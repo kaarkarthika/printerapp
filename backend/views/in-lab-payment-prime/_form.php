@@ -392,7 +392,11 @@ tbody#fetch_update_data input {
                                  </div> 
 							   </td>
 						</tr>
- 						<tr></tr>
+ 
+ 
+						 
+						
+						<tr></tr>
 						<tr>
 							<th>NET Amount</th>
 							<td><?= $form->field($main, 'overall_net_amt')->textInput(['readonly' => true,'class'=>'bg-info1  ansrefrsh form-control text-right','id'=>'total_net_amount','required' => true])->label(' ') ?></td>

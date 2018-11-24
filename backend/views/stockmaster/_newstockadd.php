@@ -26,6 +26,9 @@
     table.table.thf-11>tbody>tr>td{
 	   padding:1px!important;
    }
+   .form-group {
+    margin-bottom: 3px;
+}
 
 </style>
 <div class="">
@@ -69,14 +72,14 @@
                <div class="col-sm-12">
                   <div class="row">
                      <div class="col-sm-12">
-                        <div class="panel pd-panel h-118">
+                        <div class="panel pd-panel  ">
                            <div class="panel-heading pd-panel-head">SUPPLIER DETAILS</div>
                            <div class="panel-body pd-panel-body">
                               <div class=" ">
                                  <div class=" form-group col-sm-2  ">
                                     <label class="control-label  lbl-width">Supplier Name</label>
                                     <div class="input-group input-group-sm   ">	   			
-                                    	<select id='vendorname' name='VENDORNAME' class='vendorname freezed form-control' required>
+                                    	<select id='vendorname' name='VENDORNAME' style="width:200px!important;" class='vendorname freezed form-control' required>
                                     	<option value=''></option>
                                     	<?php if(!empty($vendor)){ foreach($vendor as $key => $value){?>
                                     	<option value='<?php echo $value['vendorid']?>'><?php echo $value['vendorname']?></option>
@@ -220,15 +223,17 @@
                                  </td>
                                  
                                  <td style="width:18%">
-                                    <div class="  ">	   		<!--input-group input-group-sm -->	
-                                       <!--input type="text" id=" " class="  ip-btn-style f-11 " name=" " required placeholder=" "-->
-                                       <select id='product_name1' name="PRODUCT_NAME[]" style="width: 280px;" data-id='1' class='product_name  freezed form-control tabind ' required>
+                                     <div class="input-group input-group-sm ">
+									   <select id='product_name1' name="PRODUCT_NAME[]" style=" " data-id='1' class='product_name  freezed form-control tabind ' required>
                                        	
                                        </select> 								  		 					 
-                                       <!--span class="ipt input-group-btn " value="click">
-                                       <button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-search"></i></button>
-                                       </span-->   
+                                       <span class="ipt input-group-btn " value="click">
+                                       <button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-plus"></i></button>
+                                       </span>   
                                     </div>
+                                  
+										
+                                    
                                  </td>
                                  <td style="width:4%"><input type="text" id="quantity1" data-id='1' required onkeypress="return isNumberKey(event);" onkeyup='Quantity(this.value,event,1);' class=" freezed quantity text-right ip-btn-style f-11" name="QUANTITY[]"></td>
                                  <td style="width:4%"><input type="text" id="free_quantity1" data-id='1'  onkeypress="return isNumberKey(event);" onkeyup='FreeQuantity(this.value,event,1);' class=" freezed free_quantity text-right ip-btn-style f-11" name="FREE_QUANTITY[]"></td>
