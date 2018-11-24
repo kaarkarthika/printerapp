@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+<head>
+	<title>TANUVAS - Tool</title>
+	
+	<!-- Meta -->
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<!-- pop up -->
+	<link href="http://192.168.1.52/2017/rpm/app/js/popupcode/popupcss.css" rel="stylesheet">
+	<script src="http://192.168.1.52/2017/rpm/app/js/popupcode/jquery-latest.pack.js"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/js/popupcode/popupjs.js"></script>	
+	<!-- Bootstrap -->
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+	
+	<!-- Upload Progress Bar -->
+	<script src="http://192.168.1.52/2017/rpm/app/js/upload-image-progress/jquery.form.js"></script>
+	<link href="http://192.168.1.52/2017/rpm/app/js/upload-image-progress/progressbox.css" rel="stylesheet">
+	
+	<!-- Bootstrap Extended -->
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap.min.css" rel="stylesheet">
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-wysihtml5/css/bootstrap-wysihtml5-0.0.2.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	 
+	
+	<!-- JQueryUI v1.9.2 -->
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-wysihtml5/css/bootstrap-wysihtml5-0.0.2.css" rel="stylesheet">
+	
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/jquery-ui-1.9.2.custom/css/smoothness/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
+	
+	
+	<!-- Glyphicons -->
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/css/glyphicons.css" rel="stylesheet">
+	
+	<!-- Bootstrap Extended -->
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-toggle-buttons/static/stylesheets/bootstrap-toggle-buttons.css" rel="stylesheet">
+	
+	
+	<!-- Uniform -->
+	<link  media="screen" href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/pixelmatrix-uniform/css/uniform.default.css" rel="stylesheet">
+	
+	<!-- JQuery v1.8.2 -->
+		
+	
+	<!-- Modernizr -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/modernizr.custom.76094.js"></script>
+	
+	<!-- MiniColors -->
+	<link rel="stylesheet" media="screen" href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/jquery-miniColors/jquery.miniColors.css" />
+	
+	<!-- Notyfy -->
+	<script type="text/javascript" src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/notyfy/jquery.notyfy.js"></script>
+	<link rel="stylesheet" href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/notyfy/jquery.notyfy.css"/>
+	<link rel="stylesheet" href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/notyfy/themes/default.css"/>
+	
+	<!-- Gritter -->
+	<link rel="stylesheet" href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/Gritter/css/jquery.gritter.css"/>
+	<script type="text/javascript" src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/Gritter/js/jquery.gritter.min.js"></script>
+	
+	<!--grid view in all pages -->
+		<script src="http://192.168.1.52/2017/rpm/app/griddata/js/grid.locale-en.js"></script>
+		<script src="http://192.168.1.52/2017/rpm/app/griddata/js/jquery.jqGrid.min.js"></script>
+	    <link href="http://192.168.1.52/2017/rpm/app/griddata/css/ui.jqgrid.css" type="text/css" rel="stylesheet" />
+		<!--add and remove box -->
+		
+		<script src="http://192.168.1.52/2017/rpm/app/js/jquery-ui.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://192.168.1.52/2017/rpm/app/css/addremovebox.css">
+	<!--validaction in jq new -->
+	<script src="http://192.168.1.52/2017/rpm/app/js/default_script.js" type="text/javascript"> </script>
+		<link rel="stylesheet" type="text/css" href="http://192.168.1.52/2017/rpm/app/css/validationEngine.css">
+		<script src="http://192.168.1.52/2017/rpm/app/js/jquery_002.js" type="text/javascript"> </script>
+		<script src="http://192.168.1.52/2017/rpm/app/js/validaction.jquery.js" type="text/javascript"> </script>	
+	<!--  Default script-->
+	<script src="http://192.168.1.52/2017/rpm/app/js/jquery-ui.min.js"></script>
+	
+	
+
+	<!-- google-code-prettify -->
+	<link href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+	
+	<!-- Theme -->
+	<link rel="stylesheet" href="http://192.168.1.52/2017/rpm/app/bootstrap/theme/css/style.min.css?1530771909" />
+	
+	<!-- LESS 2 CSS -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/less-1.3.3.min.js"></script>
+	
+</head>
+<body>
+	<div id="mask"></div>
+	<!-- Start Content -->
+	<div class="container-fluid">
+				<div class="navbar main">
+			<!-- <a href="index.html?lang=" class="appbrand"><span>Admin</span></a> -->
+			<a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/dashboard1" class="appbrand"><span>Admin</span></a>
+						<button type="button" class="btn btn-navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+						
+			<ul class="topnav pull-left tn1">
+							</ul>
+			<ul class="topnav pull-right">
+				<li class="account">
+										<a data-toggle="dropdown" href="my_account.html?lang=" class="glyphicons logout lock"><span class="hidden-phone text">Admin</span><i></i></a>
+					<ul class="dropdown-menu pull-right">
+						
+						<li class="highlight profile">
+							<span>
+								<span class="heading">Profile <a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/edit_user/1/edit" class="pull-right">edit</a></span>
+								<span class="img"></span>
+								<span class="details">
+									<a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/edit_user/1/edit">
+									Admin</a>
+																	</span>
+								<span class="clearfix"></span>
+							</span>
+						</li>
+						<li>
+							<span>
+								<a class="btn btn-default btn-small pull-right" style="padding: 2px 10px; background: #fff;" href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/logout">Sign Out</a>
+							</span>
+						</li>
+					</ul>
+									</li>
+			</ul>
+		</div>
+						<div id="wrapper">
+				<div id="menu" class="hidden-phone">
+					<span class="profile">
+						<a class="img" href="my_account.html?lang="><img src="http://192.168.1.52/2017/rpm/app/images/user_file/logo.png" alt="" /></a>
+						<span>
+							<strong>Admin</strong>
+							<a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/edit_user/1/edit">edit account</a>
+						</span>
+					</span>
+					<!-- <div id="search">
+						<input type="text" placeholder="Quick search ..." />
+						<button class="glyphicons search"><i></i></button>
+					</div> -->
+					<ul>
+						
+						<!-- <li class="hasSubmenu glyphicons home">
+							<a  href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/dashboard"><i></i><span>Dashboard</span></a>
+						</li> -->
+																								
+						<li class="glyphicons pricemanagement dashboard active	"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/dashboard1"><i></i><span>Dashboard</span></a></li>
+						<li class="hasSubmenu glyphicons home">
+							<a data-toggle="collapse" href="#updates"><i></i><span>Updates</span></a>
+							<ul class="collapse" id="dashboard">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/usernextupdate"><span>Next Update</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/usermissingupdate"><span>Missing Update</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/user_adminreview"><span>Reviews</span></a></li>		
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/adminpage"><span>Edit Request List</span></a></li>
+							</ul>
+						</li>
+																		
+												<div class="separator bottom"></div>
+						<li class="hasSubmenu glyphicons user_add">
+							<a data-toggle="collapse" href="#menu_user_management"><i></i><span>User Management</span></a>
+							<ul class="collapse" id="menu_user_management">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/add_admin"><span>Admin User</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/add_pi"><span>PI User</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/add_dean"><span>Nodal Officer</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/manage_user"><span>Manage User</span></a></li>		
+							    							    <li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/team_management"><i></i><span>Team Management</span></a></li>
+														</ul>
+						</li>
+											<!--							
+						<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/category_manage"><i></i><span>Category Management</span></a></li>
+												<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/subcategory_manage"><i></i><span>Sub Category Mgnt</span></a></li>
+											
+							<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/team_management"><i></i><span>Team Management</span></a></li>
+						 -->
+													<li class="hasSubmenu glyphicons gift">
+							<a data-toggle="collapse" href="#menu_category_management"><i></i><span>Category Management</span></a>
+							<ul class="collapse" id="menu_category_management">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/category_manage"><i></i><span>Category Management</span></a></li>
+				               <li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/subcategory_manage"><i></i><span>Sub Category Mgnt</span></a></li>
+				     	    </ul>
+						</li>
+						<li class="hasSubmenu glyphicons gift">
+							<a data-toggle="collapse" href="#menu_college_management"><i></i><span>Department Management</span></a>
+							<ul class="collapse" id="menu_college_management">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/collage_manage"><i></i><span>Add Colleges</span></a></li>
+				               <li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/add_department"><i></i><span>Add Department</span></a></li>
+				     	    </ul>
+						</li>
+																		<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/dropdownmanagement"><i></i><span>Dropdown Management</span></a></li>
+						<!-- <li class="hasSubmenu glyphicons gift">
+							<a data-toggle="collapse" href="#menu_category_management"><i></i><span>Category Management</span></a>
+							<ul class="collapse" id="menu_category_management">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/category_manage"><span>Category</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/subcategory_manage"><span>Subcategory</span></a></li>
+							</ul>
+						</li> -->
+						<!-- <li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/category_manage"><i></i><span>Category Management</span></a></li>
+						<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/subcategory_manage"><i></i><span>Subcategory Management</span></a></li> -->
+						<!-- <li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/zonemanagement"><i></i><span>Zone Management</span></a></li> -->
+							
+						<li class="hasSubmenu glyphicons gift">
+							<a data-toggle="collapse" href="#menu_agency_management"><i></i><span>Funding Agencies</span></a>
+							<ul class="collapse" id="menu_agency_management">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/add_agency"><span>Add Agency</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/manage_agency"><span>Manage Agency</span></a></li>
+							</ul>
+						</li>
+						
+						<li class="hasSubmenu glyphicons user">
+							<a data-toggle="collapse" href="#menu_collaborator_management"><i></i><span>Collaborators</span></a>
+							<ul class="collapse" id="menu_collaborator_management">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/add_collaborator"><span>Add Collaborator</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/manage_collaborator"><span>Manage Collaborator</span></a></li>
+							</ul>
+						</li>
+						
+						<!--
+						<li class="hasSubmenu glyphicons gift">
+													<a data-toggle="collapse" href="#menu_beneficiary_management"><i></i><span>Beneficiary Management</span></a>
+													<ul class="collapse" id="menu_beneficiary_management">
+														<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/add_beneficiary"><span>Add Beneficiary</span></a></li>
+														<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/manage_beneficiary"><span>Manage Beneficiary</span></a></li>
+													</ul>
+												</li>-->
+						
+						<div class="separator bottom"></div>
+						<li class="hasSubmenu glyphicons justify">
+							<a data-toggle="collapse" href="#menu_project_management"><i></i><span>Project Management</span></a>
+							<ul class="collapse" id="menu_project_management">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/add_project"><span>Add Project</span></a></li>
+								
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/edit_project"><span>Manage Project</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/comp_project"><span>Extend / Terminate</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/consolidated_report"><span>Consolidated Report</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/search_project"><span>Search Report</span></a></li>
+							</ul>
+						</li>
+						<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/project_allotment"><i></i><span>Project Allotment</span></a></li>
+														
+													<!-- <li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/project_status_update"><i></i><span>Project Status Update</span></a></li> -->
+							<li class="hasSubmenu glyphicons gift">
+							<a data-toggle="collapse" href="#project_status_update"><i></i><span>Project Status Update</span></a>
+							<ul class="collapse" id="project_status_update">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/project_status_update"><span>Status Update</span></a></li>
+								
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/admin"><span>Edit Request List</span></a></li>
+							</ul>
+						   </li>
+						<div class="separator bottom"></div>
+						<!-- <li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/reporting_system"><i></i><span>Reporting System</span></a></li> -->
+				<!--
+						<li class="hasSubmenu glyphicons gift">
+											<a data-toggle="collapse" href="#report"><i></i><span>Reporting System</span></a>
+											<ul class="collapse" id="report">
+												<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/report_update"><span>Update Report</span></a></li>
+												
+												<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/pending_update"><span>Pending Updates</span></a></li>
+											</ul>
+										</li>-->
+				
+						<!--<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/application_settings"><i></i><span>Application Settings</span></a></li>-->
+						<li class="hasSubmenu glyphicons gift">
+							<a data-toggle="collapse" href="#tanuvasadmin"><i></i><span>Tanuvas Admin</span></a>
+							<ul class="collapse" id="tanuvasadmin">
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/call_for_proposal"><span>Call for Proposal</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/tanuvas_guidelines"><span>Guidelines</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/tanuvas_pjt_picture"><span>Project Pictures</span></a></li>
+								<li class=""><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/tanuvas_faq"><span>FAQ</span></a></li>	
+							    
+							</ul>
+						</li>
+												 <!-- <li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/subcategory_manage"><i></i><span>Subcategory Management</span></a></li>
+						
+						
+						
+						<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/subsector_manage"><i></i><span>Subsector Management</span></a></li>
+						
+						<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/locationmanagement"><i></i><span>Location Management</span></a></li>
+						
+						<li class="glyphicons pricemanagement gift"><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/scheme_manage"><i></i><span>Scheme Management</span></a></li>
+					 -->
+						
+						
+						
+					</ul>
+					<div class="clearfix" style="clear: both"></div>
+									</div>
+		<div id="content">
+			
+				<style>
+			#menu>ul>li.home.active>a {
+    background: #d1d4d5;
+    color: #000;
+}
+		</style> <script>
+	$(document).ready(function(){
+		jQuery("#add_product").validationEngine({
+		  scroll: false
+		}); 
+	});
+	$(function(){
+    // Datepicker
+    $('#txt_commenceyear').datepicker({
+     shortYearCuroff: 30,
+     changeMonth: true,
+     changeYear: true,
+     dateFormat: 'dd/mm/yy',
+     yearRange: "-66:+0"
+     });
+   
+});
+$(function(){
+    // Datepicker
+    $('#txt_finyear').datepicker({
+     shortYearCuroff: 30,
+     changeMonth: true,
+     changeYear: true,
+     dateFormat: 'dd/mm/yy',
+     yearRange: "-66:+100"
+     });
+   
+});
+</script>
+
+<ul class="breadcrumb">
+	<li><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/dashboard" class="glyphicons home"><i></i> TANUVAS</a></li>
+	<li class="divider"></li>
+	<li><a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/announcements_list" class="glyphicons home">Announcements Management</a></li>
+	<li class="divider"></li>
+	<li>Add New Announcements</li>
+</ul>
+<div class="separator bottom"></div>
+
+<h3>Add New Announcements</h3>
+<a  href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/edit_project" style="    float: right;    position: relative;    top: -32px;    right: 20px;" class="btn btn-primary btn-icon " onclick="goBack()">Go Back</a>
+<div class="innerLR">
+	<div id="rootwizard" class="wizard">
+		<div class="wizard-head">
+			<ul>
+				<li><a href="#tab1" data-toggle="tab">Announcements Details</a></li>	
+			</ul>
+		</div>
+		<div class="widget">
+			
+			<div class="widget-body form-horizontal">
+			<!--<form action="http://192.168.1.52/2017/rpm/app/index.php/tanuvas_send/add_project" id='update_project' name='update_project' method="post" accept-charset="utf-8">-->
+			<form action="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/update_announcements" id='add_project' name='add_project' enctype="multipart/form-data" method="post" accept-charset="utf-8">			<input type="hidden" name="autoid" id="autoid" value="60"/>
+			<input id="master_key" name="master_key" type="hidden" value="1"  />
+			<input type="hidden" name="userpart" id="userpart" value="editproject"/>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab1">
+						<div class="row-fluid">
+							<div class="span6">
+								
+								<div class="control-group">
+									<label for="first_name" class="control-label">Title</label>
+									<div class="controls">
+							<input id="txt_title" name="txt_title" value="etst 123" type="text" placeholder="" class="validate[required] span10"   />
+										<span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="Project Name is mandatory"><i></i></span>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Description</label>
+									<div class="controls">
+										<textarea name="txt_desc" id="txt_desc">dsdsd</textarea>
+										<span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="Project DEscription mandatory"><i></i></span>
+									</div>
+								</div>
+								<div class="control-group" style="width: 50%">
+									<label class="control-label"> Year</label>
+									<div class="controls">
+										<input id="txt_year" name="txt_year" value="2014" type="text" placeholder="" class="validate[required] span10" />
+										
+									</div>
+								</div>
+																
+								
+																
+								<div class="control-group" style="width: 100%">
+									
+									<div class="controls">
+										<table class="team_tablecolor" border="1">
+										<tr>
+											<th style="width:5%">S.NO</th>
+											<th style="width:25%">File Name</th>
+											<th style="width:20%;text-align: center;">Action</th>
+											
+										</tr>
+										
+																				  <tr>
+										  	<td style="width:20%;text-align: center;">1</td>
+										  	<td style="width:20%;text-align: center;"> <a href="base/jobcard_16-5-2018.pdf" download>jobcard_16-5-2018.pdf</a> </td>
+										  	<td style="width:20%;text-align: center;"> 
+										  		<a href="base/jobcard_16-5-2018.pdf" download><img src="http://192.168.1.52/2017/rpm/app/images/user_file/download.png"></a>
+										  		<a href="http://192.168.1.52/2017/rpm/app/index.php/tanuvas/delete_attachments/52" onclick=\"javascript:return call_conform();\"  title='delete'  class='btn-action glyphicons remove_2 btn-danger'><i></i>></a> 
+										  	</td>
+										  </tr> 
+										  	
+																			</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Bootstrap Form Wizard -->
+<style>
+	table.table-condensed td span.year {
+    width:36px;
+    padding: 10px;
+    float: left;
+    text-align: center;
+}
+
+table.table-condensed {
+    width: 250px;
+}
+table.table-condensed td span.year:hover {
+    background: #6192dc;
+    color: #fff;
+    cursor: pointer;
+}
+th.prev,th.next {
+    cursor: pointer;
+}
+
+</style>
+<script type="text/javascript">
+  
+ $(function(){
+    // Datepicker
+    $('#txt_year').datepicker({
+    			 minViewMode: 'years',
+                 autoclose: true,
+                     format: 'yyyy'
+    
+     });
+   
+});
+
+</script>
+
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script> 
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
+	<script type="text/javascript">
+	$(function()
+	{
+		var bWizardTabClass = '';
+		$('.wizard').each(function()
+		{
+			if ($(this).is('#rootwizard'))
+				bWizardTabClass = 'bwizard-steps';
+			else
+				bWizardTabClass = '';
+
+			var wiz = $(this);
+			
+			$(this).bootstrapWizard(
+			{
+				onNext: function(tab, navigation, index) 
+				{
+					
+					if(index==1) 
+					{
+						var valid = $("#update_project").validationEngine('validate');						
+						if(valid==false){
+							return false;
+						}
+					}
+					if(index==2){
+						var valid = $("#update_project").validationEngine('validate');						
+						if(valid==false){
+							return false;
+						}
+					}
+					
+				}, 
+				onLast: function(tab, navigation, index) 
+				{
+					// Make sure we entered the title
+					var valid = $("#update_project").validationEngine('validate');						
+						if(valid==false){
+							return false;
+						}
+					
+				}, 
+				onTabClick: function(tab, navigation, index) 
+				{
+					// Make sure we entered the title
+					if(!wiz.find('#txt_projname').val()) {
+						alert('You must enter the project details');
+						wiz.find('#txt_name').focus();
+						return false;
+					}
+					
+				},
+				onTabShow: function(tab, navigation, index) 
+				{
+					var $total = navigation.find('li').length;
+					var $current = index+1;
+					var $percent = ($current/$total) * 100;
+					wiz.find('.bar').css({width:$percent+'%'});
+
+					wiz.find('.bar')
+						.find('.step-current').html($current)
+						.parent().find('.steps-total').html($total)
+						.parent().find('.steps-percent').html(Math.round($percent) + "%");
+		
+					// If it's the last tab then hide the last button and show the finish instead
+					if($current >= $total) {
+						wiz.find('.pagination .next').hide();
+						wiz.find('.pagination .finish').show();
+						wiz.find('.pagination .finish').removeClass('disabled');
+					} else {
+						wiz.find('.pagination .next').show();
+						wiz.find('.pagination .finish').hide();
+					}
+				},
+				tabClass: bWizardTabClass,
+				nextSelector: '.next', 
+				previousSelector: '.previous',
+				firstSelector: '.first', 
+				lastSelector: '.last'
+			});
+
+		
+		});
+	});
+	</script>
+	
+<!-- <tr><div id="txt_'+autoid+'" class="row-fluid" style="width:100%;"><div class="span3" style="width: 100%;" ><td class="uniformjs center"><div class="control_group" style="width:100%;float: left;margin-left:0px;"><div class="controls" style="margin-left:0px;"></div></div></td><td class="uniformjs center"><div class="control_group" style="width:100%;float: left;margin-left:0px;"><div class="controls" style="margin-left:0px;"><input type="text" id="collshare_'+autoid+'" name="collshare_'+autoid+'" class="span10" onkeypress="return isNumber(event)"/></div></div></td></div></div></tr> --> 
+<!-- <div id="txt_'+id+'" class="row-fluid separator" style="display:none;"><div class="span3" style="width: 80%;" ><div class="control_group" style="width:20%;float: left;"><div class="controls"></div></div><div class="control_group" style="width:20%;float: left;"><div class="controls"></div></div><div class="control_group" style="width:20%;float: left;"><div class="controls"></div></div><div class="control_group" style="width:20%;float: left;"><div class="controls"><input type="text" id="share_'+id+'" name="category_'+id+'" class="span10"/></div></div></div></div> -->
+
+
+				<!-- End Content -->
+		</div>
+		<!-- End Wrapper -->
+		</div>
+				
+	</div>
+	
+	<!-- JQueryUI v1.9.2 -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js"></script>
+	
+	<!-- JQueryUI Touch Punch -->
+	<!-- small hack that enables the use of touch events on sites using the jQuery UI user interface library -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+	
+	<!-- MiniColors -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/jquery-miniColors/jquery.miniColors.js"></script>
+	
+	<!-- Themer -->
+	<script>
+	var themerPrimaryColor = '#930303';
+	</script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/jquery.cookie.js"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/themer.js"></script>
+	
+	
+	
+	
+	<!-- Resize Script -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/jquery.ba-resize.js"></script>
+	
+	<!-- Uniform -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/pixelmatrix-uniform/jquery.uniform.min.js "></script>
+	
+	<!-- Bootstrap Script -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/js/bootstrap.min.js"></script>
+	
+	<!-- Bootstrap Extended -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-select/bootstrap-select.js"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-toggle-buttons/static/js/jquery.toggle.buttons.js"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/jasny-bootstrap/js/jasny-bootstrap.min.js" type="text/javascript"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/jasny-bootstrap/js/bootstrap-fileupload.js" type="text/javascript"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootbox.js" type="text/javascript"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-wysihtml5/js/wysihtml5-0.3.0_rc2.min.js" type="text/javascript"></script>
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/extend/bootstrap-wysihtml5/js/bootstrap-wysihtml5-0.0.2.js" type="text/javascript"></script>
+	
+	<!-- Custom Onload Script -->
+	<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/load.js"></script>
+	
+	
+
+<!-- google-code-prettify -->
+<script src="http://192.168.1.52/2017/rpm/app/bootstrap/theme/scripts/google-code-prettify/prettify.js"></script>
+<script>
+$(function(){
+	if ($('.prettyprint').length)
+		prettyPrint();
+});
+</script>
+	
+</body>
+</html>

@@ -1,0 +1,1 @@
+*/5 * * * * php /home/threcondev/public_html/backend/web/crontab.txt
