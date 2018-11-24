@@ -381,27 +381,18 @@ tbody#fetch_update_data input {
                                        <input type="radio" name="discount" class="enable-textbox-percentage" value="percentage"  autocomplete="off">%
                                     </label>         
                                   </div>
-		                          <?= $form->field($main, 'overall_dis_percent')->textInput(['class'=>'form-control w-40 total_sub_total pr-11 ansrefrsh number','id'=>'total_discountvaluetype','onkeyup'=>'DiscountPercent(this,event);'])->label('Less Discount(%)') ?>
+		                          <?= $form->field($main, 'overall_dis_percent')->textInput(['class'=>'form-control w-40 total_sub_total  ansrefrsh number','id'=>'total_discountvaluetype','onkeyup'=>'DiscountPercent(this,event);'])->label('Less Discount(%)') ?>
 								  
-								  
-								  
-				                  
-								  
-       
-                                  <div class="input-group-btn" data-toggle="buttons">
+								  <div class="input-group-btn" data-toggle="buttons">
                                      <label class="inp btn btn-default enable-textbox-flat" disabled style="padding:3px!important;">
                                        <input type="radio" name="discount" class="enable-textbox-flat" value="flat"  autocomplete="off">$
                                      </label>         
                                   </div>
-		                          <?= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total pr-11 ansrefrsh number','id'=>'total_discountamount','onkeyup'=>'DiscountAmount(this,event);'])->label('Less Disc Amount') ?>
+		                          <?= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total  ansrefrsh number','id'=>'total_discountamount','onkeyup'=>'DiscountAmount(this,event);'])->label('Less Disc Amount') ?>
                                  </div> 
 							   </td>
 						</tr>
- 
- 
-						 
-						
-						<tr></tr>
+ 						<tr></tr>
 						<tr>
 							<th>NET Amount</th>
 							<td><?= $form->field($main, 'overall_net_amt')->textInput(['readonly' => true,'class'=>'bg-info1  ansrefrsh form-control text-right','id'=>'total_net_amount','required' => true])->label(' ') ?></td>
@@ -1164,7 +1155,10 @@ function Patientdetails_modal()
 	$("body").on('click', '.remove_all', function ()
     {
     	$("#fetch_update_data tr").remove();
-    	window.location.reload(true);
+    	$("#saved_val").val('');
+    	$("#saves_sucess").removeAttr("disabled");
+    	cleartxt();
+    	clearhead();
     });
     
     
@@ -1604,6 +1598,9 @@ function PaidAmountCalculation(data,event)
 	var paid_amount=data.value;
 	var overall_net_amount=DefaultAmount();
 	var grid_length=$("#fetch_update_data tr").length;
+	
+	$('#total_discountvaluetype').val('');
+	$('#total_discountamount').val('');
 	
 	$(".calculation").each(function() 
 	{

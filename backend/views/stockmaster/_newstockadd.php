@@ -23,7 +23,9 @@
    #wrapper,.content-page{
    overflow:unset;
    }
-   
+    table.table.thf-11>tbody>tr>td{
+	   padding:1px!important;
+   }
 
 </style>
 <div class="">
@@ -203,10 +205,10 @@
                                     <th style="width:6%">Rate/Pack</th>
                                     <th style="width:6%">Batch No</th>
                                     <th style="width:6%">Expired<br>Date</th>
-                                    <th style="width:4%">Dis(%)</th>
-                                    <th style="width:4%">Dis(AMT)</th>
-                                    <th style="width:4%">GST(%)</th>
-                                    <th style="width:4%">GST(AMT)</th>
+                                    <th style="width:4%">Dis<br>(%)</th>
+                                    <th style="width:4%">Dis<br>(AMT)</th>
+                                    <th style="width:4%">GST<br>(%)</th>
+                                    <th style="width:4%">GST<br>(AMT)</th>
                                     <th style="width:6%">MRP</th>
                                     <th style="width:6%">Total<br>Amount</th>
                                  </tr>
@@ -290,21 +292,65 @@
                            </div>
                         </div>
                      </div>
+					 
+					 <div class="col-sm-4">
+					   <div class="panel pd-panel  ">
+                           <div class="panel-heading pd-panel-head">SEARCH</div>
+                           <div class="panel-body pd-panel-body">
+					            
+							  <!-- FROM DATE -->
+							  <div class="row">							 
+					           <div class="form-group col-sm-6">
+                                  <label>From</label>                          
+                                  <input type='text' class="form-control   input-sm fromDate  " id='' onkeyup=" "  name="fromDate"   required>                                                                                                              
+					           </div>
+					           
+					          <!-- TO DATE -->
+					          				   
+					           <div class="form-group col-sm-6">
+                               <label>To</label>                             		           
+                                    <input type='text' class="form-control toDate " id='' onkeyup=" " name="toDate" required>  
+                              </div>					 
+					        </div>
+							<div class=" ">
+							 <div class="form-group">
+							 <button type="button" class="btn btn-primary b1-width  freezed">Search</button>
+							 </div>
+							</div>
+					       
+					       </div>
+					 </div>
+					 </div>
+					 
+					 <div class="col-sm-2">
+					     <div class="form-group ">
+						     <div class="form-group col-sm-6"><button type="button" class="btn btn-primary b1-width  freezed" onclick='SaveRegisterForm();' id='save_button' >Save</button></div>
+						     <div class="form-group col-sm-6"><button type="button" class="btn btn-primary b1-width  freezed">Delete</button></div>
+						 </div>
+						 
+						  <div class="form-group ">
+						     <div class="form-group col-sm-6"> <button type="button" class="btn btn-primary b1-width ">Clear</button></div>
+						     <div class="form-group col-sm-6"><button type="button" class="btn btn-primary b1-width  freezed">Close</button></div>
+						 </div>
+					  
+					 </div>
+					 
+					 
                       
                   </div>
                </div>
-               <div class="col-sm-12  text-right">
+              <!-- <div class="col-sm-12  text-right">
                   <div class="row">
                      <div class="form-group ">
                         <button type="button" class="btn btn-primary b1-width  freezed" onclick='SaveRegisterForm();' id='save_button' >Save</button>
                         <button type="button" class="btn btn-primary b1-width  freezed">Delete</button>
                          <button type="button" class="btn btn-primary b1-width ">Clear</button>
                           <button type="button" class="btn btn-primary b1-width  freezed">Close</button>
-                            <button type="button" class="btn btn-primary b1-width  freezed">search</button>
+                            
                      </div>
                   </div>
                  
-               </div>
+               </div>  -->
             </div>
          </div>
       </div>
@@ -370,7 +416,22 @@ $('#invoicedate').datepick({
 	dateFormat: 'dd-mm-yyyy'
 	});
 
-
+    $('.fromDate').datepick({
+	  dateFormat: 'dd-mm-yyyy'
+	});
+	
+    $('.toDate').datepick({
+		useCurrent: false,
+	 dateFormat: 'dd-mm-yyyy'
+	});	
+	
+	$(".fromDate").on("dp.change", function (e) {
+           $('.toDate').data("DateTimePicker").minDate(e.date);
+       });
+       $(".toDate").on("dp.change", function (e) {
+           $('.fromDate').data("DateTimePicker").maxDate(e.date);
+       });
+	
    
 jQuery(document).ready(function($){
 
