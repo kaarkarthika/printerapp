@@ -140,9 +140,7 @@ input#ipnumber {
     width: 60%;
     float: right;
 }
-.Room_details .panel-body,.person-details .panel-body {
-    padding: 7px 20px;
-}
+
 </style>
 <script type="text/javascript">
    function date_time(id)
@@ -177,7 +175,13 @@ input#ipnumber {
    
    
 </script>
-<?php $form = ActiveForm::begin(['id' => 'saved_data_value_ajax']); ?> 
+<?php $form = ActiveForm::begin(['id' => 'saved_data_value_ajax',
+             'options' => [
+                'class' => 'form-inline'
+             ] ]); ?> 
+
+ 
+
 <div class="container">
    <div class="row" hidden>
 	  <strong><span class="pull-right" id="date_time"></span></strong>
@@ -251,10 +255,65 @@ input#ipnumber {
 	<div class="panel panel-border panel-custom">
 	    <div class="panel-heading"></div>
 	<div class="panel-body">
+	<div class=" col-xs-12 col-sm-6 col-lg-2">
+	<div class="form-group">
+      <label for="InputFieldA" class="col-xs-4">Field A</label>
+      <div class="col-xs-8">
+        <input type="text" class="form-control" id="InputFieldA" placeholder="InputFieldA">
+      </div>
+	  
+	  <label for=" " class="col-xs-4">Name</label>
+      <div class="col-xs-8">
+		<input type="text" class="form-control" placeholder="Patient Name" >
+      </div> 
+	  
+	  <label for=" " class="col-xs-4">Age</label>
+      <div class="col-xs-8">
+		<input type="text" placeholder="YY" style="width: 40px" >
+               		<input type="text" placeholder="MM" style="width: 40px">
+               		<input type="text" placeholder="DD" style="width: 40px">
+               		
+      </div>
+	  
+	  
+	  
+	   
+	  
+    </div>
+    </div>
+    
+	
+	
+	
+    <div class="form-group col-xs-12 col-sm-6 col-lg-2">
+      <label for=" " class="col-xs-4">Gender</label>
+      <div class="col-xs-8">
+		<input type="text" class="form-control" placeholder="Gender"  >         		
+      </div>
+	  
+	  <label for=" " class="col-xs-4">Rel Name</label>
+      <div class="col-xs-8">
+		<input type="text" class="form-control" placeholder="Relative Name" >         		
+      </div>
+	  
+	  
+	  
+	  
+	  <label for=" " class="col-xs-4">Dr Name</label>
+      <div class="col-xs-8">
+		<input type="text" class="form-control" placeholder="Dr Name" >         		
+      </div>
+    </div>
+    
+    
+ 
+     
+ 
+	
+	
 		<div class="col-sm-3">
 			<div class="form-group  ">		
-                    <div class="input-group add-on fwidth" >
-                    	
+                    <div class="input-group add-on fwidth" >              
                     <label> IP NO </label>	
                       <input class="form-control mrn inrefrsh number ipnumber" placeholder="IP Search" name="ip_no" onkeyup="Patient_details(event)"   id="ipnumber" type="text" tabindex="8">
                       <input class="form-control mrn inrefrsh number" placeholder="MRN Search" name="mr_number" onkeyup="Patient_details(event)"   id="mrnumber" type="hidden" tabindex="8">
@@ -266,47 +325,12 @@ input#ipnumber {
 					<span class='in_pat_validated' style="color:red" hidden>Enter Patient Record</span>
 						
                   </div>
-               <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Name </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Patient Name" >
-               	</div>
-              </div>
-              <div class="form-group  ">
-               	<div class="col-sm-3">
-               		<label> Age </label>
-               	</div>
-               	<div class="col-sm-9">
-               		<input type="text" placeholder="YY" style="width: 40px" >
-               		<input type="text" placeholder="MM" style="width: 40px">
-               		<input type="text" placeholder="DD" style="width: 40px">
-               		<input type="text" placeholder="Gender" style="width: 60px">
-               	</div>
-              </div>	
-              
-              <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Relative Name </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Relative Name Name" >
-               	</div>
-              </div>	   		
-				  
 
 		</div>
 		<div class="col-sm-9">
 			<div class="col-sm-4">
-				<div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Dr Name </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Dr Name" >
-               	</div>
-              </div>	
+			  
+				 	
                <div class="form-group  ">
                	<div class="col-sm-5">
                		<label> Unit Name </label>
@@ -347,7 +371,8 @@ input#ipnumber {
                		<label> Address </label>
                	</div>
                	<div class="col-sm-7">
-               		<input type="text" placeholder="Address " >
+               		<!-- <input type="text" placeholder="Address " > -->
+					<textarea></textarea>
                	</div>
               </div>	
               
@@ -534,7 +559,7 @@ input#ipnumber {
                <div class="panel panel-border panel-custom" style="">
                  <div class="panel-body">
 				   <div class=" row" style="position: relative;left: 100px; ">
-                     <div class=" form-group  col-sm-9 mt-5" style="background-color: #ebeff2;padding-top: 10px;padding-bottom:10px; ">
+                     <div class=" form-group  col-sm-9 mt-5 " style="background-color: #ebeff2;padding-top: 10px;padding-bottom:10px; ">
 					   <div class="">
 						  <?php
 							$productlist=Product::find()->where(['is_active'=>1])->asArray()->all();
@@ -599,9 +624,9 @@ input#ipnumber {
                 </table>
             </div>
 		 </div>
-		 <div class="col-sm-3" style="background-color: #ebeff2;margin-top:5px;position:relative;left:15px;" >
+		 <div class="col-sm-3 " style="background-color: #ebeff2;margin-top:5px;position:relative;left:15px;" >
 		   <div class="">
-		    <table class="table"  >
+		    <table class="table no-m"  >
 			            <tr>
 							<th>Details</th>
 							<td> 
