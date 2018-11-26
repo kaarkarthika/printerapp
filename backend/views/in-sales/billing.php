@@ -135,6 +135,14 @@ ul.donate-now.per_flat_val label{
 .inner-des textarea{
 	width:55%;
 }
+
+input#ipnumber {
+    width: 60%;
+    float: right;
+}
+.Room_details .panel-body,.person-details .panel-body {
+    padding: 7px 20px;
+}
 </style>
 <script type="text/javascript">
    function date_time(id)
@@ -172,28 +180,6 @@ ul.donate-now.per_flat_val label{
 <?php $form = ActiveForm::begin(['id' => 'saved_data_value_ajax']); ?> 
 <div class="container">
    <div class="row" hidden>
-   <!--
-      <div class="col-sm-12 sales-design">
-	  <span> <strong id='fetch_bill'><?php echo $billformat; ?></strong></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 
-       <div class="radio radio-info radio-inline">
-		                                            <input type="radio" id="inPatient" class="inPatient" value="inpatient" name="patient" checked="" >
-		                                            <label for="inlineRadio1" id="inPatient1">  MR Number <i><strong>[Alt+2]<strong></i></label>
-		                                        </div>
-												&nbsp;&nbsp;&nbsp;&nbsp;
-												
-												 <div class="radio radio-info radio-inline">
-		                                            <input type="radio" id="outPatient" class="outPatient" value="outpatient" name="patient"   >
-		                                            <label for="inlineRadio1" id="outPatient1">  Patient <i><strong>[Alt+1]</strong></i> </label>
-		                                        </div>&nbsp;
-		<div class="radio radio-info radio-inline">
-		                                            <input type="radio" id="tempPatient" class="tempPatient" value="temppatient" name="patient"  >
-		                                            <label for="inlineRadio1" id="tempPatient1"> Temporary-Sales  <i><strong>[Alt+3]<strong></i></label>
-		                                        </div>
-		<div class="radio radio-info radio-inline">  
-			<button type="button" class="btn btn-warning refresh" style="padding: 3px 16px;margin-bottom: 6px;font-size: 12px;" data-toggle="tooltip" title="Refresh" class="btn btn-success" tooltip='Refresh' name="refresh"><i class="fa fa-refresh" aria-hidden="true"></i></button>
-			<i><strong><small>[Alt+r]</small><strong></i>
-			</div>        -->                                
 	  <strong><span class="pull-right" id="date_time"></span></strong>
            <div class="panel panel-border panel-custom home-body"> <!-- ss -->
           
@@ -260,7 +246,194 @@ ul.donate-now.per_flat_val label{
 					 </div>
 					 </div>
 					 
+
+<div class="row person-details">
+	<div class="panel panel-border panel-custom">
+	    <div class="panel-heading"></div>
+	<div class="panel-body">
+		<div class="col-sm-3">
+			<div class="form-group  ">		
+                    <div class="input-group add-on fwidth" >
+                    	
+                    <label> IP NO </label>	
+                      <input class="form-control mrn inrefrsh number ipnumber" placeholder="IP Search" name="ip_no" onkeyup="Patient_details(event)"   id="ipnumber" type="text" tabindex="8">
+                      <input class="form-control mrn inrefrsh number" placeholder="MRN Search" name="mr_number" onkeyup="Patient_details(event)"   id="mrnumber" type="hidden" tabindex="8">
+					  <div class="ipt input-group-btn fetch_record patient_fetch_details" value='click' >
+						<span class="btn btn-default inpatient-details"  ><i class="glyphicon glyphicon-search"></i></span>
+					  </div>		
+					</div>
+					<span id='mr_validated' style="color:red" hidden>Invalid IP Number</span>
+					<span class='in_pat_validated' style="color:red" hidden>Enter Patient Record</span>
+						
+                  </div>
+               <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Name </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Patient Name" >
+               	</div>
+              </div>
+              <div class="form-group  ">
+               	<div class="col-sm-3">
+               		<label> Age </label>
+               	</div>
+               	<div class="col-sm-9">
+               		<input type="text" placeholder="YY" style="width: 40px" >
+               		<input type="text" placeholder="MM" style="width: 40px">
+               		<input type="text" placeholder="DD" style="width: 40px">
+               		<input type="text" placeholder="Gender" style="width: 60px">
+               	</div>
+              </div>	
+              
+              <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Relative Name </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Relative Name Name" >
+               	</div>
+              </div>	   		
+				  
+
+		</div>
+		<div class="col-sm-9">
+			<div class="col-sm-4">
+				<div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Dr Name </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Dr Name" >
+               	</div>
+              </div>	
+               <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Unit Name </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Unit Name" >
+               	</div>
+              </div>	
+               <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> DOB </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="DOB" >
+               	</div>
+              </div>	
+			</div>
+			<div class="col-sm-4">
+				
+				 <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Indent No</label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Indent No" >
+               	</div>
+              </div>	
+               <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Phone </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Phone" >
+               	</div>
+              </div>	
+               <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Address </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Address " >
+               	</div>
+              </div>	
+              
+			</div>
+			<div class="col-sm-4">
+				 <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Type </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="type" >
+               	</div>
+              </div>
+               <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Hospital </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Hospital" >
+               	</div>
+              </div>	
+               <div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Mobile </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Mobile " >
+               	</div>
+              </div>		
+			</div>
+			
+		</div>
+	 </div></div>
+</div>
+					 
+<div class="row Room_details">
+	<div class="panel panel-border panel-custom">
+	    <div class="panel-heading"></div>
+	<div class="panel-body">
+						
+		<div class="col-sm-3">
+			<div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Room No </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Room No " >
+               	</div>
+              </div>
+		</div>					
+		<div class="col-sm-3">
+			<div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Floor No </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Floor No " >
+               	</div>
+              </div>
+		</div>					
+		<div class="col-sm-3">
+			<div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Room Type </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Room type " >
+               	</div>
+              </div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Pay Type </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" placeholder="Pay Type " >
+               	</div>
+              </div>
+		</div>							 
+	</div>
+	</div>				 
+</div>		
+			 
   <div class="row">
+  	<!--
    <div class="col-sm-12">
 	 <div class="row">
 	   <div class="panel panel-border panel-custom">
@@ -283,7 +456,7 @@ ul.donate-now.per_flat_val label{
                   </div>
 						
 				  <div class="form-group col-sm-5" style="position: relative;  z-index: 1;    padding: 0;">
-					<!-- <button type="button" style="float: left;background: #800080 !important;   margin-right: 5px;margin-top:2px;" class="btn  btn-xs" id="patient_history_detils" disabled onclick='Patient_modal()'><i class="glyphicon glyphicon-user" aria-hidden="true"></i> </button> -->
+					
 					<button type="button" style="margin-top:2px;" class="btn btn-primary btn-xs" id="history_detils">Details</button>	
 				  </div>
 				  </div>
@@ -335,7 +508,7 @@ ul.donate-now.per_flat_val label{
                    </div>
 				     <div class="col-sm-3">
 				       <div class="form-group col-sm-12"> 
-		                 <!-- <input type="text" placeholder="Address" class="form-control fwidth key mrn inrefrsh" name='Address' id="address_patient" readonly> -->
+		                 
 						 <textarea placeholder="Address" style="min-height:55px;" class="form-control   key mrn inrefrsh" name='Address' id="address_patient" readonly ></textarea>
 		               </div>
 				     </div> 
@@ -343,12 +516,12 @@ ul.donate-now.per_flat_val label{
                  </div>
 				 
 		     </div>
-            </div>
+        </div> 
            </div>
          </div>
        </div>
      </div>
-  
+  -->
 			   
 			   
      <div class="col-sm-12 mt-5">

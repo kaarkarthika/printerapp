@@ -3144,17 +3144,17 @@ textarea.re-txtarea {
 	font-size: 14px!important;
 }
 
-#fetch_update_data::-webkit-scrollbar-track, #fetch_update_lab::-webkit-scrollbar-track, #fetch_update_treatment::-webkit-scrollbar-track  {
+#tbody_fetch::-webkit-scrollbar-track,#fetch_update_data::-webkit-scrollbar-track, #fetch_update_lab::-webkit-scrollbar-track, #fetch_update_treatment::-webkit-scrollbar-track  {
 	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 	background-color: #F5F5F5;
 }
 
-#fetch_update_data::-webkit-scrollbar, #fetch_update_lab::-webkit-scrollbar, #fetch_update_treatment::-webkit-scrollbar {
+#tbody_fetch::-webkit-scrollbar, #fetch_update_data::-webkit-scrollbar,#fetch_update_lab::-webkit-scrollbar, #fetch_update_treatment::-webkit-scrollbar {
 	width: 2px;
 	background-color: #F5F5F5;
 }
 
-#fetch_update_data::-webkit-scrollbar-thumb, #fetch_update_lab::-webkit-scrollbar-thumb,  #fetch_update_treatment::-webkit-scrollbar-thumb{
+#tbody_fetch::-webkit-scrollbar-thumb,#fetch_update_data::-webkit-scrollbar-thumb, #fetch_update_lab::-webkit-scrollbar-thumb,  #fetch_update_treatment::-webkit-scrollbar-thumb{
 	background-color: #73a7d2;
 }
 
@@ -3407,4 +3407,10 @@ table.thf-11 thead tr th {
 .txtarea-max{
 	min-height:50px!important;
 }
- 
+select.product-select {
+	width:100%!important;
+}
+.product-select span.select2-container{
+	
+	width:100%!important;
+} 

@@ -150,10 +150,8 @@ div#group_lab_fetch span,.testing-list span {
 	$day_val=$interval->days;
 	$month_val=$interval->m;
 	$year_val=$interval->y;
-
- 
 	
-	 $lab_payment_prime_val=LabPaymentPrime::find()->where(['lab_id'=>$lab_payment[0]['lab_prime_id']])->asArray()->one();
+ $lab_payment_prime_val=LabPaymentPrime::find()->where(['lab_id'=>$lab_payment[0]['lab_prime_id']])->asArray()->one();
 	
 $result_string.='';
 		
@@ -190,6 +188,7 @@ if(!empty($lab_payment))
 								}
 							$i=1; 	
 							$lab_testing=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->andWhere(['isactive'=>1])->asArray()->one();
+							 
 							$lab_unit=LabUnit::find()->where(['auto_id'=>$lab_testing['unit_id']])->asArray()->one();
 							$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$lab_testing['autoid']])->asArray()->one();
 										
@@ -218,7 +217,8 @@ if(!empty($lab_payment))
 									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
 									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
 									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
-								
+						  //	echo"<pre>"; print_r($key); 
+							
 							if($lab_testing['result_type']=="numeric"){
 								if(!empty($lab_reference_val)){
 									$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';

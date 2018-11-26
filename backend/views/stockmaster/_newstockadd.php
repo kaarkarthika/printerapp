@@ -28,8 +28,19 @@
    }
    .form-group {
     margin-bottom: 3px;
-}
-
+   }
+   .select2-container {
+    width: 200px !important;
+  }
+  .pd-panel-body {
+    padding: 0px 7px 3px 3px!important;
+  }
+  .select2-container .select2-selection--single {
+    height: 25px!important;
+  }
+  .select2-container .select2-selection--single .select2-selection__rendered{
+	line-height:25px;
+  }
 </style>
 <div class="">
    <!-- container -->
@@ -78,7 +89,7 @@
                               <div class=" ">
                                  <div class=" form-group col-sm-2  ">
                                     <label class="control-label  lbl-width">Supplier Name</label>
-                                    <div class="input-group input-group-sm   ">	   			
+                                    <div class="input-group input-group-sm">	   			
                                     	<select id='vendorname' name='VENDORNAME' style="width:200px!important;" class='vendorname freezed form-control' required>
                                     	<option value=''></option>
                                     	<?php if(!empty($vendor)){ foreach($vendor as $key => $value){?>
@@ -108,7 +119,7 @@
                                     <label class="control-label lbl-width">Invoice Date</label>
                                     <input type="text" class="form-control  h-20 f-11  freezed" name="INVOICEDATE" id="invoicedate" required>
                                  </div>
-								 <div class="  form-group col-sm-1 ">
+								 <div class="  form-group col-sm-2 ">
                                     <label class="control-label  lbl-width">PO No</label>
                                     <div class="input-group input-group-sm   ">	   			
                                        <input type="text" style="color:#0000ff;" id=" " class="  ip-btn-style f-11 " name=" " placeholder=" "> 								  		 					 
@@ -117,18 +128,13 @@
                                        </span>   
                                     </div>
                                  </div>
-								  <div class="  form-group col-sm-2">
+								  <div class="  form-group col-sm-1">
                                     <label class="control-label   lbl-width">  Date</label>
-                                    <input type="text" class="form-control h-20   " name=" " id=" " required>
+                                    <input type="text" class="form-control h-20" style="padding:0px;" name=" " id="datepicker" readonly>
                                  </div>
 								 
                               </div>
-                              <div class="row">
-                                 
-                              </div>
-                              <div class="row">
-                                 
-                              </div>
+                              
                            </div>
                         </div>
                      </div>
@@ -223,11 +229,11 @@
                                  </td>
                                  
                                  <td style="width:18%">
-                                     <div class="input-group input-group-sm ">
-									   <select id='product_name1' name="PRODUCT_NAME[]" style=" " data-id='1' class='product_name  freezed form-control tabind ' required>
+                                     <div class="input-group input-group-sm product-select ">
+									   <select id='product_name1' name="PRODUCT_NAME[]" style=" " data-id='1' class='product_name   freezed form-control tabind ' required>
                                        	
                                        </select> 								  		 					 
-                                       <span class="ipt input-group-btn " value="click">
+                                       <span class="ipt input-group-btn " value=" ">
                                        <button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-plus"></i></button>
                                        </span>   
                                     </div>
@@ -267,7 +273,7 @@
                                     <input type="text" class=" freezed form-control   h-20 text-right" required readonly name="OverallSubTotal" id="overall_sub_total" >
                                  </div>
 								 <div class=" form-group col-sm-3">
-                                    <label class="control-label  lbl-width">DISCOUNT AMOUNT</label>
+                                    <label class="control-label  lbl-width">DISC AMOUNT</label>
                                     <input type="text" class=" freezed form-control     text-right" readonly name="DiscountAmount" id="discount_amount">
                                  </div>
 								 <div class="form-group col-sm-3 ">
@@ -278,7 +284,8 @@
                                     <label class="control-label  lbl-width">TOTAL EXPENSES</label>
                                     <input type="text" class=" freezed form-control    text-right" name="TOTALEXPENSES" id="total_expenses">
                                  </div>
-                               
+                               </div>
+							   <div class="row">
                                   <div class="form-group col-sm-3">
                                     <label class="control-label  lbl-width">NET AMOUNT</label>
                                     <input type="text" class=" freezed form-control     text-right" required readonly name="NETAMOUNT" id="overall_net_amount">
@@ -299,27 +306,27 @@
                      </div>
 					 
 					 <div class="col-sm-4">
-					   <div class="panel pd-panel  ">
+					   <div class="panel pd-panel h-118 ">
                            <div class="panel-heading pd-panel-head">SEARCH</div>
                            <div class="panel-body pd-panel-body">
 					            
 							  <!-- FROM DATE -->
 							  <div class="row">							 
 					           <div class="form-group col-sm-6">
-                                  <label>From</label>                          
+                                  <label class="control-label  lbl-width">From</label>                          
                                   <input type='text' class="form-control   input-sm fromDate  " id='' onkeyup=" "  name="fromDate"   required>                                                                                                              
 					           </div>
 					           
 					          <!-- TO DATE -->
 					          				   
 					           <div class="form-group col-sm-6">
-                               <label>To</label>                             		           
+                               <label class="control-label  lbl-width">To</label>                             		           
                                     <input type='text' class="form-control toDate " id='' onkeyup=" " name="toDate" required>  
                               </div>					 
 					        </div>
 							<div class=" ">
 							 <div class="form-group">
-							 <button type="button" class="btn btn-primary b1-width  freezed">Search</button>
+							 <button type="button" class="btn btn-primary b1-width pull-right freezed">Search</button>
 							 </div>
 							</div>
 					       
@@ -328,7 +335,11 @@
 					 </div>
 					 
 					 <div class="col-sm-2">
-					     <div class="form-group ">
+					   <div class="panel h-118">
+                         
+                        <div class="panel-body  pd-panel-body">
+					 
+					     <div class="form-group " style="margin-top:20px;">
 						     <div class="form-group col-sm-6"><button type="button" class="btn btn-primary b1-width  freezed" onclick='SaveRegisterForm();' id='save_button' >Save</button></div>
 						     <div class="form-group col-sm-6"><button type="button" class="btn btn-primary b1-width  freezed">Delete</button></div>
 						 </div>
@@ -336,6 +347,8 @@
 						  <div class="form-group ">
 						     <div class="form-group col-sm-6"> <button type="button" class="btn btn-primary b1-width ">Clear</button></div>
 						     <div class="form-group col-sm-6"><button type="button" class="btn btn-primary b1-width  freezed">Close</button></div>
+						 </div>
+						 </div>
 						 </div>
 					  
 					 </div>
@@ -1152,6 +1165,16 @@ $(window).bind('keydown', function(event) {
             break;
         }
     }
+});
+</script>
+
+<script type="text/javascript">
+$(function() {               
+    $("#datepicker" ).datepicker({
+      dateFormat: 'dd-mm-yyyy',
+        defaultDate: new Date()
+    });
+     $("#datepicker").datepicker('setDate', new Date());  
 });
 </script>
  
