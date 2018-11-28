@@ -649,6 +649,7 @@ table.ccancel-cal select {
 	discount_amount = (discount_amount === null) ? 0 : discount_amount;
 	net_amount = (net_amount === null) ? 0 : net_amount;
 	
+	alert(data);
 	
 	if(lab_test_name === 'MasterGroup')
 	{

@@ -381,14 +381,19 @@ tbody#fetch_update_data input {
                                        <input type="radio" name="discount" class="enable-textbox-percentage" value="percentage"  autocomplete="off">%
                                     </label>         
                                   </div>
-		                          <?= $form->field($main, 'overall_dis_percent')->textInput(['class'=>'form-control w-40 total_sub_total  ansrefrsh number','id'=>'total_discountvaluetype','onkeyup'=>'DiscountPercent(this,event);'])->label('Less Discount(%)') ?>
+		                          <?= $form->field($main, 'overall_dis_percent')->textInput(['class'=>'form-control w-40 total_sub_total pr-11 ansrefrsh number','id'=>'total_discountvaluetype','onkeyup'=>'DiscountPercent(this,event);'])->label('Less Discount(%)') ?>
 								  
-								  <div class="input-group-btn" data-toggle="buttons">
+								  
+								  
+				                  
+								  
+       
+                                  <div class="input-group-btn" data-toggle="buttons">
                                      <label class="inp btn btn-default enable-textbox-flat" disabled style="padding:3px!important;">
                                        <input type="radio" name="discount" class="enable-textbox-flat" value="flat"  autocomplete="off">$
                                      </label>         
                                   </div>
-		                          <?= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total  ansrefrsh number','id'=>'total_discountamount','onkeyup'=>'DiscountAmount(this,event);'])->label('Less Disc Amount') ?>
+		                          <?= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total pr-11 ansrefrsh number','id'=>'total_discountamount','onkeyup'=>'DiscountAmount(this,event);'])->label('Less Disc Amount') ?>
                                  </div> 
 							   </td>
 						</tr>
@@ -1159,10 +1164,7 @@ function Patientdetails_modal()
 	$("body").on('click', '.remove_all', function ()
     {
     	$("#fetch_update_data tr").remove();
-    	$("#saved_val").val('');
-    	$("#saves_sucess").removeAttr("disabled");
-    	cleartxt();
-    	clearhead();
+    	window.location.reload(true);
     });
     
     
@@ -1249,9 +1251,6 @@ $(".ipnumber").typeahead({
 	  				$('#hidenmrnumber').val(result)
 	  				
 	  				$('#load1').hide();
-	  				$("#fetch_update_data tr").remove();
-    				$("#saved_val").val('');
-    				cleartxt();
 	  				
 	  			} 
           
@@ -1603,9 +1602,6 @@ function PaidAmountCalculation(data,event)
 	var overall_net_amount=DefaultAmount();
 	var grid_length=$("#fetch_update_data tr").length;
 	
-	$('#total_discountvaluetype').val('');
-	$('#total_discountamount').val('');
-	
 	$(".calculation").each(function() 
 	{
 		var data_addid=$(this).attr('dataid');
@@ -1849,44 +1845,7 @@ function PatientDetailsFetch(data)
         	$modal.modal('hide');
         }
 	});
-}
-
-function clearhead (argument) {
-  $('#mrnumber').val('');
-  $('#pat_name').val('');
-  $('#pat_mob').val('');
-  $('#pat_doctor').val('');
-  $('#pat_insurance').val('');
-  $('#pat_dob').val('');
-  $('#medicines').val('');
-  
-}
-
-function cleartxt (argument) {
-  $('#total_gst_amount').val('');
-  $('#total_sub_total').val('');
-  $('#bill_total').val('');
-  $('#total_discountvaluetype').val('');
-  $('#total_discountamount').val('');
-  $('#total_net_amount').val('');
-  $('#total_paid_amount').val('');
-  $('#total_due_amount').val('');
-  $('#labpaymentprime-authority').val('');
-  $('#remarks').val('');
-  
-}
-	
-	$("body").on('click', '.remove_all', function ()
-    {
-    	
-    	$("#fetch_update_data tr").remove();
-    	$("#saved_val").val('');
-    	$("#saves_sucess").removeAttr("disabled");
-    	cleartxt();
-    	clearhead();
-    	
-    });
-     
+} 
 </script>
 
 

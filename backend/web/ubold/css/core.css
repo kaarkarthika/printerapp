@@ -3229,7 +3229,10 @@ tbody#fetch_update_data input {
 .field-inregistration-bed_no div.help-block,
 .field-inregistration-room_no div.help-block,
 .field-inregistration-dr_unit div.help-block,
-.field-current_dr_unit div.help-block{
+.field-current_dr_unit div.help-block,
+.field-inregistration-category_type div.help-block,
+.field-inregistration-room_type div.help-block,
+.field-inregistration-ip_no div.help-block{
 	display:none!important;
 }
 .form-control.select-custom{padding:0px!important;font-size:11px;}
@@ -3414,3 +3417,9 @@ select.product-select {
 	
 	width:100%!important;
 } 
+.mt-15{
+	margin-top:15px;
+}
+.text-caps{
+	text-transform:uppercase;
+}

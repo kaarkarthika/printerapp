@@ -8,6 +8,8 @@ use yii\helpers\Url;
 /* @var $model backend\models\InCategorygroup */
 /* @var $form yii\widgets\ActiveForm */
 //	echo"<pre>";print_r($room_typeval); die;
+
+
 ?>
 
 <div class="in-categorygroup-form" style="min-height:350px">
@@ -76,7 +78,7 @@ use yii\helpers\Url;
     	  </select>
     		</div>
 					</td>
-					<td><input type='text' id="dr_price" style='text-align:right' class="dr_price price_value" onkeyup="price_val" name="dr_price" required="required" onkeypress="javascript:return isNumber(event)" value="<?php echo $cat_ref['dr_visit_price']; ?>" /></td>
+					<td><input type='text' id="dr_price" style='text-align:right' class="dr_price price_value" onkeyup="price_val();" name="dr_price" required="required" onkeypress="javascript:return isNumber(event)" value="<?php echo $cat_ref['dr_visit_price']; ?>" /></td>
 				</tr>
 				<tr>
 					<td>Nurse Charge</td>
@@ -95,13 +97,29 @@ use yii\helpers\Url;
 			    	  
 			    		</select> </div>
 			    	</td>
-					<td><input type='text' style='text-align:right' id="nurse_price" onkeyup="price_val" class="nurse_price price_value" name="nurse_price" required="required" onkeypress="javascript:return isNumber(event)" value="<?php echo $cat_ref['nurse_price']; ?>" /></td>
+					<td><input type='text' style='text-align:right' id="nurse_price" onkeyup="price_val();" class="nurse_price price_value" name="nurse_price" required="required" onkeypress="javascript:return isNumber(event)" value="<?php echo $cat_ref['nurse_price']; ?>" /></td>
 					
+				</tr>
+				<tr>
+					<td>Service Charge</td>
+					<td><select id="hsncode_service" class="selectpicker hsncode_service" name="hsncode_service" required="required" style="color: #fff !important;" size="4" data-style="btn-default btn-custom cus-fld" data-live-search="true" aria-required="true" tabindex="-98" aria-invalid="false" required >
+						<?php  
+			    		if(!empty($tax_grouping)){  
+			    				 foreach($tax_grouping as $key => $value ){ 
+			    				 	if($room_typeval['3']==$value){  ?>
+			    				 		<option value="<?php echo $key; ?>" selected><?php echo $value;?></option>
+			    				<?php 	} else{  
+			    				 	?>
+								<option value="<?php echo $key; ?>"><?php echo $value;?></option>	
+							<?php } } } ?>
+			    	  
+			    		</select></td>
+					<td><input type='text' style='text-align:right' id="service_price" class="service_price price_value" onkeyup="price_val();" name="service_price" value="<?php echo $cat_ref['service_charge'] ?>"  required="required"/></td>
 				</tr>
 				<tr>
 					<td>Room Price</td>
 					<td><input type='text' style='text-align:right' id="room_hsncode" class="room_price price_value" name="room_hsncode" required="required" readonly=""  value="<?php echo $room_typeval['1'] ?>"/></td>
-					<td><input type='text' style='text-align:right' id="room_price" class="room_price price_value" name="room_price" required="required" readonly=""  value="<?php echo $room_typeval['0'] ?>" /></td>
+					<td><input type='text' style='text-align:right' id="room_price" class="room_price price_value" name="room_price" onkeyup="price_val();" required="required"   value="<?php echo $cat_ref['room_price'] ?>" /></td>
 				</tr>	
 				<tr>
 					<td>Total</td>
@@ -166,13 +184,48 @@ div#hsncode .btn-custom.cus-fld {
 	    });
 	  });	
 	  
-	  $(".price_value").keyup(function(){
+	  /*$(".price_value").keyup(function(){
 	 	 	var dr_price=parseFloat($("input#dr_price").val());
 	  	 	var nur_price=parseFloat($("input#nurse_price").val());
 	  	 	var room_price=parseFloat($("input#room_price").val());
-	  	 	var res=(nur_price+dr_price+room_price);
+	  	 	var service_price=parseFloat($("input#service_price").val());
+	  	 	
+	  	 	var res=(nur_price+dr_price+room_price+service_price);
 	  	   $("input#total").val(res); 
-		});
+		});*/
+		
+		
+		function price_val()
+		{
+			
+			var dr_price=parseFloat($("input#dr_price").val());
+	  	 	var nur_price=parseFloat($("input#nurse_price").val());
+	  	 	var room_price=parseFloat($("input#room_price").val());
+	  	 	var service_price=parseFloat($("input#service_price").val());
+	  	 	
+	  	 	if(isNaN(dr_price))
+	  	 	{
+	  	 		dr_price=0;
+	  	 	}
+	  	 	
+	  	 	if(isNaN(nur_price))
+	  	 	{
+	  	 		nur_price=0;
+	  	 	}
+	  	 	
+	  	 	if(isNaN(room_price))
+	  	 	{
+	  	 		room_price=0;
+	  	 	}
+	  	 	
+	  	 	if(isNaN(service_price))
+	  	 	{
+	  	 		service_price=0;
+	  	 	}
+	  	 	
+	  	 	var res=(nur_price+dr_price+room_price+service_price);
+	  	   	$("input#total").val(res); 
+		}
 
 	  $("input#nurse_price").change(function() {
 	  	 var dr_price=parseFloat($("input#dr_price").val());

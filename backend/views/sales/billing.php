@@ -23,6 +23,8 @@
 	$insurance=Insurance::find()->where(['is_active'=>1])->asArray()->all();
 							
    ?>
+   
+   
    <script type="text/javascript" src="<?php echo Url::base(); ?>/boot/bootstrap3-typeahead.js"></script>
    <script type="text/javascript" src="<?php echo Url::base(); ?>/boot/bootstrap3-typeahead.min.js"></script>
    <link rel="stylesheet" type="text/css" media="screen" href="<?php echo Url::base(); ?>/jq_grid/css/datatables.min.css" />
@@ -4773,14 +4775,7 @@ function PaidAmountCalculation(data,event)
         Alertment('No Product added in Grid');
         $('#total_discountvaluetype').val('');
       }
-  //  }
-  /*  else
-    {
-      //alert('Select Discount Type');
-      Alertment('Select Discount Type');
-      $('#total_discountvaluetype').val('');
-    }
-    */
+  
  }
  
  

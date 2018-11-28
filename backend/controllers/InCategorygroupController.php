@@ -95,6 +95,14 @@ class InCategorygroupController extends Controller
 				$model_cat->dr_visit_hsn_code=$_POST['hsncode_dr'];
 				$model_cat->nurse_price=$_POST['nurse_price'];
 				$model_cat->nurse_hsn_code=$_POST['hsncode_nurse'];
+				
+				$model_cat->service_charge=$_POST['service_price'];
+				$model_cat->service_hsn=$_POST['hsncode_service'];
+				
+				$model_cat->room_price=$_POST['room_price'];
+				$model_cat->room_hsn=$_POST['hsncode_service'];
+				
+				
 				$model_cat->created_date = date('Y-m-d H:i:s');
 				$model_cat->user_id = $session['user_id'];
 				$model_cat->user_role	= $session['authUserRole'];
@@ -166,6 +174,13 @@ class InCategorygroupController extends Controller
 				$model_catup->dr_visit_hsn_code=$_POST['hsncode_dr'];
 				$model_catup->nurse_price=$_POST['nurse_price'];
 				$model_catup->nurse_hsn_code=$_POST['hsncode_nurse'];
+				
+				$model_catup->service_charge=$_POST['service_price'];
+				$model_catup->service_hsn=$_POST['hsncode_service'];
+				
+				$model_catup->room_price=$_POST['room_price'];
+				$model_catup->room_hsn=$_POST['hsncode_service'];
+				
 				$model_catup->user_id = $session['user_id'];
 				$model_catup->user_role= $session['authUserRole'];
          		$model_catup->ipaddress = $_SERVER['REMOTE_ADDR'];

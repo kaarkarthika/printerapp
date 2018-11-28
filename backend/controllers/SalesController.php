@@ -680,7 +680,8 @@ public function actionCreate() {
 						$result_string.='<th  class="text-center">Batch</th>';
 						$result_string.='<th  class="text-center" width="10%">Mfg Date</th>';
 						$result_string.='<th  class="text-center">Exp Date</th>';
-						$result_string.='<th  class="text-center">Price/Unit</th>';
+						//$result_string.='<th  class="text-center">Price/Unit</th>';
+						$result_string.='<th  class="text-center">MRP/Unit</th>';
 						$result_string.='<th  class="text-center">Availability</th>';
 						$result_string.='<th  class="text-center">Required Qty</th>';
 						
@@ -770,7 +771,10 @@ public function actionCreate() {
 								
 								
 								
-								$result_string.='<th class="text-center" id="mrp_id'.$key['stockresponseid'].'">'.$calculation.'</th>';
+								$result_string.='<th class="text-center hide" id="mrp_id'.$key['stockresponseid'].'">'.$calculation.'</th>';
+								
+								$result_string.='<th  class="text-center" id="mrp_showing'.$key['stockresponseid'].'">'.$mrp.'</th>';	
+								
 								$result_string.='<th  class="text-center" id="quanity_id'.$key['stockresponseid'].'">'.$key['total_no_of_quantity'].'</th>';
 								
 								$result_string.='<th width="14%">';
@@ -869,8 +873,13 @@ public function actionCreate() {
 								$result_string.='<th class="text-center" id="expire_date_id'.$key['stockresponseid'].'">'.date('d-m-Y',strtotime($key['expiredate'])).'</th>';
 								
 								//$result_string.='<th class="text-center" id="mrp_id'.$key['stockresponseid'].'">'.$key['mrpperunit'].'</th>';
-								$result_string.='<th class="text-center" id="mrp_id'.$key['stockresponseid'].'">'.$calculation.'</th>';
+								$result_string.='<th class="text-center hide" id="mrp_id'.$key['stockresponseid'].'">'.$calculation.'</th>';
+								
+								$result_string.='<th  class="text-center" id="mrp_showing'.$key['stockresponseid'].'">'.$mrp.'</th>';	
+								
 								$result_string.='<th  class="text-center" id="quanity_id'.$key['stockresponseid'].'">'.$key['total_no_of_quantity'].'</th>';
+								
+								
 								
 								$result_string.='<th width="14%">';
 								$valop=$tab_num+$sl_no;
@@ -5840,11 +5849,12 @@ $headertable.='</table><p></p>';
 				$tbl1.='</tr>';
 				$tbl1.='</table>';
 				$tbl1.='<table style="border:1px solid #000;padding:5px 10px;" class="replace_pro" ALIGN="left"><tr>
-				<td style="width:7%;text-align:center"><b>SI.No </b></td>';
-				$tbl1.='<td style="width:33%;"><b> Product Name </b></td>';
-				$tbl1.='<td style="width:15%;text-align:center"><b> BATCHNO </b></td>';
-				$tbl1.='<td style="width:15%;text-align:center"><b> EXPDT </b></td>';
-				$tbl1.='<td style="width:15%;text-align:center"><b> QTY </b></td>';
+				<td style="width:5%;text-align:center"><b>SI.No </b></td>';
+				$tbl1.='<td style="width:25%;"><b> Product Name </b></td>';
+				$tbl1.='<td style="width:13%;text-align:center"><b> BATCHNO </b></td>';
+				$tbl1.='<td style="width:13%;text-align:center"><b> EXPDT </b></td>';
+				$tbl1.='<td style="width:14%;text-align:center"><b> QTY </b></td>';
+				$tbl1.='<td style="width:15%;text-align:center"><b> RATE </b></td>';
 				$tbl1.='<td style="width:15%;text-align:center"><b> AMOUNT </b></td>';
 				
 				$tbl1.='</tr>';
@@ -5857,6 +5867,7 @@ $headertable.='</table><p></p>';
 					$tbl1.='<td style="text-align:center" >'.$value['batchnumber'].'</td>';
 					$tbl1.='<td style="text-align:center">'.date('d-m-Y',strtotime($value['expiredate'])).'</td>';
 					$tbl1.='<td style="text-align:center">'.$value['productqty'].'</td>';
+					$tbl1.='<td style="text-align:center">'.$value['mrp_per_unit'].'</td>';
 					$tbl1.='<td style="text-align:right">'.$value['mrp'].'</td></tr>';
 					$i++;
 				}
@@ -6254,9 +6265,6 @@ $ot[22]=$sales['remarks'];
 
 return json_encode($ot);
 
-	}else{
-		
-		return json_encode($ot);
 	}
 }
 

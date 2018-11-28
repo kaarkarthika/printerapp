@@ -10,7 +10,7 @@ use backend\models\LabTesting;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Lab Payment Primes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-echo"<pre>"; print_r($model); die;
+//echo"<pre>"; print_r($model); die;
 ?>
 <style>
 

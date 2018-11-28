@@ -33,6 +33,7 @@ use backend\models\PurchaseLog;
 use backend\models\TaxgroupingLog;
 use backend\models\PurchaseData;
 use backend\models\AutoidTable;
+use yii\db\Query;
 
 class StockmasterController extends Controller
 {
@@ -1486,6 +1487,7 @@ if($_POST)
 					$purchase_log->	vendor_inv_no=$stock_master->vendor_inv_no;
 					$purchase_log->	composition_id=$stock_master->compositionid;
 					$purchase_log->	branch_id=$stock_response->branch_id;
+					$purchase_log->	batch_number=$stock_master->batchnumber;
 					$purchase_log->	received_qty=$stock_response->receivedquantity;
 					$purchase_log->	total_qty=$stock_response->total_no_of_quantity;
 					$purchase_log->	unit_id=$stock_master->unitid;
@@ -1621,6 +1623,152 @@ else
 			return json_encode($fetch_array, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 		}		
 			
+	}
+	
+	public function actionPurchasebilldetails($from_date,$todate)
+    {
+    	
+		$from_date=date('Y-m-d',strtotime($from_date));
+		$todate=date('Y-m-d',strtotime($todate));
+		
+		
+    	$sfd=0;
+    	if(isset($_POST['start']) && $_POST['start']!="0"){
+    		$sfd=$_POST['start'];
+    	}
+    	$draw=0;
+		if(isset($_POST['draw']) && $_POST['draw']!=""){
+		  $draw=$_POST['draw'];
+		}
+		$length=10;
+		if(isset($_POST['length']) && $_POST['length']!=""){
+		  $length=$_POST['length'];
+		}
+		$s_val='';
+		if(isset($_POST['search'])){
+		  $s_val=$_POST['search']['value'];
+		}
+		
+		
+		
+		
+		$query = new Query;
+		$query	->select([
+        'purchase_data.id','purchase_data.bill_no','purchase_data.invoice_no','vendor.vendorname','purchase_data.invoice_date'])  
+        ->from('purchase_data')
+        ->join('LEFT OUTER JOIN', 'vendor',
+            'purchase_data.vendor =vendor.vendorid')		
+        ->where(['BETWEEN','purchase_data.invoice_date',$from_date,$todate])
+        ->andWhere(['or',
+		['like','purchase_data.bill_no',$s_val],
+		['like','purchase_data.invoice_no',$s_val],
+		['like','vendor.vendorname',$s_val]]
+		)
+        ->limit(100000)->all(); 
+		$command = $query->createCommand();
+		$data = $command->queryAll();
+		
+		$query_da = new Query;
+		$query_da	->select([
+        'purchase_data.id','purchase_data.bill_no','purchase_data.invoice_no','vendor.vendorname','purchase_data.invoice_date'])  
+        ->from('purchase_data')
+        ->join('LEFT OUTER JOIN', 'vendor',
+            'purchase_data.vendor =vendor.vendorid')		
+        ->where(['BETWEEN','purchase_data.invoice_date',$from_date,$todate])
+        ->andWhere(['or',
+		['like','purchase_data.bill_no',$s_val],
+		['like','purchase_data.invoice_no',$s_val],
+		['like','vendor.vendorname',$s_val]]
+		)
+        ->limit(100000)->all(); 
+		$command1 = $query_da->createCommand();
+		$data1 = $command1->queryAll();
+		//echo '<pre>';
+    	//echo $query->createCommand()->getRawSql();
+		//die;
+		
+			$response=array();
+			
+			if(!empty($data1))
+			{
+				$fetch_array=array();
+				$i=0;
+				$responce['draw']=$draw;
+				$responce['recordsTotal']= $length;
+				$responce['recordsFiltered']= count($query);
+				foreach ($data1 as $key => $value) 
+				{
+					// $responce->rows[$i]=array('mr_no'=>$value['mr_no'],'patientname'=>$value['patientname'],
+													// 'par_relationname'=>$value['par_relationname'],'pat_mobileno'=>$value['pat_mobileno']);
+					$responce['data'][]=array("DT_RowId"=>$value['id'],"purchaseno"=>$value['bill_no'],"invno"=>$value['invoice_no'],"suppliername"=>$value['vendorname'],"invoice_date"=>date('d-m-Y',strtotime($value['invoice_date'])));
+					$i++;
+				}
+			
+				
+				
+			}
+
+			return json_encode($responce);
+			die;
+	}
+
+	public function actionBilldetailsfetch($id)
+	{
+		if($id != '')
+		{
+			$purchase_data=PurchaseData::find()->where(['id'=>$id])->asArray()->one();
+			
+			$vendor=Vendor::find()->where(['vendorid'=>$purchase_data['vendor']])->asArray()->one();
+			$vendor_branch=VendorBranch::find()->where(['vendor_branchid'=>$purchase_data['vendor_branch_id']])->asArray()->one();
+			
+			
+			$purchase_data_fetch=PurchaseLog::find()->where(['purchase_data_id'=>$id])->asArray()->all();
+			
+			$product_map=ArrayHelper::map($purchase_data_fetch,'purchase_id','productid');
+			$product=Product::find()->where(['IN','productid',$product_map])->asArray()->all();
+			$product_index=ArrayHelper::index($product,'productid');
+			
+if(!empty($purchase_data_fetch))
+{
+	$fetch_array=array();
+	$tbl='';
+	foreach ($purchase_data_fetch as $key => $value) 
+	{
+		$tbl.='<tr id="tr_fetch_table1" class="tr_fetch_table" data-id="1">';
+        $tbl.='<td style="width:6%"><button type="button" onclick="Add_Grid();" class="freezed add_grid btn btn-xs btn-success" disabled>Add</button>';
+        $tbl.='<button type="button" data-id="1" onclick="Del_Grid(1);" class="freezed del_grid btn btn-xs btn-success" disabled>Del</button></td>';
+        $tbl.='<td style="width:18%"><div class="input-group input-group-sm product-select ">';
+		$tbl.='<select id="product_name1" name="PRODUCT_NAME[]" style=" " data-id="1" class="product_name   freezed form-control tabind " disabled required="">';
+        $tbl.='<option value='.$product_index[$value['productid']]['productid'].'>'.$product_index[$value['productid']]['productname'].'</option>';           	
+        $tbl.='</select>'; 								  		 					 
+        $tbl.='<span class="ipt input-group-btn " value=" ">';
+        $tbl.='<button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-plus"></i></button></span></div></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['except_free_qty'].' id="quantity1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="Quantity(this.value,event,1);" class=" freezed quantity text-right ip-btn-style f-11" name="QUANTITY[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['receivedfreequantity'].' id="free_quantity1" data-id="1" onkeypress="return isNumberKey(event);" onkeyup="FreeQuantity(this.value,event,1);" class=" freezed free_quantity text-right ip-btn-style f-11" name="FREE_QUANTITY[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['purchase_no_of_unit'].' id="pack_size1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed pack_size text-right ip-btn-style f-11" name="PACK_SIZE[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['received_qty'].' id="total_unit1" data-id="1" readonly="" required="" onkeypress="return isNumberKey(event);" class=" freezed total_unit text-right ip-btn-style f-11" name="TOTAL_UNIT[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value='.$value['priceperquantity'].' id="rate_per_unit1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="RateCalculation(this.value,event,1);" class=" freezed rate_per_unit text-right ip-btn-style f-11" name="RATE_PER_UNIT[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value='.$value['batch_number'].'  id="batch_no1" data-id="1" required="" class=" freezed batch_no ip-btn-style f-11" name="BATCH_NO[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value='.date('d-m-Y',strtotime($value['expiredate'])).' id="expired_date1" data-id="1" required="" onkeypress="return isNumberKey(event);" class=" freezed expired_date ip-btn-style f-11" name="EXPIRED_DATE[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['discountpercent'].' id="discount_percent1" data-id="1" onkeypress="return isNumberKey(event);" onkeyup="DiscountCalculation(this.value,event,1);" class=" freezed discount_percent text-right ip-btn-style f-11" name="DISCOUNT_PERCENT[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['discountvalue'].' id="discount_amount1" data-id="1" readonly="" onkeypress="return isNumberKey(event);" class=" freezed discount_amount text-right ip-btn-style f-11" name="DISCOUNT_AMOUNT[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['gstpercent'].' id="gst_percent1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed gst_percent text-right ip-btn-style f-11" name="GST_PERCENT[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['gstvalue'].' id="gst_amount1" data-id="1" readonly="" onkeypress="return isNumberKey(event);" class=" freezed gst_amount text-right ip-btn-style f-11" name="GST_AMOUNT[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value='.$value['mrpperunit'].' id="mrp1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="MRPCalculation(this.value,event,1);" onblur="MRPCalculation(this.value,event,1);" class=" freezed mrp ip-btn-style text-right f-11" name="MRP[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value='.$value['purchase_price'].' id="total_amount1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed total_amount text-right ip-btn-style f-11" name="TOTALAMOUNT[]">';
+        $tbl.='<input type="hidden" id="sub_total_amount1" data-id="1" class="sub_total_amount text-right ip-btn-style f-11" name="SUBTOTALAMOUNT[]"></td></tr>';
+    	
+	}
+
+	
+	$fetch_array[0]=$tbl;
+	$fetch_array[1]=$purchase_data;
+	$fetch_array[2]=$vendor;
+	$fetch_array[3]=$vendor_branch;
+	
+	return json_encode($fetch_array, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+}
+		}
 	}
 	
 }

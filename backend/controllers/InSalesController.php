@@ -49,6 +49,11 @@ use backend\models\InSaledetail;
 use backend\models\InRegistration;
 use backend\models\InReturndetail;
 use backend\models\InBedno;
+use backend\models\Specialistdoctor;
+use backend\models\InCategorygroup;
+use backend\models\InRoomtypes;
+use backend\models\InCategory;
+
 /**
  * InSalesController implements the CRUD actions for InSales model.
  */
@@ -596,49 +601,52 @@ class InSalesController extends Controller
         
         
         $fetch_element=array();
-        $insurance_id='';$insurances_name='';$id='';$name='';
-        $subvisit=InRegistration::find()->where(['ip_no'=>$mrnumber])->orderBy(['autoid' => SORT_DESC])->one();
         
-        if(!empty($subvisit))
+        $in_registeration=InRegistration::find()->where(['ip_no'=>$mrnumber])->orderBy(['autoid' => SORT_DESC])->one();
+        
+        if(!empty($in_registeration))
         {
-            //$subvisit=SubVisit::find()->where(['mr_number'=>$mrnumber])->orderBy(['sub_id' => SORT_DESC])->one();
-            $patientdata=Newpatient::find()->where(['mr_no'=>$subvisit->mr_no])->one();
-            
-            
-                $patient_name=$patientdata->patientname;
-                $patient_mobile_number=$patientdata->pat_mobileno;
-                $consultant_doctor=$subvisit->consultant_dr;
-                $doctor_name=Physicianmaster::find()->where(['id'=>$consultant_doctor])->one();
-                if(!empty($doctor_name))
-                {
-                    $doctor_name_fetch=$doctor_name->physician_name;
-                }
-                $insurance_type=$subvisit->type;
-                if($insurance_type != '')
-                {
-                    $insurance=Insurance::find()->where(['insurance_typeid'=>$insurance_type])->andWhere(['is_active'=>1])->one();
-                    $insurance_id=$insurance->insurance_typeid;
-                    $insurances_name=$insurance->insurance_type;
-                }
-                
-                $dob=date('d-m-Y',strtotime($patientdata->dob));
-                
-                $fetch_element[0]=$patient_name;
-				$fetch_element['mrnumber']=$patientdata->mr_no;
-                $fetch_element[1]=$patient_mobile_number;
-                $fetch_element[2]=$doctor_name_fetch;
-                $fetch_element[3]=$dob;
-                $fetch_element[4]="<option value='$insurance_id'>$insurances_name</option>";
-                $fetch_element[5]='<option value='.$patientdata->pat_sex.'>'.$patientdata->pat_sex.'</option>';
-                $fetch_element[6]=$patientdata->pat_address;
-                $fetch_element[7]=$patientdata->temporary_blocked;
-                $fetch_element[8]=$subvisit->mr_no;
-                $fetch_element[9]=$subvisit->ip_no;
-                return json_encode($fetch_element);
-            
+           $in_registeration_active=InRegistration::find()->where(['ip_no'=>$mrnumber])->andWhere(['is_active'=>1])->orderBy(['autoid' => SORT_DESC])->asArray()->one();
+		 
+		   if(!empty($in_registeration_active['category_type']))
+			{
+				$in_categorygroup=InCategorygroup::find()->where(['autoid'=>$in_registeration_active['category_type']])->one();
+				
+				$in_roomtypes_map=ArrayHelper::map(InRoomtypes::find()->asArray()->all(),'autoid','room_types');
+				$in_category_map=ArrayHelper::map(InCategory::find()->asArray()->all(),'autoid','category_name');
+				
+				$category=$in_category_map[$in_categorygroup['category_id']];
+				$roomtype=$in_roomtypes_map[$in_categorygroup['room_typeid']];	
+			
+			}
+		 	
+		   if(!empty($in_registeration_active))
+		   {
+			   $insurnce=ArrayHelper::map(Insurance::find()->asArray()->all(),'insurance_typeid','insurance_type');
+			   $patient_type=ArrayHelper::map(PatientType::find()->asArray()->all(),'type_id','patient_type');
+			   $physician_master=ArrayHelper::map(Physicianmaster::find()->asArray()->all(),'id','physician_name');   	
+		 	   $specialistdoctor=ArrayHelper::map(Specialistdoctor::find()->asArray()->all(),'s_id','specialist');   	
+		 	   $new_patient=Newpatient::find()->where(['patientid'=>$in_registeration['mr_no']])->asArray()->one();   	
+		 	   	
+				
+	           $fetch_element[0]=$in_registeration_active;
+			   $fetch_element[1]=$insurnce;
+			   $fetch_element[2]=$patient_type;
+			   $fetch_element[3]=$physician_master;
+			   $fetch_element[4]=$specialistdoctor;
+			   $fetch_element[5]=$new_patient;
+			   $fetch_element[6]=$this->Getagebriefscript($in_registeration['dob']);
+			   $fetch_element[7]=array('1'=>$in_registeration_active['paytype'],'2'=>$in_registeration_active['floor_no'],'3'=>strtoupper($category),'4'=>strtoupper($roomtype));
+	           return json_encode($fetch_element,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);   
+	       }
+		   else 
+		   {
+				return 'discharge';	
+		   } 
             
         }
-        else {
+        else 
+        {
             return 'invalid';       
         }   
     }
@@ -669,7 +677,7 @@ class InSalesController extends Controller
     
     
     
-    public function actionMedicinefetch($product_id)
+  /*  public function actionMedicinefetch($product_id)
     {
             $Stock_code=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['productid'=> $product_id]) -> all();
                 
@@ -962,7 +970,347 @@ class InSalesController extends Controller
             return json_encode($result_string);
         
             
-    }
+    }*/
+    
+    
+    
+    public function actionMedicinefetch($product_id)
+	{
+			$Stock_code=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['productid'=> $product_id]) -> all();
+				
+			if(!empty($Stock_code))
+			{	
+				foreach ($Stock_code as $key)
+				{
+					$stock_p_id[]=$key['stockid'];
+				}
+				
+				//Session of Branch Id
+				$session = Yii::$app->session;
+				$branch_id=$session['branch_id'];
+				
+				$overallstock=Stockresponse::find()->where(['IN','stockid',$stock_p_id])->andWhere(['!=', 'total_no_of_quantity', 0])->andWhere(['branch_id'=>$branch_id])->orderBy(['expiredate'=>SORT_ASC])->asArray()->all();
+				//$overallstock=Stockresponse::find()->where(['IN','stockid',$stock_p_id])->andWhere(['!=', 'total_no_of_quantity', 0])->orderBy(['expiredate'=>SORT_ASC])->asArray()->all();
+					//print_r($stock_p_id);die;
+				$productlist=Product::find()->where(['is_active'=>1])-> andWhere(['productid'=> $product_id])->asArray()->one();
+				
+				$tax_groupinglog=TaxgroupingLog::find()->where(['is_active'=>1])-> andWhere(['taxgroupid'=> $productlist['hsn_code']])->asArray()->one();
+				
+				
+				//$unitlist=ArrayHelper::map(Unit::find()->where(['is_active'=>1])->andWhere(['unitname'=>$productlist['product_typeid']])->asArray()->all(), 'unitid', 'unitvalue');
+			
+				if(!empty($productlist))
+				{
+					$productid=$productlist['productid'];
+					$productname=$productlist['productname'];
+					$composition_id=$productlist['composition_id'];
+					$Composition=Composition::find()->where(['is_active'=>1])-> andWhere(['composition_id' => $composition_id]) ->asArray()->one();
+					if(!empty($Composition))
+					{
+						$composition_name=$Composition['composition_name'];
+						
+					}
+				}
+				
+				
+				
+				
+				if(!empty($overallstock))
+				{
+						$result_string='';
+							
+						$sl_no=1;
+						$tab_num=500;
+						
+						
+						$result_string.='<div class="table-responsive"><table class="table table-bordered table-striped">';
+						$result_string.='<thead><tr>';
+						$result_string.='<th  width="10%" class="text-center">#</th>';
+						$result_string.='<th  class="text-center">Batch</th>';
+						$result_string.='<th  class="text-center" width="10%">Mfg Date</th>';
+						$result_string.='<th  class="text-center">Exp Date</th>';
+						//$result_string.='<th  class="text-center">Price/Unit</th>';
+						$result_string.='<th  class="text-center">MRP/Unit</th>';
+						$result_string.='<th  class="text-center">Availability</th>';
+						$result_string.='<th  class="text-center">Required Qty</th>';
+						
+						$result_string.='<th  class="text-center">Product Qty</th>';
+						$result_string.='<th  class="text-center">Total Units</th>';
+						$result_string.='</tr></thead>';
+						$result_string.='<tbody>';		
+						
+						$tot_avail_qty;
+						$prime_id=array();	
+						foreach ($overallstock as $key) 
+						{
+							
+							$unitlist=ArrayHelper::map(Unit::find()->where(['is_active'=>1])->andWhere(['unitid'=>$key['unitid']])->asArray()->all(), 'unitid', 'unitvalue');
+							if(!empty($key))
+							{
+								
+								$date_now=date('Y-m-d');
+								$date_expire=date('Y-m-d',strtotime($key['expiredate']));
+								$date_exp=date_create($date_expire);
+								$threemonth_expire=date_sub($date_exp,date_interval_create_from_date_string("90 days"));
+								$threemonth_expire1=date_format($threemonth_expire,"Y-m-d");
+								
+								
+								
+								if ($key['total_no_of_quantity'] < 0)
+								{
+								
+								}
+								else 
+								{
+								if($threemonth_expire1 <= $date_now)
+								{
+									
+								$Stock_brand=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['stockid'=> $key['stockid']]) -> one();
+								
+								//New Unit Code
+								//$percentage=$tax_groupinglog['tax'];
+								//$mrp=$key['mrpperunit'];
+								//$multi=100*$mrp;
+								//$newprice=100*$mrp/(100+$percentage);
+								//$calculation = number_format($newprice,2, '.', '');
+								
+								if($key['is_tablet'] == 1)
+								{
+									//New Unit Code
+									$percentage=$tax_groupinglog['tax'];
+									$mrp=$key['mrpperunit']/$key['size_qty'];
+									$newprice=100*$mrp/(100+$percentage);
+									$calculation = number_format($newprice,2, '.', '');
+								}
+								else 
+								{
+									//New Unit Code
+									$percentage=$tax_groupinglog['tax'];
+									$mrp=$key['mrpperunit'];
+									$newprice=100*$mrp/(100+$percentage);
+									$calculation = number_format($newprice,2, '.', '');
+								}
+								
+								
+								
+								
+								$result_string.='<tr class="exp">';
+								
+								$result_string.='<th class="text-center">'.$sl_no.'</th>';
+								$result_string.='<th class="hide" id="prd_name'.$key['stockresponseid'].'">'.$productname."/".$composition_name.'</th>';
+								
+								$result_string.='<input type="hidden" class="form-control" name="stock_id_hide[]" data-id='.$key['stockresponseid'].' id="stock_id'.$key['stockresponseid'].'" value='.$key['stockid'].'>';
+								$result_string.='<input type="hidden" class="form-control" name="product_hide[]" data-id='.$key['stockresponseid'].' id="product_id'.$key['stockresponseid'].'" value='.$productid.'>';
+								$result_string.='<input type="hidden" class="form-control" name="brand_hide[]" data-id='.$key['stockresponseid'].' id="brandcode_id'.$key['stockresponseid'].'" value='.$Stock_brand->brandcode.'>';
+								$result_string.='<input type="hidden" class="form-control" name="stockcode_hide[]" data-id='.$key['stockresponseid'].' id="stockcode_id'.$key['stockresponseid'].'" value='.$Stock_brand->stockcode.'>';
+								$result_string.='<input type="hidden" class="form-control" name="composition_hide[]" data-id='.$key['stockresponseid'].' id="composition_id'.$key['stockresponseid'].'" value='.$Stock_brand->compositionid.'>';
+								$result_string.='<input type="hidden" class="form-control" name="unitid_hide[]" data-id='.$key['stockresponseid'].' id="unit_id'.$key['stockresponseid'].'" value='.$Stock_brand->unitid.'>';
+								$result_string.='<input type="hidden" class="form-control" name="mrp_per_qty_hide[]" data-id='.$key['stockresponseid'].' id="mrp_per_qty_hide'.$key['stockresponseid'].'" value='.$mrp.'>';
+									
+								$result_string.='<th class="hide prd_name1">'.$productname."/".$composition_name.'</th>';
+								$result_string.='<th class="hide" id="batchnumber'.$key['stockresponseid'].'">'.$key['batchnumber'].'</th>';
+								$result_string.='<th class="hide" id="total_qty'.$key['stockresponseid'].'">'.$key['total_no_of_quantity'].'</th>';
+								
+								$result_string.='<th class="hide" id="gst_sale_percent'.$key['stockresponseid'].'">'.$percentage.'</th>';
+								
+								
+								$result_string.='<th  id="batch_id'.$key['stockresponseid'].'">'.$key['batchnumber'].'</th>';
+								$result_string.='<th class="text-center" id="manu_date_id'.$key['stockresponseid'].'">'.date('d-m-Y',strtotime($key['manufacturedate'])).'</th>';
+								$result_string.='<th class="text-center" id="expire_date_id'.$key['stockresponseid'].'">'.date('d-m-Y',strtotime($key['expiredate'])).'</th>';
+								
+								
+								
+								$result_string.='<th class="text-center hide" id="mrp_id'.$key['stockresponseid'].'">'.$calculation.'</th>';
+								
+								$result_string.='<th  class="text-center" id="mrp_showing'.$key['stockresponseid'].'">'.$mrp.'</th>';	
+								
+								$result_string.='<th  class="text-center" id="quanity_id'.$key['stockresponseid'].'">'.$key['total_no_of_quantity'].'</th>';
+								
+								$result_string.='<th width="14%">';
+								$valop=$tab_num+$sl_no;
+								if($valop == 501)
+								{
+									$result_string.='<input type="text" class="form-control required_qty tabenter_acc tabenter'.$valop.' number focus_first " name="required_qty_enter[]" data-id='.$key['stockresponseid'].' id="required_id'.$key['stockresponseid'].'"  tabindex="'.$valop.'">';	
+								}
+								else
+								{
+									$result_string.='<input type="text" class="form-control required_qty  tabenter_acc tabenter'.$valop.' number" name="required_qty_enter[]" data-id='.$key['stockresponseid'].' id="required_id'.$key['stockresponseid'].'"  tabindex="'.$valop.'">';									
+								}
+								$valop=$valop+1;
+								
+								
+								$result_string.='<input id="getunitvalue'.$key['stockresponseid'].'"  type="hidden" name="selected_value" data-bind="bs-drp-sel-value" value="">';
+								
+								$result_string.='</th>';
+								
+								$result_string.='<th width="14%">';
+							
+								$result_string.='<select  id="data_unit'.$key['stockresponseid'].'" class="form-control unitvalue tabenter_acc tabenter'.$valop.'" data-unit="'.$key['stockresponseid'].'" role="menu" tabindex="'.$valop.'">';
+								
+								foreach ($unitlist as $key1 => $val) 
+								{
+									    $result_string.='<option data-unit-name="'.$val.'" value="'.$key1.'">'.$val.'</option>';		
+									
+								}
+								$result_string.='</select>';
+								
+								$result_string.='<span id="validated_field'.$key['stockresponseid'].'" style="color:red;display:none">Req.Quantity type</span>';
+								$result_string.='<input id="data_no_of_unit'.$key['stockresponseid'].'"  type="hidden" class="no_of_unit" >';
+								$result_string.='<input id="data-unit-name'.$key['stockresponseid'].'"  type="hidden">';
+								
+								$result_string.='</th>';
+								
+								$result_string.='<th width="15%">';
+								
+								
+								$result_string.='<input id="total_unit'.$key['stockresponseid'].'" data-id='.$key['stockresponseid'].'  type="text" class="form-control total_unit" readonly>';
+								
+								$result_string.='</th>';
+								
+								$result_string.='</tr>';
+								$tot_avail_qty=$tot_avail_qty+$key['total_no_of_quantity'];
+								$prime_id[]=$key['stockresponseid'];
+							}
+							else if($threemonth_expire1 >= $date_now)
+							{ 
+									
+								
+								$Stock_brand=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['stockid'=> $key['stockid']]) -> one();
+								
+								if($key['is_tablet'] == 1)
+								{
+									//New Unit Code
+									$percentage=$tax_groupinglog['tax'];
+									$mrp=$key['mrpperunit']/$key['size_qty'];
+									$newprice=100*$mrp/(100+$percentage);
+									//print_r($newprice);die;
+									$calculation = number_format($newprice,2, '.', '');
+								}
+								else 
+								{
+									//New Unit Code
+									$percentage=$tax_groupinglog['tax'];
+									$mrp=$key['mrpperunit'];
+									$newprice=100*$mrp/(100+$percentage);
+									$calculation = number_format($newprice,2, '.', '');
+								}
+								
+								
+								
+								
+								$result_string.='<tr>';
+								$result_string.='<th class="text-center">'.$sl_no.'</th>';
+								$result_string.='<th class="hide" id="prd_name'.$key['stockresponseid'].'">'.$productname."/".$composition_name.'</th>';
+								
+								$result_string.='<input type="hidden" class="form-control" name="stock_id_hide[]" data-id='.$key['stockresponseid'].' id="stock_id'.$key['stockresponseid'].'" value='.$key['stockid'].'>';
+								$result_string.='<input type="hidden" class="form-control" name="product_hide[]" data-id='.$key['stockresponseid'].' id="product_id'.$key['stockresponseid'].'" value='.$productid.'>';
+								$result_string.='<input type="hidden" class="form-control" name="brand_hide[]" data-id='.$key['stockresponseid'].' id="brandcode_id'.$key['stockresponseid'].'" value='.$Stock_brand->brandcode.'>';
+								$result_string.='<input type="hidden" class="form-control" name="stockcode_hide[]" data-id='.$key['stockresponseid'].' id="stockcode_id'.$key['stockresponseid'].'" value='.$Stock_brand->stockcode.'>';
+								$result_string.='<input type="hidden" class="form-control" name="composition_hide[]" data-id='.$key['stockresponseid'].' id="composition_id'.$key['stockresponseid'].'" value='.$Stock_brand->compositionid.'>';
+								$result_string.='<input type="hidden" class="form-control" name="unitid_hide[]" data-id='.$key['stockresponseid'].' id="unit_id'.$key['stockresponseid'].'" value='.$Stock_brand->unitid.'>';
+								$result_string.='<input type="hidden" class="form-control" name="mrp_per_qty_hide[]" data-id='.$key['stockresponseid'].' id="mrp_per_qty_hide'.$key['stockresponseid'].'" value='.$mrp.'>';
+								
+								$result_string.='<th class="hide prd_name1">'.$productname."/".$composition_name.'</th>';
+								$result_string.='<th class="hide" id="batchnumber'.$key['stockresponseid'].'">'.$key['batchnumber'].'</th>';
+								$result_string.='<th class="hide" id="total_qty'.$key['stockresponseid'].'">'.$key['total_no_of_quantity'].'</th>';
+								
+								$result_string.='<th class="hide" id="gst_sale_percent'.$key['stockresponseid'].'">'.$percentage.'</th>';
+								
+								
+								$result_string.='<th  id="batch_id'.$key['stockresponseid'].'">'.$key['batchnumber'].'</th>';
+								$result_string.='<th class="text-center" id="manu_date_id'.$key['stockresponseid'].'">'.date('d-m-Y',strtotime($key['manufacturedate'])).'</th>';
+								$result_string.='<th class="text-center" id="expire_date_id'.$key['stockresponseid'].'">'.date('d-m-Y',strtotime($key['expiredate'])).'</th>';
+								
+								//$result_string.='<th class="text-center" id="mrp_id'.$key['stockresponseid'].'">'.$key['mrpperunit'].'</th>';
+								$result_string.='<th class="text-center hide" id="mrp_id'.$key['stockresponseid'].'">'.$calculation.'</th>';
+								
+								$result_string.='<th  class="text-center" id="mrp_showing'.$key['stockresponseid'].'">'.$mrp.'</th>';	
+								
+								$result_string.='<th  class="text-center" id="quanity_id'.$key['stockresponseid'].'">'.$key['total_no_of_quantity'].'</th>';
+								
+								
+								
+								$result_string.='<th width="14%">';
+								$valop=$tab_num+$sl_no;
+								if($valop == 501)
+								{
+									
+										$result_string.='<input type="text" class="form-control required_qty tabenter_acc tabenter'.$valop.' number focus_first " name="required_qty_enter[]" data-id='.$key['stockresponseid'].' id="required_id'.$key['stockresponseid'].'"  tabindex="'.$valop.'">';
+									
+								}
+								else
+								{
+									
+									    $result_string.='<input type="text" class="form-control required_qty  tabenter_acc tabenter'.$valop.' number" name="required_qty_enter[]" data-id='.$key['stockresponseid'].' id="required_id'.$key['stockresponseid'].'"  tabindex="'.$valop.'">';
+									
+								}
+								$valop=$valop+1;
+								
+								
+								$result_string.='<input id="getunitvalue'.$key['stockresponseid'].'"  type="hidden" name="selected_value" data-bind="bs-drp-sel-value" value="">';
+								
+								$result_string.='</th>';
+								
+								$result_string.='<th width="14%">';
+							
+								$result_string.='<select  id="data_unit'.$key['stockresponseid'].'" class="form-control unitvalue tabenter_acc tabenter'.$valop.'" data-unit="'.$key['stockresponseid'].'" role="menu" tabindex="'.$valop.'">';
+								
+								foreach ($unitlist as $key1 => $val) 
+								{
+									
+									    $result_string.='<option data-unit-name="'.$val.'" value="'.$key1.'">'.$val.'</option>';		
+											
+								}
+								$result_string.='</select>';
+								
+								$result_string.='<span id="validated_field'.$key['stockresponseid'].'" style="color:red;display:none">Req.Quantity type</span>';
+								$result_string.='<input id="data_no_of_unit'.$key['stockresponseid'].'"  type="hidden" class="no_of_unit" >';
+								$result_string.='<input id="data-unit-name'.$key['stockresponseid'].'"  type="hidden">';
+								
+								$result_string.='</th>';
+								
+								$result_string.='<th width="15%">';
+								
+								
+								$result_string.='<input id="total_unit'.$key['stockresponseid'].'" data-id='.$key['stockresponseid'].'  type="text" class="form-control total_unit" readonly>';
+								
+								$result_string.='</th>';
+								
+								$result_string.='</tr>';
+								$tot_avail_qty=$tot_avail_qty+$key['total_no_of_quantity'];
+								$prime_id[]=$key['stockresponseid'];
+							}	
+								}
+							}
+								$sl_no++;$tab_num++;
+						}
+						$prime_id=implode(',', $prime_id);
+						
+						
+						$result_string.='</tbody> 
+											
+											<input id="total_available_qty" value="'.$tot_avail_qty.'" type="hidden" class="form-control">
+											<input id="prime_id_conv" value="'.$prime_id.'"  type="hidden" class="form-control">
+						
+						 </table></div>';
+					}
+			}
+			else
+			{
+				$result_string='NULL';	
+			}
+			
+			return json_encode($result_string);
+		
+			
+	}
+    
+    
+    
+    
+    
+    
+    
 
     public function actionTemptabletfetch()
     {
@@ -1150,8 +1498,250 @@ class InSalesController extends Controller
             return json_encode($result_string);
     }
     
-    
-    public function actionSaveddata()
+	
+	public function actionSaveddata()
+    {
+        $saledata = new InSales();
+        $patientdata=new Newpatient();
+        
+        //Session of Branch Id
+        $session = Yii::$app->session;
+        $branch_id=$session['branch_id'];
+        $saleid='';
+        
+        
+        if($_POST)
+        {
+        
+            $primary_id=$_POST['primeid'];
+            $quantity=$_POST['quantity'];
+            $price=$_POST['price'];
+            $ip_no=$_POST['ip_no'];
+            $discount_method=$_POST['discount_method'];
+            $discount_value=$_POST['discount_value'];
+            $discoun_type=$_POST['discountext_value'];
+            $gst_percent=$_POST['gst_percent'];
+            $cgst_percent=$_POST['cgst_percent'];
+            $cgst_value=$_POST['cgst_value'];
+            $sgst_percent=$_POST['sgst_percent'];
+            $sgst_value=$_POST['sgst_value'];
+            $total_amt_cal=$_POST['total_amt_cal'];
+            $total_net_amount=$_POST['total_net_amount'];
+            
+            $total_disc_original=$_POST['total_disc_original'];
+            $overall_discount_percent=$_POST['overall_discount_percent'];
+            
+            $total_gst=$_POST['total_gst'];
+            $batchnumber=$_POST['batchnumber'];
+            $product_name_id=$_POST['product_name_id'];
+            $brandcode_id=$_POST['brandcode_id'];
+            $stockcode_id=$_POST['stockcode_id'];
+            $composition_id=$_POST['composition_id'];
+            $unit_id=$_POST['unit_id'];
+            $stock_id=$_POST['stock_id'];
+            $expire_date_id=$_POST['expire_date_id'];
+            $mrp_rate_per_unit=$_POST['mrp_rate_per_unit'];
+            $total_items=$_POST['total_items'];
+            $product_name=$_POST['product_name'];
+            $tablet_type=$_POST['tablet_type'];
+            $total_quantity=$_POST['total_quantity'];
+            $medicine_type_ins=$_POST['medicine_type_ins'];
+            $tablet_tot_unit_ins=$_POST['tablet_tot_unit_ins'];
+            
+            
+            $overall_discount_type=$_POST['overall_discount_type'];
+            $overall_sub_total=$_POST['total_sub_total'];
+                    
+             
+                
+                $subvisit=InRegistration::find()->where(['mr_no'=>$_POST['mr_number']])->andWhere(['date(created_date)'=>date('Y-m-d')])->orderBy(['autoid' => SORT_DESC])->one();
+                $patientdata=Newpatient::find()->where(['patientid'=>$subvisit->pat_id])->one();
+                
+                //Entry Tablet
+  
+                $medical_record_number=$_POST['mr_number'];
+                
+                $In_pat_name=$_POST['in_patient'];
+                $In_pat_mob=$_POST['in_patient_mobile'];
+                $In_doctor_name=$_POST['in_doctor_name'];
+                $In_insurance_type=$_POST['insurance_type'];
+                $In_date_of_birth=date('Y-m-d',strtotime($_POST['date_of_birth']));
+                
+                //New Insert 23/08/2018
+                $saledata->patient_id=$patientdata->patientid;
+                $saledata->subvisit_id=$subvisit->autoid;
+                $saledata->subvisit_num=$subvisit->ip_no;
+                $saledata->gender=$_POST['gender'];
+                $saledata->address=$_POST['Address']; 
+                
+                
+                $saledata->ip_no=$ip_no;
+                $saledata->mrnumber=$medical_record_number;
+                $saledata->branch_id=$branch_id;
+                $saledata->sales_type='I';
+                $saledata->name=$In_pat_name;
+                $saledata->dob=$In_date_of_birth;
+                $saledata->physicianname=$In_doctor_name;
+                $saledata->insurancetype=$In_insurance_type;
+                $saledata->patienttype=1;
+                $saledata->phonenumber=$In_pat_mob;
+                $saledata->tot_no_of_items=$total_items;
+                $saledata->tot_quantity=$total_quantity;
+                
+                
+                $saledatainc=InSales::find()->orderBy(['opsaleid' => SORT_DESC])->one();
+                $saleincrement=$saledatainc->saleincrement+1;
+                $billformat = "ECDR".($saleincrement);
+                $saledata->saleincrement=$saleincrement;
+                $saledata -> billnumber = $billformat;
+                $saledata -> invoicedate = date("Y-m-d h:i:s");
+                $saledata -> total = $total_net_amount;
+                foreach ($primary_id as $key => $value)
+                {
+                    $totalcgstvalue+= $cgst_value[$key];
+                    $totalsgstvalue+= $sgst_value[$key];
+                    
+                    $totalsgstpercent+= $sgst_percent[$key];
+                    $totalcgstpercent+= $cgst_percent[$key];
+                }
+                $total_gst_value=$totalcgstvalue+$totalsgstvalue;
+                $total_gst_percent=$totalcgstpercent+$totalsgstpercent;
+                
+                $saledata -> total_gst_percent = $total_gst_percent;
+                $saledata -> total_cgst_percent = $totalcgstpercent;
+                $saledata -> total_sgst_percent = $totalsgstpercent;
+                
+                
+                $saledata -> totalgstvalue = $total_gst_value;
+                $saledata -> totalcgstvalue = $totalcgstvalue;
+                $saledata -> totalsgstvalue = $totalsgstvalue;
+                $saledata -> totaldiscountvalue = $total_disc_original;
+                $saledata -> totaltaxableamount = $total_gst;
+                $saledata -> overall_sub_total = $overall_sub_total;
+                
+                $saledata -> overalltotal = $total_net_amount;
+                $saledata -> paid_status = 'Paid';
+                $saledata -> updated_by = $session['user_id'];
+                $saledata -> updated_ipaddress = $_SERVER['REMOTE_ADDR'];
+                $saledata -> updated_on = date("Y-m-d H:i:s");
+                
+                //new Code
+                $saledata -> overalldiscountpercent = $overall_discount_percent;
+                $saledata -> overalldiscountamount = $total_disc_original;
+                $saledata -> overalldiscounttype = $overall_discount_type;
+                $saledata -> created_at = date("Y-m-d H:i:s");
+                
+                if($saledata ->save())
+                {
+                    $saleid = $saledata -> opsaleid;
+                    $i = 1;
+                    foreach ($primary_id as $key => $value)
+                    {
+                        
+                        $Saledetail = new InSaledetail();
+                        $Saledetail -> opsaleid = $saleid;
+                        $Saledetail -> stockid = $stock_id[$key];
+                        $Saledetail -> stockresponseid = $value;
+                        $Saledetail -> price = $price[$key];
+                        
+                        $Saledetail -> saledate = date('Y-m-d h:i:s');
+                        $Saledetail -> productid =  $product_name_id[$key];
+                        $Saledetail -> batchnumber =  $batchnumber[$key];
+                        $Saledetail -> brandcode = $brandcode_id[$key];
+                        $Saledetail -> stock_code = $stockcode_id[$key];
+                        $Saledetail -> compositionid = $composition_id[$key];
+                        $Saledetail -> unitid = $unit_id[$key];
+                        $Saledetail -> productqty = $quantity[$key];
+                        $Saledetail -> priceperqty = $price[$key];
+                        $Saledetail -> expiredate = date('Y-m-d',strtotime($expire_date_id[$key]));
+                        
+                        $Saledetail -> discountvalueperquantity = $discoun_type[$key];
+                        
+                        $total_gst_value= $cgst_value[$key]+$sgst_value[$key];
+                        
+                        $Saledetail -> gstrate = $gst_percent[$key];
+                        
+                        $Saledetail -> gstvalue = $total_gst_value;
+                        $Saledetail -> cgstvalue = $cgst_value[$key];
+                        $Saledetail -> sgstvalue = $sgst_value[$key];
+                        $Saledetail -> discountvalue = $discount_value[$key];
+                        $Saledetail -> discount_type = $discount_method[$key];
+                        $Saledetail -> mrpperunit = $mrp_rate_per_unit[$key];
+                        $Saledetail -> sgst_percent = $sgst_percent[$key];
+                        $Saledetail -> cgst_percent = $cgst_percent[$key];
+                        
+                        $Saledetail -> total_price_perqty = $total_amt_cal[$key];
+                        
+                        $Saledetail -> product_name = $product_name[$key];
+                        
+                        $Saledetail -> tablet_type = $tablet_type[$key];
+                        $Saledetail ->  medicine_type_ins = $medicine_type_ins[$key];                       
+                        $Saledetail ->  tablet_tot_unit_ins = $tablet_tot_unit_ins[$key];
+                        
+                        
+                        $Saledetail -> is_active = 1;
+                        $Saledetail -> updated_by = $session['user_id'];
+                        $Saledetail -> updated_ipaddress = $_SERVER['REMOTE_ADDR'];
+                        $Saledetail -> updated_on = date("Y-m-d H:i:s");
+                        $Saledetail ->  created_at = date("Y-m-d H:i:s");
+                        if($Saledetail -> save())
+                        {
+                            
+                        }
+                        else {
+                            print_r($Saledetail->getErrors());
+                             die;   
+                        }
+                        
+                    }
+                }   
+                else { //echo "sdf";
+                        print_r($saledata->getErrors());
+                        die;    
+                     }
+                
+                    $overallstock=Stockresponse::find()->where(['IN','stockresponseid',$primary_id])->all();
+                    $overallstock_array=ArrayHelper::toArray($overallstock);
+                        
+                        if(!empty($overallstock_array))
+                {
+                    foreach ($overallstock_array as $key => $value)
+                    {
+                            $Stock_brand=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['stockid'=> $value['stockid']]) -> one();
+                            $overallstock_updated=Stockresponse::find()->where(['stockresponseid'=> $value['stockresponseid']])->one();
+                            $Stock_brand_array=ArrayHelper::toArray($Stock_brand);
+                            $current_quantity=$value['total_no_of_quantity'];
+                            $updated_quantity=$quantity;
+                            $nw_quantity=$current_quantity-$updated_quantity[$key];
+                            $overallstock_updated->total_no_of_quantity=$nw_quantity;
+                            $overallstock_updated->sales_status='Y';
+                            
+                            if($overallstock_updated->save())
+                            {
+                                $stock_quantity=$Stock_brand->total_no_of_quantity;
+                                $updated_stock_quantity=$stock_quantity-$updated_quantity[$key];
+                                $Stock_brand->total_no_of_quantity=$updated_stock_quantity;
+                                if($Stock_brand->save())
+                                {
+                                    
+                                }
+                                else 
+                                {
+                                    print_r($Stock_brand->getErrors());die;
+                                }
+                            }
+                            else 
+                            {
+                                print_r($overallstock_updated->getErrors());die;
+                            }   
+                    }
+                }
+                $saledatainc=InSales::find()->orderBy(['opsaleid' => SORT_DESC])->one();
+                return "Y=".$saledatainc->opsaleid;  
+                }
+	
+			}
+  /*  public function actionSaveddata()
     {
         $saledata = new InSales();
         $patientdata=new Newpatient();
@@ -1392,6 +1982,7 @@ class InSalesController extends Controller
                 return "Y=".$saledatainc->opsaleid;  
              }
          }
+         }*/
             
     
     public function actionReturnsalestablet()
@@ -5088,4 +5679,24 @@ public function actionPatientkey1($id)
 		}
 	}
     
+	public function Getagebriefscript($userDob)
+	{
+		
+		//Create a DateTime object using the user's date of birth.
+		$dob = new \DateTime($userDob);
+		//We need to compare the user's date of birth with today's date.
+		$now = new \DateTime();
+		//Calculate the time difference between the two dates.
+		$difference = $now->diff($dob);
+		
+		//Get the difference in years, as we are looking for the user's age.
+		$year = $difference->y;
+		$month = $difference->m;
+		$day = $difference->d;
+		
+		
+		//Print it out.
+		return $year."/".$month."/".$day."/";
+	}
+	
 }

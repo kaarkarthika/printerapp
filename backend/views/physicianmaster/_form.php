@@ -70,6 +70,9 @@ select#physicianmaster-specialist {
 
 </div>
  <script>
+ 
+ 	
+ 
 	$('#physician-form').on('beforeSubmit', function(e) {
 	$("#loadphysician").show();
     var form = $(this);

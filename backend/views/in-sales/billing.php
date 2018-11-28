@@ -12,17 +12,15 @@
 	use backend\models\Insurance;
 	use kartik\typeahead\TypeaheadBasic;
 	use kartik\typeahead\Typeahead;
-
-   use backend\models\Composition;
-   
-  use yii\jui\AutoComplete;
-use yii\web\JsExpression;
+	use backend\models\Composition;
+  	use yii\jui\AutoComplete;
+	use yii\web\JsExpression;
    
    $this->title = 'Modules';
     $session = Yii::$app->session;
 	$insurance=Insurance::find()->where(['is_active'=>1])->asArray()->all();
 								
-
+	
    ?>
 
 
@@ -177,101 +175,71 @@ input#ipnumber {
 </script>
 <?php $form = ActiveForm::begin(['id' => 'saved_data_value_ajax',
              'options' => [
-                'class' => 'form-inline'
+                'class' => ''
              ] ]); ?> 
 
  
 
 <div class="container">
-   <div class="row" hidden>
-	  <strong><span class="pull-right" id="date_time"></span></strong>
-           <div class="panel panel-border panel-custom home-body"> <!-- ss -->
-          
-            <div class="panel-body">
-               <div class="row">
-     				 
-					 <div class="col-sm-12   "  style="position: relative;top:10px;" >
-					  <div class="outpatientblock  desc" hidden >
-					  <div class="row">
-					  <div class="col-sm-1"  ></div>
-					  
-					  <div class="form-group col-sm-2"  >
-                         	<?= $form->field($patient, 'mr_no',['enableAjaxValidation' => true])->textInput(['id'=>'new_mr_name' ,'maxlength' => true ,'class' => 'form-control text-cap fwidth key outrefrsh', 'placeholder'=>'MR Number','tabindex'=>"1"])->label(false) ?>
-                           <!--input type="text" placeholder="MR Number"  class="form-control text-cap fwidth key outrefrsh" id='new_mr_name' tabindex="1"-->
-                       		 <span class='out_mr_validated' hidden style="color:red">MR Details Not Found</span>
-                        </div>
-					  
-					  <div class="form-group col-sm-2"  >
-                         
-                           <input type="text" placeholder="Patient Name" name='patient_name' class="form-control text-cap fwidth key outrefrsh" id='out_patient_name' tabindex="2">
-                       		 <span class='out_pat_validated' hidden style="color:red">Enter Patient Details</span>
-                        </div>
-                        <div class="form-group col-sm-2">
-                         
-                           <input type="text" name='mobile_number' id='out_pat_mob' class="form-control fwidth key number outrefrsh phone" placeholder="Mobile Number" onkeypress="phoneno()" maxlength="10" tabindex="3" >
-                        </div>
-						
-						<div class="form-group col-sm-2">
-                       
-                           <div class="input-group fwidth " >
-                              <span class="ipt input-group-btn  ">
-                                 <select class="btn text-cap " tabindex="4"  >
-                                    <option>Mr</option>
-                                    <option>Ms</option>
-                                    <option>Mrs</option>
-                                 </select>
-                              </span>
-                              <input placeholder="Doctor Name" type="text" name='doctor_name' id='out_pat_doc' class="form-control text-cap outrefrsh" tabindex="5">
-                           </div>
-                        </div>
-                        
-                        <div class="form-group col-sm-2"  >
-                         
-                           <select   class="form-control fwidth  text-cap" name='insurance_type_ins' prompt="Selct Insurance" id="pat_insurance_ins" tabindex="6">
-                              <option value="">--Insurance--</option>
-                             <?php 
-                             	
-								if(!empty($insurance))
-								{
-									foreach ($insurance as $key => $value) 
-									{
-                             ?>
-                             <option value="<?php echo $value['insurance_typeid']?>"><?php echo $value['insurance_type']?></option>
-                             <?php }} ?>
-                           </select>
-                        </div>
-                        
-                        </div>
-                        </div>
-						
-					 </div>
-					 </div>
-					 </div>
-					 </div>
-					 </div>
+   
 					 
 
 <div class="row person-details">
 	<div class="panel panel-border panel-custom">
+	     <div class="panel-heading"></div>
+	       <div class="panel-body">
+			
+			    &nbsp;&nbsp;&nbsp;&nbsp;<div class="radio radio-info radio-inline">
+		          <input type="radio" id="inPatient" class="inPatient" value="inpatient" name="patient" checked="">
+		          <label for="inlineRadio1" id="inPatient1">IN-PATIENT</label><strong><strong>
+		        </strong></strong></div><strong><strong>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		        <div class="radio radio-info radio-inline">
+		           <input type="radio" id="tempPatient" class="tempPatient" value="temppatient" name="patient">
+		           <label for="inlineRadio1" id="tempPatient1">Temporary-Sales</label><strong><strong>
+		        </strong></strong></div><strong><strong>		    
+            </strong></strong></strong></strong></div>
+	    
 	    <div class="panel-heading"></div>
-	<div class="panel-body">
-	<div class=" col-xs-12 col-sm-6 col-lg-2">
+	    
+	    
+	    
+	 
+	    
+	    
+	<div class="panel-body inpatient_only">
+	 <div class=" col-xs-12 col-sm-6 col-lg-2 f-no-pd">
 	<div class="form-group">
-      <label for="InputFieldA" class="col-xs-4">Field A</label>
-      <div class="col-xs-8">
-        <input type="text" class="form-control" id="InputFieldA" placeholder="InputFieldA">
-      </div>
+ 
+	  <div class="input-group add-on fwidth" >              
+                    <label>IP NO</label>	
+                      <input class="form-control mrn inrefrsh number ipnumber"  name="ip_no" onkeyup="Patient_details(event,this.value)"   id="ipnumber" type="text" tabindex="8">
+                      <!--input class="form-control mrn inrefrsh number" placeholder="MRN Search" name="mr_number" onkeyup="Patient_details(event)"   id="mrnumber" type="hidden" tabindex="8"-->
+					  <div class="ipt input-group-btn fetch_record patient_fetch_details" value='click' >
+						<span class="btn btn-default inpatient-details rt-5"  ><i class="glyphicon glyphicon-search"></i></span>
+					  </div>		
+					</div>
+					<span id='mr_validated' style="color:red" hidden>Invalid IP Number</span>
+					<span class='in_pat_validated' style="color:red" hidden>Enter Patient Record</span>
 	  
-	  <label for=" " class="col-xs-4">Name</label>
-      <div class="col-xs-8">
-		<input type="text" class="form-control" placeholder="Patient Name" >
-      </div> 
+	             <div class="input-group add-on fwidth" >
+                     <label> Name </label>	
+                     <input class="form-control fetch_patient_clear"   name="IPPATIENTNAME"   id="ippatientname" type="text" >                   
+                     <div class="ipt input-group-btn">
+                        <span class="ipt btn btn-info rt-5" title="Details"><i class="glyphicon glyphicon-user"></i></span>
+                     </div>
+                  </div>
+ 
 	  
-	  <label for=" " class="col-xs-4">Age</label>
-      <div class="col-xs-8">
-		<input type="text" placeholder="YY" style="width: 40px" >
-               		<input type="text" placeholder="MM" style="width: 40px">
-               		<input type="text" placeholder="DD" style="width: 40px">
+	  
+      <div class="col-xs-12 f-no-pd">
+      	<label for=" " class="col-xs-2 f-no-pd">Age</label>
+      	<label>Y:</label>
+		<input type="text"  id='year_based' class='fetch_patient_clear' style="width: 40px" >
+		<label>M:</label>
+        <input type="text"  id='month_based' class='fetch_patient_clear' style="width: 40px">
+        <label>D:</label>
+        <input type="text"  id='day_based' class='fetch_patient_clear' style="width: 40px">
                		
       </div>
 	  
@@ -285,25 +253,80 @@ input#ipnumber {
 	
 	
 	
-    <div class="form-group col-xs-12 col-sm-6 col-lg-2">
-      <label for=" " class="col-xs-4">Gender</label>
-      <div class="col-xs-8">
-		<input type="text" class="form-control" placeholder="Gender"  >         		
+    <div class="form-group col-xs-12 col-sm-6 col-lg-2 f-no-pd">
+      <label for=" " class="col-xs-4 f-no-pd">Gender</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ippatient_gender' >         		
       </div>
 	  
-	  <label for=" " class="col-xs-4">Rel Name</label>
-      <div class="col-xs-8">
-		<input type="text" class="form-control" placeholder="Relative Name" >         		
+	  <label for=" " class="col-xs-4 f-no-pd">Rel Name</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ippatient_relative'   >         		
       </div>
 	  
 	  
 	  
 	  
-	  <label for=" " class="col-xs-4">Dr Name</label>
-      <div class="col-xs-8">
-		<input type="text" class="form-control" placeholder="Dr Name" >         		
+	  <label for=" " class="col-xs-4 f-no-pd">Dr Name</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ipdoctor_consultant'>         		
       </div>
     </div>
+	
+	
+	<div class="form-group col-xs-12 col-sm-6 col-lg-2 f-no-pd">
+      <label for=" " class="col-xs-4 f-no-pd " >Unit Name</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ippatient_unit'  >         		
+      </div>
+	  <label for=" " class="col-xs-4 f-no-pd">DOB</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ippatient_dob'  >         		
+      </div> 
+	  
+    </div>
+	
+	
+	<div class="form-group col-xs-12 col-sm-6 col-lg-2 f-no-pd">
+      
+	  <label for=" " class="col-xs-4 f-no-pd " >Address</label>
+      <div class="col-xs-8 f-no-pd">
+		<textarea class="form-control fetch_patient_clear" id='ippatient_address'></textarea>        		
+      </div> 
+    
+    </div>
+	
+	<div class="form-group col-xs-12 col-sm-6 col-lg-2 f-no-pd">
+	  <label for=" " class="col-xs-4 f-no-pd " >Phone</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ippatient_phone'  >         		
+      </div>
+      <label for=" " class="col-xs-4 f-no-pd">Patient Type</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ippatient_pattype'  >         		
+      </div>
+	 
+    </div>
+	
+	<div class="form-group col-xs-12 col-sm-6 col-lg-2 f-no-pd">
+	
+	 <label for=" " class="col-xs-4 f-no-pd">Insurance</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ippatient_insurance' >         		
+      </div> 
+	  <label for=" " class="col-xs-4 f-no-pd">Mobile</label>
+      <div class="col-xs-8 f-no-pd">
+		<input type="text" class="form-control fetch_patient_clear" id='ippatient_mobile'>         		
+      </div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
     
     
  
@@ -311,242 +334,61 @@ input#ipnumber {
  
 	
 	
-		<div class="col-sm-3">
-			<div class="form-group  ">		
-                    <div class="input-group add-on fwidth" >              
-                    <label> IP NO </label>	
-                      <input class="form-control mrn inrefrsh number ipnumber" placeholder="IP Search" name="ip_no" onkeyup="Patient_details(event)"   id="ipnumber" type="text" tabindex="8">
-                      <input class="form-control mrn inrefrsh number" placeholder="MRN Search" name="mr_number" onkeyup="Patient_details(event)"   id="mrnumber" type="hidden" tabindex="8">
-					  <div class="ipt input-group-btn fetch_record patient_fetch_details" value='click' >
-						<span class="btn btn-default inpatient-details"  ><i class="glyphicon glyphicon-search"></i></span>
-					  </div>		
-					</div>
-					<span id='mr_validated' style="color:red" hidden>Invalid IP Number</span>
-					<span class='in_pat_validated' style="color:red" hidden>Enter Patient Record</span>
-						
-                  </div>
-
-		</div>
-		<div class="col-sm-9">
-			<div class="col-sm-4">
-			  
-				 	
-               <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Unit Name </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Unit Name" >
-               	</div>
-              </div>	
-               <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> DOB </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="DOB" >
-               	</div>
-              </div>	
-			</div>
-			<div class="col-sm-4">
-				
-				 <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Indent No</label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Indent No" >
-               	</div>
-              </div>	
-               <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Phone </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Phone" >
-               	</div>
-              </div>	
-               <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Address </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<!-- <input type="text" placeholder="Address " > -->
-					<textarea></textarea>
-               	</div>
-              </div>	
-              
-			</div>
-			<div class="col-sm-4">
-				 <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Type </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="type" >
-               	</div>
-              </div>
-               <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Hospital </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Hospital" >
-               	</div>
-              </div>	
-               <div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Mobile </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Mobile " >
-               	</div>
-              </div>		
-			</div>
-			
-		</div>
+		
+		 
 	 </div></div>
 </div>
 					 
-<div class="row Room_details">
+<div class="row Room_details inpatient_only">
 	<div class="panel panel-border panel-custom">
 	    <div class="panel-heading"></div>
 	<div class="panel-body">
-						
-		<div class="col-sm-3">
-			<div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Room No </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Room No " >
-               	</div>
-              </div>
-		</div>					
-		<div class="col-sm-3">
-			<div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Floor No </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Floor No " >
-               	</div>
-              </div>
-		</div>					
-		<div class="col-sm-3">
-			<div class="form-group  ">
-               	<div class="col-sm-5">
-               		<label> Room Type </label>
-               	</div>
-               	<div class="col-sm-7">
-               		<input type="text" placeholder="Room type " >
-               	</div>
-              </div>
-		</div>
 		<div class="col-sm-3">
 			<div class="form-group  ">
                	<div class="col-sm-5">
                		<label> Pay Type </label>
                	</div>
                	<div class="col-sm-7">
-               		<input type="text" placeholder="Pay Type " >
+               		<input type="text" class="form-control fetch_patient_clear" id='ippatient_paytype'  >
                	</div>
               </div>
-		</div>							 
+		</div>	
+		<div class="col-sm-3">
+			<div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Floor No </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" class="form-control fetch_patient_clear" id='ippatient_floor'  >
+               	</div>
+              </div>
+		</div>				
+		<div class="col-sm-3">
+			<div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> CATEGORY NO </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" class="form-control fetch_patient_clear" id='ippatient_roomno'  >
+               	</div>
+              </div>
+		</div>					
+							
+		<div class="col-sm-3">
+			<div class="form-group  ">
+               	<div class="col-sm-5">
+               		<label> Room Type </label>
+               	</div>
+               	<div class="col-sm-7">
+               		<input type="text" class="form-control fetch_patient_clear" id='ippatient_roomtype' >
+               	</div>
+              </div>
+		</div>
+								 
 	</div>
 	</div>				 
 </div>		
-			 
-  <div class="row">
-  	<!--
-   <div class="col-sm-12">
-	 <div class="row">
-	   <div class="panel panel-border panel-custom">
-	    <div class="panel-heading"></div>
-	    <div class="panel-body">
-		  <div class="inpatientblock  desc"  style="position: relative;top: 3px;" > 
-		 	<div class="row">
-		      <div class="col-sm-3">
-		      	<div class="row">
-				 <div class="form-group col-sm-7">		
-                    <div class="input-group add-on fwidth" >
-                      <input class="form-control mrn inrefrsh number ipnumber" placeholder="IP Search" name="ip_no" onkeyup="Patient_details(event)"   id="ipnumber" type="text" tabindex="8">
-                      <input class="form-control mrn inrefrsh number" placeholder="MRN Search" name="mr_number" onkeyup="Patient_details(event)"   id="mrnumber" type="hidden" tabindex="8">
-					  <div class="ipt input-group-btn fetch_record patient_fetch_details" value='click' >
-						<span class="btn btn-default inpatient-details"  ><i class="glyphicon glyphicon-search"></i></span>
-					  </div>		
-					</div>
-					<span id='mr_validated' style="color:red" hidden>Invalid IP Number</span>
-					<span class='in_pat_validated' style="color:red" hidden>Enter Patient Record</span>
-                  </div>
-						
-				  <div class="form-group col-sm-5" style="position: relative;  z-index: 1;    padding: 0;">
-					
-					<button type="button" style="margin-top:2px;" class="btn btn-primary btn-xs" id="history_detils">Details</button>	
-				  </div>
-				  </div>
-				  <div class="row">
-				  	 <input type="text" name="mrnumberno" readonly="readonly" id="mrnumberno" placeholder="MR Number" class="form-control mrnumberno">	
-				  </div>
-			    </div>		
-				
-				
-				<div class="col-sm-9">
-				  <div class="row">
-				   <div class="col-sm-9">
-				   <div class="col-sm-4">
-					<div class="form-group  "  > 
-                       <input type="text" placeholder="Patient Name" class="form-control text-cap fwidth mrn inrefrsh" name='in_patient' id="pat_name" readonly>         
-                    </div>
-					<div class="form-group  ">   
-                       <input type="text" placeholder="Mobile Number" class="form-control fwidth mrn number phone inrefrsh" name='in_patient_mobile'   onkeypress="phoneno()"  id="pat_mob" readonly>
-                    </div>
-                    </div>
-					<div class="col-sm-4">
-					<div class="form-group  ">    
-                       <div class="input-group fwidth">
-                         <span class="ipt input-group-btn">
-                           <select class="btn mrn text-cap"  disabled>
-                             <option>Mr</option>
-                             <option>Ms</option>
-                             <option>Mrs</option>
-                           </select>
-                         </span>
-                         <input type="text" placeholder="Doctor Name" class="form-control mrn inrefrsh text-cap" name='in_doctor_name' id="pat_doctor"  readonly>
-                       </div>
-                     </div>
-                     <div class=" form-group  ">                              
-                       <select placeholder="Insurance Type" class="form-control fwidth key mrn inrefrsh text-cap" name='insurance_type' id="pat_insurance" readonly>      
-                       </select>
-                     </div>
-                     </div>
-					<div class="col-sm-4"> 
-                     <div class="form-group">   
-                        <input type="text" placeholder="Date of Birth" class="form-control fwidth key mrn inrefrsh" name='date_of_birth' id="pat_dob" readonly>
-                     </div>
-					  <div class="form-group">             
-		                <select placeholder="Gender" class="form-control fwidth key mrn inrefrsh text-cap" name='Gender' id="gender" readonly>
-		                </select>
-		             </div>
-					 
-                     </div>
-                   </div>
-				     <div class="col-sm-3">
-				       <div class="form-group col-sm-12"> 
-		                 
-						 <textarea placeholder="Address" style="min-height:55px;" class="form-control   key mrn inrefrsh" name='Address' id="address_patient" readonly ></textarea>
-		               </div>
-				     </div> 
-                   </div>
-                 </div>
-				 
-		     </div>
-        </div> 
-           </div>
-         </div>
-       </div>
-     </div>
-  -->
+
 			   
 			   
      <div class="col-sm-12 mt-5">
@@ -590,45 +432,41 @@ input#ipnumber {
            </div>
            <div id="load1" style='display:none;text-align: center;'><img  class="load-image"  src="<?= Url::to('@web/loader1.gif') ?>" /></div>
              <div class="row">
-                <table class="table table-bordered table-striped  tbl-scrol" id="tbUser">
-                  <thead>
-                     <tr>
-                       <th rowspan="2" class="text-center hide">#</th>
-                       <th rowspan="2" style="width:7.8%" class="text-center">Stock / Drug</th>
-                       <th rowspan="2" style='width:4%;' class="text-center">Batch</th>
-                       <th rowspan="2" style='width:8%;' class="text-center">Exp Date</th>
-                       <th rowspan="2" style='width:5%;' class="text-center">Qty</th>
-                       <th rowspan="2" style='width:7.1%;' class="text-center">Unit<br>Form</th>
-                       <th rowspan="2" style='width:8%;' class="text-center">Price</th>
-                       <!--  <th rowspan="2" width="5%" class="text-center">Discount Type</th> -->
-                       <th colspan="2" style='width:15.1%;'  class="text-center"  >Discount</th>
-                       <!-- <th colspan="2" class="text-center">IGST</th> -->
-                       <th colspan="2" style='width:15%;' class="text-center">CGST</th>
-                       <th colspan="2" style='width:15.4%;' class="text-center">SGST</th>
-                       <th rowspan="2" class="text-center">Total</th>
-                       <th rowspan="2" class="text-center">Remove</th>
-                     </tr>
-                     <tr>
-                       <th class="text-center">Val</th>
-                       <th width="5%" class="text-center">Amt</th>
-                       <!-- <th class="text-center">%</th> 
-                       <th width="5%" class="text-center">Amt</th>-->
-                       <th class="text-center">%</th> 
-                       <th width="5%" class="text-center" > Amt</th>
-                       <th class="text-center" >%</th>
-                       <th width="5%" class="text-center" > Amt</th>
-                     </tr>
-                   </thead>
-                   <tbody id='fetch_update_data'>  
-                   </tbody>
-                </table>
+                 <table class="table table-bordered table-striped tbl-scrol" id="tbUser">
+                        <thead>
+                           <tr>
+                              <th rowspan="2" class="text-center hide">#</th>
+                              <th rowspan="2" style="width:7%"  class="text-center">Stock / Drug</th>
+                              <th rowspan="2" style='width:6%;' class="text-center">Batch</th>
+                              <th rowspan="2" style='width:8%;' class="text-center">Exp Date</th>
+                              <th rowspan="2" style='width:5%;'  class="text-center">Qty</th>
+                              <th rowspan="2" style='width:7%;' class="text-center">Unit<br>Form</th>
+                              <th rowspan="2" style='width:8%;' class="text-center">MRP</th>
+                              <th colspan="2" style='width:14.8%;'  class="text-center"  >Discount</th>
+                              <th colspan="2" style='width:15.1%;' class="text-center">CGST</th>
+                              <th colspan="2" style='width:15%;' class="text-center">SGST</th>
+                              <th rowspan="2" class="text-center">Total</th>
+                              <th rowspan="2" class="text-center">Remove</th>
+                           </tr>
+                           <tr>
+                              <th class="text-center">Val</th>
+                              <th width="5%" class="text-center">Amt</th>
+                              <th class="text-center">%</th> 
+                              <th width="5%" class="text-center">Amt</th>
+                              <th class="text-center" >%</th>
+                              <th width="5%" class="text-center">Amt</th>
+                           </tr>
+                        </thead>
+                        <tbody id='fetch_update_data'>  
+                        </tbody>
+                  </table>
             </div>
 		 </div>
 		 <div class="col-sm-3 " style="background-color: #ebeff2;margin-top:5px;position:relative;left:15px;" >
 		   <div class="">
 		    <table class="table no-m"  >
 			            <tr>
-							<th>Details</th>
+							<th class="rt-5">Details</th>
 							<td> 
 								<div class="input-group">
 								  <div class="input-group-btn" data-toggle="buttons" >
@@ -636,28 +474,28 @@ input#ipnumber {
                                        <input   type="radio" name="discount" class="enable-textbox-percentage" disabled value="percentage"  autocomplete="off">Items
                                     </label>         
                                   </div>
-								  <input type="text" class="form-control total_items ansrefrsh" name='total_items' readonly id="no_of_items">
-							<input type="hidden" class="form-control total_items ansrefrsh" name='total_items_hidden'  id="no_of_items_hidden">						 
+								  <input type="text" class="form-control total_items ansrefrsh clear_bill" name='total_items' readonly id="no_of_items">
+							<input type="hidden" class="form-control total_items ansrefrsh " name='total_items_hidden'  id="no_of_items_hidden">						 
                             
 		                         <div class="input-group-btn" data-toggle="buttons" >
                                      <label  disabled class="inp btn btn-default   " style="padding:3px!important;">
                                        <input   type="radio" name="discount" class="enable-textbox-flat" value="flat" disabled autocomplete="off">Qty
                                      </label>         
                                   </div>
-		                         <input type="text"   class="form-control total_quantity ansrefrsh" name='total_quantity' readonly id="total_quantity">
+		                         <input type="text"   class="form-control total_quantity ansrefrsh clear_bill" name='total_quantity' readonly id="total_quantity">
 							<input type="hidden"   class="form-control total_quantity ansrefrsh" name='total_quantity_hidden'  id="total_quantity_hidden">
 											      
 					  </div> 
 							   </td>
 						</tr>
 						<tr>
-							<th class="col-sm-5">Price</th>
-							<td class="col-sm-7"><input type="text"  class="form-control text-right total_sub_total ansrefrsh" name='total_sub_total' readonly id="total_sub_total">
+							<th class="col-sm-5 rt-5">Price</th>
+							<td class="col-sm-7"><input type="text"  class="form-control text-right total_sub_total ansrefrsh clear_bill" name='total_sub_total' readonly id="total_sub_total">
 							<input type="hidden"  class="form-control total_sub_total text-right ansrefrsh" name='total_sub_total_hidden' id="total_sub_total_hidden">
 							</tr>
 						<tr>
-							<th>GST</th>
-							<td><input type="text"   class="form-control  text-right total_vat ansrefrsh" name='total_gst' readonly id="total_gst_amount">
+							<th class="rt-5">GST</th>
+							<td><input type="text"   class="form-control  text-right total_vat ansrefrsh clear_bill" name='total_gst' readonly id="total_gst_amount">
 							<input type="hidden"    class="form-control text-right total_vat ansrefrsh" name='total_gst_hidden'  id="total_gst_amount_hidden">
 							</tr>
 						<!-- <tr>
@@ -665,7 +503,7 @@ input#ipnumber {
 							<td><input type="text" class="form-control total_vat text-right ansrefrsh" name='bill_total' readonly ></td>
 						</tr> -->
 						<tr>
-							<th>Discount</th>
+							<th class="rt-5">Discount</th>
 							<td> 
 								<div class="input-group">
 								  <div class="input-group-btn" data-toggle="buttons">
@@ -673,51 +511,55 @@ input#ipnumber {
                                        <input   type="radio" name="discount" class="enable-textbox-percentage" disabled value="percentage"  autocomplete="off">%
                                     </label>         
                                   </div>
-		                          <input type="text" class="form-control total_disc_original ansrefrsh number"  name='overall_discount_percent' onkeyup="OverallPercentageDiscount();"  id="total_discountvaluetype">
+		                          <input type="text" class="form-control total_disc_original ansrefrsh number clear_bill"  name='overall_discount_percent' onkeyup="OverallPercentageDiscount();"  id="total_discountvaluetype">
 						          <input type="hidden" class="form-control total_disc_original ansrefrsh number"  name='overall_discount_percent_hidden'   id="total_discountvaluetype_hidden">
 							      <div class="input-group-btn" data-toggle="buttons">
                                      <label disabled class="inp btn btn-default enable-textbox-flat " style="padding:3px!important;">
                                        <input   type="radio" name="discount" class="enable-textbox-flat" value="flat" disabled autocomplete="off">$
                                      </label>         
                                   </div>
-		                          <input type="text" class="form-control total_disc_original ansrefrsh number"  name='total_disc_original'   id="total_discountamount">
+		                          <input type="text" class="form-control total_disc_original ansrefrsh number clear_bill"  readonly name='total_disc_original'   id="total_discountamount">
 								  <input type="hidden" class="form-control total_disc_original ansrefrsh number"  name='total_disc_original_hidden'   id="total_discountamount_hidden">
 							    </div> 
 							   </td>
 						</tr>
 						<tr>
-							<th>NET Amount</th>
-							<td><input type="text" class="form-control text-right total-netamt ansrefrsh bg-primary" name='total_net_amount' style="color:#000;font-size: 14pt;" readonly id="total_net_amount">
+							<th class="col-sm-5">TOTAL AMOUNT</th>
+							<td class="col-sm-7"><input type="text" style="color: blue;font-size: 14pt;" class="form-control total_amount_mrp text-right ansrefrsh" name="total_amount_mrp" readonly="" id="total_amount_mrp">
+						</td></tr>
+						<tr>
+							<th class="rt-5">NET Amount</th>
+							<td><input type="text" class="form-control text-right total-netamt ansrefrsh bg-primary clear_bill" name='total_net_amount' style="color:#0000ff;font-size: 14pt;" readonly id="total_net_amount">
 							<input type="hidden" class="form-control text-right total-netamt ansrefrsh bg-primary" name='total_net_amount_hidden' style="color: #fff;font-size: 14pt;"  id="total_net_amount_hidden">
 							</tr>
 						<tr>
-							<th>Round Off</th>
-							<td><input type=" text" class="form-control text-right" name="round_off_value" id="round_off_value" readonly placeholder=" "></td>
+							<th class="rt-5">Round Off</th>
+							<td><input type=" text" class="form-control text-right clear_bill" name="round_off_value" id="round_off_value" readonly placeholder=" "></td>
 						</tr>
 						<tr>
-							<th>Cash</th>
-							<td><input type=" text" class="form-control text-right" name="cash_value" id="cash_value" readonly placeholder=" "></td>
+							<th class="rt-5">Cash</th>
+							<td><input type=" text" class="form-control text-right text-blue f-20 clear_bill" name="cash_value" id="cash_value" readonly placeholder=" "></td>
 						</tr>
 						<tr>
-							<th>Paid Amount</th>
-							<td><input type=" text" class="form-control text-right" id="paid_amt" name="paid_amt" readonly placeholder=" Paid Amount" onkeyup="PaidAmountCalculation(this,event);"></td>
+							<th class="rt-5">Paid Amount</th>
+							<td><input type=" text" style="color: blue;font-size: 14pt;"  class="form-control text-right clear_bill number" id="paid_amt" name="paid_amt"   onkeyup="PaidAmountCalculated(this.value);"></td>
 						</tr>
 						<tr>
-							<th>Due Amount</th>
-							<td><input type=" text" class="form-control text-right" id="due_amt" name="due_amt" readonly placeholder=" Due Amount "></td>
+							<th class="rt-5">Due Amount</th>
+							<td><input type=" text" class="form-control text-right text-red f-20 clear_bill" id="due_amt" name="due_amt" readonly placeholder=""></td>
 						</tr>
 					   
 					   </table>
 					   <div class="form-group  col-sm-12">
-							<label class="control-label text-default" for=" ">Amount in Words</label>
+							<label class="control-label text-default clear_bill" for=" ">Amount in Words</label>
 							<div>							
-								<input type=" text" class="form-control" id="amt_in_words" placeholder=" " readonly style="text-transform:uppercase;">
+								<input type=" text" class="form-control clear_bill" id="amt_in_words" placeholder=" " readonly style="text-transform:uppercase;">
 				           </div>
 					   </div>
 					
 					   <div class="form-group col-sm-12">
 							<label class="control-label " for=" ">Remarks</label>	
-							<textarea style="min-height: 30px; " class="form-control rounded-0 remarks" id="remarks" name="remarks" rows="2"></textarea>																	
+							<textarea style="min-height: 30px; " class="form-control rounded-0 remarks clear_bill" id="remarks" name="remarks" rows="2"></textarea>																	
 				       </div>
 					   
 					   
@@ -753,134 +595,7 @@ input#ipnumber {
 			  
 			  
 			  
-			<!--  <div class=" ">
-               
-			   <br>
-			    
-				<div class="panel panel-border panel-custom  "  >
-                     <div class="panel-body" style="padding: 0 5px !important;">
-
-			   <fieldset class="scheduler-border  ">
-			   <!--  <legend class="scheduler-border form-head">FINANCIAL DETAILS</legend>  
-			   <div class="row financial">
-			        <div class="col-sm-9">
-					   <div class="row"><div class="col-sm-4" style="border-right: 1px solid #dee6e4;">
-			          <div class=" inner-des">
-			            <div class="form-group">
-					        <label class="control-label " for=" ">ITEMS</label>
-							<input type="text" class="form-control total_items ansrefrsh" name='total_items' readonly id="no_of_items">
-							<input type="hidden" class="form-control total_items ansrefrsh" name='total_items_hidden'  id="no_of_items_hidden">						 
-				        </div>
-				 
-				        <div class="form-group">
-					        <label class="control-label " for=" ">QTY</label>						 
-							<input type="text"   class="form-control total_quantity ansrefrsh" name='total_quantity' readonly id="total_quantity">
-							<input type="hidden"   class="form-control total_quantity ansrefrsh" name='total_quantity_hidden'  id="total_quantity_hidden">
-									
-						</div>
-				 
-						<div class="form-group">
-							<label class="control-label  " for=" ">GST</label>
-							<input type="text"   class="form-control total_vat ansrefrsh" name='total_gst' readonly id="total_gst_amount">
-							<input type="hidden"    class="form-control total_vat ansrefrsh" name='total_gst_hidden'  id="total_gst_amount_hidden">
-									
-						</div>
-					   </div>
-			         </div>
-					 
-					 
-					 
-			          
-					  <div class="col-sm-4" style="border-right: 1px solid #dee6e4;">
-					  <div class=" inner-des">
-					    <div class="form-group">
-					        <label class="control-label" for=" ">Disc in %</label>					    
-							<input type="text" class="form-control total_disc_original ansrefrsh number"  name='overall_discount_percent' onkeyup="OverallPercentageDiscount();"  id="total_discountvaluetype">
-						    <input type="hidden" class="form-control total_disc_original ansrefrsh number"  name='overall_discount_percent_hidden'   id="total_discountvaluetype_hidden">
-												
-				        </div>
-						
-						<div class="form-group">
-					        <label class="control-label" for=" ">Disc in Flat</label>					    
-							<input type="text" class="form-control total_disc_original ansrefrsh number"  name='total_disc_original'   id="total_discountamount">
-							<input type="hidden" class="form-control total_disc_original ansrefrsh number"  name='total_disc_original_hidden'   id="total_discountamount_hidden">
-											
-				        </div>
-					  <div class="form-group" style="visibility:hidden;">
-					  <label class="control-label" for=" ">Test</label>
-					  <input type="text">
-					  
-					  </div>
-					  
-						
-						
-			          </div>
- 					</div>
-					  
-			         <div class="col-sm-4" style="border-right: 1px solid #dee6e4;">
-					   <div class=" inner-des">
-					   
-					   
-					   <div class="form-group">
-					        <label class="control-label" for=" ">Sub Total</label>						 
-							<input type="text"  class="form-control total_sub_total ansrefrsh" name='total_sub_total' readonly id="total_sub_total">
-							<input type="hidden"  class="form-control total_sub_total ansrefrsh" name='total_sub_total_hidden' id="total_sub_total_hidden">
-															 
-				        </div>
-				 
-				        <div class="form-group">
-					        <label class="control-label" for=" ">Net Amount</label>					    
-							<input type="text" class="form-control total-netamt ansrefrsh bg-primary" name='total_net_amount' style="color: #fff;font-size: 14pt;" readonly id="total_net_amount">
-							<input type="hidden" class="form-control total-netamt ansrefrsh bg-primary" name='total_net_amount_hidden' style="color: #fff;font-size: 14pt;"  id="total_net_amount_hidden">
-									
-				        </div>
-
-                        <div class="form-group">
-					        <label class="control-label" for=" ">Round Off</label>					    
-							<input type=" text" class="form-control" id="round_off_value" readonly placeholder=" ">
-				        </div>
-				        <div class="form-group">
-					        <label class="control-label" for=" ">CASH</label>					    
-							<input type=" text" class="form-control" id="cash_value" readonly placeholder=" ">
-				        </div>
-					   
-					   
-					   
-							   
-				       </div>	   
-			         </div></div>
-					   <div class="row"><div class="form-group  col-sm-6">
-					  <label class="control-label text-default" for=" ">Amount in Words</label>
-                      <div>							
-					     <input type=" text" class="form-control" id="amt_in_words" placeholder=" " readonly style="text-transform:uppercase;">
-				      </div>
-				    </div>
-					
-					<div class="form-group col-sm-6">
-							<label class="control-label " for=" ">Remarks</label>							 					 
-                            <textarea style="min-height: 30px; " class="form-control rounded-0 remarks" id="remarks" name="remarks" rows="2"></textarea>																	
-				        </div>
-					</div>
-					  
-					</div>
-					
-					<div class="col-sm-3"> <div class="inner-des button-select-re">
- 
-	        	          <button type="button" value='save_bill' name='saved_bill' style="z-index: 9999;" class="btn btn-success fwidth ss_v save_billing" onclick='SaveBilling();' data-toggle="tooltip" title="Save and Submit"><i class="fa fa-save"></i> Save</button>
-                          <button type="button" class="btn btn-success remove_all">Clear</button>
-	        	          <button type="button" class="btn btn-success remove_all">Close</button>        			
-                      <a href="<?php  echo Yii::$app->request->BaseUrl;?>/index.php?r=in-sales/index" class="btn btn-bk btn-default b-width " style="margin-top: 40px; float:right;" Title="Go To Grid">Go to Grid </a> 
-			          </div></div>                				 
-			   </div>
-			   
-			    </fieldset>
-			   
-			   
-			   </div>
-			   
-			   </div>
-			    
-            </div>  -->
+		
          </div>
 	 
 	 
@@ -920,7 +635,7 @@ input#ipnumber {
                         
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<div class="form-group ">
-				<button type="button" class="btn btn-primary btn-sm fetch_data" id='add_to_grid' onkeyup="Add_to_grid(event)" tabindex="105" data-toggle="tooltip" title="Add to Grid"><i class="fa fa-save"></i></button>&nbsp;<i><small>[Alt+7]</small></i> &nbsp;&nbsp;
+				<button type="button" class="btn btn-primary btn-sm fetch_data" id='add_to_grid' onclick="Add_to_grid();" onkeyup="Add_to_grid(event);" tabindex="105" data-toggle="tooltip" title="Add to Grid"><i class="fa fa-save"></i></button>&nbsp;<i><small>[Alt+7]</small></i> &nbsp;&nbsp;
               	<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Close" data-dismiss="modal"><i class="fa fa-close"></i></button>&nbsp;<i><small>[Esc]</small></i>
 			 
 				</div>
@@ -1169,6 +884,9 @@ $('.inpatient-details').click(function(){
         
 });
 
+
+$('.fetch_patient_clear').attr('readonly','readonly');
+
 });
 
 
@@ -1212,64 +930,28 @@ $(document).ready(function(e){
 $(function () {
 	    
         $("input[name='patient']").click(function () {
-               if ($("#outPatient").is(":checked")) 
+               
+               
+               if ($("#inPatient").is(":checked")) 
                {
-               	
-               		$(".get_slno").val('');
+              		$(".get_slno").val('');
     				$(".get_temp_no").val('');
-					
-               	 	
-				    $('.inrefrsh').val('');
-				    $('.ansrefrsh').val('');
-					$('#temp_med_fetch').prop('disabled', false);
-					 $("#tbUser tbody tr").remove(); 
-                   $(".outpatientblock").show();
-   				$('[tabindex="1"]').focus();
-   				$(".inpatientblock").hide();  
-   				
-   				 var out_patient=$('#outPatient').val();
-  				 if(out_patient != '')
-  				 {
-			  		 $.ajax({
-						 type: "POST",
-						 url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchbillnumber&id=";?>"+out_patient,
-						success: function (result) 
-						{
-							 $('#fetch_bill').html(result);    	    
-						}
-					});
-  				}
-   				 				
-               }
-			   else if ($("#inPatient").is(":checked")) 
-               {
-              
-               	
-               		$(".get_slno").val('');
-    				$(".get_temp_no").val('');
-					
-				    $('.outrefrsh').val('');
+					$('.outrefrsh').val('');
 					$('.ansrefrsh').val('');
 					$('#temp_med_fetch').prop('disabled', false);
-					 $("#tbUser tbody tr").remove(); 
-                   $(".inpatientblock").show();
-   				$('[tabindex="8"]').focus();
-   				$(".outpatientblock").hide();
-   				  
-   				 var in_patient=$('#inPatient').val();
-  				 if(in_patient != '')
-  				 {
-			  		 $.ajax({
-						 type: "POST",
-						 url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchbillnumber&id=";?>"+in_patient,
-						success: function (result) 
-						{
-							 $('#fetch_bill').html(result);    	    
-						}
-					});
-  				}
-   				  
-               }
+					$("#tbUser tbody tr").remove(); 
+                    $(".inpatientblock").show();
+   				    $('[tabindex="8"]').focus();
+   				    $(".outpatientblock").hide();
+   				    
+   				    $('.inpatient_only').show();
+   				    $('.fetch_patient_clear').val('');
+   				    $('.clear_bill').val('');
+   				    $('.medicines').val('');
+   				    $('#fetch_update_data tr').remove();
+   				    $('#ipnumber').focus();
+   				    
+   			   }
                else if ($("#tempPatient").is(":checked")) 
                {
                	
@@ -1278,29 +960,21 @@ $(function () {
 					
 				    $('.outrefrsh').val('');
 					$('.ansrefrsh').val('');
-					$("#tbUser tbody tr").remove(); 
+					$("#fetch_update_data tr").remove(); 
                    	$('.inrefrsh').val('');
 				    $('.ansrefrsh').val('');
-					$("#tbUser tbody tr").remove(); 
+					$("#fetch_update_data tr").remove(); 
                    	$('[tabindex="7"]').focus();
                    	$(".inpatientblock").hide();
    					$(".outpatientblock").hide();
    					$('#temp_med_fetch').attr('disabled','disabled');
    				  	
-   				  	var temp_patient=$('#tempPatient').val();
-  				 if(temp_patient != '')
-  				 {
-			  		 $.ajax({
-						 type: "POST",
-						 url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchbillnumber&id=";?>"+temp_patient,
-						success: function (result) 
-						{
-							 $('#fetch_bill').html(result);    	    
-						}
-					});
-  				}
-   				  	
-               }			
+   				  	$('.inpatient_only').hide();
+   				  	$('.fetch_patient_clear').val('');
+   				    $('.clear_bill').val('');
+   				    $('.medicines').val('');
+   				    $('#fetch_update_data tr').remove();
+   				}			
            }); 
         
     }); 
@@ -1397,82 +1071,139 @@ $(function () {
 	  });	
 		 
 		
-   			$('body').on("keyup",'.required_qty',function(e)
+   			$('body').on("keypress",'.required_qty',function(e)
    			{
    				var available_id=$(this).attr('data-id');
+   				$(this).val();
+   				$('#total_unit'+available_id).val('');
+   			});
+			
+   			$('body').on("keyup",'.required_qty',function(e)
+   			{
+   				var keycode = (e.keyCode ? e.keyCode : e.which);
+        		
+        		
+   				
+   				var available_id=$(this).attr('data-id');
+   				
    				var available_value=parseInt($('#quanity_id'+available_id).html());
    				var required_value=parseInt($(this).val());
    				var keycode = (e.keyCode ? e.keyCode : e.which);
    				
+   				
+   				
+   				$('#fetch_batch_qty').val('');
+   				
    				if(required_value > available_value)
    				{
-   					//alert("You enter more than Availability");
    					Alertment('You enter more than Availability');
    					$(this).val("");
-   					return false;
+   					$('#total_unit'+available_id).val('');
    				}
+   				else if(required_value === 0 || isNaN(required_value))
+   				{
+   					$(this).val("");
+   					$('#total_unit'+available_id).val('');
+   					
+   					
+   				}
+   				else if(required_value >= available_value || required_value < available_value)
+   				{
+   					var available_id=$(this).attr('data-id');
+	   				var available_value=parseInt($('#quanity_id'+available_id).html());
+	   				var required_value=parseInt($('#required_id'+available_id).val());
+	   				
+	   				var product_qty=$('#data_unit'+available_id).val();
+	   				
+	   				$.ajax({
+		            type: "POST",
+		            url: "<?php echo Yii::$app->homeUrl . "?r=sales/getunitquantity&id=";?>"+encodeURIComponent(product_qty),
+		            success: function (result) 
+		            { 
+		            	var result = $.parseJSON(result);
+		            	var value_unit=result[0];
+		            	var value_type=result[1];
+		            	
+		            	$('#data_no_of_unit'+available_id).val(value_unit);
+		            	$('#data-unit-name'+available_id).val(value_type);
+		            	
+		            	var data_unit=parseInt($('#data_no_of_unit'+available_id).val());
+		            	var required_qty=parseInt($('#required_id'+available_id).val());
+		            	var total_unit=required_qty*data_unit;
+		            	
+		            	var availablity=parseInt($('#quanity_id'+available_id).html());
+		            	
+		            	
+		            	
+		            	if(availablity < total_unit)
+		            	{
+		            		//alert("Total Units is greater than Availability");
+		            		Alertment("Total Units is greater than Availability");
+		            		$('#total_unit'+available_id).val('');
+		            		$('#required_id'+available_id).val('');
+		            		$('#data_unit'+available_id).val('');
+		            		$('#validated_field'+available_id).hide();
+		            			
+		            	}
+		            	else
+		            	{
+		            		
+		            		if(isNaN($('#total_unit'+available_id).val()))
+		            		{
+		            			$('#total_unit'+available_id).val('');
+		            		}
+		            		else
+		            		{
+		            			var total_available_getting=parseInt($('#stk').val());
+		            			var adding_qty=0;
+		            			$('#total_unit'+available_id).val(total_unit);
+		            			$('.total_unit').each(function ()
+								{	
+									var dat=$(this).attr('data-id');
+									var tot_unit_id=parseInt($('#total_unit'+dat).val());
+									
+									if(!isNaN(tot_unit_id))
+									{
+										adding_qty=adding_qty+tot_unit_id;
+									}
+									
+										
+			   					});
+			   					
+			   					if(total_available_getting >= adding_qty || total_available_getting > adding_qty)
+			   					{
+			   						$('#fetch_batch_qty').val(adding_qty);
+			   						if(keycode === 13)
+							        {
+							        	Add_to_grid(e);
+							        }
+			   					}
+			   					else
+			   					{
+			   						Alertment('You enter more than Availability');
+   									$(this).val("");
+   									$('#total_unit'+available_id).val('');
+			   					}
+		            		}
+			            		
+		            			
+		            	}
+		            	
+		            }
+		                });	
+	   						
+   				}
+   				
+   				
+   				
    			});
    			
    			
-   			$('body').on("blur",'.required_qty',function(e)
-   			{
-   				var available_id=$(this).attr('data-id');
-   				var available_value=parseInt($('#quanity_id'+available_id).html());
-   				var required_value=parseInt($('#required_id'+available_id).val());
-   				
-   				var product_qty=$('#data_unit'+available_id).val();
-   				var keycode = (e.keyCode ? e.keyCode : e.which);
-   				
-   						if(keycode == '0')
-   						{
-   							$.ajax({
-				            type: "POST",
-				            url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/getunitquantity&id=";?>"+encodeURIComponent(product_qty),
-				            success: function (result) 
-				            { 
-				            	var result = $.parseJSON(result);
-				            	var value_unit=result[0];
-				            	var value_type=result[1];
-				            	
-				            	$('#data_no_of_unit'+available_id).val(value_unit);
-				            	$('#data-unit-name'+available_id).val(value_type);
-				            	
-				            	var data_unit=parseInt($('#data_no_of_unit'+available_id).val());
-				            	var required_qty=parseInt($('#required_id'+available_id).val());
-				            	var total_unit=required_qty*data_unit;
-				            	
-				            	var availablity=parseInt($('#quanity_id'+available_id).html());
-				            	
-				            	
-				            	
-				            	if(availablity < total_unit)
-				            	{
-				            		//alert("Total Units is greater than Availability");
-				            		Alertment("Total Units is greater than Availability");
-				            		$('#total_unit'+available_id).val('');
-				            		$('#required_id'+available_id).val('');
-				            		$('#data_unit'+available_id).val('');
-				            		$('#validated_field'+available_id).hide();
-				            			
-				            	}
-				            	else
-				            	{
-				            		$('#total_unit'+available_id).val(total_unit);
-				            		if($('#total_unit'+available_id).val() == 'NaN')
-				            		{
-				            			$('#total_unit'+available_id).val('');
-				            		}
-				            		
-				            	}
-				            	
-				            }
-				        });	
-   						}
-   			});
    			
    			
    			
-   			$('body').on("keypress",'.tabenter_acc',function(e)
+   			
+   		/*	$('body').on("keypress",'.tabenter_acc',function(e)
    			{
    				var keycode = (e.keyCode ? e.keyCode : e.which);
         		
@@ -1496,7 +1227,7 @@ $(function () {
 		          return false;
 		        }
    				
-   			});	
+   			});	*/
    		
    			
 
@@ -1553,40 +1284,10 @@ $('#temp_fetch_model').on('shown.bs.modal', function ()
         
  $('[tabindex="8"]').focus();
 
+
+
+
 shortcut.add("Alt+1",
-function() {
-	$(".get_slno").val('');
-    	$(".get_temp_no").val('');
-		
-	    $('.inrefrsh').val('');
-		$('.ansrefrsh').val('');
-		 $("#tbUser tbody tr").remove(); 
-	 	$('#inPatient').prop('checked', false);
-		 $('#outPatient').prop('checked', true);
-	 $('#temp_med_fetch').prop('disabled', false);
-$(".outpatientblock").show();
-$(".inpatientblock").hide();
-  $('[tabindex="1"]').focus();
-  
-  var out_patient=$('#outPatient').val();
-  if(out_patient != '')
-  {
-  		 $.ajax({
-			 type: "POST",
-			 url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchbillnumber&id=";?>"+out_patient,
-			success: function (result) 
-			{
-				 $('#fetch_bill').html(result);    	    
-			}
-		});
-  }
-      
-},
-{ 'type':'keydown', 'propagate':true, 'target':document}
-); 
-
-
-shortcut.add("Alt+2",
 function() {
 	$(".get_slno").val('');
     	$(".get_temp_no").val('');
@@ -1602,18 +1303,12 @@ $(".outpatientblock").hide();
 $('[tabindex="8"]').focus();
      
      
-  var in_patient=$('#inPatient').val();
-  if(in_patient != '')
-  {
-  		 $.ajax({
-			type: "POST",
-			 url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchbillnumber&id=";?>"+in_patient,
-			success: function (result) 
-			{
-				 $('#fetch_bill').html(result);    	    
-			}
-		});
-  }
+$('.inpatient_only').show();
+$('.fetch_patient_clear').val('');
+$('.clear_bill').val('');
+$('.medicines').val('');
+$('#fetch_update_data tr').remove();
+$('#ipnumber').focus();
      
        
 },
@@ -1621,7 +1316,7 @@ $('[tabindex="8"]').focus();
 );
 
 
-shortcut.add("Alt+3",
+shortcut.add("Alt+2",
 function() {
 	
 		$(".get_slno").val('');
@@ -1641,18 +1336,11 @@ function() {
 	 	$('#tempPatient').prop('checked', true);
 	 	$('#temp_med_fetch').attr('disabled','disabled');
 	 	
-  var temp_patient=$('#tempPatient').val();
-  if(temp_patient != '')
-  {
-  		 $.ajax({
-			type: "POST",
-			 url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchbillnumber&id=";?>"+temp_patient,
-			success: function (result) 
-			{
-				 $('#fetch_bill').html(result);    	    
-			}
-		});
-  }
+$('.inpatient_only').hide();
+$('.fetch_patient_clear').val('');
+$('.clear_bill').val('');
+$('.medicines').val('');
+$('#fetch_update_data tr').remove();
 },
 { 'type':'keydown', 'propagate':true, 'target':document}
 ); 
@@ -1780,100 +1468,114 @@ function() {
     {
 
       //alert('test');
-      var unique_id=$(this).attr('data_delete_row');
-      var no_of_items=parseInt($('#no_of_items').val());
-      var delete_items=no_of_items-1;
-      $('#no_of_items').val(delete_items);
-      
-      var quantity_add=parseInt($('#quantity_add'+unique_id).html());
-      var total_quantity=parseInt($('#total_quantity').val());
-      var delete_quantity=total_quantity-quantity_add;
-      $('#total_quantity').val(delete_quantity);
-      
-      
-      var sgst_value=parseFloat($('#sgst_value'+unique_id).val());
-      var cgst_value=parseFloat($('#cgst_value'+unique_id).val());
-      var igst_value=parseFloat($('#igst_value'+unique_id).val());
-      var delete_gst=sgst_value+igst_value+cgst_value;
-      
-      var total_gst_amount=parseFloat($('#total_gst_amount').val());
-      var delete_total_gst_amount=total_gst_amount-delete_gst;
-      $('#total_gst_amount').val(delete_total_gst_amount.toFixed(2));
-      
-      //Total Amount variable apply subtotal,rounded value,net amount
-      var total_amount=parseFloat($('#price'+unique_id).val());
-      var total_sub_total=parseFloat($('#total_sub_total').val());
-      var delete_total_sub_total=total_sub_total-total_amount;
-      $('#total_sub_total').val(delete_total_sub_total.toFixed(2));
-      
-      
-      
-      var total_net_amount=parseInt($('#total_net_amount').val());
-      var total_value_amount=parseInt($('#total_amount'+unique_id).val());
-      
-      var delete_total_net_amount=total_net_amount-total_value_amount;
-      $('#total_net_amount').val(delete_total_net_amount.toFixed(2));
-      
-      //Discount value
+			var unique_id=$(this).attr('data_delete_row');
+			var no_of_items=parseInt($('#no_of_items').val());
+			var delete_items=no_of_items-1;
+			$('#no_of_items').val(delete_items);
+			
+			var quantity_add=parseInt($('#quantity_add'+unique_id).html());
+			var total_quantity=parseInt($('#total_quantity').val());
+			var delete_quantity=total_quantity-quantity_add;
+			$('#total_quantity').val(delete_quantity);
+			
+			
+			var sgst_value=parseFloat($('#sgst_value'+unique_id).val());
+			var cgst_value=parseFloat($('#cgst_value'+unique_id).val());
+			var igst_value=parseFloat($('#igst_value'+unique_id).val());
+			var delete_gst=sgst_value+igst_value+cgst_value;
+			
+			var total_gst_amount=parseFloat($('#total_gst_amount').val());
+			var delete_total_gst_amount=total_gst_amount-delete_gst;
+			$('#total_gst_amount').val(delete_total_gst_amount.toFixed(2));
+			
+			//Total Amount variable apply subtotal,rounded value,net amount
+			var total_amount=parseFloat($('#price'+unique_id).val());
+			var total_sub_total=parseFloat($('#total_sub_total').val());
+			var delete_total_sub_total=total_sub_total-total_amount;
+			$('#total_sub_total').val(delete_total_sub_total.toFixed(2));
+			
+			var total_net_amount=parseInt($('#total_net_amount').val());
+			var total_value_amount=parseInt($('#total_amount'+unique_id).val());
+			
+			var delete_total_net_amount=total_net_amount-total_value_amount;
+			$('#total_net_amount').val(delete_total_net_amount.toFixed(2));
+			
+			var hidden_mrp_amount=parseFloat($('#total_amount1'+unique_id).val());
+			var total_amount_mrp_new=parseFloat($('#total_amount_mrp').val());
+			var subtraction_amount_new=total_amount_mrp_new - hidden_mrp_amount;
+			 $('#total_amount_mrp').val(subtraction_amount_new.toFixed(2)); 
+			
+			//Discount value
 
-      var discount_amount=$('#disc_amount'+unique_id).val();
-      var discount_total=$('#total_discountvalue').val();
-      if(isNaN(discount_amount))
-      {
-        discount_amount=0;
-      }
-      var subdiscount=discount_total-discount_amount;
-      $('#total_discountvalue').val(subdiscount.toFixed(2));
+			var discount_amount=$('#disc_amount'+unique_id).val();
+			var discount_total=$('#total_discountvalue').val();
+			if(isNaN(discount_amount))
+			{
+				discount_amount=0;
+			}
+			var subdiscount=discount_total-discount_amount;
+			$('#total_discountvalue').val(subdiscount.toFixed(2));
 
-      $(this).closest('tr').remove();
+     
+
+                //alert(disc_percentage);
+                
+
+    	$(this).closest('tr').remove();
 
        var disc_percentage=parseFloat($('#total_discountvaluetype').val());
                 if(disc_percentage!=''){
                  setTimeout(function () {                 
                  OverallPercentageDiscountProcedure(disc_percentage);
                },1000);
-                }
-
+                } 
       var total_sub_totalre=parseFloat($('#total_sub_total').val());
       var total_gst_amountre=parseFloat($('#total_gst_amount').val());
 
       var distotal=total_sub_totalre+total_gst_amountre;
+      //alert(distotal);
+      //alert(distotal);
+      $('#total_net_amount').val(distotal); 
       
-      $('#total_net_amount').val(distotal);  
+     
+      
+       
       var distotalamount= $('#total_net_amount').val();
       var discash_amount=Math.round(distotalamount);
       var calc=discash_amount - distotalamount;
       $('#round_off_value').val(calc.toFixed(2));  
       //$('#round_off_value').val(0);
       $('#cash_value').val(discash_amount);
-       $('#paid_amt').val(discash_amount);
+      $('#paid_amt').val(discash_amount);
       var due_val=parseFloat($('#cash_value').val())-parseFloat($('#paid_amt').val());
       $('#due_amt').val(due_val);
       
-       //var total_net=$('#total_net_amount').val();
+      
+       var total_net=$('#total_net_amount').val();
        var words =$('#cash_value').val();
        var net_amount_in_words=convertNumberToWords(Math.round(words));
        $('#amt_in_words').val(net_amount_in_words);
         
-        
-        if($('#fetch_update_data tr').length == 0)
-        {
-          $('#total_sub_total').val(0);
-          $('#total_net_amount').val(0);
-          $('#total_gst_amount').val(0);
-          $('#no_of_items').val(0);
-          $('#total_quantity').val(0);
-          $('#total_discountvalue').val(0);
+    		
+    		if($('#fetch_update_data tr').length == 0)
+    		{
+    			$('#total_sub_total').val(0);
+    			$('#total_amount_mrp').val(0);
+    			$('#total_net_amount').val(0);
+    			$('#total_gst_amount').val(0);
+    			$('#no_of_items').val(0);
+    			$('#total_quantity').val(0);
+    			$('#total_discountvalue').val(0);
           $('#total_discountvaluetype').val(0);
           $('#total_discountamount').val(0);
           $('#cash_value').val(0);
-          $('#paid_amt').val(0);
-          $('#due_amt').val(0);
           $('#round_off_value').val(0);
+          $('#due_amt').val(0);
+          $('#paid_amt').val(0);
           var words=$('#cash_value').val();
           var net_amount_in_words=convertNumberToWords(Math.round(words));
             $('#amt_in_words').val(net_amount_in_words);
-        }
+    		}
         
     });
   });
@@ -3079,145 +2781,107 @@ $(document).ready(function(){
   <script>
  
   
-  function Patient_details(event)
-  {		
-  		  if(event.keyCode === 13)
-          {
-				var mrnumber=$('#ipnumber').val();
-				var encodemrnumber=encodeURIComponent(mrnumber);
-				
-				if(encodemrnumber != '')
-				{
-					$('#load1').show();
-					$.ajax({
-						
-				            type: "POST",
-				            url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchmrnumber&mrnumber=";?>"+encodemrnumber,
-				            success: function (result) 
-				            {  $("#tbUser tbody tr").remove(); cleartxt();
-				            	$('#load1').hide();
-				            	if(result == 'invalid')
-				            	{
-				            		$('#pat_name').val('');
-				            		$('#pat_mob').val('');
-				            		$('#pat_doctor').val('');
-				            		$('#pat_insurance').val('');
-				            		$('#pat_dob').val('');
-				            		$('#mrnumberno').val('');
-				            		$('#gender').html('');
-					           		$('#address_patient').val('');
-				            		$('#mrnumber').val('');
-				            		$('#mr_validated').delay('fast').fadeIn();
-				            		$('#mr_validated').delay(4000).fadeOut();
-				            		
-				            	}
-				            	else
-				            	{
-				            		var obj = $.parseJSON(result);
-				            		if(obj[7] == 'N')
-				            		{
-				            			$('#pat_name').val(obj[0]);
-						           		$('#pat_mob').val(obj[1]);
-						           		$('#pat_doctor').val(obj[2]);
-						           		
-						           		$('#mrnumberno').val(obj['mrnumber']);
-						           		
-						           		if(obj[3] != '01-01-1970')
-						           		{
-						           			$('#pat_dob').val(obj[3]);
-						           		}
-						           		document.getElementById('pat_insurance').innerHTML=obj[4];
-						           		$('#gender').html(obj[5]);
-						           		$('#address_patient').val(obj[6]);
-                          $('#mrnumber').val(obj[8]);
-
-						           		
-						           		
-						           		$('#medicines').focus();
-				            		}
-					            	else if(obj[7] == 'Y')
-					            	{
-					            		//alert('This Patient Temporary Blocked');
-					            		Alertment('This Patient Temporary Blocked');
-					            	}
-				            	}
-				           	}
-				        });
-				}
-		}
-		else if(event.button == 0)
+  function Patient_details(event,data)
+  {
+  	
+  	if(data === '')
+  	{
+  		$('.fetch_patient_clear').val('');
+  		$("#fetch_update_data tr").remove(); 
+	    $('.fetch_patient_clear').val('');
+    	$('.clear_bill').val('');
+  	}
+  			
+	if(event.keyCode === 13)
+    {
+		var ipnumber=$('#ipnumber').val();
+		var encodeipnumber=encodeURIComponent(ipnumber);
+		
+		if(encodeipnumber != '')
 		{
-			
-				$('#load1').show();
-				var mrnumber=$('#mrnumber').val();
-				var encodemrnumber=encodeURIComponent(mrnumber);
-				if(encodemrnumber != '')
-				{
-					$.ajax({
-						
-				            type: "POST",
-				            url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchmrnumber&mrnumber=";?>"+encodemrnumber,
-				            dataType: "html",
-				            success: function (result) 
-				            { 
-				            	$('#load1').hide();
-				            	if(result == 'invalid')
-				            	{
-				            		$('#pat_name').val('');
-				            		$('#pat_mob').val('');
-				            		$('#pat_doctor').val('');
-				            		$('#pat_insurance').val('');
-				            		$('#pat_dob').val('');
-				            		
-				            		$('#mr_validated').delay('fast').fadeIn();
-				            		$('#mr_validated').delay(4000).fadeOut();
-				            		
-				            	}
-				            	
-				            	else
-				            	{
-				            		/*var obj = $.parseJSON(result);
-					            	$('#pat_name').val(obj[0]);
-					           		$('#pat_mob').val(obj[1]);
-					           		$('#pat_doctor').val(obj[2]);
-									
-					           		if(obj[3] != '01-01-1970')
-					           		{
-					           			$('#pat_dob').val(obj[3]);
-					           		}
-					           		document.getElementById('pat_insurance').innerHTML=obj[4];
-					           		$('#medicines').focus();*/
-					           		
-					           		
-				            		var obj = $.parseJSON(result);
-				            		if(obj[7] == 'N')
-				            		{
-				            			$('#pat_name').val(obj[0]);
-						           		$('#pat_mob').val(obj[1]);
-						           		$('#pat_doctor').val(obj[2]);
-										
-						           		if(obj[3] != '01-01-1970')
-						           		{
-						           			$('#pat_dob').val(obj[3]);
-						           		}
-						           		document.getElementById('pat_insurance').innerHTML=obj[4];
-						           		$('#gender').html(obj[5]);
-						           		$('#address_patient').val(obj[6]);
-						           		
-						           		
-						           		$('#medicines').focus();
-				            		}
-					            	else if(obj[7] == 'Y')
-					            	{
-					            		//alert('This Patient Temporary Blocked');
-					            		Alertment('This Patient Temporary Blocked');
-					            	}
-				            	}
-				           	}
-				        });
-				}
+			$('#load1').show();
+			$.ajax({
+				type: "POST",
+	            url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchmrnumber&mrnumber=";?>"+encodeipnumber,
+	            success: function (result) 
+	            {  
+	            	$('#load1').hide();
+	            	$("#fetch_update_data tr").remove(); 
+	            	
+	            	$('.fetch_patient_clear').val('');
+	            	$('.clear_bill').val('');
+	            	
+	            	//cleartxt();
+	            	
+	            	if(result === 'invalid')
+	            	{
+	            		$('#ipnumber').val('');
+	            		Alertment('Data Not Found');
+	            	}
+	            	else if(result === 'discharge')
+	            	{
+	            		$('#ipnumber').val('');
+	            		Alertment('This Patient Has Discharged');
+	            	}
+	            	else
+	            	{
+	            		var obj = $.parseJSON(result);
+		            	
+		            	$('#ippatientname').val(obj[0]['patient_name'].toUpperCase());
+		            	$('#ippatient_gender').val(obj[0]['sex'].toUpperCase());
+		            	$('#ippatient_relative').val(obj[0]['relation_suffix'].toUpperCase()+' '+obj[0]['relative_name'].toUpperCase());
+		            	if(obj[0]['consultant_dr'] !== null && obj[0]['dr_unit'] !== null)
+		            	{
+		            		$('#ipdoctor_consultant').val(obj[3][obj[0]['consultant_dr']].toUpperCase());
+		            		$('#ippatient_unit').val(obj[3][obj[0]['dr_unit']].toUpperCase());
+		            	}
+		            	
+		            	
+		            	$('#ippatient_dob').val(formatDate(obj[0]['dob']));
+		            	$('#ippatient_address').val(obj[0]['address'].toUpperCase()+','+obj[0]['city'].toUpperCase());
+		            	//$('#ippatient_phone').val(obj[1]['mobile_no']);
+		            	
+		            	if(obj[0]['type'] !== null)
+		            	{
+		            		$('#ippatient_pattype').val(obj[2][obj[0]['type']].toUpperCase());
+		            	}
+		            	
+		            	if(obj[0]['ins_type'] !== null)
+		            	{
+		            		$('#ippatient_insurance').val(obj[1][obj[0]['ins_type']].toUpperCase());
+		            	}
+		            	
+		            	
+		            	$('#ippatient_mobile').val(obj[0]['mobile_no']);
+		            	
+		            	if(obj[6] !== null)
+		            	{
+		            		var mobile_no=obj[6].split('/');
+		            		
+		            		$('#year_based').val(mobile_no[0]);
+		            		$('#month_based').val(mobile_no[1]);
+		            		$('#day_based').val(mobile_no[2]);
+		            		
+		            		
+		            	}
+		            	//Room Details Fetched Pending
+			            $('#ippatient_paytype').val(obj[7]['1'].toUpperCase());
+			            $('#ippatient_floor').val(obj[7]['2'].toUpperCase());
+			            $('#ippatient_roomno').val(obj[7]['3'].toUpperCase());
+			            $('#ippatient_roomtype').val(obj[7]['4'].toUpperCase());
+			            
+			            $('#medicines').focus();	
+			            
+		            }
+		        }
+			     });
 		}
+	 }
+
   }
+  
+  
+
   
   
   //Fetch Qty
@@ -3500,17 +3164,10 @@ $(document).ready(function(){
         Alertment('No Product added in Grid');
         $('#total_discountvaluetype').val('');
       }
-  //  }
-  /*  else
-    {
-      //alert('Select Discount Type');
-      Alertment('Select Discount Type');
-      $('#total_discountvaluetype').val('');
-    }
-    */
+  
  }
   //Add To Grid
-  function Add_to_grid(event)
+  /*function Add_to_grid(event)
   {
   		if(event.keyCode === 13)
   		{
@@ -3593,21 +3250,21 @@ $(document).ready(function(){
 												//alert(data_no_of_unit_value);
 												
 							
-							var markup = "<tr class='save_data_table' data-id="+tbl_value[i]+" id='table_del"+tbl_value[i]+"'><td class='hide'>"+slno+"</td><td style='width:7.8%'><div class='trunctext'>"+product_name+"</div></td><td style='width:4%;'>"+batchnumber+"</td><td style='width:8%;'>"+expire_date_id+"</td><td class='quantity_add' style='width:5%;' id='quantity_add"+tbl_value[i]+"'>"+required_id+"</td><td style='width:7%;' id='unit_value_medicine"+tbl_value[i]+"'>"+unit_value+"</td><td style='width:8%'><input type='hidden' name='medicine_type_ins[]' id='medicine_type_ins"+tbl_value[i]+"' value='"+unit_value+"'><input type='hidden' name='tablet_tot_unit_ins[]' id='tablet_tot_unit"+tbl_value[i]+"' value='"+total_unit+"'><input type='hidden' name='tablet_type[]' id='tablet_type"+tbl_value[i]+"' value='"+tablet_type+"'><input type='hidden' name='mrp_rate_per_unit[]' value='"+mrp_id+"'><input type='hidden' name='stock_id[]' value='"+stock_id+"'><input type='hidden' name='unit_id[]' value='"+unit_id+"'><input type='hidden' name='composition_id[]' value='"+composition_id+"'>"
+							var markup = "<tr class='save_data_table' data-id="+tbl_value[i]+" id='table_del"+tbl_value[i]+"'><td class='hide'>"+slno+"</td><td style='width:7.8%'><div class='trunctext'>"+product_name+"</div></td><td style='width:4.5%;'>"+batchnumber+"</td><td style='width:9%;'>"+expire_date_id+"</td><td class='quantity_add' style='width:5%;' id='quantity_add"+tbl_value[i]+"'>"+required_id+"</td><td style='width:7%;' id='unit_value_medicine"+tbl_value[i]+"'>"+unit_value+"</td><td style='width:8%'><input type='hidden' name='medicine_type_ins[]' id='medicine_type_ins"+tbl_value[i]+"' value='"+unit_value+"'><input type='hidden' name='tablet_tot_unit_ins[]' id='tablet_tot_unit"+tbl_value[i]+"' value='"+total_unit+"'><input type='hidden' name='tablet_type[]' id='tablet_type"+tbl_value[i]+"' value='"+tablet_type+"'><input type='hidden' name='mrp_rate_per_unit[]' value='"+mrp_id+"'><input type='hidden' name='stock_id[]' value='"+stock_id+"'><input type='hidden' name='unit_id[]' value='"+unit_id+"'><input type='hidden' name='composition_id[]' value='"+composition_id+"'>"
 							  							+"<input type='hidden' name='stockcode_id[]' value='"+stockcode_id+"'><input type='hidden' name='brandcode_id[]' value='"+brandcode_id+"'><input type='hidden' name='product_name_id[]' value='"+product_id+"'><input type='hidden' name='expire_date_id[]' value='"+expire_date_id+"'>"
 							  							+"<input type='hidden' name='batchnumber[]' value='"+batchnumber+"'><input type='hidden' name='product_name[]' value='"+product_name+"'><input type='hidden' name='quantity[]' value='"+required_id+"'><input type='hidden' name='primeid[]' value='"+tbl_value[i]+"'><input type='text' name='price[]' class='w-53 price_mrp text-right disctxt' data_price_mrp="+tbl_value[i]+" value="+price_per_quantity.toFixed(1)+" id="+'price'+tbl_value[i]+"></td>"
 						  								//+"<td><ul class='donate-now'><input type='hidden' name='discount_method[]' id='disc_method"+tbl_value[i]+"' ><li><input type='radio'  name='desc"+tbl_value[i]+"' data_flat='"+tbl_value[i]+"' id='flat_discount"+tbl_value[i]+"'  disabled='disabled' class='deselect flat testrad'  onchange='descChanged("+tbl_value[i]+")'><label for='flat_discount"+tbl_value[i]+"' class='w-50 text-center testrad'>F</label></li><li>"
 						  								//+"<input type='radio' id='percent"+tbl_value[i]+"' data-deselect="+tbl_value[i]+"  disabled='disabled' class='deselect percent testrad' name='desc"+tbl_value[i]+"'  onchange='descChanged("+tbl_value[i]+")' ><label for='percent"+tbl_value[i]+"' class='w-50 text-center testrad'>%</label></li></ul></td>"
-						  								+"<td><div class='input-group'> <input type='text' name='discount_value[]' data_disc_value='"+tbl_value[i]+"' id='enabledisc"+tbl_value[i]+"'  class='enabledisc disctxt w-55' readonly></div></td><td><div class='input-group'> <input type='text' name='discountext_value[]' id='disc_amount"+tbl_value[i]+"' class='add_discount text-right disctxt w-55' readonly>"
+						  								+"<td style='width:7.5%;'><div class='input-group'> <input type='text' name='discount_value[]' data_disc_value='"+tbl_value[i]+"' id='enabledisc"+tbl_value[i]+"'  class='enabledisc disctxt w-55' readonly></div></td><td style='width:7.5%'><div class='input-group'> <input type='text' name='discountext_value[]' id='disc_amount"+tbl_value[i]+"' class='add_discount text-right disctxt w-55' readonly>"
 						  								+"</div></td><td class='w-xss hide'><input type='hidden' class='form-control' data_gst_percent='"+tbl_value[i]+"' name='gst_percent[]' id='gst_percent"+tbl_value[i]+"' value='"+gst_sale_percent+"' readonly><input type='text' class='form-control' data_igst_percent='"+tbl_value[i]+"' id='igst_percent"+tbl_value[i]+"' readonly></td><td class='hide'><input type='text'  class='form-control' data_igst_value='"+tbl_value[i]+"' id='igst_value"+tbl_value[i]+"' readonly></td>"
-						  								+"<td class=' '><input type='text'  class='cgst_percent disctxt w-55' name='cgst_percent[]' data_cgst_percent='"+tbl_value[i]+"' id='cgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class='disctxt w-53  cgst_value text-right' name='cgst_value[]' data_cgst_value='"+tbl_value[i]+"' id='cgst_value"+tbl_value[i]+"' readonly></td>"
-						  								+"<td class=' '><input type='text'  class='sgst_percent w-55 disctxt' name='sgst_percent[]' data_sgst_percent='"+tbl_value[i]+"' id='sgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class='w-53 disctxt sgst_value text-right' name='sgst_value[]' data_sgst_value='"+tbl_value[i]+"' id='sgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td style='width:7.5%' class=' '><input type='text'  class='cgst_percent disctxt w-55' name='cgst_percent[]' data_cgst_percent='"+tbl_value[i]+"' id='cgst_percent"+tbl_value[i]+"' readonly></td><td style='width:7.5%'><input type='text'  class='disctxt w-53  cgst_value text-right' name='cgst_value[]' data_cgst_value='"+tbl_value[i]+"' id='cgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td style='width:7.7%' class=' '><input type='text'  class='sgst_percent w-55 disctxt' name='sgst_percent[]' data_sgst_percent='"+tbl_value[i]+"' id='sgst_percent"+tbl_value[i]+"' readonly></td><td style='width:7.7%;'><input type='text'  class='w-53 disctxt sgst_value text-right' name='sgst_value[]' data_sgst_value='"+tbl_value[i]+"' id='sgst_value"+tbl_value[i]+"' readonly></td>"
 						  								+"<td><input type='text'  class='w-53 disctxt total_amt_cal text-right' name='total_amt_cal[]' data_total='"+tbl_value[i]+"' id='total_amount"+tbl_value[i]+"' readonly><input type='hidden'  class='form-control reduired_qty_hidden text-right' name='reduired_qty_hidden[]' data_total='"+tbl_value[i]+"' value="+required_id+" id='reduired_qty_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control price_hidden text-right' name='price_hidden[]' data_total='"+tbl_value[i]+"' id='price_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_percentage_hidden text-right' name='cgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_value_hidden text-right' name='cgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_percentage_hidden text-right' name='sgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_value_hidden text-right' name='sgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control total_amt_cal1 text-right' name='total_amt_cal1[]' data_total='"+tbl_value[i]+"' id='total_amount1"+tbl_value[i]+"'></td>"
 						  								+"<td class='text-center'><button type='button' class='btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow' data_delete_row="+tbl_value[i]+" id='delrow"+tbl_value[i]+"'><i class='fa fa-remove'></i></button></td></tr>";
 																																					
 																													
 														
-						  	 /*$("#fetch_update_data").append(markup);*/
+						  	
                  if($("#fetch_update_data").append(markup)){
                 var disc_percentage=parseFloat($('#total_discountvaluetype').val());
                 if(disc_percentage!=''){
@@ -3815,15 +3472,15 @@ $(document).ready(function(){
 												//alert(data_no_of_unit_value);
 												
 												
-												var markup = "<tr  class='save_data_table' data-id="+tbl_value[i]+" id='table_del"+tbl_value[i]+"'><td class='hide'>"+slno+"</td><td style='width:7.8%;'><div class='trunctext '>"+product_name+"</div></td><td style='width:4%;'>"+batchnumber+"</td><td style='width:8%;'>"+expire_date_id+"</td><td style='width:5%;'class='quantity_add' id='quantity_add"+tbl_value[i]+"'>"+required_id+"</td><td style='width:7%;' id='unit_value_medicine"+tbl_value[i]+"'>"+unit_value+"</td><td style='width:8%'><input type='hidden' name='medicine_type_ins[]' id='medicine_type_ins"+tbl_value[i]+"' value='"+unit_value+"'><input type='hidden' name='tablet_tot_unit_ins[]' id='tablet_tot_unit"+tbl_value[i]+"' value='"+total_unit+"'><input type='hidden' name='tablet_type[]' id='tablet_type"+tbl_value[i]+"' value='"+tablet_type+"'><input type='hidden' name='mrp_rate_per_unit[]' value='"+mrp_id+"'><input type='hidden' name='stock_id[]' value='"+stock_id+"'><input type='hidden' name='unit_id[]' value='"+unit_id+"'><input type='hidden' name='composition_id[]' value='"+composition_id+"'>"
+												var markup = "<tr  class='save_data_table' data-id="+tbl_value[i]+" id='table_del"+tbl_value[i]+"'><td class='hide'>"+slno+"</td><td style='width:7.8%;'><div class='trunctext '>"+product_name+"</div></td><td style='width:4.5%;'>"+batchnumber+"</td><td style='width:9%;'>"+expire_date_id+"</td><td style='width:5%;'class='quantity_add' id='quantity_add"+tbl_value[i]+"'>"+required_id+"</td><td style='width:7%;' id='unit_value_medicine"+tbl_value[i]+"'>"+unit_value+"</td><td style='width:8%'><input type='hidden' name='medicine_type_ins[]' id='medicine_type_ins"+tbl_value[i]+"' value='"+unit_value+"'><input type='hidden' name='tablet_tot_unit_ins[]' id='tablet_tot_unit"+tbl_value[i]+"' value='"+total_unit+"'><input type='hidden' name='tablet_type[]' id='tablet_type"+tbl_value[i]+"' value='"+tablet_type+"'><input type='hidden' name='mrp_rate_per_unit[]' value='"+mrp_id+"'><input type='hidden' name='stock_id[]' value='"+stock_id+"'><input type='hidden' name='unit_id[]' value='"+unit_id+"'><input type='hidden' name='composition_id[]' value='"+composition_id+"'>"
 							  							+"<input type='hidden' name='stockcode_id[]' value='"+stockcode_id+"'><input type='hidden' name='brandcode_id[]' value='"+brandcode_id+"'><input type='hidden' name='product_name_id[]' value='"+product_id+"'><input type='hidden' name='expire_date_id[]' value='"+expire_date_id+"'>"
 							  							+"<input type='hidden' name='batchnumber[]' value='"+batchnumber+"'><input type='hidden' name='product_name[]' value='"+product_name+"'><input type='hidden' name='quantity[]' value='"+required_id+"'><input type='hidden' name='primeid[]' value='"+tbl_value[i]+"'><input type='text' name='price[]' class='price_mrp disctxt text-right w-53' data_price_mrp="+tbl_value[i]+" value="+price_per_quantity.toFixed(1)+" id="+'price'+tbl_value[i]+"></td>"
 						  								//+"<td><ul class='donate-now'><input type='hidden' name='discount_method[]' id='disc_method"+tbl_value[i]+"' ><li><input type='radio'  name='desc"+tbl_value[i]+"' data_flat='"+tbl_value[i]+"' id='flat_discount"+tbl_value[i]+"'  disabled='disabled' class='deselect flat testrad'  onchange='descChanged("+tbl_value[i]+")'><label for='flat_discount"+tbl_value[i]+"' class='w-50 text-center testrad'>F</label></li><li>"
 						  								//+"<input type='radio' id='percent"+tbl_value[i]+"' data-deselect="+tbl_value[i]+"  disabled='disabled' class='deselect percent testrad' name='desc"+tbl_value[i]+"'  onchange='descChanged("+tbl_value[i]+")' ><label for='percent"+tbl_value[i]+"' class='w-50 text-center testrad'>%</label></li></ul></td>"
-						  								+"<td><div class='input-group'> <input type='text' name='discount_value[]' data_disc_value='"+tbl_value[i]+"' id='enabledisc"+tbl_value[i]+"'  class='enabledisc disctxt w-55' readonly></div></td><td><div class='input-group'> <input type='text' name='discountext_value[]' id='disc_amount"+tbl_value[i]+"' class='add_discount text-right disctxt w-55' readonly>"
+						  								+"<td style='width:7.5%'><div class='input-group'> <input type='text' name='discount_value[]' data_disc_value='"+tbl_value[i]+"' id='enabledisc"+tbl_value[i]+"'  class='enabledisc disctxt w-55' readonly></div></td><td style='width:7.5%'><div class='input-group'> <input type='text' name='discountext_value[]' id='disc_amount"+tbl_value[i]+"' class='add_discount text-right disctxt w-55' readonly>"
 						  								+"</div></td><td class='w-xss hide'><input type='hidden' class='form-control' data_gst_percent='"+tbl_value[i]+"' name='gst_percent[]' id='gst_percent"+tbl_value[i]+"' value='"+gst_sale_percent+"' readonly><input type='text' class='form-control' data_igst_percent='"+tbl_value[i]+"' id='igst_percent"+tbl_value[i]+"' readonly></td><td class='hide'><input type='text'  class='form-control' data_igst_value='"+tbl_value[i]+"' id='igst_value"+tbl_value[i]+"' readonly></td>"
-						  								+"<td class='w-xss'><input type='text'  class='disctxt w-53 cgst_percent text-right' name='cgst_percent[]' data_cgst_percent='"+tbl_value[i]+"' id='cgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class='w-53 cgst_value text-right' name='cgst_value[]' data_cgst_value='"+tbl_value[i]+"' id='cgst_value"+tbl_value[i]+"' readonly></td>"
-						  								+"<td class='w-xss'><input type='text'  class='disctxt w-53 sgst_percent' name='sgst_percent[]' data_sgst_percent='"+tbl_value[i]+"' id='sgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class='w-53 sgst_value text-right' name='sgst_value[]' data_sgst_value='"+tbl_value[i]+"' id='sgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td style='width:7.5%' class=' '><input type='text'  class='disctxt w-53 cgst_percent text-right' name='cgst_percent[]' data_cgst_percent='"+tbl_value[i]+"' id='cgst_percent"+tbl_value[i]+"' readonly></td><td style='width:7.5%;'><input type='text'  class='w-53 cgst_value text-right' name='cgst_value[]' data_cgst_value='"+tbl_value[i]+"' id='cgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td style='width:7.7%' class=' '><input type='text'  class='disctxt w-53 sgst_percent' name='sgst_percent[]' data_sgst_percent='"+tbl_value[i]+"' id='sgst_percent"+tbl_value[i]+"' readonly></td><td style='width:7.7%'><input type='text'  class='w-53 sgst_value text-right' name='sgst_value[]' data_sgst_value='"+tbl_value[i]+"' id='sgst_value"+tbl_value[i]+"' readonly></td>"
 						  								+"<td><input type='text'  class='disctxt w-53 total_amt_cal text-right' name='total_amt_cal[]' data_total='"+tbl_value[i]+"' id='total_amount"+tbl_value[i]+"' readonly><input type='hidden'  class='form-control reduired_qty_hidden text-right' name='reduired_qty_hidden[]' data_total='"+tbl_value[i]+"' value="+required_id+" id='reduired_qty_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control price_hidden text-right' name='price_hidden[]' data_total='"+tbl_value[i]+"' id='price_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_percentage_hidden text-right' name='cgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_value_hidden text-right' name='cgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_percentage_hidden text-right' name='sgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_value_hidden text-right' name='sgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control total_amt_cal1 text-right' name='total_amt_cal1[]' data_total='"+tbl_value[i]+"' id='total_amount1"+tbl_value[i]+"'></td>"
 						  								+"<td class='text-center'><button type='button' class='btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow' data_delete_row="+tbl_value[i]+" id='delrow"+tbl_value[i]+"'><i class='fa fa-remove'></i></button></td></tr>";
 																																					
@@ -4090,7 +3747,8 @@ $(document).ready(function(){
 						
 						$('#fetch_update_data').scrollTop(200);
 			}
-  }
+  }*/
+ 
   
  
  function QtyValidation(id)
@@ -4557,13 +4215,13 @@ function OverallPercentageDiscount()
  {
  	if($('#inPatient').is(":checked"))
     {
-		var pat_name=$('#pat_name').val();
-		var mrnumber=$('#mrnumber').val();
-		var get_insurance=$('#pat_insurance').val();
+		var pat_name=$('#ippatientname').val();
+		var ipnumber=$('#ipnumber').val();
+		var get_insurance=$('#ippatient_insurance').val();
 		
-		if(pat_name !== '' && mrnumber !== '')
+		if(pat_name !== '' && ipnumber !== '')
 		{
-			if(get_insurance === "1" || get_insurance === "2" || get_insurance === "3")
+			if(get_insurance !== '')
 			{
 				$('#total_discountvaluetype').val('');
 				Alertment('This is Organization Patient not allowed to Discount');
@@ -4572,9 +4230,9 @@ function OverallPercentageDiscount()
 		}
 		else
 		{
-			$('#mrnumber').focus();
+			$('#ippatientname').focus();
 			$('#total_discountvaluetype').val('');
-			Alertment('Add Patient Name');
+			Alertment('Add In-Patient Name');
 			return false;
 		}
    	} 
@@ -5124,134 +4782,55 @@ $.alert({
 
 function SaveBilling() 
 { 
-	/* if ($("#outPatient").is(":checked"))
-	{
-		$out_pat_doc=$('#out_pat_doc').val();
-	$out_pat_mob=$('#out_pat_mob').val();
-	$out_patient_name=$('#out_patient_name').val();
-	$new_mr_name=$('#new_mr_name').val();
-	if($new_mr_name == '' || $out_pat_doc == '')
-	{ 
-		$('.out_pat_validated').delay('fast').fadeIn();
-	$('.out_pat_validated').delay(4000).fadeOut();
-	$('[tabindex="1"]').focus();
-	  alert('Something went wrong.'); 
-	    return false;
-	}
-	else
-	{ 
-		$.ajax({
-	    type: "POST",
-	url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/saveddata";?>",
-	data: $("#saved_data_value_ajax").serialize(),
-	success: function (result) 
-	{ 
-		
-		var data1=result.split("=")[0];
-	var data2=result.split("=")[1];
 	
-	if(data1=="Y")
-	{
-		if(data2=='OPTEMPSAVED')
-	{
-		alert('Data Saved');
-		window.location.reload(true);
-	}
-	else
-	{
-		$(".save_billing").prop('disabled', true);
-	 var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data2;
-	 window.open(url,'_blank');
-						 window.location.reload(true);
-					}	
-	        	}
-	        }
-	    	});
-		};	 	
-	}
-	else if ($("#inPatient").is(":checked")) 
-	{*/
-		//$mrnumber=$('#mrnumber').val();
     $ipnumber=$('#ipnumber').val();
-	$pat_name=$('#pat_name').val();
+	$pat_name=$('#ippatientname').val();
 	$pat_mob=$('#pat_mob').val();
 	$pat_doctor=$('#pat_doctor').val();
 	$pat_insurance=$('#pat_insurance').val();
 	//$pat_dob=$('#pat_dob').val();
-	if($ipnumber == '')
+	if($ipnumber === '' && $pat_name === '')
 	{ 
 		$('#ipnumber').focus();
-	$('.in_pat_validated').delay('fast').fadeIn();
-	$('.in_pat_validated').delay(4000).fadeOut();
-	    alert('Something went wrong.');
+		$('.in_pat_validated').delay('fast').fadeIn();
+		$('.in_pat_validated').delay(4000).fadeOut();
+	    alert('In-Patient Details Required');
 	    return false;
 	}
 	else
 	{ 
-
-if (confirm('Are You Sure to Save ?')) {
-
-		$.ajax({
-	    type: "POST",
-	url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/saveddata";?>",
-	data: $("#saved_data_value_ajax").serialize(),
-	success: function (result) 
-	{ 
-		
-		var data1=result.split("=")[0];
-	var data2=result.split("=")[1];
-	//alert(data2);
-	if(data1=="Y")
-	{
-		if(data2=='OPTEMPSAVED')
-	{
-		alert('Data Saved');
-		
-		window.location.reload(true);
-	}
-	else
-	{
-		 $("#saved_val").val(data2);
-		$(".save_billing").prop('disabled', true);
-	 var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data2;
-	 
-	 window.open(url,'_blank');
-						 window.location.reload(true);
+		if (confirm('Are You Sure to Save ?')) 
+		{
+			$.ajax({
+			type: "POST",
+			url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/saveddata";?>",
+			data: $("#saved_data_value_ajax").serialize(),
+			success: function (result) 
+			{ 
+				
+				var data1=result.split("=")[0];
+				var data2=result.split("=")[1];
+				if(data1=="Y")
+				{
+					if(data2=='OPTEMPSAVED')
+					{
+						alert('Data Saved');
+						window.location.reload(true);
 					}
-						
-	        	}
-	        }
-	    	});
+					else
+					{
+				 		$("#saved_val").val(data2);
+						$(".save_billing").prop('disabled', true);
+					    var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data2;
+			 			window.open(url,'_blank');
+						window.location.reload(true);
+					}
+				}
+			}
+			});
+		}
+	}
 
-}
-		}
-	/*}
-	else if ($("#tempPatient").is(":checked")) 	
-	{
-		 
-		
-		var gh=$("#saved_data_value_ajax").serialize();
-	if(gh != '')
-	{
-		$.ajax({
-	    type: "POST",
-	url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/saveddata";?>",
-	data: gh,
-	success: function (result) 
-	{ 
-		var data1=result.split("=")[0];
-	var data2=result.split("=")[1];
-	if(data1=="Y")
-	{
-		 $(".save_billing").prop('disabled', true);
-	 var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data2;
-	 window.open(url,'_blank');
-						 window.location.reload(true);
-	        	}
-	        }
-	    	});	
-		}
-	}*/
 }
 			
 				
@@ -5469,6 +5048,7 @@ function formatDate(date)
 
      return [day, month, year].join('-');
  }
+ 
 function PatientDetailsFetch(data)
 {   $("#tbUser tbody tr").remove(); cleartxt();
 	$.ajax({
@@ -5496,42 +5076,7 @@ function PatientDetailsFetch(data)
 	});
 }
 
-$(".ipnumber").typeahead({
-	
-	source: function(query,result) {
-	  		$.ajax({
-	  			url:'<?php echo Yii::$app->homeUrl . "?r=in-registration/ajaxipnumber";?>',
-	  			method:'POST',
-	  			data:{query:query},
-	  			dataType:'json',
-	  			success:function(data)
-	  			{
-	  				result($.map(data, function(item){
-	  				return item.ip_no;
-	  			  }));
-	  				
-	  			}
-	  		})
-	},
-	autoSelect: true,
-	displayText: function(result)
-	{
-		 return result;
-	},
-	afterSelect: function(result) 
-	{  $('#load1').show();
-		$.ajax({
-	  			url:'<?php echo Yii::$app->homeUrl . "?r=in-registration/ajaxipnumberselect&id=";?>'+result,
-	  			method:'POST',
-	  			dataType:'json',
-	  			success:function(data)
-	  			{   $('#load1').hide();
-	  			 	$("#tbUser tbody tr").remove();
-	  			 	cleartxt();
-	  			}
-	  		})
-	  }
-});
+
 function cleartxt (argument) {
   $('#no_of_items').val('');
   $('#total_quantity').val('');
@@ -5579,16 +5124,16 @@ function PaidAmountCalculation(data,event)
 function PaidAmountCalculated(data)
 {
 	var grid_length=$("#tbUser tbody tr").length;
-	var get_insurance=$('#pat_insurance').val();
-	var mrnumber=$('#mrnumber').val();
-	var pat_name=$('#pat_name').val();
+	var get_insurance=$('#ippatient_insurance').val();
+	var ipnumber=$('#ipnumber').val();
+	var pat_name=$('#ippatientname').val();
 	var set_paidamount=data; 
 	
 	if ($("#inPatient").is(":checked"))
 	{
-		if(mrnumber !== '' && pat_name !== '')
+		if(ipnumber !== '' && pat_name !== '')
 		{
-			if(get_insurance === "1" || get_insurance === "2" || get_insurance === "3")
+			if(get_insurance !== '')
 			{
 				$('#paid_amt').val(0);
 				Alertment('This is Organization Patient');
@@ -5605,29 +5150,26 @@ function PaidAmountCalculated(data)
 					$('#paid_amt').val(0);
 					$('#medicines').focus();
 					Alertment('Add Product in Grid');
+					return false;
 				}
 				
 			}
 		}
 		else
 		{
-			ClearBillField();
-			$('#mrnumber').focus();
+			$('#ipnumber').focus();
 			Alertment('Patient Details Required');
 		}
-	}
-	else if($("#outPatient").is(":checked"))
-	{
-		PaidCalc(data)
 	}
 	else if($("#tempPatient").is(":checked"))
 	{
 		PaidCalc(data)
 	}
-	    var words =$('#paid_amt').val();
-       var net_amount_in_words=convertNumberToWords(Math.round(words));
-       $('#amt_in_words').val(net_amount_in_words);
-       var totamt=parseFloat($('#total_net_amount').val());
+	
+	var words =$('#paid_amt').val();
+    var net_amount_in_words=convertNumberToWords(Math.round(words));
+    $('#amt_in_words').val(net_amount_in_words);
+    var totamt=parseFloat($('#total_net_amount').val());
 	var round_off_value=Math.round(totamt);
 	$('#cash_value').val(round_off_value);
 }
@@ -5658,7 +5200,7 @@ function PaidCalc(data)
 	//Round Off Value
 	var round_off_value=Math.round(total_amount);
 	//$('#cash_value').val(round_off_value);
-	//$('#paid_amt').val(round_off_value);
+	//$('#paid_value').val(round_off_value);
 	
 	
 	if(round_off_value > total_amount)
@@ -5672,6 +5214,7 @@ function PaidCalc(data)
 		$('#round_off_value').val(round_off_cal.toFixed(2));
 	}
 	var datacal=0;
+	
 	if(round_off_value <= data)
 	{
 		datacal=round_off_value;
@@ -5687,7 +5230,7 @@ function PaidCalc(data)
 		var calculation=round_off_value - datacal;
 		$('#due_amt').val(calculation);
 		//$('#cash_value').val(datacal);
-		//$('#paid_amt').val(datacal);
+		//$('#paid_value').val(datacal);
 	}
 	
 	if(data === '')
@@ -5698,5 +5241,1230 @@ function PaidCalc(data)
 	}
 	
 }
+
+
+ function Add_to_grid(event)
+  {
+
+
+  		if(event.keyCode === 13)
+  		{
+			var arr = [];
+			var tbl_value = [];
+			var validated = [];
+			
+			$('.required_qty').each(function ()
+			{	
+   				arr.push($(this).val());
+   				tbl_value.push($(this).attr('data-id'));
+   				
+			});
+			
+			var prime_removal=$('#prime_id_conv').val();
+			var prime_split=prime_removal.split(',');
+			var iny=0;
+			$('.save_data_table').each(function ()
+			{	
+   				$('#table_del'+prime_split[iny]).remove();
+   				iny++;
+			});
+					
+			var slnovalue='';
+			var total_net_amount=0;
+			var total_net_quantity=0;
+			var no_of_items=0;
+			var total_gst_amount=0;
+			var sub_total=0;
+			var disc_amount=0;
+			
+			
+					 
+			if($('.get_slno').val() == '')
+			{
+				var slno=1;
+					
+				for (var i=0; i < arr.length; i++)
+				{
+					 var product_type=$('#data_unit'+tbl_value[i]).val();
+					 if(arr[i] != '' && tbl_value[i] != '')
+					 {	
+						if(product_type != '')
+						{
+							//validation
+							$('#validated_field'+tbl_value[i]).hide();
+							var batch_id=$('#batch_id'+tbl_value[i]).html();
+						  	var manu_date_id=$('#manu_date_id'+tbl_value[i]).html();
+						  	var expire_date_id=$('#expire_date_id'+tbl_value[i]).html();
+						  		
+						  	//unit calculation
+						  	var mrp_id=parseFloat($('#mrp_id'+tbl_value[i]).html());
+						  	var total_unit=parseInt($('#total_unit'+tbl_value[i]).val());
+						  	//var price_per_quantity=total_unit*mrp_id.toFixed(1);
+						  	var price_per_quantity=total_unit*mrp_id;
+						  	
+						  	var product_name=$('#prd_name'+tbl_value[i]).html();
+						  	var batchnumber=$('#batchnumber'+tbl_value[i]).html();
+						  		
+						  	//Quanity variable
+						  	//var total_qty=$('#total_qty'+tbl_value[i]).html();
+						  	var quanity_id=parseInt($('#quanity_id'+tbl_value[i]).html());
+						  	var required_id=parseInt($('#required_id'+tbl_value[i]).val());
+						  		
+						  	//var current_available_stock=quanity_id-required_id;
+						  		
+						  	var unit_value=$('#data-unit-name'+tbl_value[i]).val();
+						  		
+						  	var gst_sale_percent=$('#gst_sale_percent'+tbl_value[i]).html();
+						  		
+						  					
+							var product_id=$('#product_id'+tbl_value[i]).val();
+							var brandcode_id=$('#brandcode_id'+tbl_value[i]).val();
+							var stockcode_id=$('#stockcode_id'+tbl_value[i]).val();
+							var composition_id=$('#composition_id'+tbl_value[i]).val();
+							var unit_id=$('#unit_id'+tbl_value[i]).val();
+							var stock_id=$('#stock_id'+tbl_value[i]).val();
+							var mrp_id=$('#mrp_id'+tbl_value[i]).html();
+								 	
+							var tablet_type=$('#data_unit'+tbl_value[i]).val();
+							
+							var data_no_of_unit_value=$('#data_no_of_unit'+tbl_value[i]).val();	
+							
+							
+							//New Code 16/11/2018
+							var original_mrp_price=$('#mrp_per_qty_hide'+tbl_value[i]).val();
+										
+							var markup = "<tr  class='save_data_table' data-id="+tbl_value[i]+" id='table_del"+tbl_value[i]+"'><td class='hide'>"+slno+"</td><td style='width:7%'><div class='trunctext '  style=' '  >"+product_name+"</div></td><td  style='width:6%';>"+batchnumber+"</td><td  style='width:8%';>"+expire_date_id+"</td><td style='width:5%'; class='quantity_add' id='quantity_add"+tbl_value[i]+"'>"+required_id+"</td><td  style='width:7%'; id='unit_value_medicine"+tbl_value[i]+"'>"+unit_value+"</td><td style='width:8%';><input type='hidden' name='medicine_type_ins[]' id='medicine_type_ins"+tbl_value[i]+"' value='"+unit_value+"'><input type='hidden' name='tablet_tot_unit_ins[]' id='tablet_tot_unit"+tbl_value[i]+"' value='"+total_unit+"'><input type='hidden' name='tablet_type[]' id='tablet_type"+tbl_value[i]+"' value='"+tablet_type+"'><input type='hidden' name='mrp_rate_per_unit[]' value='"+mrp_id+"'><input type='hidden' name='stock_id[]' value='"+stock_id+"'><input type='hidden' name='unit_id[]' value='"+unit_id+"'><input type='hidden' name='composition_id[]' value='"+composition_id+"'>"
+							  							+"<input type='hidden' name='mrp_per_unit_amount[]' value='"+original_mrp_price+"'><input type='hidden' name='stockcode_id[]' value='"+stockcode_id+"'><input type='hidden' name='brandcode_id[]' value='"+brandcode_id+"'><input type='hidden' name='product_name_id[]' value='"+product_id+"'><input type='hidden' name='expire_date_id[]' value='"+expire_date_id+"'>"
+							  							+"<input type='hidden' name='batchnumber[]' value='"+batchnumber+"'><input type='hidden' name='product_name[]' value='"+product_name+"'><input type='hidden' name='quantity[]' value='"+required_id+"'><input type='hidden' name='primeid[]' value='"+tbl_value[i]+"'><input type='hidden' name='price[]' class='price_mrp text-right disctxt w-53' data_price_mrp="+tbl_value[i]+" value="+price_per_quantity+" id="+'price'+tbl_value[i]+"><input type='text' readonly name='showmrp[]' class='showmrp text-right disctxt w-53' data_price_mrp="+tbl_value[i]+" value="+original_mrp_price+" id="+'show_mrp'+tbl_value[i]+"></td>"
+						  								//+"<td><ul class='donate-now'><input type='hidden' name='discount_method[]' id='disc_method"+tbl_value[i]+"' ><li><input type='radio'  name='desc"+tbl_value[i]+"' data_flat='"+tbl_value[i]+"' id='flat_discount"+tbl_value[i]+"'  disabled='disabled' class='deselect flat testrad'  onchange='descChanged("+tbl_value[i]+")'><label for='flat_discount"+tbl_value[i]+"' class='w-50 text-center testrad'>F</label></li><li>"
+						  								//+"<input type='radio' id='percent"+tbl_value[i]+"' data-deselect="+tbl_value[i]+"  disabled='disabled' class='deselect percent testrad' name='desc"+tbl_value[i]+"'  onchange='descChanged("+tbl_value[i]+")' ><label for='percent"+tbl_value[i]+"' class='w-50 text-center testrad'>%</label></li></ul></td>"
+						  								+"<td><div class='input-group'> <input type='text' name='discount_value[]' data_disc_value='"+tbl_value[i]+"' id='enabledisc"+tbl_value[i]+"'  class='enabledisc disctxt w-55' readonly></div></td><td><div class='input-group'> <input type='text' name='discountext_value[]' id='disc_amount"+tbl_value[i]+"' class='add_discount text-right disctxt w-55' readonly>"
+						  								+"</div></td><td class='w-xss hide'><input type='hidden' class='form-control w-50' data_gst_percent='"+tbl_value[i]+"' name='gst_percent[]' id='gst_percent"+tbl_value[i]+"' value='"+gst_sale_percent+"' readonly><input type='text' class='form-control' data_igst_percent='"+tbl_value[i]+"' id='igst_percent"+tbl_value[i]+"' readonly></td><td class='hide'><input type='text'  class='form-control w-50' data_igst_value='"+tbl_value[i]+"' id='igst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td class=''><input type='text'  class='cgst_percent disctxt w-55 text-right' name='cgst_percent[]' data_cgst_percent='"+tbl_value[i]+"' id='cgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class=' cgst_value disctxt w-53 text-right' name='cgst_value[]' data_cgst_value='"+tbl_value[i]+"' id='cgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td class=''><input type='text'  class='sgst_percent  disctxt w-55' name='sgst_percent[]' data_sgst_percent='"+tbl_value[i]+"' id='sgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class=' w-53 disctxt sgst_value text-right' name='sgst_value[]' data_sgst_value='"+tbl_value[i]+"' id='sgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td><input type='text'  class='w-53 disctxt total_amt_cal text-right' name='total_amt_cal[]' data_total='"+tbl_value[i]+"' id='total_amount"+tbl_value[i]+"' readonly><input type='hidden'  class='form-control reduired_qty_hidden text-right' name='reduired_qty_hidden[]' data_total='"+tbl_value[i]+"' value="+required_id+" id='reduired_qty_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control price_hidden text-right' name='price_hidden[]' data_total='"+tbl_value[i]+"' id='price_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_percentage_hidden text-right' name='cgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_value_hidden text-right' name='cgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_percentage_hidden text-right' name='sgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_value_hidden text-right' name='sgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control total_amt_cal1 text-right' name='total_amt_cal1[]' data_total='"+tbl_value[i]+"' id='total_amount1"+tbl_value[i]+"'></td>"
+						  								+"<td class='text-center'><button type='button' class='btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow' data_delete_row="+tbl_value[i]+" id='delrow"+tbl_value[i]+"'><i class='fa fa-remove'></i></button></td></tr>";
+																																					
+																													
+														
+						 if($("#fetch_update_data").append(markup))
+		               	{
+		               		var disc_percentage=parseFloat($('#total_discountvaluetype').val());
+			                if(disc_percentage!='')
+			                {
+				                 setTimeout(function () {                 
+				                 OverallPercentageDiscountProcedure(disc_percentage);
+				               },200);
+			                } 
+		               	}	
+						  	
+						  	 
+						  	 if(isNaN($('#price'+tbl_value[i]).val()))
+   							 {
+   								$('#price'+tbl_value[i]).val(0);
+   								
+   								//$('#price_hidden'+tbl_value[i]).val(0);
+   							 }
+						  	 else
+						  	 {
+						  		$('#price'+tbl_value[i]).val();
+						  		//$('#price_hidden'+tbl_value[i]).val();
+						  	 }
+						  		
+						  	 if(gst_sale_percent == 0)
+						  	 {
+						  		$('#cgst_percent'+tbl_value[i]).val(0);
+						  		$('#cgst_value'+tbl_value[i]).val(0);
+						  		$('#sgst_percent'+tbl_value[i]).val(0);
+						  		$('#sgst_value'+tbl_value[i]).val(0);
+						  		$('#igst_percent'+tbl_value[i]).val(0);
+						  		$('#igst_value'+tbl_value[i]).val(0);
+						  			
+						  		var price=parseFloat($('#price'+tbl_value[i]).val());
+						  		//var priceceil=Math.ceil(price);
+						  		//Total
+						  		$('#total_amount'+tbl_value[i]).val(price.toFixed(2));
+						  		
+						  		//Hidden Value Set	
+						  		$('#total_amount1'+tbl_value[i]).val(price.toFixed(2));
+						  		$('#price_hidden'+tbl_value[i]).val(price.toFixed(2));
+						  		$('#cgst_percentage_hidden'+tbl_value[i]).val(0);
+						  		$('#cgst_value_hidden'+tbl_value[i]).val(0);
+						  		$('#sgst_percentage_hidden'+tbl_value[i]).val(0);
+						  		$('#sgst_value_hidden'+tbl_value[i]).val(0);
+						  			
+						  	 }
+						  	 else
+						  	 {
+						  		var gst_divide=gst_sale_percent/2;
+						  		
+						  		if(isNaN(gst_divide))
+   							 	{
+   									gst_divide=0;
+   							 	}
+						  		
+						  		var total_amount=parseFloat($('#price'+tbl_value[i]).val());
+						  		
+						  		if(isNaN(total_amount))
+   							 	{
+   									total_amount=0;
+   							 	}
+						  			
+						  		var cgst_value=total_amount*gst_divide;
+						  		
+						  		if(isNaN(cgst_value))
+   							 	{
+   									cgst_value=0;
+   							 	}
+						  		
+						  		var cgst_amt=cgst_value/100;
+						  		
+						  		if(isNaN(cgst_amt))
+   							 	{
+   									cgst_amt=0;
+   							 	}
+						  		
+						  		var cgst_amount=parseFloat(cgst_amt);
+						  		
+						  		if(isNaN(cgst_amount))
+   							 	{
+   									cgst_amount=0;
+   							 	}
+						  			
+						  		var sgst_value=total_amount*gst_divide;
+						  		
+						  		if(isNaN(sgst_value))
+   							 	{
+   									sgst_value=0;
+   							 	}
+						  		
+						  		var sgst_amt=sgst_value/100;
+						  		
+						  		if(isNaN(sgst_amt))
+   							 	{
+   									sgst_amt=0;
+   							 	}
+						  		
+						  		var sgst_amount=parseFloat(sgst_amt);
+						  			
+						  		if(isNaN(sgst_amount))
+   							 	{
+   									sgst_amount=0;
+   							 	}	
+						  			var total=total_amount+cgst_amount+sgst_amount;
+						  			var totfloat=parseFloat(total);
+						  		if(isNaN(total))
+   							 	{
+   									total=0;
+   							 	}	
+						  		
+						  			$('#cgst_percent'+tbl_value[i]).val(gst_divide);
+						  			$('#cgst_value'+tbl_value[i]).val(cgst_amount.toFixed(2));
+						  			$('#sgst_percent'+tbl_value[i]).val(gst_divide);
+						  			$('#sgst_value'+tbl_value[i]).val(sgst_amount.toFixed(2));
+						  			$('#igst_percent'+tbl_value[i]).val(0);
+						  			$('#igst_value'+tbl_value[i]).val(0);
+						  			//Total
+						  			$('#total_amount'+tbl_value[i]).val(totfloat.toFixed(2));
+						  			
+						  			
+						  			
+						  			//Hidden Value Set	
+							  		$('#total_amount1'+tbl_value[i]).val(totfloat.toFixed(2));
+							  		$('#price_hidden'+tbl_value[i]).val(total_amount.toFixed(2));
+							  		$('#cgst_percentage_hidden'+tbl_value[i]).val(gst_divide);
+							  		$('#cgst_value_hidden'+tbl_value[i]).val(cgst_amount.toFixed(2));
+							  		$('#sgst_percentage_hidden'+tbl_value[i]).val(gst_divide);
+							  		$('#sgst_value_hidden'+tbl_value[i]).val(sgst_amount.toFixed(2));
+						  			
+						  		}
+						  		
+						  		slno++;
+						  		slnovalue=slno;	
+						  }
+							else
+							{
+								$('#validated_field'+tbl_value[i]).show();
+								$("#fetch_update_data tr").remove();
+								$modal = $('#myModal');
+								$modal.modal('show'); 
+								return false;
+							}	
+							
+					  	}
+					  	
+					}
+					
+								$('.get_slno').val(slnovalue);
+					 			$modal = $('#myModal');
+								$modal.modal('hide'); 
+									
+					}
+					else
+					{
+								 var slno=parseInt($('.get_slno').val());
+								 //exist total quanity
+								 var value=parseFloat($('#total_net_amount').val());
+								 var total_quantity_exist=parseInt($('#total_quantity').val());
+								 var no_of_items1=parseInt($('#no_of_items').val());
+								 var total_gst_amount1=parseFloat($('#total_gst_amount').val());
+								 var sub_total1=parseFloat($('#total_sub_total').val());
+								 var disc_amount1=parseFloat($('#total_discountvalue').val())
+					 
+									for (var i=0; i < arr.length; i++)
+									{
+										
+										var product_type=$('#data_unit'+tbl_value[i]).val();
+										
+									  	if(arr[i] != '' && tbl_value[i] != '')
+									  	{
+									  		if(product_type != '')
+											{
+													
+												$("#table_del"+tbl_value[i]).remove();									
+											  	var batch_id=$('#batch_id'+tbl_value[i]).html();
+											  	var manu_date_id=$('#manu_date_id'+tbl_value[i]).html();
+											  	var expire_date_id=$('#expire_date_id'+tbl_value[i]).html();
+											  		
+											  	//unit calculation
+											  	var mrp_id=parseFloat($('#mrp_id'+tbl_value[i]).html());
+											  	var total_unit=parseInt($('#total_unit'+tbl_value[i]).val());
+											  	//var price_per_quantity=total_unit*mrp_id.toFixed(1);
+											  	var price_per_quantity=total_unit*mrp_id;
+											  	
+											  	var product_name=$('#prd_name'+tbl_value[i]).html();
+											  	var batchnumber=$('#batchnumber'+tbl_value[i]).html();
+											  		
+											  	//Quanity variable
+											  	//var total_qty=$('#total_qty'+tbl_value[i]).html();
+											  	var quanity_id=parseInt($('#quanity_id'+tbl_value[i]).html());
+											  	var required_id=parseInt($('#required_id'+tbl_value[i]).val());
+											  	var unit_value=$('#data-unit-name'+tbl_value[i]).val();
+											  
+											  	var gst_sale_percent=$('#gst_sale_percent'+tbl_value[i]).html();
+											  	var product_id=$('#product_id'+tbl_value[i]).val();
+											  	var brandcode_id=$('#brandcode_id'+tbl_value[i]).val();
+												var stockcode_id=$('#stockcode_id'+tbl_value[i]).val();
+												var composition_id=$('#composition_id'+tbl_value[i]).val();
+												var unit_id=$('#unit_id'+tbl_value[i]).val();
+												var stock_id=$('#stock_id'+tbl_value[i]).val();
+												var mrp_id=$('#mrp_id'+tbl_value[i]).html();
+												 	
+												var tablet_type=$('#data_unit'+tbl_value[i]).val();	
+												
+												var data_no_of_unit_value=$('#data_no_of_unit'+tbl_value[i]).val();	
+												//alert(data_no_of_unit_value);
+												
+												//New Code 16/11/2018
+												var original_mrp_price=$('#mrp_per_qty_hide'+tbl_value[i]).val();
+												
+												
+												var markup = "<tr  class='save_data_table' data-id="+tbl_value[i]+" id='table_del"+tbl_value[i]+"'><td class='hide'>"+slno+"</td><td style='width:7%'><div class='trunctext  '>"+product_name+"</div></td><td style='width:6%';>"+batchnumber+"</td><td style='width:8%';>"+expire_date_id+"</td><td style='width:5%'; class='quantity_add' id='quantity_add"+tbl_value[i]+"'>"+required_id+"</td><td style='width:7%'; id='unit_value_medicine"+tbl_value[i]+"'>"+unit_value+"</td><td style='width:8%';><input type='hidden' name='medicine_type_ins[]' id='medicine_type_ins"+tbl_value[i]+"' value='"+unit_value+"'><input type='hidden' name='tablet_tot_unit_ins[]' id='tablet_tot_unit"+tbl_value[i]+"' value='"+total_unit+"'><input type='hidden' name='tablet_type[]' id='tablet_type"+tbl_value[i]+"' value='"+tablet_type+"'><input type='hidden' name='mrp_rate_per_unit[]' value='"+mrp_id+"'><input type='hidden' name='stock_id[]' value='"+stock_id+"'><input type='hidden' name='unit_id[]' value='"+unit_id+"'><input type='hidden' name='composition_id[]' value='"+composition_id+"'>"
+							  							+"<input type='hidden' name='mrp_per_unit_amount[]' value='"+original_mrp_price+"'><input type='hidden' name='stockcode_id[]' value='"+stockcode_id+"'><input type='hidden' name='brandcode_id[]' value='"+brandcode_id+"'><input type='hidden' name='product_name_id[]' value='"+product_id+"'><input type='hidden' name='expire_date_id[]' value='"+expire_date_id+"'>"
+							  							+"<input type='hidden' name='batchnumber[]' value='"+batchnumber+"'><input type='hidden' name='product_name[]' value='"+product_name+"'><input type='hidden' name='quantity[]' value='"+required_id+"'><input type='hidden' name='primeid[]' value='"+tbl_value[i]+"'><input type='hidden' name='price[]' class='price_mrp text-right  disctxt w-53' data_price_mrp="+tbl_value[i]+" value="+price_per_quantity+" id="+'price'+tbl_value[i]+"><input type='text' readonly name='showmrp[]' class='showmrp text-right disctxt w-53' data_price_mrp="+tbl_value[i]+" value="+original_mrp_price+" id="+'show_mrp'+tbl_value[i]+"></td>"
+						  								//+"<td><ul class='donate-now'><input type='hidden' name='discount_method[]' id='disc_method"+tbl_value[i]+"' ><li><input type='radio'  name='desc"+tbl_value[i]+"' data_flat='"+tbl_value[i]+"' id='flat_discount"+tbl_value[i]+"'  disabled='disabled' class='deselect flat testrad'  onchange='descChanged("+tbl_value[i]+")'><label for='flat_discount"+tbl_value[i]+"' class='w-50 text-center testrad'>F</label></li><li>"
+						  								//+"<input type='radio' id='percent"+tbl_value[i]+"' data-deselect="+tbl_value[i]+"  disabled='disabled' class='deselect percent testrad' name='desc"+tbl_value[i]+"'  onchange='descChanged("+tbl_value[i]+")' ><label for='percent"+tbl_value[i]+"' class='w-50 text-center testrad'>%</label></li></ul></td>"
+						  								+"<td><div class='input-group'> <input type='text' name='discount_value[]' data_disc_value='"+tbl_value[i]+"' id='enabledisc"+tbl_value[i]+"'  class='enabledisc disctxt w-55' readonly></div></td><td><div class='input-group'> <input type='text' name='discountext_value[]' id='disc_amount"+tbl_value[i]+"' class='add_discount text-right disctxt w-55' readonly>"
+						  								+"</div></td><td class='w-xss hide'><input type='hidden' class='form-control' data_gst_percent='"+tbl_value[i]+"' name='gst_percent[]' id='gst_percent"+tbl_value[i]+"' value='"+gst_sale_percent+"' readonly><input type='text' class='form-control' data_igst_percent='"+tbl_value[i]+"' id='igst_percent"+tbl_value[i]+"' readonly></td><td class='hide'><input type='text'  class='form-control' data_igst_value='"+tbl_value[i]+"' id='igst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td class=''><input type='text'  class='form-control cgst_percent text-right' name='cgst_percent[]' data_cgst_percent='"+tbl_value[i]+"' id='cgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class='w-53 cgst_value text-right' name='cgst_value[]' data_cgst_value='"+tbl_value[i]+"' id='cgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td class=''><input type='text'  class='form-control sgst_percent' name='sgst_percent[]' data_sgst_percent='"+tbl_value[i]+"' id='sgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class='w-53 sgst_value text-right' name='sgst_value[]' data_sgst_value='"+tbl_value[i]+"' id='sgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td><input type='text'  class='form-control total_amt_cal text-right' name='total_amt_cal[]' data_total='"+tbl_value[i]+"' id='total_amount"+tbl_value[i]+"' readonly><input type='hidden'  class='form-control reduired_qty_hidden text-right' name='reduired_qty_hidden[]' data_total='"+tbl_value[i]+"' value="+required_id+" id='reduired_qty_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control price_hidden text-right' name='price_hidden[]' data_total='"+tbl_value[i]+"' id='price_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_percentage_hidden text-right' name='cgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_value_hidden text-right' name='cgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_percentage_hidden text-right' name='sgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_value_hidden text-right' name='sgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control total_amt_cal1 text-right' name='total_amt_cal1[]' data_total='"+tbl_value[i]+"' id='total_amount1"+tbl_value[i]+"'></td>"
+						  								+"<td class='text-center'><button type='button' class='btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow' data_delete_row="+tbl_value[i]+" id='delrow"+tbl_value[i]+"'><i class='fa fa-remove'></i></button></td></tr>";
+																																					
+																			
+					
+                
+                  //	 $("#fetch_update_data").append(markup);
+
+
+                /* var disc_percentage=parseFloat($('#total_discountvaluetype').val());
+
+                if(disc_percentage!=''){
+                 OverallPercentageDiscountProcedure(disc_percentage);
+                } */
+               	if($("#fetch_update_data").append(markup))
+               	{
+               		var disc_percentage=parseFloat($('#total_discountvaluetype').val());
+	                if(disc_percentage!='')
+	                {
+		                 setTimeout(function () {                 
+		                 OverallPercentageDiscountProcedure(disc_percentage);
+		               },200);
+	                } 
+               	}						
+                 
+													
+											    if(isNaN($('#price'+tbl_value[i]).val()))
+				   							 	{
+				   									$('#price'+tbl_value[i]).val(0);
+				   							 	}
+										  		else
+										  		{
+										  			$('#price'+tbl_value[i]).val();
+										  		}
+										  		
+										  		if(gst_sale_percent == 0)
+										  		{
+										  			$('#cgst_percent'+tbl_value[i]).val(0);
+										  			$('#cgst_value'+tbl_value[i]).val(0);
+										  			$('#sgst_percent'+tbl_value[i]).val(0);
+										  			$('#sgst_value'+tbl_value[i]).val(0);
+										  			$('#igst_percent'+tbl_value[i]).val(0);
+										  			$('#igst_value'+tbl_value[i]).val(0);
+										  			
+										  			var price=parseFloat($('#price'+tbl_value[i]).val());
+										  			//var priceceil=Math.ceil(price);
+										  			//Total Price
+										  			if(isNaN(price))
+   							 						{
+   													 	price=0;
+   							 						}
+										  			
+										  			$('#total_amount'+tbl_value[i]).val(price.toFixed(2));
+										  			
+										  			//Hidden Value Set	
+											  		$('#total_amount1'+tbl_value[i]).val(price.toFixed(2));
+											  		$('#price_hidden'+tbl_value[i]).val(price.toFixed(2));
+											  		$('#cgst_percentage_hidden'+tbl_value[i]).val(0);
+											  		$('#cgst_value_hidden'+tbl_value[i]).val(0);
+											  		$('#sgst_percentage_hidden'+tbl_value[i]).val(0);
+											  		$('#sgst_value_hidden'+tbl_value[i]).val(0);
+										  			
+										  			
+										  		}
+										  		else
+										  		{
+										  			var gst_divide=gst_sale_percent/2;
+										  			if(isNaN(gst_divide))
+   							 						{
+   													 	gst_divide=0;
+   							 						}
+										  			var total_amount=parseFloat($('#price'+tbl_value[i]).val());
+										  			if(isNaN(total_amount))
+   							 						{
+   													 	total_amount=0;
+   							 						}
+										  			var cgst_value=total_amount*gst_divide;
+										  			if(isNaN(cgst_value))
+   							 						{
+   													 	cgst_value=0;
+   							 						}
+										  			var cgst_amt=cgst_value/100;
+										  			if(isNaN(cgst_amt))
+   							 						{
+   													 	cgst_amt=0;
+   							 						}
+										  			var cgst_amount=parseFloat(cgst_amt);
+										  			if(isNaN(cgst_amount))
+   							 						{
+   													 	cgst_amount=0;
+   							 						}
+										  			var sgst_value=total_amount*gst_divide;
+										  			if(isNaN(sgst_value))
+   							 						{
+   													 	sgst_value=0;
+   							 						}
+										  			var sgst_amt=sgst_value/100;
+										  			if(isNaN(sgst_amt))
+   							 						{
+   													 	sgst_amt=0;
+   							 						}
+										  			var sgst_amount=parseFloat(sgst_amt);
+										  			if(isNaN(sgst_amount))
+   							 						{
+   													 	sgst_amount=0;
+   							 						}
+										  			var total=total_amount+cgst_amount+sgst_amount;
+										  			var totalceil=parseFloat(total);
+										  			if(isNaN(total))
+   							 						{
+   													 	total=0;
+   							 						}
+										  		
+										  			$('#cgst_percent'+tbl_value[i]).val(gst_divide);
+										  			$('#cgst_value'+tbl_value[i]).val(cgst_amount.toFixed(2));
+										  			$('#sgst_percent'+tbl_value[i]).val(gst_divide);
+										  			$('#sgst_value'+tbl_value[i]).val(sgst_amount.toFixed(2));
+										  			$('#igst_percent'+tbl_value[i]).val(0);
+										  			$('#igst_value'+tbl_value[i]).val(0);
+										  			//Total Price
+										  			$('#total_amount'+tbl_value[i]).val(totalceil.toFixed(2));
+										  			
+										  			//Hidden Value Set	
+											  		$('#total_amount1'+tbl_value[i]).val(totalceil.toFixed(2));
+											  		$('#price_hidden'+tbl_value[i]).val(total_amount.toFixed(2));
+											  		$('#cgst_percentage_hidden'+tbl_value[i]).val(gst_divide);
+											  		$('#cgst_value_hidden'+tbl_value[i]).val(cgst_amount.toFixed(2));
+											  		$('#sgst_percentage_hidden'+tbl_value[i]).val(gst_divide);
+											  		$('#sgst_value_hidden'+tbl_value[i]).val(sgst_amount.toFixed(2));
+										  			
+										  			
+										  		}
+											  		slno++;
+											  		slnovalue=slno;
+											  	
+									  		}
+											if(product_type == '')
+											{
+													$('#validated_field'+tbl_value[i]).show();
+													$modal = $('#myModal');
+													$modal.modal('show'); 
+													return false;
+											}	
+											
+											
+									  	}
+									} // For Loop End
+		
+									$('.get_slno').val(slnovalue);
+									 $modal = $('#myModal');
+									$modal.modal('hide'); 
+									
+									
+					}
+						
+						var inc=0;
+						var total_amount=0;
+						var total_amount_final=0;
+						var total_quantity=0;
+						var total_quantity_final=0;
+						var total_gst_amount=0;
+						var total_gst_amount_final=0;
+						var disc_amount=0;
+						var disc_amount_final=0;
+						var total_net_amount=0;
+						var total_net_amount_final=0;
+						var hidden_net_amount=0;
+						$('.save_data_table').each(function ()
+						{	
+							var data_id=$(this).attr('data-id');
+							total_amount=parseFloat($('#price'+data_id).val());
+							total_quantity=parseInt($('#quantity_add'+data_id).html());
+							var sgst=parseFloat($('#sgst_value'+data_id).val());
+							var cgst=parseFloat($('#cgst_value'+data_id).val());
+							disc_amount=parseFloat($('#disc_amount'+data_id).val());
+							total_net_amount=parseFloat($('#total_amount'+data_id).val());
+							
+							var hidden_net_amount_var=parseFloat($('#total_amount1'+data_id).val());
+							
+							if(isNaN(hidden_net_amount_var))
+							{
+								hidden_net_amount_var=0;
+							}
+							
+							
+							if(isNaN(sgst))
+   							{
+   								sgst=0;
+   							}
+   							if(isNaN(cgst))
+   							{
+   								cgst=0;
+   							}
+   							
+							total_gst_amount=cgst+sgst;
+							
+							if(isNaN(total_amount))
+   							{
+   								total_amount=0;
+   							}
+   							if(isNaN(total_quantity))
+   							{
+   								total_quantity=0;
+   							}
+   							if(isNaN(total_quantity))
+   							{
+   								total_quantity=0;
+   							}
+   							if(isNaN(disc_amount))
+   							{
+   								disc_amount=0;
+   							}
+   							if(isNaN(total_net_amount))
+   							{
+   								total_net_amount=0;
+   							}
+							total_amount_final+=total_amount;
+							total_quantity_final+=total_quantity;
+							total_gst_amount_final+=total_gst_amount;
+							
+							disc_amount_final+=disc_amount;
+							total_net_amount_final+=total_net_amount;
+							inc++;	
+							
+							hidden_net_amount=hidden_net_amount_var+hidden_net_amount;			
+						});
+						
+						$('#no_of_items').val(inc);
+						$('#total_sub_total').val(total_amount_final.toFixed(2));
+						$('#total_quantity').val(total_quantity_final);
+						$('#total_gst_amount').val(total_gst_amount_final.toFixed(2));
+						$('#total_discountvalue').val(disc_amount_final.toFixed(2));
+						$('#total_roundedvalue').val(total_net_amount_final.toFixed(2));
+						
+						$('#total_net_amount').val(total_net_amount_final.toFixed(2));
+						
+						//new code 20/11/2018
+						$('#total_amount_mrp').val(hidden_net_amount.toFixed(2));
+						
+						
+						//Amount In Words
+						var net_amount_in_words=convertNumberToWords(Math.round(total_net_amount_final));
+						$('#amt_in_words').val(net_amount_in_words);
+						
+						//cash value
+						$('#cash_value').val(Math.round(total_net_amount_final));
+						
+						//Round Off Value
+						var round_off_value=Math.round(total_net_amount_final);
+						if(round_off_value > total_net_amount_final)
+						{
+							var round_off_cal=round_off_value - total_net_amount_final;
+							$('#round_off_value').val(round_off_cal.toFixed(2));
+						}
+						else if(round_off_value < total_net_amount_final)
+						{
+							var round_off_cal=total_net_amount_final - round_off_value;
+							$('#round_off_value').val(round_off_cal.toFixed(2));
+						}
+					
+						var get_insurancevalue=$('#ippatient_insurance').val();
+					
+						 if(get_insurancevalue !== "")
+						 {
+						 	
+						 		$('#due_amt').val(Math.round(total_net_amount_final));
+      							$('#paid_amt').val('0');	
+      					 }
+      					 else
+      					 {
+      							$('#due_amt').val('0');
+      							$('#paid_amt').val(Math.round(total_net_amount_final));
+      					 }
+      							
+						
+				
+						
+						
+						
+						$('#fetch_update_data').scrollTop(200);
+						
+						$('#medicines').val('');
+						$('#medicines').focus();
+						
+						//PaidAmountCalculation();
+			}
+			
+  }
+  
+  function Add_to_grid()
+{
+		
+			var arr = [];
+			var tbl_value = [];
+			var validated = [];
+			
+			$('.required_qty').each(function ()
+			{	
+   				arr.push($(this).val());
+   				tbl_value.push($(this).attr('data-id'));
+   				
+			});
+			
+			var prime_removal=$('#prime_id_conv').val();
+			var prime_split=prime_removal.split(',');
+			var iny=0;
+			$('.save_data_table').each(function ()
+			{	
+   				$('#table_del'+prime_split[iny]).remove();
+   				iny++;
+			});
+					
+			var slnovalue='';
+			var total_net_amount=0;
+			var total_net_quantity=0;
+			var no_of_items=0;
+			var total_gst_amount=0;
+			var sub_total=0;
+			var disc_amount=0;
+			
+			
+					 
+			if($('.get_slno').val() == '')
+			{
+				var slno=1;
+					
+				for (var i=0; i < arr.length; i++)
+				{
+					 var product_type=$('#data_unit'+tbl_value[i]).val();
+					 if(arr[i] != '' && tbl_value[i] != '')
+					 {	
+						if(product_type != '')
+						{
+							//validation
+							$('#validated_field'+tbl_value[i]).hide();
+							var batch_id=$('#batch_id'+tbl_value[i]).html();
+						  	var manu_date_id=$('#manu_date_id'+tbl_value[i]).html();
+						  	var expire_date_id=$('#expire_date_id'+tbl_value[i]).html();
+						  		
+						  	//unit calculation
+						  	var mrp_id=parseFloat($('#mrp_id'+tbl_value[i]).html());
+						  	var total_unit=parseInt($('#total_unit'+tbl_value[i]).val());
+						  	//var price_per_quantity=total_unit*mrp_id.toFixed(1);
+						  	var price_per_quantity=total_unit*mrp_id;
+						  	
+						  	var product_name=$('#prd_name'+tbl_value[i]).html();
+						  	var batchnumber=$('#batchnumber'+tbl_value[i]).html();
+						  		
+						  	//Quanity variable
+						  	//var total_qty=$('#total_qty'+tbl_value[i]).html();
+						  	var quanity_id=parseInt($('#quanity_id'+tbl_value[i]).html());
+						  	var required_id=parseInt($('#required_id'+tbl_value[i]).val());
+						  		
+						  	//var current_available_stock=quanity_id-required_id;
+						  		
+						  	var unit_value=$('#data-unit-name'+tbl_value[i]).val();
+						  		
+						  	var gst_sale_percent=$('#gst_sale_percent'+tbl_value[i]).html();
+						  		
+						  					
+							var product_id=$('#product_id'+tbl_value[i]).val();
+							var brandcode_id=$('#brandcode_id'+tbl_value[i]).val();
+							var stockcode_id=$('#stockcode_id'+tbl_value[i]).val();
+							var composition_id=$('#composition_id'+tbl_value[i]).val();
+							var unit_id=$('#unit_id'+tbl_value[i]).val();
+							var stock_id=$('#stock_id'+tbl_value[i]).val();
+							var mrp_id=$('#mrp_id'+tbl_value[i]).html();
+								 	
+							var tablet_type=$('#data_unit'+tbl_value[i]).val();
+							
+							var data_no_of_unit_value=$('#data_no_of_unit'+tbl_value[i]).val();	
+							
+							
+							//New Code 16/11/2018
+							var original_mrp_price=$('#mrp_per_qty_hide'+tbl_value[i]).val();
+										
+							var markup = "<tr  class='save_data_table' data-id="+tbl_value[i]+" id='table_del"+tbl_value[i]+"'><td class='hide'>"+slno+"</td><td style='width:7%'><div class='trunctext '  style=' '  >"+product_name+"</div></td><td  style='width:6%';>"+batchnumber+"</td><td  style='width:8%';>"+expire_date_id+"</td><td style='width:5%'; class='quantity_add' id='quantity_add"+tbl_value[i]+"'>"+required_id+"</td><td  style='width:7%'; id='unit_value_medicine"+tbl_value[i]+"'>"+unit_value+"</td><td style='width:8%';><input type='hidden' name='medicine_type_ins[]' id='medicine_type_ins"+tbl_value[i]+"' value='"+unit_value+"'><input type='hidden' name='tablet_tot_unit_ins[]' id='tablet_tot_unit"+tbl_value[i]+"' value='"+total_unit+"'><input type='hidden' name='tablet_type[]' id='tablet_type"+tbl_value[i]+"' value='"+tablet_type+"'><input type='hidden' name='mrp_rate_per_unit[]' value='"+mrp_id+"'><input type='hidden' name='stock_id[]' value='"+stock_id+"'><input type='hidden' name='unit_id[]' value='"+unit_id+"'><input type='hidden' name='composition_id[]' value='"+composition_id+"'>"
+							  							+"<input type='hidden' name='mrp_per_unit_amount[]' value='"+original_mrp_price+"'><input type='hidden' name='stockcode_id[]' value='"+stockcode_id+"'><input type='hidden' name='brandcode_id[]' value='"+brandcode_id+"'><input type='hidden' name='product_name_id[]' value='"+product_id+"'><input type='hidden' name='expire_date_id[]' value='"+expire_date_id+"'>"
+							  							+"<input type='hidden' name='batchnumber[]' value='"+batchnumber+"'><input type='hidden' name='product_name[]' value='"+product_name+"'><input type='hidden' name='quantity[]' value='"+required_id+"'><input type='hidden' name='primeid[]' value='"+tbl_value[i]+"'><input type='hidden' name='price[]' class='price_mrp text-right disctxt w-53' data_price_mrp="+tbl_value[i]+" value="+price_per_quantity+" id="+'price'+tbl_value[i]+"><input type='text' readonly name='showmrp[]' class='showmrp text-right disctxt w-53' data_price_mrp="+tbl_value[i]+" value="+original_mrp_price+" id="+'show_mrp'+tbl_value[i]+"></td>"
+						  								//+"<td><ul class='donate-now'><input type='hidden' name='discount_method[]' id='disc_method"+tbl_value[i]+"' ><li><input type='radio'  name='desc"+tbl_value[i]+"' data_flat='"+tbl_value[i]+"' id='flat_discount"+tbl_value[i]+"'  disabled='disabled' class='deselect flat testrad'  onchange='descChanged("+tbl_value[i]+")'><label for='flat_discount"+tbl_value[i]+"' class='w-50 text-center testrad'>F</label></li><li>"
+						  								//+"<input type='radio' id='percent"+tbl_value[i]+"' data-deselect="+tbl_value[i]+"  disabled='disabled' class='deselect percent testrad' name='desc"+tbl_value[i]+"'  onchange='descChanged("+tbl_value[i]+")' ><label for='percent"+tbl_value[i]+"' class='w-50 text-center testrad'>%</label></li></ul></td>"
+						  								+"<td><div class='input-group'> <input type='text' name='discount_value[]' data_disc_value='"+tbl_value[i]+"' id='enabledisc"+tbl_value[i]+"'  class='enabledisc disctxt w-55' readonly></div></td><td><div class='input-group'> <input type='text' name='discountext_value[]' id='disc_amount"+tbl_value[i]+"' class='add_discount text-right disctxt w-55' readonly>"
+						  								+"</div></td><td class='w-xss hide'><input type='hidden' class='form-control w-50' data_gst_percent='"+tbl_value[i]+"' name='gst_percent[]' id='gst_percent"+tbl_value[i]+"' value='"+gst_sale_percent+"' readonly><input type='text' class='form-control' data_igst_percent='"+tbl_value[i]+"' id='igst_percent"+tbl_value[i]+"' readonly></td><td class='hide'><input type='text'  class='form-control w-50' data_igst_value='"+tbl_value[i]+"' id='igst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td class=''><input type='text'  class='cgst_percent disctxt w-55 text-right' name='cgst_percent[]' data_cgst_percent='"+tbl_value[i]+"' id='cgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class=' cgst_value disctxt w-53 text-right' name='cgst_value[]' data_cgst_value='"+tbl_value[i]+"' id='cgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td class=''><input type='text'  class='sgst_percent  disctxt w-55' name='sgst_percent[]' data_sgst_percent='"+tbl_value[i]+"' id='sgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class=' w-53 disctxt sgst_value text-right' name='sgst_value[]' data_sgst_value='"+tbl_value[i]+"' id='sgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td><input type='text'  class='w-53 disctxt total_amt_cal text-right' name='total_amt_cal[]' data_total='"+tbl_value[i]+"' id='total_amount"+tbl_value[i]+"' readonly><input type='hidden'  class='form-control reduired_qty_hidden text-right' name='reduired_qty_hidden[]' data_total='"+tbl_value[i]+"' value="+required_id+" id='reduired_qty_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control price_hidden text-right' name='price_hidden[]' data_total='"+tbl_value[i]+"' id='price_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_percentage_hidden text-right' name='cgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_value_hidden text-right' name='cgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_percentage_hidden text-right' name='sgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_value_hidden text-right' name='sgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control total_amt_cal1 text-right' name='total_amt_cal1[]' data_total='"+tbl_value[i]+"' id='total_amount1"+tbl_value[i]+"'></td>"
+						  								+"<td class='text-center'><button type='button' class='btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow' data_delete_row="+tbl_value[i]+" id='delrow"+tbl_value[i]+"'><i class='fa fa-remove'></i></button></td></tr>";
+																																					
+																													
+														
+						 if($("#fetch_update_data").append(markup))
+		               	{
+		               		var disc_percentage=parseFloat($('#total_discountvaluetype').val());
+			                if(disc_percentage!='')
+			                {
+				                 setTimeout(function () {                 
+				                 OverallPercentageDiscountProcedure(disc_percentage);
+				               },200);
+			                } 
+		               	}	
+						  	
+						  	 
+						  	 if(isNaN($('#price'+tbl_value[i]).val()))
+   							 {
+   								$('#price'+tbl_value[i]).val(0);
+   								
+   								//$('#price_hidden'+tbl_value[i]).val(0);
+   							 }
+						  	 else
+						  	 {
+						  		$('#price'+tbl_value[i]).val();
+						  		//$('#price_hidden'+tbl_value[i]).val();
+						  	 }
+						  		
+						  	 if(gst_sale_percent == 0)
+						  	 {
+						  		$('#cgst_percent'+tbl_value[i]).val(0);
+						  		$('#cgst_value'+tbl_value[i]).val(0);
+						  		$('#sgst_percent'+tbl_value[i]).val(0);
+						  		$('#sgst_value'+tbl_value[i]).val(0);
+						  		$('#igst_percent'+tbl_value[i]).val(0);
+						  		$('#igst_value'+tbl_value[i]).val(0);
+						  			
+						  		var price=parseFloat($('#price'+tbl_value[i]).val());
+						  		//var priceceil=Math.ceil(price);
+						  		//Total
+						  		$('#total_amount'+tbl_value[i]).val(price.toFixed(2));
+						  		
+						  		//Hidden Value Set	
+						  		$('#total_amount1'+tbl_value[i]).val(price.toFixed(2));
+						  		$('#price_hidden'+tbl_value[i]).val(price.toFixed(2));
+						  		$('#cgst_percentage_hidden'+tbl_value[i]).val(0);
+						  		$('#cgst_value_hidden'+tbl_value[i]).val(0);
+						  		$('#sgst_percentage_hidden'+tbl_value[i]).val(0);
+						  		$('#sgst_value_hidden'+tbl_value[i]).val(0);
+						  			
+						  	 }
+						  	 else
+						  	 {
+						  		var gst_divide=gst_sale_percent/2;
+						  		
+						  		if(isNaN(gst_divide))
+   							 	{
+   									gst_divide=0;
+   							 	}
+						  		
+						  		var total_amount=parseFloat($('#price'+tbl_value[i]).val());
+						  		
+						  		if(isNaN(total_amount))
+   							 	{
+   									total_amount=0;
+   							 	}
+						  			
+						  		var cgst_value=total_amount*gst_divide;
+						  		
+						  		if(isNaN(cgst_value))
+   							 	{
+   									cgst_value=0;
+   							 	}
+						  		
+						  		var cgst_amt=cgst_value/100;
+						  		
+						  		if(isNaN(cgst_amt))
+   							 	{
+   									cgst_amt=0;
+   							 	}
+						  		
+						  		var cgst_amount=parseFloat(cgst_amt);
+						  		
+						  		if(isNaN(cgst_amount))
+   							 	{
+   									cgst_amount=0;
+   							 	}
+						  			
+						  		var sgst_value=total_amount*gst_divide;
+						  		
+						  		if(isNaN(sgst_value))
+   							 	{
+   									sgst_value=0;
+   							 	}
+						  		
+						  		var sgst_amt=sgst_value/100;
+						  		
+						  		if(isNaN(sgst_amt))
+   							 	{
+   									sgst_amt=0;
+   							 	}
+						  		
+						  		var sgst_amount=parseFloat(sgst_amt);
+						  			
+						  		if(isNaN(sgst_amount))
+   							 	{
+   									sgst_amount=0;
+   							 	}	
+						  			var total=total_amount+cgst_amount+sgst_amount;
+						  			var totfloat=parseFloat(total);
+						  		if(isNaN(total))
+   							 	{
+   									total=0;
+   							 	}	
+						  		
+						  			$('#cgst_percent'+tbl_value[i]).val(gst_divide);
+						  			$('#cgst_value'+tbl_value[i]).val(cgst_amount.toFixed(2));
+						  			$('#sgst_percent'+tbl_value[i]).val(gst_divide);
+						  			$('#sgst_value'+tbl_value[i]).val(sgst_amount.toFixed(2));
+						  			$('#igst_percent'+tbl_value[i]).val(0);
+						  			$('#igst_value'+tbl_value[i]).val(0);
+						  			//Total
+						  			$('#total_amount'+tbl_value[i]).val(totfloat.toFixed(2));
+						  			
+						  			
+						  			
+						  			//Hidden Value Set	
+							  		$('#total_amount1'+tbl_value[i]).val(totfloat.toFixed(2));
+							  		$('#price_hidden'+tbl_value[i]).val(total_amount.toFixed(2));
+							  		$('#cgst_percentage_hidden'+tbl_value[i]).val(gst_divide);
+							  		$('#cgst_value_hidden'+tbl_value[i]).val(cgst_amount.toFixed(2));
+							  		$('#sgst_percentage_hidden'+tbl_value[i]).val(gst_divide);
+							  		$('#sgst_value_hidden'+tbl_value[i]).val(sgst_amount.toFixed(2));
+						  			
+						  		}
+						  		
+						  		slno++;
+						  		slnovalue=slno;	
+						  }
+							else
+							{
+								$('#validated_field'+tbl_value[i]).show();
+								$("#fetch_update_data tr").remove();
+								$modal = $('#myModal');
+								$modal.modal('show'); 
+								return false;
+							}	
+							
+					  	}
+					  	
+					}
+					
+								$('.get_slno').val(slnovalue);
+					 			$modal = $('#myModal');
+								$modal.modal('hide'); 
+									
+					}
+					else
+					{
+								 var slno=parseInt($('.get_slno').val());
+								 //exist total quanity
+								 var value=parseFloat($('#total_net_amount').val());
+								 var total_quantity_exist=parseInt($('#total_quantity').val());
+								 var no_of_items1=parseInt($('#no_of_items').val());
+								 var total_gst_amount1=parseFloat($('#total_gst_amount').val());
+								 var sub_total1=parseFloat($('#total_sub_total').val());
+								 var disc_amount1=parseFloat($('#total_discountvalue').val())
+					 
+									for (var i=0; i < arr.length; i++)
+									{
+										
+										var product_type=$('#data_unit'+tbl_value[i]).val();
+										
+									  	if(arr[i] != '' && tbl_value[i] != '')
+									  	{
+									  		if(product_type != '')
+											{
+													
+												$("#table_del"+tbl_value[i]).remove();									
+											  	var batch_id=$('#batch_id'+tbl_value[i]).html();
+											  	var manu_date_id=$('#manu_date_id'+tbl_value[i]).html();
+											  	var expire_date_id=$('#expire_date_id'+tbl_value[i]).html();
+											  		
+											  	//unit calculation
+											  	var mrp_id=parseFloat($('#mrp_id'+tbl_value[i]).html());
+											  	var total_unit=parseInt($('#total_unit'+tbl_value[i]).val());
+											  	//var price_per_quantity=total_unit*mrp_id.toFixed(1);
+											  	var price_per_quantity=total_unit*mrp_id;
+											  	
+											  	var product_name=$('#prd_name'+tbl_value[i]).html();
+											  	var batchnumber=$('#batchnumber'+tbl_value[i]).html();
+											  		
+											  	//Quanity variable
+											  	//var total_qty=$('#total_qty'+tbl_value[i]).html();
+											  	var quanity_id=parseInt($('#quanity_id'+tbl_value[i]).html());
+											  	var required_id=parseInt($('#required_id'+tbl_value[i]).val());
+											  	var unit_value=$('#data-unit-name'+tbl_value[i]).val();
+											  
+											  	var gst_sale_percent=$('#gst_sale_percent'+tbl_value[i]).html();
+											  	var product_id=$('#product_id'+tbl_value[i]).val();
+											  	var brandcode_id=$('#brandcode_id'+tbl_value[i]).val();
+												var stockcode_id=$('#stockcode_id'+tbl_value[i]).val();
+												var composition_id=$('#composition_id'+tbl_value[i]).val();
+												var unit_id=$('#unit_id'+tbl_value[i]).val();
+												var stock_id=$('#stock_id'+tbl_value[i]).val();
+												var mrp_id=$('#mrp_id'+tbl_value[i]).html();
+												 	
+												var tablet_type=$('#data_unit'+tbl_value[i]).val();	
+												
+												var data_no_of_unit_value=$('#data_no_of_unit'+tbl_value[i]).val();	
+												//alert(data_no_of_unit_value);
+												
+												//New Code 16/11/2018
+												var original_mrp_price=$('#mrp_per_qty_hide'+tbl_value[i]).val();
+												
+												
+												var markup = "<tr  class='save_data_table' data-id="+tbl_value[i]+" id='table_del"+tbl_value[i]+"'><td class='hide'>"+slno+"</td><td style='width:7%'><div class='trunctext  '>"+product_name+"</div></td><td style='width:6%';>"+batchnumber+"</td><td style='width:8%';>"+expire_date_id+"</td><td style='width:5%'; class='quantity_add' id='quantity_add"+tbl_value[i]+"'>"+required_id+"</td><td style='width:7%'; id='unit_value_medicine"+tbl_value[i]+"'>"+unit_value+"</td><td style='width:8%';><input type='hidden' name='medicine_type_ins[]' id='medicine_type_ins"+tbl_value[i]+"' value='"+unit_value+"'><input type='hidden' name='tablet_tot_unit_ins[]' id='tablet_tot_unit"+tbl_value[i]+"' value='"+total_unit+"'><input type='hidden' name='tablet_type[]' id='tablet_type"+tbl_value[i]+"' value='"+tablet_type+"'><input type='hidden' name='mrp_rate_per_unit[]' value='"+mrp_id+"'><input type='hidden' name='stock_id[]' value='"+stock_id+"'><input type='hidden' name='unit_id[]' value='"+unit_id+"'><input type='hidden' name='composition_id[]' value='"+composition_id+"'>"
+							  							+"<input type='hidden' name='mrp_per_unit_amount[]' value='"+original_mrp_price+"'><input type='hidden' name='stockcode_id[]' value='"+stockcode_id+"'><input type='hidden' name='brandcode_id[]' value='"+brandcode_id+"'><input type='hidden' name='product_name_id[]' value='"+product_id+"'><input type='hidden' name='expire_date_id[]' value='"+expire_date_id+"'>"
+							  							+"<input type='hidden' name='batchnumber[]' value='"+batchnumber+"'><input type='hidden' name='product_name[]' value='"+product_name+"'><input type='hidden' name='quantity[]' value='"+required_id+"'><input type='hidden' name='primeid[]' value='"+tbl_value[i]+"'><input type='hidden' name='price[]' class='price_mrp text-right  disctxt w-53' data_price_mrp="+tbl_value[i]+" value="+price_per_quantity+" id="+'price'+tbl_value[i]+"><input type='text' readonly name='showmrp[]' class='showmrp text-right disctxt w-53' data_price_mrp="+tbl_value[i]+" value="+original_mrp_price+" id="+'show_mrp'+tbl_value[i]+"></td>"
+						  								//+"<td><ul class='donate-now'><input type='hidden' name='discount_method[]' id='disc_method"+tbl_value[i]+"' ><li><input type='radio'  name='desc"+tbl_value[i]+"' data_flat='"+tbl_value[i]+"' id='flat_discount"+tbl_value[i]+"'  disabled='disabled' class='deselect flat testrad'  onchange='descChanged("+tbl_value[i]+")'><label for='flat_discount"+tbl_value[i]+"' class='w-50 text-center testrad'>F</label></li><li>"
+						  								//+"<input type='radio' id='percent"+tbl_value[i]+"' data-deselect="+tbl_value[i]+"  disabled='disabled' class='deselect percent testrad' name='desc"+tbl_value[i]+"'  onchange='descChanged("+tbl_value[i]+")' ><label for='percent"+tbl_value[i]+"' class='w-50 text-center testrad'>%</label></li></ul></td>"
+						  								+"<td><div class='input-group'> <input type='text' name='discount_value[]' data_disc_value='"+tbl_value[i]+"' id='enabledisc"+tbl_value[i]+"'  class='enabledisc disctxt w-55' readonly></div></td><td><div class='input-group'> <input type='text' name='discountext_value[]' id='disc_amount"+tbl_value[i]+"' class='add_discount text-right disctxt w-55' readonly>"
+						  								+"</div></td><td class='w-xss hide'><input type='hidden' class='form-control' data_gst_percent='"+tbl_value[i]+"' name='gst_percent[]' id='gst_percent"+tbl_value[i]+"' value='"+gst_sale_percent+"' readonly><input type='text' class='form-control' data_igst_percent='"+tbl_value[i]+"' id='igst_percent"+tbl_value[i]+"' readonly></td><td class='hide'><input type='text'  class='form-control' data_igst_value='"+tbl_value[i]+"' id='igst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td class=''><input type='text'  class='form-control cgst_percent text-right' name='cgst_percent[]' data_cgst_percent='"+tbl_value[i]+"' id='cgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class='w-53 cgst_value text-right' name='cgst_value[]' data_cgst_value='"+tbl_value[i]+"' id='cgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td class=''><input type='text'  class='form-control sgst_percent' name='sgst_percent[]' data_sgst_percent='"+tbl_value[i]+"' id='sgst_percent"+tbl_value[i]+"' readonly></td><td><input type='text'  class='w-53 sgst_value text-right' name='sgst_value[]' data_sgst_value='"+tbl_value[i]+"' id='sgst_value"+tbl_value[i]+"' readonly></td>"
+						  								+"<td><input type='text'  class='form-control total_amt_cal text-right' name='total_amt_cal[]' data_total='"+tbl_value[i]+"' id='total_amount"+tbl_value[i]+"' readonly><input type='hidden'  class='form-control reduired_qty_hidden text-right' name='reduired_qty_hidden[]' data_total='"+tbl_value[i]+"' value="+required_id+" id='reduired_qty_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control price_hidden text-right' name='price_hidden[]' data_total='"+tbl_value[i]+"' id='price_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_percentage_hidden text-right' name='cgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control cgst_value_hidden text-right' name='cgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='cgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_percentage_hidden text-right' name='sgst_percentage_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_percentage_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control sgst_value_hidden text-right' name='sgst_value_hidden[]' data_total='"+tbl_value[i]+"' id='sgst_value_hidden"+tbl_value[i]+"'><input type='hidden'  class='form-control total_amt_cal1 text-right' name='total_amt_cal1[]' data_total='"+tbl_value[i]+"' id='total_amount1"+tbl_value[i]+"'></td>"
+						  								+"<td class='text-center'><button type='button' class='btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow' data_delete_row="+tbl_value[i]+" id='delrow"+tbl_value[i]+"'><i class='fa fa-remove'></i></button></td></tr>";
+																																					
+																			
+					
+                
+                  //	 $("#fetch_update_data").append(markup);
+
+
+                /* var disc_percentage=parseFloat($('#total_discountvaluetype').val());
+
+                if(disc_percentage!=''){
+                 OverallPercentageDiscountProcedure(disc_percentage);
+                } */
+               	if($("#fetch_update_data").append(markup))
+               	{
+               		var disc_percentage=parseFloat($('#total_discountvaluetype').val());
+	                if(disc_percentage!='')
+	                {
+		                 setTimeout(function () {                 
+		                 OverallPercentageDiscountProcedure(disc_percentage);
+		               },200);
+	                } 
+               	}						
+                 
+													
+											    if(isNaN($('#price'+tbl_value[i]).val()))
+				   							 	{
+				   									$('#price'+tbl_value[i]).val(0);
+				   							 	}
+										  		else
+										  		{
+										  			$('#price'+tbl_value[i]).val();
+										  		}
+										  		
+										  		if(gst_sale_percent == 0)
+										  		{
+										  			$('#cgst_percent'+tbl_value[i]).val(0);
+										  			$('#cgst_value'+tbl_value[i]).val(0);
+										  			$('#sgst_percent'+tbl_value[i]).val(0);
+										  			$('#sgst_value'+tbl_value[i]).val(0);
+										  			$('#igst_percent'+tbl_value[i]).val(0);
+										  			$('#igst_value'+tbl_value[i]).val(0);
+										  			
+										  			var price=parseFloat($('#price'+tbl_value[i]).val());
+										  			//var priceceil=Math.ceil(price);
+										  			//Total Price
+										  			if(isNaN(price))
+   							 						{
+   													 	price=0;
+   							 						}
+										  			
+										  			$('#total_amount'+tbl_value[i]).val(price.toFixed(2));
+										  			
+										  			//Hidden Value Set	
+											  		$('#total_amount1'+tbl_value[i]).val(price.toFixed(2));
+											  		$('#price_hidden'+tbl_value[i]).val(price.toFixed(2));
+											  		$('#cgst_percentage_hidden'+tbl_value[i]).val(0);
+											  		$('#cgst_value_hidden'+tbl_value[i]).val(0);
+											  		$('#sgst_percentage_hidden'+tbl_value[i]).val(0);
+											  		$('#sgst_value_hidden'+tbl_value[i]).val(0);
+										  			
+										  			
+										  		}
+										  		else
+										  		{
+										  			var gst_divide=gst_sale_percent/2;
+										  			if(isNaN(gst_divide))
+   							 						{
+   													 	gst_divide=0;
+   							 						}
+										  			var total_amount=parseFloat($('#price'+tbl_value[i]).val());
+										  			if(isNaN(total_amount))
+   							 						{
+   													 	total_amount=0;
+   							 						}
+										  			var cgst_value=total_amount*gst_divide;
+										  			if(isNaN(cgst_value))
+   							 						{
+   													 	cgst_value=0;
+   							 						}
+										  			var cgst_amt=cgst_value/100;
+										  			if(isNaN(cgst_amt))
+   							 						{
+   													 	cgst_amt=0;
+   							 						}
+										  			var cgst_amount=parseFloat(cgst_amt);
+										  			if(isNaN(cgst_amount))
+   							 						{
+   													 	cgst_amount=0;
+   							 						}
+										  			var sgst_value=total_amount*gst_divide;
+										  			if(isNaN(sgst_value))
+   							 						{
+   													 	sgst_value=0;
+   							 						}
+										  			var sgst_amt=sgst_value/100;
+										  			if(isNaN(sgst_amt))
+   							 						{
+   													 	sgst_amt=0;
+   							 						}
+										  			var sgst_amount=parseFloat(sgst_amt);
+										  			if(isNaN(sgst_amount))
+   							 						{
+   													 	sgst_amount=0;
+   							 						}
+										  			var total=total_amount+cgst_amount+sgst_amount;
+										  			var totalceil=parseFloat(total);
+										  			if(isNaN(total))
+   							 						{
+   													 	total=0;
+   							 						}
+										  		
+										  			$('#cgst_percent'+tbl_value[i]).val(gst_divide);
+										  			$('#cgst_value'+tbl_value[i]).val(cgst_amount.toFixed(2));
+										  			$('#sgst_percent'+tbl_value[i]).val(gst_divide);
+										  			$('#sgst_value'+tbl_value[i]).val(sgst_amount.toFixed(2));
+										  			$('#igst_percent'+tbl_value[i]).val(0);
+										  			$('#igst_value'+tbl_value[i]).val(0);
+										  			//Total Price
+										  			$('#total_amount'+tbl_value[i]).val(totalceil.toFixed(2));
+										  			
+										  			//Hidden Value Set	
+											  		$('#total_amount1'+tbl_value[i]).val(totalceil.toFixed(2));
+											  		$('#price_hidden'+tbl_value[i]).val(total_amount.toFixed(2));
+											  		$('#cgst_percentage_hidden'+tbl_value[i]).val(gst_divide);
+											  		$('#cgst_value_hidden'+tbl_value[i]).val(cgst_amount.toFixed(2));
+											  		$('#sgst_percentage_hidden'+tbl_value[i]).val(gst_divide);
+											  		$('#sgst_value_hidden'+tbl_value[i]).val(sgst_amount.toFixed(2));
+										  			
+										  			
+										  		}
+											  		slno++;
+											  		slnovalue=slno;
+											  	
+									  		}
+											if(product_type == '')
+											{
+													$('#validated_field'+tbl_value[i]).show();
+													$modal = $('#myModal');
+													$modal.modal('show'); 
+													return false;
+											}	
+											
+											
+									  	}
+									} // For Loop End
+		
+									$('.get_slno').val(slnovalue);
+									 $modal = $('#myModal');
+									$modal.modal('hide'); 
+									
+									
+					}
+						
+						var inc=0;
+						var total_amount=0;
+						var total_amount_final=0;
+						var total_quantity=0;
+						var total_quantity_final=0;
+						var total_gst_amount=0;
+						var total_gst_amount_final=0;
+						var disc_amount=0;
+						var disc_amount_final=0;
+						var total_net_amount=0;
+						var total_net_amount_final=0;
+						var hidden_net_amount=0;
+						$('.save_data_table').each(function ()
+						{	
+							var data_id=$(this).attr('data-id');
+							total_amount=parseFloat($('#price'+data_id).val());
+							total_quantity=parseInt($('#quantity_add'+data_id).html());
+							var sgst=parseFloat($('#sgst_value'+data_id).val());
+							var cgst=parseFloat($('#cgst_value'+data_id).val());
+							disc_amount=parseFloat($('#disc_amount'+data_id).val());
+							total_net_amount=parseFloat($('#total_amount'+data_id).val());
+							
+							var hidden_net_amount_var=parseFloat($('#total_amount1'+data_id).val());
+							
+							if(isNaN(hidden_net_amount_var))
+							{
+								hidden_net_amount_var=0;
+							}
+							
+							
+							if(isNaN(sgst))
+   							{
+   								sgst=0;
+   							}
+   							if(isNaN(cgst))
+   							{
+   								cgst=0;
+   							}
+   							
+							total_gst_amount=cgst+sgst;
+							
+							if(isNaN(total_amount))
+   							{
+   								total_amount=0;
+   							}
+   							if(isNaN(total_quantity))
+   							{
+   								total_quantity=0;
+   							}
+   							if(isNaN(total_quantity))
+   							{
+   								total_quantity=0;
+   							}
+   							if(isNaN(disc_amount))
+   							{
+   								disc_amount=0;
+   							}
+   							if(isNaN(total_net_amount))
+   							{
+   								total_net_amount=0;
+   							}
+							total_amount_final+=total_amount;
+							total_quantity_final+=total_quantity;
+							total_gst_amount_final+=total_gst_amount;
+							
+							disc_amount_final+=disc_amount;
+							total_net_amount_final+=total_net_amount;
+							inc++;	
+							
+							hidden_net_amount=hidden_net_amount_var+hidden_net_amount;			
+						});
+						
+						$('#no_of_items').val(inc);
+						$('#total_sub_total').val(total_amount_final.toFixed(2));
+						$('#total_quantity').val(total_quantity_final);
+						$('#total_gst_amount').val(total_gst_amount_final.toFixed(2));
+						$('#total_discountvalue').val(disc_amount_final.toFixed(2));
+						$('#total_roundedvalue').val(total_net_amount_final.toFixed(2));
+						
+						$('#total_net_amount').val(total_net_amount_final.toFixed(2));
+						
+						//new code 20/11/2018
+						$('#total_amount_mrp').val(hidden_net_amount.toFixed(2));
+						
+						
+						//Amount In Words
+						var net_amount_in_words=convertNumberToWords(Math.round(total_net_amount_final));
+						$('#amt_in_words').val(net_amount_in_words);
+						
+						//cash value
+						$('#cash_value').val(Math.round(total_net_amount_final));
+						
+						//Round Off Value
+						var round_off_value=Math.round(total_net_amount_final);
+						if(round_off_value > total_net_amount_final)
+						{
+							var round_off_cal=round_off_value - total_net_amount_final;
+							$('#round_off_value').val(round_off_cal.toFixed(2));
+						}
+						else if(round_off_value < total_net_amount_final)
+						{
+							var round_off_cal=total_net_amount_final - round_off_value;
+							$('#round_off_value').val(round_off_cal.toFixed(2));
+						}
+					
+						var get_insurancevalue=$('#ippatient_insurance').val();
+							
+						 if(get_insurancevalue !== "")
+						 {
+						 	
+						 		$('#due_amt').val(Math.round(total_net_amount_final));
+      							$('#paid_amt').val('0');	
+      					 }
+      					 else
+      					 {
+      							$('#due_amt').val('0');
+      							$('#paid_amt').val(Math.round(total_net_amount_final));
+      					 }
+      							
+						
+				
+						
+						
+						
+						$('#fetch_update_data').scrollTop(200);
+						
+						$('#medicines').val('');
+						$('#medicines').focus();
+						
+						//PaidAmountCalculation();
+			
+				}
 </script>
 

@@ -9,13 +9,14 @@
 
 <script type="text/javascript" src="<?php echo Url::base(); ?>/date_pick_dmc/js/jquery.plugin.js"></script>
 <script type="text/javascript" src="<?php echo Url::base(); ?>/date_pick_dmc/js/jquery.datepick.js"></script>
+
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo Url::base(); ?>/date_pick_dmc/css/jquery.datepick.css" />
 
 <link rel="stylesheet" type="text/css" media="screen" href="ubold/dist/css/select2.css" />
 <script  src="ubold/dist/js/select2.js"></script>
 
-
-
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo Url::base(); ?>/jq_grid/css/datatables.min.css" />
+ 
 
 <style>
    #load{display: none;position: fixed;left: 128px;top: 27px;width: 100%;height: 100%;z-index: 9999;/*opacity: 0.6;*/margin-top: 20%; }
@@ -41,6 +42,10 @@
   .select2-container .select2-selection--single .select2-selection__rendered{
 	line-height:25px;
   }
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    line-height: 25px !important;
+    padding-left: 5px !important;
+}
 </style>
 <div class="">
    <!-- container -->
@@ -113,7 +118,7 @@
                                  </div>
 								 <div class="  form-group col-sm-1 ">
                                     <label class="control-label   lbl-width">Invoice No</label>
-                                    <input type="text" class=" form-control h-20 f-11  freezed" name="INVOICEBILL" id="invoice_bill" required>
+                                    <input type="text" class=" form-control h-20 f-11  freezed invoice_bil" name="INVOICEBILL" id="invoice_bill" required>
                                  </div>
 								 <div class=" form-group col-sm-2">
                                     <label class="control-label lbl-width">Invoice Date</label>
@@ -122,14 +127,14 @@
 								 <div class="  form-group col-sm-2 ">
                                     <label class="control-label  lbl-width">PO No</label>
                                     <div class="input-group input-group-sm   ">	   			
-                                       <input type="text" style="color:#0000ff;" id=" " class="  ip-btn-style f-11 " name=" " placeholder=" "> 								  		 					 
-                                       <span class="ipt input-group-btn " value="click">
+                                       <input type="text" style="color:#0000ff;" id="purchase_no" readonly class="purchase_no  ip-btn-style f-11 " name=" " placeholder=" "> 								  		 					 
+                                       <!--span class="ipt input-group-btn " value="click">
                                        <button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-search"></i></button>
-                                       </span>   
+                                       </span-->   
                                     </div>
                                  </div>
 								  <div class="  form-group col-sm-1">
-                                    <label class="control-label   lbl-width">  Date</label>
+                                    <label class="control-label   lbl-width">Credit Date</label>
                                     <input type="text" class="form-control h-20" style="padding:0px;" name=" " id="datepicker" readonly>
                                  </div>
 								 
@@ -252,7 +257,7 @@
                                  <td style="width:4%"><input type="text" id="discount_amount1" data-id='1' readonly onkeypress="return isNumberKey(event);" class=" freezed discount_amount text-right ip-btn-style f-11" name="DISCOUNT_AMOUNT[]"></td>
                                  <td style="width:4%"><input type="text" id="gst_percent1" data-id='1' required readonly onkeypress="return isNumberKey(event);" class=" freezed gst_percent text-right ip-btn-style f-11" name="GST_PERCENT[]"></td>
                                  <td style="width:4%"><input type="text" id="gst_amount1" data-id='1' readonly onkeypress="return isNumberKey(event);" class=" freezed gst_amount text-right ip-btn-style f-11" name="GST_AMOUNT[]"></td>
-                                 <td style="width:6%"><input type="text" id="mrp1" data-id='1' required onkeypress="return isNumberKey(event);" class=" freezed mrp ip-btn-style text-right f-11" name="MRP[]"></td>
+                                 <td style="width:6%"><input type="text" id="mrp1" data-id='1' required onkeypress="return isNumberKey(event);" onkeyup="MRPCalculation(this.value,event,1);" onblur="MRPCalculation(this.value,event,1);" class=" freezed mrp ip-btn-style text-right f-11" name="MRP[]"></td>
                                  <td style="width:6%"><input type="text" id="total_amount1" data-id='1' required readonly onkeypress="return isNumberKey(event);" class=" freezed total_amount text-right ip-btn-style f-11" name="TOTALAMOUNT[]">
                                  					  <input type="hidden" id="sub_total_amount1" data-id='1'  class="sub_total_amount text-right ip-btn-style f-11" name="SUBTOTALAMOUNT[]">
                                  </td>
@@ -314,19 +319,19 @@
 							  <div class="row">							 
 					           <div class="form-group col-sm-6">
                                   <label class="control-label  lbl-width">From</label>                          
-                                  <input type='text' class="form-control   input-sm fromDate  " id='' onkeyup=" "  name="fromDate"   required>                                                                                                              
+                                  <input type='text' class="form-control   input-sm fromDate" onkeyup="validDate(this.value);" id='fromDate' name="fromDate">                                                                                                              
 					           </div>
 					           
 					          <!-- TO DATE -->
 					          				   
 					           <div class="form-group col-sm-6">
                                <label class="control-label  lbl-width">To</label>                             		           
-                                    <input type='text' class="form-control toDate " id='' onkeyup=" " name="toDate" required>  
+                                    <input type='text' class="form-control toDate " id='toDate' onkeyup="validDate(this.value);" name="toDate">  
                               </div>					 
 					        </div>
 							<div class=" ">
 							 <div class="form-group">
-							 <button type="button" class="btn btn-primary b1-width pull-right freezed">Search</button>
+							 <button type="button" class="btn btn-primary b1-width pull-right freezed" onclick='searchbillhistory();' id='bill_search'>Search</button>
 							 </div>
 							</div>
 					       
@@ -345,7 +350,7 @@
 						 </div>
 						 
 						  <div class="form-group ">
-						     <div class="form-group col-sm-6"> <button type="button" class="btn btn-primary b1-width ">Clear</button></div>
+						     <div class="form-group col-sm-6"> <button type="button" onclick='ClearForm();' class="btn btn-primary b1-width ">Clear</button></div>
 						     <div class="form-group col-sm-6"><button type="button" class="btn btn-primary b1-width  freezed">Close</button></div>
 						 </div>
 						 </div>
@@ -377,28 +382,78 @@
 </div>
 <?php ActiveForm::end(); ?>
 <div id="formdetails"></div>
-</div>       
-</div>
-</div>
-</div>
-</div>
+
+
+
+<div id="invoice_bill_details" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header tmp-head">
+        <button type="button" class="close tmp-close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Purchase Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="" id="bill_history_report">
+	      <table id="reg_table" class="display" style="width:100%">
+	        <thead>
+	            <tr>
+	                <th>Purchase No</th>
+	                <th>Invoice No</th>
+	                <th>Supplier Name</th>
+	                 <th>Invoice Date</th>
+	            </tr>
+	        </thead>
+	    </table>    
+    </div>
+      </div>
+      <div class="inp modal-footer">
+        <button type="button" class="btn btn-dnnger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div> 
+
+
 <script type="text/javascript" src="js/shortcut.js" ></script>
 <script>
 
 var vendor_json=$.parseJSON('<?php echo $vendor_branch_json;?>');
 
+
+
+
+
 $(document).ready(function(){
+
+//$('#invoice_bill').focus();	
    	 
 $("#wrapper").addClass("enlarged");
 $("#wrapper").addClass("forced");   			
 $("ul.list-unstyled").css("display","none");   
 
-$("#vendorname").select2({ placeholder: "SLECT VENDORNAME"});
-$('#vendorname').bind('change keyup',function () {
- 
+
+
+$("#vendorname").select2({ placeholder: "SELECT VENDORNAME"});
+$('#vendorname').bind('change keyup',function (event) {
+var keycode = (event.keyCode ? event.keyCode : event.which);
+
 //get value of selected option
 var value = $(this).children("option:selected").attr('value');
-
+  //var vendorip = $('#vendorname').val();
+    
+//	if(vendorip !=''){
+		
+	//	$("#invoice_bill").focus();	
+		
+	//}
+	
+	
+	//$('#vendorname').$('#invoice_bill').focus();
+	
+	
 // do something here
 if(value !== '')
 {
@@ -415,17 +470,24 @@ if(value !== '')
 	{
 		$('#phone_no').val(vendor_json[value]['branch_phonenumber']);
 	}
-	
+	$("#vendorname").select2({ placeholder: "SELECT VENDORNAME"});
+	$("#invoice_bill").focus();	
 }
+
+
 }).change();
 
-
+	
 var current_date = new Date();
 var dd = parseInt(current_date.getUTCDate());
 var mm  = parseInt(current_date.getUTCMonth()+1);
 var yy = parseInt(current_date.getUTCFullYear());
 $('#invoicedate').val(dd+'-'+mm+'-'+yy);
+$('#datepicker').val(dd+'-'+mm+'-'+yy);
+$('#fromDate').val(dd+'-'+mm+'-'+yy);
+$('#toDate').val(dd+'-'+mm+'-'+yy);
 
+//jtable_pd();
 
 
 });
@@ -434,21 +496,10 @@ $('#invoicedate').datepick({
 	dateFormat: 'dd-mm-yyyy'
 	});
 
-    $('.fromDate').datepick({
-	  dateFormat: 'dd-mm-yyyy'
-	});
+ 
+   
 	
-    $('.toDate').datepick({
-		useCurrent: false,
-	 dateFormat: 'dd-mm-yyyy'
-	});	
-	
-	$(".fromDate").on("dp.change", function (e) {
-           $('.toDate').data("DateTimePicker").minDate(e.date);
-       });
-       $(".toDate").on("dp.change", function (e) {
-           $('.fromDate').data("DateTimePicker").maxDate(e.date);
-       });
+
 	
    
 jQuery(document).ready(function($){
@@ -553,6 +604,20 @@ $('#expired_date'+data_id).datepick({
 
 });
 
+
+$('#fromDate,#toDate').datepick({ 
+onSelect: customRange, showTrigger: '#calImg',dateFormat: 'dd-mm-yyyy'}); 
+     
+function customRange(dates) { 
+    if (this.id == 'fromDate') { 
+        $('#toDate').datepick('option', 'minDate', dates[0] || null); 
+    } 
+    else { 
+        $('#fromDate').datepick('option', 'maxDate', dates[0] || null); 
+    } 
+}
+
+
 });
 
 
@@ -567,7 +632,9 @@ if(keycode !== 9)
 	var free_quantity=parseFloat($('#free_quantity'+data_id).val());
 	if(isNaN(pack_size))
 	{
-		$('#quantity').val('');
+		$('#quantity'+data_id).val('');
+		$('#rate_per_unit'+data_id).val('');
+		$('#product_name'+data_id).focus();
 		Alertment('Choose Pack Size');
 		return false;	
 	}
@@ -618,7 +685,7 @@ if(keycode !== 9)
 	var quantity=parseFloat($('#quantity'+data_id).val());
 	if(isNaN(pack_size))
 	{
-		$('#free_quantity').val('');
+		$('#free_quantity'+data_id).val('');
 		Alertment('Choose Pack Size');
 		return false;	
 	}
@@ -889,7 +956,7 @@ function Add_Grid()
 	
 var appended_text='<tr id="tr_fetch_table'+increment+'"  class="tr_fetch_table" data-id="'+increment+'"><td style="width:6%"><button type="button" data-id="'+increment+'" onclick="Add_Grid();" class=" freezed add_grid btn btn-xs btn-success">Add</button>  '+
 '<button type="button" data-id="'+increment+'" onclick="Del_Grid('+increment+');" class=" freezed del_grid btn btn-xs btn-success">Del</button></td><td style="width:18%">'+
-'<div class=""><select id="product_name'+increment+'" name="PRODUCT_NAME[]" style="width: 280px;" data-id="'+increment+'" class=" freezed product_name form-control tabind " required></select></div></td>'+
+'<div class="input-group input-group-sm product-select"><select id="product_name'+increment+'" name="PRODUCT_NAME[]"   data-id="'+increment+'" class=" freezed product_name form-control tabind " required></select><span class="ipt input-group-btn"><button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-plus"></i></button></span></div></td>'+
 '<td style="width:4%"><input type="text" id="quantity'+increment+'" data-id="'+increment+'" required onkeypress="return isNumberKey(event);" onkeyup="Quantity(this.value,event,'+increment+');" class=" freezed quantity text-right ip-btn-style f-11" name="QUANTITY[]"></td>'+
 '<td style="width:4%"><input type="text" id="free_quantity'+increment+'" data-id="'+increment+'"  onkeypress="return isNumberKey(event);" onkeyup="FreeQuantity(this.value,event,'+increment+');" class=" freezed free_quantity text-right ip-btn-style f-11" name="FREE_QUANTITY[]"></td>'+
 '<td style="width:4%"><input type="text" id="pack_size'+increment+'" data-id="'+increment+'" readonly required onkeypress="return isNumberKey(event);" class=" freezed pack_size text-right ip-btn-style f-11" name="PACK_SIZE[]"></td>'+
@@ -901,7 +968,7 @@ var appended_text='<tr id="tr_fetch_table'+increment+'"  class="tr_fetch_table" 
 '<td style="width:4%"><input type="text" id="discount_amount'+increment+'" data-id="'+increment+'" readonly onkeypress="return isNumberKey(event);" class=" freezed discount_amount text-right ip-btn-style f-11" name="DISCOUNT_AMOUNT[]"></td>'+
 '<td style="width:4%"><input type="text" id="gst_percent'+increment+'" data-id="'+increment+'" readonly  onkeypress="return isNumberKey(event);" class=" freezed gst_percent text-right ip-btn-style f-11" name="GST_PERCENT[]"></td>'+
 '<td style="width:4%"><input type="text" id="gst_amount'+increment+'" data-id="'+increment+'" readonly onkeypress="return isNumberKey(event);" class=" freezed gst_amount text-right ip-btn-style f-11" name="GST_AMOUNT[]"></td>'+
-'<td style="width:6%"><input type="text" id="mrp'+increment+'" data-id="'+increment+'" required onkeypress="return isNumberKey(event);" class=" freezed mrp ip-btn-style text-right f-11" name="MRP[]"></td>'+
+'<td style="width:6%"><input type="text" id="mrp'+increment+'" data-id="'+increment+'" required onkeypress="return isNumberKey(event);" onkeyup="MRPCalculation(this.value,event,'+increment+');" onblur="MRPCalculation(this.value,event,'+increment+');" class=" freezed mrp ip-btn-style text-right f-11" name="MRP[]"></td>'+
 '<td style="width:6%"><input type="text" id="total_amount'+increment+'" data-id="'+increment+'" readonly onkeypress="return isNumberKey(event);" class=" freezed total_amount text-right ip-btn-style f-11" name="TOTALAMOUNT[]">'+
 '<input type="hidden" id="sub_total_amount'+increment+'" data-id="'+increment+'" class="sub_total_amount text-right ip-btn-style f-11" name="SUBTOTALAMOUNT[]"></td></tr>';
 
@@ -1127,6 +1194,7 @@ $.ajax({
      		//$('.del_grid').attr('disabled','disabled');
      		$('.freezed').attr('disabled','disabled');
      		//$('#save_button').attr('disabled','disabled');
+     		$('#purchase_no').val(obj[1]);
      		Alertment('Stock Saved Sucessfully! Your Unique Number is '+obj[1]+'');
      	}
      }
@@ -1139,6 +1207,55 @@ $.ajax({
 }
 
 
+function MRPCalculation(value,event,data_id)
+{
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+
+	if(keycode === 9 || keycode === 13)
+	{
+		var price_per_qty=parseFloat($('#rate_per_unit'+data_id).val());
+	var data_value=parseFloat(value);
+	if(isNaN(price_per_qty))
+	{
+		Alertment('Enter Price Per Quantity');
+		return false;
+	}
+	else if(!isNaN(price_per_qty))
+	{
+		if(data_value < price_per_qty)
+		{
+			$('#mrp'+data_id).val('');
+			Alertment('Unit Price Not Greater than MRP Amount');
+				return false;
+			}
+		}
+	}
+}
+
+function MRPCalculation(value,event,data_id)
+{
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+
+	if(keycode === 9 || keycode === 13)
+	{
+		var price_per_qty=parseFloat($('#rate_per_unit'+data_id).val());
+	var data_value=parseFloat(value);
+	if(isNaN(price_per_qty))
+	{
+		Alertment('Enter Price Per Quantity');
+		return false;
+	}
+	else if(!isNaN(price_per_qty))
+	{
+		if(data_value < price_per_qty)
+		{
+			$('#mrp'+data_id).val('');
+			Alertment('Unit Price Not Greater than MRP Amount');
+				return false;
+			}
+		}
+	}
+}
 
 
 $(window).bind('keydown', function(event) {
@@ -1166,6 +1283,174 @@ $(window).bind('keydown', function(event) {
         }
     }
 });
+
+
+function jtable_pd(){
+  
+  var from_date= $('#fromDate').val();
+  var todate=$('#toDate').val();
+  if(from_date !== '' && todate !== '')
+  {    
+  var url=('<?php echo Url::base('http'); ?>');
+  var ajax_url=url+'/index.php?r=stockmaster/purchasebilldetails&from_date='+from_date+'&todate='+todate;
+  var table_reg= $('#reg_table').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "destroy": true,
+         "ajax": {
+          "url": ajax_url,
+           "type": "POST"
+          },
+          keys: {
+              keys: [ 13 /* ENTER */, 38 /* UP */, 40 /* DOWN */ ]
+          },
+          "columns": [
+            { "data": "purchaseno"},
+            { "data": "invno"},
+            { "data": "suppliername"},
+             { "data": "invoice_date"},
+          ],
+        initComplete: function() {
+        this.api().row( {order: 'current' }, 0).select();
+ 
+    }
+    });
+    
+   $('#reg_table').on('key-focus.dt', function(e, datatable, cell){
+        // Select highlighted row
+      //  table_reg.row(cell.index().row).select();
+      //  $('#reg_table_filter input').val("");
+         $('#reg_table_filter input').focus();
+    });
+    
+  $('#reg_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
+        
+       
+        var table_as = $("#reg_table").DataTable();
+        if(key === 13){
+          
+          $('#reg_table thead').on( 'click', 'th', function () {
+          var columnData = table_as.column( this ).data();
+          //alert(columnData);
+        } );
+            
+        var data_reg = table_as.row(cell.index().row).data();
+           $('#reg_table_filter input').focus();
+        }
+    }); 
+    
+$('#reg_table').on( 'click', 'tr', function () {
+    var data = table_reg.row( this ).id();
+    
+    BillDetailsFetch(data);
+});
+
+$('#reg_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
+     if(key === 13){
+      
+      var data = table_reg.row(cell.index().row).id();
+      
+      BillDetailsFetch(data);
+  }
+});    
+   } 
+}
+
+
+function BillDetailsFetch(data)
+{
+	
+  	$.ajax({
+    type: "POST",
+    url: "<?php echo Yii::$app->homeUrl . "?r=stockmaster/billdetailsfetch&id=";?>"+data,
+  	//dataType:'json',
+  	success: function (result) 
+    {
+    	var obj=$.parseJSON(result);
+    	
+    	//alert(obj[0]);
+    	//$('#tbody_fetch tr').remove();
+    	
+    	$('#tbody_fetch tr').html(obj[0]);
+    	
+    	$('#overall_sub_total').val(obj[1]['sub_total']);
+    	if(obj[1]['discount_amount'] !== null)
+    	{
+    		$('#discount_amount').val(obj[1]['discount_amount']);
+    	}
+    	
+    	$('#overall_gst_amount').val(obj[1]['gst_amount']);
+    	$('#overall_net_amount').val(obj[1]['net_amount']);
+    	$('#round_off').val(obj[1]['round_off']);
+    	$('#overalltotalamount').val(obj[1]['total_amount']);
+    	
+    	$('#vendorname').html('<option value='+obj[2]['vendorid']+'>'+obj[2]['vendorname']+'</option>');
+    	$('#address').val(obj[3]['address1']);
+    	$('#phone_no').val(obj[3]['branch_phonenumber']);
+    	
+    	$('#invoice_bill').val(obj[1]['invoice_no']);
+    	$('#invoicedate').val(formatDate1(obj[1]['invoice_date']));
+    	$('#purchase_no').val(obj[1]['bill_no']);
+    	
+    	
+    	//$('#tbody_fetch tr').append(obj[1]);
+    	$modal = $('#invoice_bill_details');
+  		$modal.modal('hide');
+  		
+  		$('.freezed').attr('disabled','disabled')
+        
+    }
+  });
+}
+
+
+function validDate(value)
+{
+	//value.trim();
+	if(value === '')
+	{
+		var current_date = new Date();
+		var dd = parseInt(current_date.getUTCDate());
+		var mm  = parseInt(current_date.getUTCMonth()+1);
+		var yy = parseInt(current_date.getUTCFullYear());
+		
+		$('#fromDate').val(dd+'-'+mm+'-'+yy);
+		$('#toDate').val(dd+'-'+mm+'-'+yy);
+	}	
+	
+}
+
+
+function searchbillhistory()
+{
+	$('#fromDate').val();
+	$('#toDate').val();
+	jtable_pd();
+	$modal = $('#invoice_bill_details');
+  	$modal.modal('show');
+}
+
+function formatDate1(date) 
+{
+	 console.log(date);
+     var d = new Date(date),
+     month = '' + (d.getMonth() + 1),
+     day = '' + d.getDate(),
+     month = '' + (d.getMonth() + 1),
+     year = d.getFullYear();
+	 
+	// console.log(d);
+	 
+     if (month.length < 2) month = '0' + month;
+     if (day.length < 2) day = '0' + day;
+
+     return [day,month,year].join('-');
+ }
+ 
+ function ClearForm()
+ {
+ 	window.location.reload(true);
+ }
 </script>
 
 <script type="text/javascript">
@@ -1174,7 +1459,7 @@ $(function() {
       dateFormat: 'dd-mm-yyyy',
         defaultDate: new Date()
     });
-     $("#datepicker").datepicker('setDate', new Date());  
+    // $("#datepicker").datepicker('setDate', new Date());  
 });
 </script>
  

@@ -2541,8 +2541,27 @@ public function actionAjaxsinglefetch($id)
 		 }
 		
 	}
+	
+	
+	public function actionUcilhelp()
+    {
+    	if($_POST)
+		{
+			print_r($_POST);DIE;
+		}
+		else
+		{
+			return $this->render('ucil_help');
+		}
+    	
+	}
+	
+	
 	public function actionPrint()
     {
+    	
+		print_r($_POST);die;
+		
     	require ('../../vendor/tcpdf/tcpdf.php');
 				$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 				$pdf->SetCreator(PDF_CREATOR);
@@ -2585,12 +2604,20 @@ public function actionAjaxsinglefetch($id)
 				$tbl1.=' <p> </p>';
 				$tbl1.=' <p style="text-align:center;font-size:12px;"> Signature of Examination Authority</p>';
 				$pdf->writeHTML($tbl1, true, false, false, false, '');
-				$pdf->Output('report_medical_examination.pdf');
+				
+				$pdf->AddPage();
+				
+				
+				
+				
+				
+				
  		}
 		
-	public function actionPrint1()
+	public function actionPrint1($patname,$id1,$id2)
     {
-    	require ('../../vendor/tcpdf/tcpdf.php');
+    	
+		require ('../../vendor/tcpdf/tcpdf.php');
 				$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 				$pdf->SetCreator(PDF_CREATOR);
 				$pdf->SetAuthor('DMC');
@@ -2606,20 +2633,16 @@ public function actionAjaxsinglefetch($id)
 				$pdf->SetMargins(10, false, 10, true); // set the margins 
 				$pdf->AddPage();
 				 
-				$tbl1='<html>
-				<head>
-				</head>
-				</head>
-				<body>	<div><h2 style="text-align:center;color:#000;">FORM-Q</h2>';
+				$tbl1='	<div><h2 style="text-align:center;color:#000;">FORM-Q</h2>';
 				$tbl1.='<p style="text-align:center;line-height:2px;font-size:14px;">(See Rules 29 F(2) and 29 L)</p>';
 				$tbl1.='<p style="text-align:center;line-height:2px;font-size:14px;">Report of Medical Examination under Rule 29 B</p>';
 				$tbl1.='<p style="text-align:center;line-height:2px;font-size:14px;"> (To be issued in triplicate)**</p>';
 				$tbl1.='<p style="border-top:1px solid #000;"></p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;"> Certificate No :  ......................</p>';
 				$tbl1.=' <p> </p>';
-				$tbl1.='<p style=" line-height:2px;font-size:14px;"> Certified that Shri/Smt ............................................................................................................. employed as</p>';
-				$tbl1.='<p style=" line-height:2px;font-size:14px;">   .............................................. in UCIL Tummalapalle Mine.</p>';
-				$tbl1.='<p style=" line-height:1.7;font-size:14px;">From-B No ..............................  has been examined for an initial/periodical* medical examination. He/She* appears to be ................................ Years of age.The findings of the examing of the examining authority are given in the attached sheet.It is considered that Shri / Smt.............................. </p>';
+				$tbl1.='<p style=" line-height:2px;font-size:14px;"> Certified that Shri/Smt ..<b>'.$patname.'</b>................................................... employed as</p>';
+				$tbl1.='<p style=" line-height:2px;font-size:14px;"> .............................................. in UCIL Tummalapalle Mine.</p>';
+				$tbl1.='<p style=" line-height:1.7;font-size:14px;">From-B No ..............................  has been examined for an initial/periodical* medical examination. He/She* appears to be ................................ Years of age.The findings of the examing of the examining authority are given in the attached sheet.It is considered that Shri / Smt..<b>'.$patname.'</b>............................ </p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;"> *(a) is medically fit for any emloyement in mines.</p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;"> *(b) is suffering from ................. and is medically unfit for</p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;              (i) and employement in mine;or</p>';
@@ -2634,8 +2657,34 @@ public function actionAjaxsinglefetch($id)
 				$tbl1.='<p style=" line-height:2px;font-size:14px;">*Delete Whatever is not applicable.</p>';
 				$tbl1.='<p style=" line-height:1.5;font-size:14px;">** One copy of the certificate shall be handed over to the person concerned and anothercopy shall be sent to the manager of the mine concerned by registered post, And the third copy shall be  retained by the examining authority.</p>';
 				$pdf->writeHTML($tbl1, true, false, false, false, '');
-				$pdf->Output('report_medical_examination_from29.pdf');
- 		}
+				
+				$pdf->AddPage();
+				
+				$tbl2='<p style="text-align:center;"><b><h3> Report of Medical Examination under Mines Rule 29B<br>(To he usedin Continuation with Form O)</h3></b></p>';
+				$tbl2.=' <p> </p>';
+				
+				$tbl2.='<p> <table   style="font-size:12px;"><tr><th style="width:30%">Certificate Number :</th> <td></td> </tr></table></p>';
+				$tbl2.=' <p><table   style="font-size:12px;"><tr><th style="width:30%">Name :</th> <td><b>'.$patname.'</b></td> </tr></table></p>';
+				$tbl2.=' <p><table   style="font-size:12px;"><tr><th style="width:30%">Identification Marks :</th> <td> <b> '.$id1.'</b><br> <b> '.$id2.'</b></td> </tr></table></p>';
+				$tbl2.=' <p> </p>';
+				$tbl2.=' <p style="font-size:12px;">Result of Lung Function Test(Spirometry)</p>';
+				$tbl2.=' <p><table border="1" cellpadding="10" style="font-size:12px;"> <thead><tr><th>Parameters</th><th>Predicted Value</th><th>Performed Value</th><th>% of predicted</th></tr></thead>
+				           <tbody><tr><td>Forced Vital Capacity <br> (FEV) </td><td></td><td></td><td></td></tr>
+						    <tr><td>Forced Vital Capacity <br> (FEV1)</td><td></td><td></td><td></td></tr>
+							<tr><td> (FEV1)/FVC</td><td></td><td></td><td></td></tr>
+							<tr><td> Peak Expiratory Flow</td><td></td><td></td><td></td></tr>
+						   </tbody>
+				</table></p>';
+				$tbl2.=' <p style="font-size:12px;">Spirometry Result enclosed</p>';
+				$tbl2.=' <p> </p>';
+				$tbl2.=' <p> </p>';
+				$tbl2.=' <p> </p>';
+				$tbl2.=' <p> </p>';
+				$tbl2.=' <p style="text-align:center;font-size:12px;"> Signature of Examination Authority</p>';
+				$pdf->writeHTML($tbl2, true, false, false, false, '');
 	
+			
+				$pdf->Output('report_medical_examination.pdf');
+ 		}
 	
 }

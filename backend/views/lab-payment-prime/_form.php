@@ -2133,11 +2133,13 @@ function cleartxt (argument) {
 	
 	$("body").on('click', '.remove_all', function ()
     {
+    	
     	$("#fetch_update_data tr").remove();
     	$("#saved_val").val('');
     	$("#saves_sucess").removeAttr("disabled");
     	cleartxt();
     	clearhead();
+    	
     });
     
   

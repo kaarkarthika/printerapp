@@ -42,6 +42,7 @@ input[type="checkbox"]:focus,
 }
 .form-group input{
 	margin:1px;
+    border: 1px solid #999;
 }
 
 .form-group {
@@ -472,5 +473,46 @@ table {
 }
 
  .Room_details .panel-body,.person-details .panel-body {
-    padding: 2px 20px;
+    padding: 2px 6px;
+}
+.f-no-pd{
+	    padding-left: 1px!important;
+    padding-right: 1px!important;
+}
+textarea.m-h-80{
+	min-height:80px;
+}
+.text-red{
+	color:#ff0000;
+}
+.f-20{
+	font-size:20px;
+}
+.text-blue{
+	color:#4169e1;
+}
+.save_data_table td input {
+    font-size: 13px!important;
+}
+
+.form-group.f-no-pd{
+	margin-bottom: 0px!important;
+}
+
+.f-no-pd input.form-control{
+	margin: 5px 0px 0px 0px;
+}
+label.f-no-pd{
+	margin-top:8px;
+}
+.f-no-pd div.form-group div.input-group label{
+	margin-top:8px;
+}
+.rt-5{
+	position:relative!important;
+	top:5px;
+}
+.f-no-pd div.form-group div.input-group div.input-group-btn span.btn-info{
+	height: 25px!important;
+    padding: 2px 5px!important;
 }

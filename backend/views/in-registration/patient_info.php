@@ -61,6 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'bed_list' => $bed_list,
         'Newpatient_json' => $Newpatient_json,
         'ArrayHelper_patient'=>$ArrayHelper_patient,
+        'insurance' => $insurance,
     ]) ?>
 
 </div>

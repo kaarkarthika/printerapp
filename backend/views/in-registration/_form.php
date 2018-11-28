@@ -23,21 +23,15 @@ use yii\helpers\ArrayHelper;
 
 
 <style>
-table.dataTable th.focus,
-table.dataTable td.focus {
-  outline: none;
-}
-.panel-border.panel-custom .panel-heading{
-	background-color:#fff;
-}
+ 
 .b-width{width:100%;}
  .btn-default{color:#333!important;}
  .panel-border .panel-body {
-    padding: 5px 20px 10px 20px;
+    padding: 0px 20px 0px 20px;
 	background-color: ;
 }
 .c.panel{
-	margin-bottom:10px;
+	margin-bottom:5px;
 	
 }
 label.control-label{
@@ -85,9 +79,7 @@ button.btn.btn-success.physician {
 .form-group label.control-label {
     font-size: 12px;
 }
-.form-group {
-    margin-bottom: 0;
-}
+
 .patient_details .form-group label.control-label {
     width: 37%;
     /*float: left;
@@ -147,6 +139,9 @@ div#example_wrapper {
     display: none;
 }
 </style>
+
+<link rel="stylesheet" type="text/css" media="screen" href="ubold/dist/css/select2.css" />
+<script  src="ubold/dist/js/select2.js"></script>
 <div class="in-registration-form">
 
 
@@ -160,62 +155,64 @@ div#example_wrapper {
 	            <div class="panel-body"> 
 	                 <div class="row">
 					    <div class="col-sm-2 br-rt">					    							
-						  <div class="form-group" style="margin-bottom:10px;">
+						  <div class=" "  >
 						    <label class="control-label">Mr No</label><br>  
 							<div class="input-group input-group-sm">							   
-								<?= $form->field($model, 'mr_no')->textInput(['class'=>'mrnumber form-control cus-fld number','autocomplete'=>"off",'maxlength' => true,'onkeyup'=>'EmptyESC(this,event);','required'=> true])->label('') ?>
+								<?= $form->field($model, 'mr_no')->textInput(['class'=>'clearfield mrnumber form-control cus-fld number','autocomplete'=>"off",'maxlength' => true,'onkeyup'=>'EmptyESC(this,event);','required'=> true])->label('') ?>
 								<span class="input-group-btn">
 									<button type="button" class="btn btn-default btn-flat btn  patient_fetch_details "><i class="ssearch glyphicon glyphicon-search"></i></button>
 								</span>
 							</div>
 						  </div>
 						  
-						  <?= $form->field($model, 'ip_no')->textInput(['class'=>'mrnumber form-control','maxlength' => true,'readonly'=>"readonly"]) ?>
-						    <?=$form->field($model, 'patient_type')->dropDownList([ 'opd' => 'OPD','ipd' => 'IPD'], ['class' => '  form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Patient Type') ?>
-							<?= $form->field($model, 'registered')->dropDownList([ 'Booked' => 'Booked', 'UnBooked' => 'UnBooked'], ['class' => '  form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Registered') ?>
-							<?= $form->field($model, 'panel_type')->dropDownList([ 'cash' => 'Cash', 'credit' => 'Credit'], ['class' => '  form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Panel Type') ?>
+						  <?= $form->field($model, 'ip_no')->textInput(['class'=>'clearfield mrnumber form-control','maxlength' => true,'readonly'=>"readonly"]) ?>
+						    <?=$form->field($model, 'patient_type')->dropDownList([ 'opd' => 'OPD','ipd' => 'IPD'], ['class' => 'form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Patient Type') ?>
+							<?= $form->field($model, 'registered')->dropDownList([ 'Booked' => 'Booked', 'UnBooked' => 'UnBooked'], ['class' => 'form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Registered') ?>
+							<?= $form->field($model, 'panel_type')->dropDownList([ 'cash' => 'Cash', 'credit' => 'Credit'], ['class' => 'form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Panel Type') ?>
 						
 						</div>
 						
 						<div class="col-sm-3 br-rt">
-						     <?= $form->field($model, 'name_initial')->dropDownList([ 'Mr' => 'Mr', 'Miss' => 'Miss','Baby' => 'Baby','Mrs' => 'Mrs','Master' => 'Master','Baby Of' => 'Baby Of','Empty' => 'Empty','Dr' => 'Dr','Ms.' => 'Ms.'],['class' => 'form-control   w-cus', 'style'=>' ', 'placeholder'=>'Name Inital','tabindex'=>332 ,'required'=> true,'onchange'=>'AutomaticInitial()'])->label('Inital') ?>
-							 <?= $form->field($model, 'patient_name')->textInput(['required'=> true,'class'=>'form-control']) ?>
-							 <?= $form->field($model, 'sex')->dropDownList([ 'Male' => 'Male', 'Female' => 'Female'], ['class' => '  form-control w-cus','style'=>' ','tabindex'=>339,'required'=> true])->label('Gender') ?>
-							  <?= $form->field($model, 'marital_status')->dropDownList([ 'Married' => 'Married', 'Unmarried' => 'Unmarried','Widow'=>'Widow'], ['class' => '  form-control w-cus ','required'=> true,'tabindex'=>338,'required'=> true])->label('Mar Stat') ?>
-							  <?= $form->field($model, 'type')->dropDownList($patienttype, ['title'=>'Patient Type','class' => '  form-control w-cus','style'=>' ','tabindex'=>352,'required'=> true,'onchange'=>'Patienttypemodule(this.value);'])->label('Pat Type') ?>
+						     <?= $form->field($model, 'name_initial')->dropDownList([ 'Mr' => 'Mr', 'Miss' => 'Miss','Baby' => 'Baby','Mrs' => 'Mrs','Master' => 'Master','Baby Of' => 'Baby Of','Empty' => 'Empty','Dr' => 'Dr','Ms.' => 'Ms.'],['class' => 'clearfield form-control   w-cus', 'style'=>' ', 'placeholder'=>'Name Inital','tabindex'=>332 ,'required'=> true,'onchange'=>'AutomaticInitial()','style'=>'pointer-events: none;'])->label('Inital') ?>
+							 <?= $form->field($model, 'patient_name')->textInput(['required'=> true,'class'=>'form-control','readonly'=>true]) ?>
+							 <?= $form->field($model, 'sex')->dropDownList([ 'Male' => 'Male', 'Female' => 'Female'], ['class' => 'clearfield  form-control w-cus','tabindex'=>339,'required'=> true,'style'=>'pointer-events: none;'])->label('Gender') ?>
+							  <?= $form->field($model, 'marital_status')->dropDownList([ 'Married' => 'Married', 'Unmarried' => 'Unmarried','Widow'=>'Widow'], ['class' => 'clearfield form-control w-cus','required'=> true,'tabindex'=>338,'required'=> true,'style'=>'pointer-events: none;'])->label('Martial Status') ?>
+							  <?= $form->field($model, 'type')->dropDownList($patienttype, ['title'=>'Patient Type','class' => 'clearfield  form-control w-cus','tabindex'=>352,'required'=> true,'onchange'=>'Patienttypemodule(this.value);','style'=>'pointer-events: none;'])->label('Pat Type') ?>
+							  
+							   <?= $form->field($model, 'ins_type')->dropDownList($insurance, ['title'=>'Insurance Type','class' => 'clearfield form-control w-cus','style'=>'display:none;pointer-events: none;','tabindex'=>352])->label(false) ?>
 						</div>
 
 
 
 
 						<div class="col-sm-3 br-rt">
-							  <?= $form->field($model, 'dob')->textInput(['class' => '  form-control w-cus ' ,'placeholder'=>'DD-MM-YYYY','tabindex'=>334,'required'=> true])->label('DOB')?>
+							  <?= $form->field($model, 'dob')->textInput(['class' => 'clearfield  form-control w-cus ' ,'placeholder'=>'DD-MM-YYYY','tabindex'=>334,'required'=> true,'readonly'=>true])->label('DOB')?>
 							  
 <div class="dob ">
 	<div class="row">
    <div class="col-sm-4">
       <div class="form-group">
          <label class="control-label" for="newpatient-pat_age">YEAR(S)</label>
-         <input type="text" placeholder="YYYY" name="year_dob" readonly="readonly" id="year_dob" class="form-control year_dob">  
+         <input type="text" placeholder="YYYY" name="year_dob" readonly="readonly" id="year_dob" class="clearfield form-control year_dob">  
       </div>
    </div>
    <div class="col-sm-4">
       <div class="form-group">
          <label class="control-label" for="newpatient-pat_age">MONTH(S)</label>
-         <input type="text" placeholder="MM" name="month_dob" readonly="readonly" id="month_dob" class="form-control month_dob"> 
+         <input type="text" placeholder="MM" name="month_dob" readonly="readonly" id="month_dob" class="clearfield form-control month_dob"> 
       </div>
    </div>
    <div class="col-sm-4">
       <div class="form-group ">
          <label class="control-label" for="newpatient-pat_age">DAY(S)</label>
-         <input type="text" placeholder="DD" name="date_dob" readonly="readonly" id="date_dob" class="form-control date_dob"> 
+         <input type="text" placeholder="DD" name="date_dob" readonly="readonly" id="date_dob" class="clearfield form-control date_dob"> 
       </div>
    </div>
 </div>
 </div>
 							 
-							<?= $form->field($model, 'mobile_no')->textInput(['required' => true]) ?>
-							<?= $form->field($model, 'address')->textarea(['rows' => 1,'required' => true,'class'=>'form-control txtaddress']) ?>	
+							<?= $form->field($model, 'mobile_no')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
+							<?= $form->field($model, 'address')->textarea(['rows' => 1,'required' => true,'class'=>'clearfield form-control txtaddress','readonly'=>true]) ?>	
 						</div>
 
 
@@ -223,18 +220,20 @@ div#example_wrapper {
 
 						
 						<div class="col-sm-2 br-rt">
-						    <?= $form->field($model, 'city')->textInput(['required' => true]) ?>
-							<?= $form->field($model, 'district')->textInput(['required' => true]) ?>
-							<?= $form->field($model, 'state')->textInput(['required' => true]) ?>
-							<?= $form->field($model, 'pincode')->textInput() ?>
-							<?= $form->field($model, 'country')->textInput() ?>
+						    <?= $form->field($model, 'city')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
+							<?= $form->field($model, 'district')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
+							<?= $form->field($model, 'state')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
+							<?= $form->field($model, 'pincode')->textInput(['class'=>'form-control clearfield','readonly'=>true]) ?>
+							<?= $form->field($model, 'country')->textInput(['class'=>'form-control clearfield','readonly'=>true]) ?>
 						</div>
 						
+						
+						
 						<div class="col-sm-2 br-rt">
-							<?= $form->field($model, 'relation_suffix')->dropDownList([ 'S/O' => 'S/O', 'D/O' => 'D/O','W/O' => 'W/O','H/O'=>'H/O','C/O'=>'C/O','Empty'=>'Empty','Sis/O'=>'Sis/O','B/O'=>'B/O','M/O'=>'M/O','F/O'=>'F/O','Self'=>'Self'], ['class' => ' form-control col-sm-6 w-cus','style'=>' ','tabindex'=>336,'required'=> true,'onchange'=>'AutomaticRelation()'])->label('Relation') ?>
-							<?= $form->field($model, 'relative_name')->textInput(['required' => true]) ?>
-							<?= $form->field($model, 'phone_no')->textInput() ?> 
-							<?= $form->field($model, 'religion')->textInput() ?>
+							<?= $form->field($model, 'relation_suffix')->dropDownList([ 'S/O' => 'S/O', 'D/O' => 'D/O','W/O' => 'W/O','H/O'=>'H/O','C/O'=>'C/O','Empty'=>'Empty','Sis/O'=>'Sis/O','B/O'=>'B/O','M/O'=>'M/O','F/O'=>'F/O','Self'=>'Self'], ['class' => 'clearfield form-control w-cus','style'=>' ','tabindex'=>336,'required'=> true,'onchange'=>'AutomaticRelation()','style'=>'pointer-events: none;'])->label('Relation') ?>
+							<?= $form->field($model, 'relative_name')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
+							<?= $form->field($model, 'phone_no')->textInput(['class'=>'form-control clearfield','readonly'=>true]) ?> 
+							<?= $form->field($model, 'religion')->textInput(['class'=>'form-control clearfield','readonly'=>true]) ?>
 						</div>
 						
 					 </div>
@@ -250,45 +249,53 @@ div#example_wrapper {
 		        </div>
 	            <div class="panel-body">
 				   <div class="row">
-				       <div class="col-sm-4">
-							<?= $form->field($model, 'paytype')->dropDownList(['Economy' => 'ECONOMY'], ['class' => '  form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Pay Type') ?>
-					   </div>
+				       
 				   
-					   <div class="col-sm-4">
-						    <label class="control-label">Bed No</label><br>  
-							<div class="input-group input-group-sm">							   
-								<?= $form->field($model, 'bed_no')->textInput(['maxlength' => true,'class'=>'form-control  ','required'=> true])->label('') ?>
+					   <div class="col-sm-6">
+						    <label class="control-label">Category No</label><br> 
+                            <div class="form-group">							
+							<div class="input-group input-group-sm">
+								
+								
+															   
+								<?= $form->field($model, 'category_type')->dropDownList($room_type,['class'=>'clearfield form-control  ','required'=> true,'onchange'=>'Roomdetailsfetch(this.value);'])->label('') ?>
 								<span class="input-group-btn"  >
 									<button type="button" class="btn btn-default btn-flat btn  patient_bed"><i class="ssearch glyphicon glyphicon-search"></i></button>
 								</span>
 							</div>
+							</div>
 						</div>
 					   
 
-					   <div class="col-sm-4">
+					   <div class="col-sm-6">
+					       <div class="form-group">
 						    <label class="control-label">Room No</label><br>  
 							<div class="input-group input-group-sm">
 							   
-								<?= $form->field($model, 'room_no')->textInput(['maxlength' => true,'class'=>'form-control pl-15','required'=> true])->label('') ?>
+								<?= $form->field($model, 'room_type')->textInput(['readonly' => true,'class'=>'clearfield form-control ','required'=> true])->label('') ?>
 								<span class="input-group-btn">
 									<button type="button" class="btn btn-default btn-flat btn  "><i class="ssearch glyphicon glyphicon-search"></i></button>
 								</span>
 							</div>
+							</div>
 						</div>
                       </div>
                       <div class="row">					  
-					   <div class="col-sm-4">
-						<?= $form->field($model, 'floor_no')->textInput(['maxlength' => true,'required'=> true]) ?>
+					   <div class="col-sm-6">
+						<?= $form->field($model, 'floor_no')->textInput(['required'=> true,'class'=>'form-control clearfield','readonly'=>true]) ?>
 					   </div>
-					   <div class="col-sm-4">
-							<?= $form->field($model, 'room_type')->textInput(['maxlength' => true,'required'=> true]) ?>
+					   <div class="col-sm-6">
+							<?= $form->field($model, 'paytype')->dropDownList(['Economy' => 'ECONOMY'], ['class' => '  form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Pay Type') ?>
+					   </div>
+					   <!--div class="col-sm-4">
+							<?= $form->field($model, 'room_type')->textInput(['required'=> true,'class'=>'clearfield','readonly'=>true]) ?>
 							
-					   </div>
+					   </div-->
 					  	 
-						<input type="hidden" name="bedid" id="bedid"  value="100">
-						<input type="hidden" name="roomnoid" id="roomnoid"  value="400">
-						<input type="hidden" name="roomtypeid" id="roomtypeid" value="300" >
-						<input type="hidden" name="floorid" id="floorid" value="200" >
+						<input type="hidden" name="bedid" class='clearfield' id="bedid"  value="100">
+						<input type="hidden" name="roomnoid" class='clearfield' id="roomnoid"  value="400">
+						<input type="hidden" name="roomtypeid" class='clearfield' id="roomtypeid" value="300" >
+						<input type="hidden" name="floorid" class='clearfield' id="floorid" value="200" >
 					  </div>
 				   </div>
 		        </div>
@@ -306,7 +313,7 @@ div#example_wrapper {
 				      <div class="col-sm-6">
 						<label class="control-label">Consultant</label><br>  
 						<div class="input-group input-group-sm">	   
-							<?= $form->field($model, 'consultant_dr')->dropDownList($physicianmaster, ['class' => '  form-control w-cus','prompt'=>'-DoctorName-'  ,'style'=>' ','tabindex'=>360,'required'=>true])->label(' ') ?>
+							<?= $form->field($model, 'consultant_dr')->dropDownList($physicianmaster, ['class' => 'clearfield  form-control w-cus','prompt'=>'-DoctorName-'  ,'style'=>' ','tabindex'=>360,'required'=>true])->label(' ') ?>
 							<span class="input-group-btn">
 							  <button type="button" onclick='Doctor_fetch();' class="btn btn-default btn-flat btn doctor_details"><i class="ssearch glyphicon glyphicon-search"></i></button>
 							</span>
@@ -324,11 +331,11 @@ div#example_wrapper {
 				      
 				   </div>
 				    
-				   <div class="row" style="margin-top:15px;">
+				   <div class="row  ">
 				      <div class="col-sm-6">
 						<label class="control-label">Speciality</label><br>  
 						<div class="input-group input-group-sm">	   
-							<?= $form->field($model, 'speciality')->dropDownList($specialistdoctor,['required'=> true,'prompt'=>'-SpecialistName-'])->label('')?>
+							<?= $form->field($model, 'speciality')->dropDownList($specialistdoctor,['required'=> true,'prompt'=>'-SpecialistName-','class'=>'form-control clearfield'])->label('')?>
 							<span class="input-group-btn">
 							  <button type="button" class="btn btn-default btn-flat btn  "><i class="ssearch glyphicon glyphicon-search"></i></button>
 							</span>
@@ -337,7 +344,7 @@ div#example_wrapper {
 				      <div class="col-sm-6">
 						<label class="control-label">Co Consultant</label><br>  
 						<div class="input-group input-group-sm">	   
-							<?= $form->field($model, 'co_consultant')->dropDownList($physicianmaster,['maxlength' => true,'prompt'=>'-DoctorName-'])->label('') ?>
+							<?= $form->field($model, 'co_consultant')->dropDownList($physicianmaster,['prompt'=>'-DoctorName-','class'=>'form-control clearfield'])->label('') ?>
 							<span class="input-group-btn">
 							  <button type="button" class="btn btn-default btn-flat btn  "><i class="ssearch glyphicon glyphicon-search"></i></button>
 							</span>
@@ -360,13 +367,13 @@ div#example_wrapper {
 					      <div class="form-group"> 
     	                    <button type="button" class="btn   btn-success b-width" id='saves_sucess' onclick="SaveIPForm();">Save</button>
 						  </div>
-						 </div><br>
+						 </div> 
 						 <div class="row">
 
 						   <div class="form-group">						 
 							<button type="button" class="btn  btn-warning b-width" onclick='Refresh()'>Refresh</button> 
 						   </div>
-                         </div><br>
+                         </div> 
 						 <div class="row">
                            <div class="form-group">
     	                    <button type='reset' class="btn btn-default b-width"  onclick='clearForm();'>Clear</button> 
@@ -375,7 +382,7 @@ div#example_wrapper {
 						 </div>
 							<span id="loadphysician" style="display: none;"><img src="<?= Url::to('@web/loader.gif') ?>" />Loading...</span>
 							<span id="loadtexts" style="display: none; "></span>
-						  <br>
+						  
 						<div class="row">
 						  <div class="form-group">
 						     <a href="<?php  echo Yii::$app->request->BaseUrl;?>/index.php?r=in-registration/index" class="btn btn-bk btn-default b-width " Title="BACK To Grid">Back to Grid </a> 
@@ -389,7 +396,7 @@ div#example_wrapper {
 		     </div>
 		   </div> 
 		 </div>
-    
+    <input type="hidden" name="saved_val" id='saved_val'>
   <?php ActiveForm::end(); ?>
   
  <div id="patient_hist-modal" class="modal fade" role="dialog">
@@ -405,10 +412,10 @@ div#example_wrapper {
             	<table id="bednofetch" class="table table-striped table-bordered nowrap display" style="width:100%">
 				<thead>
 				  <tr>
-				  	<th>BED NO</th>
-				    <th>ROOM NO</th>
-				    <th>ROOM TYPES</th>
-				    <th>BED CHARAGE</th>
+				  	
+				    <th>CATEGORY TYPE</th>
+				    <th>ROOM TYPE</th>
+				    <th>CHARAGE/PER DAY</th>
 				  </tr>
 				</thead>
 				
@@ -573,6 +580,7 @@ function Refresh()
 $(document).ready(function() {
 	//$(".pagination > li > a").attr("href", "javascript:void(0)");
 	
+	$('#inregistration-mr_no').focus();
 	
     var disable_buttons = function(){
     $("._edit_save_btn").unbind("click").click(function(e){
@@ -587,6 +595,9 @@ bedbo_fetch();
 doctor_fetched();
 
 doctor_unit_consultant();
+
+
+//$('#inregistration-category_type').select2({ placeholder: "Select RoomType"});
 	
 }); 
 
@@ -603,7 +614,7 @@ function MRNUMBER(data,event)
 	     type: "POST",
 		 url: "<?php echo Yii::$app->homeUrl . "?r=in-registration/mr-number-fetch&id=";?>"+data.value,
 	     success: function (result) 
-	     { //alert(result);
+	     { 
 	     	$('#load1').hide();
 	     	var obj = JSON.parse(result);
      		if(obj[0] === 'Empty')
@@ -658,25 +669,41 @@ function SaveIPForm()
 	{
 
 		 if (confirm('Are You Sure to Save ?')) {
+		 
+		 	
+		 	
 		$.ajax({
 	            type: "POST",
 	            url: "<?php echo Yii::$app->homeUrl . "?r=in-registration/create";?>",
 	            data: $("#w0").serialize(),
 	            success: function (result) 
 	            { 
-	            	alert(result);
+	            	//alert(result);
 	            	var obj = $.parseJSON(result);
 	            	if(obj[0] == 'Save')
 		        	{
-		        	 $('#load1').hide();
+		        	 	$('#load1').hide();
 		        		$('#show_mrnumber').html(obj[1]);
 		        		$('#inregistration-ip_no').val(obj[1]);
 		        		$('#mr_modal').modal({backdrop: 'static', keyboard: false});
 					 	$("#saves_sucess").attr("disabled", "disabled"); 
-					 } 
-	            	else if(result == '0')
+					 	
+					 	$("#saved_val").val(1);
+					 	var url='<?php echo Yii::$app->homeUrl ?>?r=in-registration/pdf&id='+obj[2];
+			 			window.open(url,'_blank');
+					 	
+					} 
+	            	else if(obj[0] == 'Mismatch')
 		        	{
-		        		Alertment('Already Registered..');
+		        		Alertment('MR Number MisMatched...Check it');
+		        	}
+		        	else if(obj[0] == 'NotEntry')
+		        	{
+		        		Alertment('Patient Data Not Found...');
+		        	}
+		        	else if(obj[0] == 'IPExpiry')
+		        	{
+		        		Alertment('This Patient Already Registered');
 		        	}	
 		       	 }
 		       
@@ -691,7 +718,15 @@ $(window).bind('keydown', function(event) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
         case 's':
             event.preventDefault();
-           	SaveIPForm();
+            
+            var  saved_val = $("#saved_val").val();
+              if(saved_val===""){
+            	SaveIPForm();
+            	//onetimesave=2;
+            	
+            }else{
+            	Alertment("Already Saved");
+            }
             break;
         case 'f':
             event.preventDefault();
@@ -743,9 +778,15 @@ $(".mrnumber").typeahead({
 	  			dataType:'json',
 	  			success:function(data)
 	  			{   $('#load1').hide();
+	  				
+	  				$('#inregistration-ins_type').attr('style');
+	  				$('#inregistration-ins_type').css('display','none');
+	  				$('#inregistration-ins_type').css('pointer-events','none');
+	  				
+	  				
 	  				$('#inregistration-name_initial').val(data['pat_inital_name']);
 					$('#inregistration-patient_name').val(data['patientname']);
-					$('#inregistration-dob').val((data['dob']));
+					$('#inregistration-dob').val(formatDate(data['dob']));
 					$('#inregistration-sex').val(data['pat_sex']);
 					$('#inregistration-marital_status').val(data['pat_marital_status']);
 					$('#inregistration-relation_suffix').val(data['pat_relation']);
@@ -757,6 +798,27 @@ $(".mrnumber").typeahead({
 					$('#inregistration-pincode').val(data['pat_pincode']);
 					$('#inregistration-phone_no').val(data['pat_phone']);
 					$('#inregistration-mobile_no').val(data['pat_mobileno']);
+					
+					if(data['type'] !== null)
+					{
+					
+						$('#inregistration-type').val(data['pat_type']);
+						
+						if(data['pat_type'] === '3')
+						{
+							$('#inregistration-ins_type').val(data['insurance_type_id']);
+							$('#inregistration-ins_type').removeAttr('style');
+							$('#inregistration-ins_type').attr('style');
+							$('#inregistration-ins_type').css('pointer-events','none');
+							
+						}
+					}
+					else if(data['type'] === null)
+					{
+						$('#inregistration-type').val(1);
+					}
+					
+					
   var now = new Date();
   var today = new Date(now.getYear(),now.getMonth(),now.getDate());
   var yearNow = now.getYear();
@@ -934,6 +996,10 @@ function formatDate(date)
 		$('#inregistration-phone_no').val('');
 		$('#inregistration-mobile_no').val('');
 		$('#inregistration-mr_no').val('');
+		
+		$('.clearfield').val('');
+		$('#inregistration-ins_type').attr('style');
+		$('#inregistration-ins_type').css('display','none');
 	}
  }
 </script>	
@@ -1007,11 +1073,11 @@ $('#reg_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
 
 
 //Bed No Master
-
+ 
 function bedbo_fetch(){
     	
   var url=('<?php echo Url::base('http'); ?>');
-  var ajax_url=url+'/index.php?r=in-registration/bednofetch';
+  var ajax_url=url+'/index.php?r=in-registration/roomtypefetch';
   var table_reg= $('#bednofetch').DataTable( {
         "processing": true,
         "serverSide": true,
@@ -1023,10 +1089,10 @@ function bedbo_fetch(){
            		keys: [ 13 /* ENTER */, 38 /* UP */, 40 /* DOWN */ ]
         	},
         	"columns": [
-            { "data": "bedno","defaultContent": '<input type="text" value="0" />' },
-            { "data": "room_no","defaultContent": "NA" },
-            { "data": "room_types","defaultContent":"NA" },
-            { "data": "price","defaultContent": '<input type="text" value="0" />'  },
+            { "data": "category_type","defaultContent": '<input type="text" value="0" />' },
+            { "data": "room_type","defaultContent": "NA" },
+            { "data": "total","defaultContent":"NA" },
+        
         	],
         initComplete: function() {
 		   this.api().row( {order: 'current' }, 0).select();
@@ -1279,6 +1345,8 @@ function PatientDetailsFetch(data)
         { 
         	var obj = $.parseJSON(result);
         	
+        	$('.clearfield').val('');
+        	
         	$('#inregistration-mr_no').val(obj[0]['mr_no']);
         	$('#inregistration-name_initial').val(obj[0]['pat_inital_name']);
         	$('#inregistration-patient_name').val(obj[0]['patientname']);
@@ -1297,6 +1365,25 @@ function PatientDetailsFetch(data)
         	
         	CalculateAge(obj[0]['dob']);
         	
+        	if(obj[0]['type'] !== null)
+			{
+			
+				$('#inregistration-type').val(obj[0]['pat_type']);
+				
+				if(obj[0]['pat_type'] === '3')
+				{
+					$('#inregistration-ins_type').val(obj[0]['insurance_type_id']);
+					$('#inregistration-ins_type').removeAttr('style');
+					$('#inregistration-ins_type').attr('style');
+					$('#inregistration-ins_type').css('pointer-events','none');
+				}
+			}
+			else if(obj[0]['type'] === null)
+			{
+				$('#inregistration-type').val(1);
+			}
+        	
+        	
         	$modal = $('#patient_details');
         	$modal.modal('hide');
         }
@@ -1308,15 +1395,17 @@ function Roomdetailsfetch(data)
 {
  	$.ajax({
         type: "POST",
-        url: "<?php echo Yii::$app->homeUrl . "?r=in-registration/bednogrid&id=";?>"+data,
+        url: "<?php echo Yii::$app->homeUrl . "?r=in-registration/categorygrid&id=";?>"+data,
         success: function (result) 
         { 
         	var obj = $.parseJSON(result);
         	
-        	$('#inregistration-bed_no').val(obj[0]['bedno']);
-        	$('#inregistration-room_no').val(obj[1]['room_no']);
-        	$('#inregistration-floor_no').val(obj[3]['floor_no']);
-        	$('#inregistration-room_type').val(obj[2]['room_types']);
+        	
+        	
+        	$('#inregistration-category_type').val(obj[0]);
+        	$('#inregistration-room_type').val(obj[1]);
+        	$('#inregistration-floor_no').val(obj[2]);
+        	
         	
         	$modal = $('#patient_hist-modal');
         	$modal.modal('hide');

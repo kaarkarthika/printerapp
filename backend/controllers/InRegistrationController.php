@@ -129,135 +129,189 @@ class InRegistrationController extends Controller
 		$bed_list=InBedno::find()->where(['is_active'=>1])->asArray()->all();
 		$room_list=InRoomno::find()->where(['is_active'=>1])->asArray()->all();
 		$medicalcharge=InMedicalRecordingCharge::find()->where(['autoid'=>1])->asArray()->one();
+		$insurance=ArrayHelper::map(Insurance::find()->where(['is_active'=>1])->asArray()->all(), 'insurance_typeid', 'insurance_type');
 		
-		if ($model->load(Yii::$app->request->post())) {
+		//
+		$in_categorygroup=InCategorygroup::find()->where(['is_active'=>1])->all();
+		$in_roomtypes_map=ArrayHelper::map(InRoomtypes::find()->where(['is_active'=>1])->asArray()->all(),'autoid','room_types');
+		$in_category_map=ArrayHelper::map(InCategory::find()->where(['is_active'=>1])->asArray()->all(),'autoid','category_name');
+		
+		
+		if(!empty($in_categorygroup))
+		{
+			$room_type=array();
+			foreach ($in_categorygroup as $key => $value)
+			{
+				$room_type[$value['autoid']]=$in_category_map[$value['category_id']].'/'.$in_roomtypes_map[$value['room_typeid']];
+			}
+		}
+		
+		if ($model->load(Yii::$app->request->post())) 
+		{
 			 
-			$model1=InRegistration::find()->where(['mr_no'=>$_POST['InRegistration']['mr_no']])->asArray()->one();
+			$model1=InRegistration::find()->where(['mr_no'=>$_POST['InRegistration']['mr_no']])->andWhere(['is_active'=>1])->asArray()->one();
 			
-	  if(empty($model1)){
-			$auto_get=AutoidTable::find()->where(['auto'=>13])->asArray()->one();
-			if(!empty($auto_get))
+	    if(empty($model1))
+	    {
+	    	
+			//print_r($_POST);die;
+			$new_patient=Newpatient::find()->where(['mr_no'=>$_POST['InRegistration']['mr_no']])->asArray()->one();
+		  if(!empty($new_patient))	
+		  {
+		  	if($new_patient['patientname'] == $_POST['InRegistration']['patient_name'])
 			{
-			   $inc_value=$auto_get['start_num']+1;
-			   $rtno = str_pad($inc_value, 3, "0", STR_PAD_LEFT);
-			   $valid_sub_number=AutoidTable::updateAll(['start_num' => $rtno,'updated_at' => date('Y-m-d H:i:s'),'ipaddress'=> $_SERVER['REMOTE_ADDR']], ['auto' => 13]);
-			}
-			
-			$bill_no=AutoidTable::find()->where(['auto'=>16])->asArray()->one();
-			if(!empty($bill_no))
-			{
-			   $billinc=$bill_no['start_num']+1;
-			   $bill_numval = str_pad($billinc, 8, "0", STR_PAD_LEFT);
-			   $valid_sub_number=AutoidTable::updateAll(['start_num' => $bill_numval,'updated_at' => date('Y-m-d H:i:s'),'ipaddress'=> $_SERVER['REMOTE_ADDR']], ['auto' => 16]);
-			}
-	//	print_r($bill_numval); die;
-        	$model->patient_type=$_POST['InRegistration']['patient_type'];
-			$model->registered=$_POST['InRegistration']['registered'];
-			$model->panel_type=$_POST['InRegistration']['panel_type'];
-			$model->mr_no=$_POST['InRegistration']['mr_no'];
-			$model->ip_no=$rtno;
-			$model->bill_number=$bill_numval;
-			$model->name_initial=$_POST['InRegistration']['name_initial'];
-			$model->patient_name=$_POST['InRegistration']['patient_name'];
-			$model->dob=$_POST['InRegistration']['dob'];
-			$model->sex	=$_POST['InRegistration']['sex'];
-			$model->marital_status=$_POST['InRegistration']['marital_status'];
-			$model->relation_suffix=$_POST['InRegistration']['relation_suffix'];
-			$model->relative_name=$_POST['InRegistration']['relative_name'];
-			$model->address=$_POST['InRegistration']['address'];
-			$model->city=$_POST['InRegistration']['city'];
-			$model->district=$_POST['InRegistration']['district'];
-			$model->state=$_POST['InRegistration']['state'];
-			$model->pincode=$_POST['InRegistration']['pincode'];
-			$model->phone_no=$_POST['InRegistration']['phone_no'];
-			$model->mobile_no=$_POST['InRegistration']['mobile_no'];
-			$model->country=$_POST['InRegistration']['country'];
-			$model->religion=$_POST['InRegistration']['religion'];
-			$model->type=$_POST['InRegistration']['type'];
-			
-			$model->refered_name=$_POST['InRegistration']['refered_name'];
-			$model->ucil_from=$_POST['InRegistration']['ucil_from'];
-			$model->ucil_to=$_POST['InRegistration']['ucil_to'];
-			
-			$model->paytype=$_POST['InRegistration']['paytype'];
-			$model->bed_no	=$_POST['bedid'];
-			$model->room_no=$_POST['roomnoid'];
-			$model->floor_no=$_POST['floorid'];
-			$model->room_type=$_POST['roomtypeid'];
-			$model->consultant_dr=$_POST['InRegistration']['consultant_dr'];
-			$model->dr_unit=$_POST['InRegistration']['dr_unit'];
-			
-			$model->speciality=$_POST['InRegistration']['speciality'];
-			$model->co_consultant=$_POST['InRegistration']['co_consultant'];
-			$model->diagnosis=$_POST['InRegistration']['diagnosis'];
-			$model->remarks	=$_POST['InRegistration']['remarks'];
-			$model->is_active=$_POST['InRegistration']['is_active'];
-			
-			$model->created_date = date('Y-m-d H:i:s');
-			$model->user_id = $session['user_id'];
-			$model->userrole= $session['authUserRole'];
-         	$model ->ipaddress = $_SERVER['REMOTE_ADDR'];
-			
-			if($model ->save()){
+				$auto_get=AutoidTable::find()->where(['auto'=>13])->asArray()->one();
+				if(!empty($auto_get))
+				{
+				   $inc_value=$auto_get['start_num']+1;
+				   $rtno = str_pad($inc_value, 3, "0", STR_PAD_LEFT);
+				   $valid_sub_number=AutoidTable::updateAll(['start_num' => $rtno,'updated_at' => date('Y-m-d H:i:s'),'ipaddress'=> $_SERVER['REMOTE_ADDR']], ['auto' => 13]);
+				}
 				
-				$money_log->mr_no=$_POST['InRegistration']['mr_no'];
-				$money_log->ip_no=$rtno;
-				$money_log->bill_number=$model->bill_number;
-				$money_log->total_amt=$medicalcharge['amount'];
-				$money_log->action="Registration";
-				$money_log->created_date = date('Y-m-d H:i:s');
-				$money_log->user_id = $session['user_id'];
-				$money_log->ipaddress = $_SERVER['REMOTE_ADDR'];
-				//echo"<pre>";print_r($money_log); die;
-				if($money_log->save()){
-				}else{
-					echo"<pre>"; print_r($money_log->getErrors()); die;
+				$bill_no=AutoidTable::find()->where(['auto'=>16])->asArray()->one();
+				if(!empty($bill_no))
+				{
+				   $billinc=$bill_no['start_num']+1;
+				   $bill_numval = str_pad($billinc, 8, "0", STR_PAD_LEFT);
+				   $valid_sub_number=AutoidTable::updateAll(['start_num' => $bill_numval,'updated_at' => date('Y-m-d H:i:s'),'ipaddress'=> $_SERVER['REMOTE_ADDR']], ['auto' => 16]);
 				}
-				//$category_group=InCategorygroup::find()->where(['is_active'=>1])->andwhere(['room_typeid'=>$model->room_type])->asArray()->one();
-				$category_group=InCategorygroup::find()->where(['is_active'=>1])->andwhere(['room_typeid'=>6])->asArray()->one();
-				$moneyroom_log=new IpMoneyreceiptsLog();
-				$moneyroom_log->mr_no=$_POST['InRegistration']['mr_no'];
-				$moneyroom_log->ip_no=$rtno;
-				$moneyroom_log->bill_number=$model->bill_number;
-				$moneyroom_log->total_amt=$category_group['total'];
-				$moneyroom_log->action="Room Charges";
-				$moneyroom_log->created_date = date('Y-m-d H:i:s');
-				$moneyroom_log->user_id = $session['user_id'];
-				$moneyroom_log->ipaddress = $_SERVER['REMOTE_ADDR'];
-				if($moneyroom_log->save()){
-				}else{
-					echo"<pre>"; print_r($moneyroom_log->getErrors()); die;
-				}
-			
+		
+	        	$model->patient_type=$_POST['InRegistration']['patient_type'];
+				$model->registered=$_POST['InRegistration']['registered'];
+				$model->panel_type=$_POST['InRegistration']['panel_type'];
+				$model->mr_no=$new_patient['mr_no'];
+				$model->ip_no=$rtno;
+				$model->bill_number=$bill_numval;
+				$model->name_initial=$new_patient['pat_inital_name'];
+				$model->patient_name=$new_patient['patientname'];
+				$model->dob=date('Y-m-d',strtotime($new_patient['dob']));
+				$model->sex	=$new_patient['pat_sex'];
+				$model->marital_status=$new_patient['pat_marital_status'];
+				$model->relation_suffix=$new_patient['pat_relation'];
+				$model->relative_name=$new_patient['par_relationname'];
+				$model->address=$new_patient['pat_address'];
+				$model->city=$new_patient['pat_city'];
+				$model->district=$new_patient['pat_distict'];
+				$model->state=$new_patient['pat_state'];
+				$model->pincode=$new_patient['pat_pincode'];
+				$model->phone_no=$new_patient['pat_phone'];
+				$model->mobile_no=$new_patient['pat_mobileno'];
+				$model->country=$_POST['InRegistration']['country'];
+				$model->religion=$_POST['InRegistration']['religion'];
+				$model->type=$new_patient['pat_type'];
+				
+				$model->ins_type=$new_patient['insurance_type_id'];
+				
+				/*$model->refered_name=$_POST['InRegistration']['refered_name'];
+				$model->ucil_from=$_POST['InRegistration']['ucil_from'];
+				$model->ucil_to=$_POST['InRegistration']['ucil_to'];*/
+				
+				//$model->paytype=$_POST['InRegistration']['paytype'];
+				//$model->bed_no	=$_POST['bedid'];
+				
+				//$model->room_no=$_POST['roomnoid'];
+				//$model->floor_no=$_POST['floorid'];
 				
 				
-				$change_model->ip_no=$rtno;
-				$change_model->mr_no=$_POST['InRegistration']['mr_no'];
-				$change_model->paytype=$_POST['InRegistration']['paytype'];
-				$change_model->roomtype	=$_POST['roomtypeid'];
-				$change_model->roomno	=$_POST['roomnoid'];
-				$change_model->floorno	=$_POST['floorid'];
-				$change_model->unit	=$_POST['InRegistration']['dr_unit'];
-				$change_model->bedno=$_POST['bedid'];
-				$change_model->created_date = date('Y-m-d H:i:s');
-				$change_model->user_id = $session['user_id'];
-				$change_model->userrole= $session['authUserRole'];
-         		$change_model ->ipaddress = $_SERVER['REMOTE_ADDR'];
-				//$change_model->save();
-				if($change_model->save()){
-					$fetch_view[0]='Save';
-					$fetch_view[1]=$rtno;
-					$myJSON = json_encode($fetch_view);
-					return $myJSON;
-				}else{
-					echo"<pre>"; print_r($change_model->getErrors()); die;
-				}
+				$model->category_type=$_POST['InRegistration']['category_type'];
+				$model->floor_no=$_POST['InRegistration']['floor_no'];
+				
+				$model->room_type=$_POST['InRegistration']['room_type'];
+				
+				$model->consultant_dr=$_POST['InRegistration']['consultant_dr'];
+				$model->dr_unit=$_POST['InRegistration']['dr_unit'];
+				
+				$model->speciality=$_POST['InRegistration']['speciality'];
+				$model->co_consultant=$_POST['InRegistration']['co_consultant'];
+				$model->diagnosis=$_POST['InRegistration']['diagnosis'];
+				$model->remarks	=$_POST['InRegistration']['remarks'];
+				$model->is_active=1;
+				
+				$model->created_date = date('Y-m-d H:i:s');
+				$model->user_id = $session['user_id'];
+				$model->userrole= $session['authUserRole'];
+	         	$model ->ipaddress = $_SERVER['REMOTE_ADDR'];
+		
+			
+				if($model ->save()){
 					
-			 }
+					$money_log->mr_no=$_POST['InRegistration']['mr_no'];
+					$money_log->ip_no=$rtno;
+					$money_log->bill_number=$model->bill_number;
+					$money_log->total_amt=$medicalcharge['amount'];
+					$money_log->action="Registration";
+					$money_log->created_date = date('Y-m-d H:i:s');
+					$money_log->user_id = $session['user_id'];
+					$money_log->ipaddress = $_SERVER['REMOTE_ADDR'];
+					
+					if($money_log->save()){
+					}else{
+						echo"<pre>"; print_r($money_log->getErrors()); die;
+					}
+					
+					$category_group=InCategorygroup::find()->where(['is_active'=>1])->andwhere(['room_typeid'=>6])->asArray()->one();
+					$moneyroom_log=new IpMoneyreceiptsLog();
+					$moneyroom_log->mr_no=$_POST['InRegistration']['mr_no'];
+					$moneyroom_log->ip_no=$rtno;
+					$moneyroom_log->bill_number=$model->bill_number;
+					$moneyroom_log->total_amt=$category_group['total'];
+					$moneyroom_log->action="Room Charges";
+					$moneyroom_log->created_date = date('Y-m-d H:i:s');
+					$moneyroom_log->user_id = $session['user_id'];
+					$moneyroom_log->ipaddress = $_SERVER['REMOTE_ADDR'];
+					if($moneyroom_log->save()){
+						
+					}else{
+						
+						echo"<pre>"; print_r($moneyroom_log->getErrors()); die;
+					}
+				
+					
+					
+					$change_model->ip_no=$rtno;
+					$change_model->mr_no=$_POST['InRegistration']['mr_no'];
+					$change_model->paytype=$_POST['InRegistration']['paytype'];
+					$change_model->roomtype	=$_POST['roomtypeid'];
+					$change_model->roomno	=$_POST['roomnoid'];
+					$change_model->floorno	=$_POST['floorid'];
+					$change_model->unit	=$_POST['InRegistration']['dr_unit'];
+					$change_model->bedno=$_POST['bedid'];
+					$change_model->created_date = date('Y-m-d H:i:s');
+					$change_model->user_id = $session['user_id'];
+					$change_model->userrole= $session['authUserRole'];
+	         		$change_model->ipaddress = $_SERVER['REMOTE_ADDR'];
+					
+					if($change_model->save())
+					{
+						$fetch_view[0]='Save';
+						$fetch_view[1]=$rtno;
+						$fetch_view[2]=$model->autoid;
+						
+						$myJSON = json_encode($fetch_view);
+						return $myJSON;
+					}
+					else
+					{
+						echo"<pre>"; print_r($change_model->getErrors()); die;
+					}
+						
+				 }
 			}else{
-				echo "0";
+				$fetch_view[0]='Mismatch';
+				$myJSON = json_encode($fetch_view);
+				return $myJSON;
 			}
-            //return $this->redirect(['view', 'id' => $model->autoid]);
+			}else{
+				$fetch_view[0]='NotEntry';
+				$myJSON = json_encode($fetch_view);
+				return $myJSON;
+			}
+			
+			}else{
+				$fetch_view[0]='IPExpiry';
+				$myJSON = json_encode($fetch_view);
+				return $myJSON;
+			}
         }
 		else
 		{
@@ -273,6 +327,8 @@ class InRegistrationController extends Controller
 			$ArrayHelper_patient=ArrayHelper::index($Newpatient,'patientid');
 			$Newpatient_json=json_encode($ArrayHelper_patient);
 			
+		
+			
 			
 			return $this->render('create', [
             'model' => $model,
@@ -282,6 +338,8 @@ class InRegistrationController extends Controller
             'Newpatient_json' => $Newpatient_json,
             'ArrayHelper_patient' => $ArrayHelper_patient,
             'specialistdoctor' => $specialistdoctor,
+            'insurance' => $insurance,
+            'room_type' => $room_type,
         ]);
 				
 		}
@@ -405,7 +463,7 @@ $salesdetail=$modelz->patientdetails($id);
 			'pat_inital_name'=>'pat_inital_name','dob'=>'dob','pat_sex'=>'pat_sex','pat_marital_status'=>'pat_marital_status',
 			'pat_relation'=>'pat_relation','par_relationname'=>'par_relationname','pat_address'=>'pat_address',
 			'pat_city'=>'pat_city','pat_distict'=>'pat_distict','pat_state'=>'pat_state','pat_pincode'=>'pat_pincode',
-			'pat_phone'=>'pat_phone','pat_mobileno'=>'pat_mobileno','pat_email'=>'pat_email'])->where(['temporary_blocked'=>'N'])->andWhere(['mr_no'=>$id])->asArray()->one();
+			'pat_phone'=>'pat_phone','pat_mobileno'=>'pat_mobileno','pat_email'=>'pat_email','insurance_type_id'=>'insurance_type_id','pat_type'=>'pat_type'])->where(['temporary_blocked'=>'N'])->andWhere(['mr_no'=>$id])->asArray()->one();
 		
 			if(!empty($Newpatient))
 			{
@@ -757,7 +815,7 @@ public function actionAjaxipnumberselect($id)
 			return json_encode($responce);
 			die;
 	}
-	public function actionBednofetch()
+	/*public function actionBednofetch()
     {
     	$sfd=0;
     	if(isset($_POST['start']) && $_POST['start']!="0"){
@@ -832,10 +890,87 @@ public function actionAjaxipnumberselect($id)
 
 		return json_encode($responce);
 		die;
+	}*/
+	
+	
+	public function actionRoomtypefetch()
+    {
+    	$sfd=0;
+    	if(isset($_POST['start']) && $_POST['start']!="0"){
+    		$sfd=$_POST['start'];
+    	}
+    	$draw=0;
+		if(isset($_POST['draw']) && $_POST['draw']!=""){
+		  $draw=$_POST['draw'];
+		}
+		$length=10;
+		if(isset($_POST['length']) && $_POST['length']!=""){
+		  $length=$_POST['length'];
+		}
+		$s_val='';
+		if(isset($_POST['search'])){
+		  $s_val=$_POST['search']['value'];
+		}
+
+			//$bed_list=InBedno::find()->where(['is_active'=>1])->asArray()->all();
+			$query = new Query;
+			$query	->select([
+        'in_categorygroup.autoid','in_categorygroup.category_id','in_categorygroup.room_typeid','in_categorygroup.total'])  
+        ->from('in_categorygroup')
+        ->join('LEFT OUTER JOIN', 'in_category',
+            'in_categorygroup.category_id =in_category.autoid')		
+        ->join('LEFT OUTER JOIN', 'in_roomtypes', 
+            'in_categorygroup.room_typeid =in_roomtypes.autoid')
+		->where(['or',
+		
+		['like','in_category.category_name',$s_val],
+		['like','in_roomtypes.room_types',$s_val],
+		['like','in_categorygroup.total',$s_val]]
+		)
+        ->limit(100000)->all(); 
+		
+		$command = $query->createCommand();
+		$data = $command->queryAll();
+		
+		$query1 = new Query;
+		$query1	->select([
+        'in_categorygroup.autoid','in_categorygroup.category_id','in_categorygroup.room_typeid','in_categorygroup.total',
+        'in_category.category_name','in_roomtypes.room_types'
+        ])  
+        ->from('in_categorygroup')
+        ->join('LEFT OUTER JOIN', 'in_category',
+            'in_categorygroup.category_id =in_category.autoid')		
+        ->join('LEFT OUTER JOIN', 'in_roomtypes', 
+            'in_categorygroup.room_typeid =in_roomtypes.autoid')
+		->where(['or',
+		
+		['like','in_category.category_name',$s_val],
+		['like','in_roomtypes.room_types',$s_val],
+		['like','in_categorygroup.total',$s_val]]
+		)
+        ->limit($length)->offset($sfd)->all(); 
+		
+		$command1 = $query1->createCommand();
+		$data1 = $command1->queryAll();
+		
+		$response='';
+			
+		if(!empty($data1))
+		{
+			$fetch_array=array();
+			$responce['draw']=$draw;
+			$responce['recordsTotal']= $length;
+			$responce['recordsFiltered']= count($data);
+			foreach ($data1 as $key => $value) 
+			{
+				$responce['data'][]=array("DT_RowId"=>$value['autoid'],"category_type"=>$value['category_name'],"room_type"=>$value['room_types'],"total"=>$value['total']);
+			}
+		}
+//echo '<pre>';
+	//	print_r($data1);die;
+		return json_encode($responce);
+		die;
 	}
-	
-	
-	
 	
 	public function actionDoctorfetch()
     {
@@ -975,7 +1110,7 @@ public function actionAjaxipnumberselect($id)
 	}
 	
 	
-	public function actionBednogrid($id)
+	/*public function actionBednogrid($id)
 	{
 		$in_bedno=InBedno::find()->where(['autoid'=>$id])->asArray()->one();
 		
@@ -992,9 +1127,25 @@ public function actionAjaxipnumberselect($id)
 		$fetch_array[3]=$in_floormaster;
 		
 		return json_encode($fetch_array);
+	}*/
+	
+	public function actionCategorygrid($id)
+	{
+		
+		$in_roomtypes_map=ArrayHelper::map(InRoomtypes::find()->where(['is_active'=>1])->asArray()->all(),'autoid','room_types');
+		$in_category_map=ArrayHelper::map(InCategory::find()->where(['is_active'=>1])->asArray()->all(),'autoid','category_name');
+		
+		$in_categorygroup= InCategorygroup::find()->where(['autoid'=>$id])->asArray()->one();
+		
+		$fetch_array=array();
+		$fetch_array[0]=$id;
+		$fetch_array[1]=$in_roomtypes_map[$in_categorygroup['room_typeid']];
+		$fetch_array[2]='FIRST FLOOR';
 		
 		
+		return json_encode($fetch_array,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 	}
+	
 	
 	
 	public function actionCrbednogrid($id)
@@ -1964,6 +2115,8 @@ public function actionAjaxipnumberselect($id)
 		$bed_list=InBedno::find()->where(['is_active'=>1])->asArray()->all();
 		$room_list=InRoomno::find()->where(['is_active'=>1])->asArray()->all();
 		
+		
+		
 		if ($model->load(Yii::$app->request->post())) {
 			 
 			$auto_get=AutoidTable::find()->where(['auto'=>13])->asArray()->one();
@@ -2058,6 +2211,7 @@ public function actionAjaxipnumberselect($id)
 			$ArrayHelper_patient=ArrayHelper::index($Newpatient,'patientid');
 			$Newpatient_json=json_encode($ArrayHelper_patient);
 			
+			$insurance=ArrayHelper::map(Insurance::find()->where(['is_active'=>1])->asArray()->all(), 'insurance_typeid', 'insurance_type');
 			
 			return $this->render('patient_info', [
             'model' => $model,
@@ -2066,6 +2220,7 @@ public function actionAjaxipnumberselect($id)
             'bed_list' => $bed_list,
             'Newpatient_json' => $Newpatient_json,
             'ArrayHelper_patient' => $ArrayHelper_patient,
+            'insurance' => $insurance,
         ]);
 				
 		}
@@ -2092,8 +2247,61 @@ public function actionAjaxipnumberselect($id)
 	{
 
 		$reg_list=InRegistration::find()->where(['is_active'=>1])->andWhere(['autoid'=>$id])->asArray()->one();
-		//echo"<pre>";print_r($reg_list); die;
+		
+		$new_patient=Newpatient::find()->where(['mr_no'=>$reg_list['mr_no']])->asArray()->one();
+		
+		$physicianmaster=ArrayHelper::map(Physicianmaster::find()->asArray()->all(), 'id', 'physician_name');
+		
+		$insurance=ArrayHelper::map(Insurance::find()->where(['is_active'=>1])->asArray()->all(), 'insurance_typeid', 'insurance_type');
+		
+		$session = Yii::$app->session;
+		$userid=$session['user_id'];
+		
+		if(!empty($userid))
+		{
+			$branch_det=BranchAdmin::find()->where(['ba_autoid'=>$userid])->asArray()->one();
+			$user_name=strtoupper($branch_det['ba_name']);
+		}
+		else 
+		{
+			$user_name='';
+		}
+		
+		$patient_type=ArrayHelper::map(PatientType::find()->asArray()->all(), 'type_id', 'patient_type');
+		
+		$insurance=ArrayHelper::map(Insurance::find()->asArray()->all(), 'insurance_typeid', 'insurance_type');
+		
+		if(!empty($reg_list['type']))
+		{
+			$pat_type=$patient_type[$reg_list['type']];
+			$ins_type='';
+			
+			if($reg_list['type'] == '3')
+			{
+				$ins_type=$insurance[$reg_list['ins_type']];
+			}
+		}
+		else 
+		{
+			$pat_type='';
+			$ins_type='';
+		}
 
+		if(!empty($reg_list['category_type']))
+		{
+			$in_categorygroup=InCategorygroup::find()->where(['autoid'=>$reg_list['category_type']])->one();
+			
+			$in_roomtypes_map=ArrayHelper::map(InRoomtypes::find()->asArray()->all(),'autoid','room_types');
+			$in_category_map=ArrayHelper::map(InCategory::find()->asArray()->all(),'autoid','category_name');
+			
+			$category=$in_category_map[$in_categorygroup['category_id']];
+			$roomtype=$in_roomtypes_map[$in_categorygroup['room_typeid']];	
+		}
+		
+		$floor=$reg_list['floor_no'];
+		
+		
+		
 			require ('../../vendor/tcpdf/tcpdf.php');
 				$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 				$pdf->SetCreator(PDF_CREATOR);
@@ -2138,30 +2346,30 @@ public function actionAjaxipnumberselect($id)
 				$tbl1.='<p style="border-top:1px solid #000;"></p>';
 				$tbl1.='<p style="text-align:center;font-size:13px;font-weight:bold;line-height:2px;"><u>IN PATIENT MEDICAL RECORD</u></p>';
 				$tbl1.='<table cellpadding="4" style="border:1px solid #000;padding:5px 10px;font-size:12px;margin-top:250px;" ALIGN="left" border=1 >
-				<tr><td style="width:15%;"> <B> MR NUMBER </B> </td><td style="width:35%;">: '.$reg_list['mr_no'].'</td><td style="width:18%;"> <B> IP NO </B> </td><td style="width:32%;">:</td> </tr>
-				<tr><td style="width:15%;"> <B> Patient Name </B> </td><td style="width:35%;">: '.$reg_list['patient_name'].' </td><td style="width:18%;"> <B> Admission Date </B> </td><td style="width:32%;">:</td> </tr>
-				<tr><td style="width:15%;"> <B> Relative Name </B> </td><td style="width:35%;">: '.$reg_list['relative_name'].' </td><td style="width:18%;"> <B> Admission Time </B> </td><td style="width:32%;">:</td> </tr>
-				<tr><td style="width:15%;"> <B> Age / Gender </B> </td><td style="width:35%;">: '.$reg_list['mr_no'].'</td><td style="width:18%;"> <B> MLC No </B> </td><td style="width:32%;">:</td> </tr>
+				<tr><td style="width:15%;"> <B> MR NUMBER </B> </td><td style="width:35%;">:&nbsp;&nbsp;&nbsp;'.$reg_list['mr_no'].'</td><td style="width:18%;"> <B> IP NO </B> </td><td style="width:32%;">:&nbsp;&nbsp;&nbsp;'.$reg_list['ip_no'].'</td> </tr>
+				<tr><td style="width:15%;"> <B> Patient Name </B> </td><td style="width:35%;">:&nbsp;&nbsp;&nbsp;'.strtoupper($reg_list['name_initial'].'.'.$reg_list['patient_name']).' </td><td style="width:18%;"> <B> Admission Date </B> </td><td style="width:32%;">:&nbsp;&nbsp;&nbsp;'.date('d-m-Y',strtotime($reg_list['created_date'])).'</td> </tr>
+				<tr><td style="width:15%;"> <B> Relative Name </B> </td><td style="width:35%;">:&nbsp;&nbsp;&nbsp;'.strtoupper($reg_list['relative_name']).' </td><td style="width:18%;"> <B> Admission Time </B> </td><td style="width:32%;">:&nbsp;&nbsp;&nbsp;'.date('h:i A',strtotime($reg_list['created_date'])).'</td> </tr>
+				<tr><td style="width:15%;"> <B> Age</B> </td><td style="width:35%;">:&nbsp;&nbsp;&nbsp;'.$this->Getagebrief($new_patient['dob']).'</td><td style="width:18%;"> <B> Gender </B> </td><td style="width:32%;">:&nbsp;&nbsp;&nbsp;'.$new_patient['pat_sex'].'</td> </tr>
 				<tr>
-				<td style="width:15%;"> <B> Address </B> </td><td style="width:35%;">: '.$reg_list['address'].' <br> '.$reg_list['city'].' <br> '.$reg_list['district'].'</td>
+				<td style="width:15%;"> <B> Address </B> </td><td style="width:35%;">:&nbsp;&nbsp;&nbsp;'.strtoupper($reg_list['address']).' <br>&nbsp;&nbsp;&nbsp;&nbsp;'.strtoupper($reg_list['city']).' <br>&nbsp;&nbsp;&nbsp;&nbsp;'.strtoupper($reg_list['district']).'</td><td style="width:18%;"> <B> Floor </B> </td><td style="width:32%;">:&nbsp;&nbsp;&nbsp;'.strtoupper($floor).'</td>
 				<td style="width:15%;">  </td><td style="width:35%;"></td> </tr>
 				<tr>
-				<td style="width:15%;"> <B> Mobile No </B> </td><td style="width:35%;">: '.$reg_list['mobile_no'].'</td>
+				<td style="width:15%;"> <B> Mobile No </B> </td><td style="width:35%;">:&nbsp;&nbsp; '.$reg_list['mobile_no'].'</td><td style="width:18%;"> <B> Category </B> </td><td style="width:32%;">:&nbsp;&nbsp;&nbsp;'.strtoupper($category).'</td>
 				<td style="width:15%;">  </td><td style="width:35%;"></td> </tr>
 				<tr>
-				<td style="width:15%;"> <B> Consulant </B> </td><td style="width:35%;">: '.$reg_list['consultant_dr'].'</td>
+				<td style="width:15%;"> <B> Consulant </B> </td><td style="width:35%;">:&nbsp;&nbsp;&nbsp;'.strtoupper($physicianmaster[$reg_list['consultant_dr']]).'</td><td style="width:18%;"> <B> Room Type </B> </td><td style="width:32%;">:&nbsp;&nbsp;&nbsp;'.strtoupper($roomtype).'</td>
 				<td style="width:15%;">  </td><td style="width:35%;"></td> </tr>
 				</table>';	
 				$tbl1.='<table  style="border-left:1px solid #000;border-right:1px solid #000;padding:5px 10px;font-size:12px;margin-top:250px;" ALIGN="left" border=1 >
 				<tr>
-				  <td style="font-weight:bold;"><u>Referral / Insurance Details </u></td> <td > </td></tr></table>
+				  <td style="font-weight:bold;"><u>Patient / Insurance Details </u></td> <td > </td></tr></table>
 				 <table  style="border-left:1px solid #000;border-right:1px solid #000;padding:5px 10px;font-size:12px;margin-top:250px;" ALIGN="left" border=1 >
 				<tr>
-				  	<td style="width:16%;" > <B> Referred by </B></td> <td  style="width:34%;">: </td>
+				  	<td style="width:16%;" > <B> Patient Type </B></td> <td  style="width:34%;">:&nbsp;&nbsp;'.strtoupper($pat_type).' </td>
 				  	<td style="width:15%;" > <B> Contact No </B> </td> <td  style="width:35%;">: '.$reg_list['mobile_no'].'</td>
 				  </tr>
 				  <tr>
-				  <td style="width:16%;"> <B> Organization </B> </td> <td style="width:35%;">: </td>
+				  <td style="width:16%;"> <B> Insurance </B> </td> <td style="width:35%;">:&nbsp;&nbsp;'.strtoupper($ins_type).' </td>
 				</tr>
 			</table>';	
 				$tbl1.='<table  style="border:1px solid #000;padding:5px 10px;font-size:12px;margin-top:250px;" ALIGN="left" border=1 >
@@ -2176,12 +2384,12 @@ public function actionAjaxipnumberselect($id)
 				<tr>
 				  <td style="font-weight:bold;"><u>Data Entry Details</u></td> <td > </td> <td> </td><td> </td></tr>
 				  <tr>
-				  <td style="width:15%;"> Admitted by </td> <td >: </td>
+				  <td style="width:15%;"> Admitted by </td> <td >:&nbsp;&nbsp;'.$user_name.'</td>
 				  <td style="width:15%;">  </td> <td > </td>
 				  </tr>
 				  <tr>
-				  <td> Date & Time </td> <td>: </td>
-				  <td> </td> <td style="text-align:right;float:right;width:40%;">signature </td>
+				  <td> Date & Time</td> <td>:&nbsp;&nbsp;'.date('d-m-Y h:i A').'</td>
+				  <td> </td> <td style="text-align:right;float:right;width:40%;"><b>Signature</b></td>
 				</tr>
 			</table>';	
 
@@ -2337,6 +2545,26 @@ public function actionAjaxipnumberselect($id)
 		$difference = $now->diff($dob);
 		$age = $difference->y;
 		return $age;
+	}
+	
+	public function Getagebrief($userDob)
+	{
+		
+		//Create a DateTime object using the user's date of birth.
+		$dob = new \DateTime($userDob);
+		//We need to compare the user's date of birth with today's date.
+		$now = new \DateTime();
+		//Calculate the time difference between the two dates.
+		$difference = $now->diff($dob);
+		
+		//Get the difference in years, as we are looking for the user's age.
+		$year = $difference->y;
+		$month = $difference->m;
+		$day = $difference->d;
+		
+		
+		//Print it out.
+		return $year." Years ".$month." Months ".$day." Days";
 	}
 	
 	 }

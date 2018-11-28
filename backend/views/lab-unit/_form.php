@@ -11,8 +11,24 @@ use yii\helpers\Url;
 <div class="lab-unit-form">
 
     <?php $form = ActiveForm::begin(['id'=>'unit-form']); ?>
+
     <?= $form->field($model, 'unit_name')->textInput(['maxlength' => true,'required' => true]) ?>
+
     <?= $form->field($model, 'unit_value')->textInput(['maxlength' => true,'required' => true]) ?>
+
+    <!-- <?= $form->field($model, 'unit_type')->textInput(['maxlength' => true,'required' => true]) ?>
+
+    <?= $form->field($model, 'referencesymbol')->textInput(['maxlength' => true,'required' => true]) ?>
+
+    <?= $form->field($model, 'isactive')->dropDownList([ 'A' => 'A', 'I' => 'I', ], ['prompt' => '']) ?>
+
+    <?= $form->field($model, 'created_at')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'created_date')->textInput() ?>
+
+    <?= $form->field($model, 'update_at')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'update_date')->textInput() ?> -->
 
     <!-- <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -23,7 +39,7 @@ use yii\helpers\Url;
      	}?> 
     <?= $form->field($model, 'isactive', [
     'template' => "<div class='checkbox checkbox-custom' style='margin-top:30px;'>{input}<label>Active</label></div>{error}",
-	])->checkbox([],false) ?>
+])->checkbox([],false) ?>
 
     <?= Html::Button('<i class="fa fa-fw fa-close"></i> Close', ['class' => 'btn btn-danger closez', 'data-dismiss'=>"modal" ,'aria-hidden'=>"true"]) ?>
     <?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-fw fa-save"></i>Save' : '<i class="fa fa-fw fa-edit "></i>Update', ['class' => $model->isNewRecord ? 'btn btn-success savecategory' : 'btn btn-primary updatecategory']) ?>
@@ -36,6 +52,7 @@ use yii\helpers\Url;
 </div>
 <script>
 	$('#unit-form').on('beforeSubmit', function(e) {
+	//$("#load").show();
     $(".savecategory").attr('disabled','disabled');
     var form = $(this);
     var formData = form.serialize();
