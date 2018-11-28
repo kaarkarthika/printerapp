@@ -3423,3 +3423,6 @@ select.product-select {
 .text-caps{
 	text-transform:uppercase;
 }
+td div.input-group div.input-group-btn label.inp.btn.btn-default{
+	font-size:10px!important;
+}
