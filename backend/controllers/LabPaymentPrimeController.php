@@ -350,7 +350,7 @@ class LabPaymentPrimeController extends Controller
 	
  	public function actionTestsave($id)
     {
-    	//echo"<pre>"; print_r($_POST); die;
+    	echo"<pre>"; print_r($_POST); die;
 		
     	$originalDate = $_POST['sample'];
 		$newDate = date("Y-m-d H:i ", strtotime($originalDate));

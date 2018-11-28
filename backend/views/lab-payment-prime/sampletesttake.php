@@ -20,9 +20,10 @@ $this->params['breadcrumbs'][] = $this->title;
             		<p style="float: left;margin-right: 10px;">Sample Collection Date</p>
                 <div class='input-group date' id='datetimepicker1' style="width: 200px;">
                     <input type='text' required="required" class=" datepicker form-control date_sample" id="date_sample" name="date_sample" />
+                    <!-- <input type='text' required="required" class=" form-control date_sample" id='datetimepicker4' name="date_sample" /> -->
                     
                 </div>
-            </div>
+                      </div>
             <div class="form-group"> 	<p>Remarks</p>
                 <textarea name="remarks" id="remarks" row="5" class="remarks form-control"></textarea>
             </div>
@@ -62,6 +63,10 @@ $('.datepicker').datepicker({
 });
 
 
+            $(function () {
+                $('#datetimepicker4').datetimepicker();
+            });
+        
     
 
 $("#save").click(function(e) {

@@ -150,10 +150,8 @@ div#group_lab_fetch span,.testing-list span {
 	$day_val=$interval->days;
 	$month_val=$interval->m;
 	$year_val=$interval->y;
-
- 
 	
-	 $lab_payment_prime_val=LabPaymentPrime::find()->where(['lab_id'=>$lab_payment[0]['lab_prime_id']])->asArray()->one();
+ $lab_payment_prime_val=LabPaymentPrime::find()->where(['lab_id'=>$lab_payment[0]['lab_prime_id']])->asArray()->one();
 	
 $result_string.='';
 		
@@ -164,6 +162,9 @@ if(!empty($lab_payment))
 			<span> Lab Testing </span>
 			<?php
 			 
+			 //$maincount=ArrayHelper::map(MainTestgroup::find()->select(['autoid'])->asArray()->all(),'autoid','autoid');
+		//	 $maincount=MainTestgroup::find()->asArray()->all();
+			 
 			 $result_string='';
 			 $result_string.='<input type="hidden" name="labtest" id="labtest" value='.$lab_payment_prime_val['lab_id'].' >';
 			 	$result_string.='<table class="table table-bordered algincss " style="margin-bottom: -2px;">
@@ -173,23 +174,39 @@ if(!empty($lab_payment))
 				$status_grouptest=0;
 				$status_group=0;
 				$vali=0;
+				
 				foreach ($lab_payment as $key => $value)  
 				{
 					 $split_group=explode('_', $value['lab_test_name']);
 					 if($split_group[0]=="MasterGroup"){
 					 	$mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$value['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
+						/* echo"<pre>";
+						 	print_r($maincount[$key]['autoid']);
+						 //	print_r($value['lab_common_id']);
+							
+						 if($maincount==$value['lab_common_id']){
+						 	 print_r("found");
+						 }else{
+						   	//print_r("not found");
+						 }
+						 */
+						 
+						 
 						 if($status_mg=="0"){
 						 	$result_string.='<table class="table table-bordered algincss" ALIGN="Center" style="margin-bottom: -2px;background: #ffd9d9;"><tr><td style="padding: 3px 10px;    text-align: center;"><b>'.$mastergroupname[$value['lab_common_id']].'</b></td></tr></table>';
-							$status_mg=1; }
+							$status_mg=1; 
+							}
 							$testgroupname=ArrayHelper::map(Testgroup::find()->where(['autoid'=>$value['lab_testgroup']])->asArray()->all(), 'autoid', 'testgroupname');
 								if($repeat_test!=$value['lab_testgroup']){
 								 if($status_grouptest==0){
 								 	 $repeat_test=$value['lab_testgroup'];
 									 $result_string.='<table class="table table-bordered algincss" style="margin-bottom: -2px;background: #eaeaea;"><tr><td style="padding: 3px 10px;"><b>'.$testgroupname[$value['lab_testgroup']].'</b><td></tr></table>';
-									 $status_grouptest++; }
+									// $status_grouptest++; 
+								 }
 								}
 							$i=1; 	
 							$lab_testing=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->andWhere(['isactive'=>1])->asArray()->one();
+							 
 							$lab_unit=LabUnit::find()->where(['auto_id'=>$lab_testing['unit_id']])->asArray()->one();
 							$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$lab_testing['autoid']])->asArray()->one();
 										
@@ -218,7 +235,8 @@ if(!empty($lab_payment))
 									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
 									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
 									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
-								
+						  //	echo"<pre>"; print_r($key); 
+							
 							if($lab_testing['result_type']=="numeric"){
 								if(!empty($lab_reference_val)){
 									$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';

@@ -85,9 +85,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			['attribute' => 'ph_number', 
             	'label' => 'Phone Number ',
              	],
-			 ['attribute' => 'physican_name', 
-            	'label' => 'Physician Name ',
-             	],
+			 ['attribute' => 'dr_name', 
+            	'label' => ' Physician Name',
+           
+            ],
           [   	
           'attribute'=>'payment_status', 
             'width'=>'150px',

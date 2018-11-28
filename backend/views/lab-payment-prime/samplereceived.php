@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		<p style="float: left;margin-right: 10px;">Sample Received Date</p>
             		 <div class='input-group date' id='datetimepicker1' style="width: 200px;">
                     	<input type='text' required="required" class=" datepicker form-control date_sample" id="date_sample" name="date_sample" />
-                    
+                    <!-- <input type='text' required="required" class=" form-control date_sample" id='datetimepicker4' name="date_sample" /> -->
                 </div>
                 <!-- <div class='input-group date' id='datetimepicker1' style="width: 200px;">
                 	<input type='text' class="datepicker form-control date_sample" id="date_sample" name="date_sample" />
@@ -72,6 +72,10 @@ $this->params['breadcrumbs'][] = $this->title;
   // });
 //         
  
+            $(function () {
+                $('#datetimepicker4').datetimepicker();
+            });
+            
 $("#save").click(function(e) {
   
   var sampletest =$("#date_sample").val(); 

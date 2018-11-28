@@ -40,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'ph_number',
              ['attribute' => 'dr_name', 
             	'label' => ' Physician Name',
+           
             ],
             //'insurance',
             [	'attribute' => 'insurance', 
@@ -65,28 +66,14 @@ $this->params['breadcrumbs'][] = $this->title;
 				}
 				
 		   }],
-            // 'overall_item',
-            // 'overall_gst_per',
-            // 'overall_cgst_per',
-            // 'overall_sgst_per',
-            // 'overall_gst_amt',
-            // 'overall_cgst_amt',
-            // 'overall_sgst_amt',
-            // 'overall_dis_type',
-            // 'overall_dis_percent',
-            // 'overall_dis_amt',
-            // 'overall_sub_total',
-            // 'overall_net_amt',
-            // 'created_at',
-            // 'updated_at',
-            // 'user_id',
-            // 'updated_ipaddress',
+          
         ],
     ]) ?>
 
  <table class="table table-striped table-bordered detail-view">
     	<thead>
-    		<tr><td>S.No</td>
+    		<tr>
+    			<td>S.No</td>
     			<td>Investications</td>
     			<td>RATE</td>
     			<td>GST(%)</td>
@@ -132,7 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<tr class="total"><td></td>
 		<td> Total</td>
 		<td><?php echo $tot_rate; ?></td>
-		<td><?php echo $tot_gstpre; ?></td><td><?php echo $tot_gstval; ?></td>		<td><?php echo $tot_discount_percent; ?></td><td><?php echo $tot_discount_val; ?></td><td><?php echo $total_price; ?></td>	
+		<td><?php echo $tot_gstpre; ?></td><td><?php echo $tot_gstval; ?></td><td><?php echo $tot_discount_percent; ?></td><td><?php echo $tot_discount_val; ?></td><td><?php echo $total_price; ?></td>	
 	</tr>		
 <? }else{ ?>
 	<tr><td>No Records</td></tr>
