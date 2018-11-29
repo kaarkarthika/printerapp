@@ -525,7 +525,7 @@ input#ipnumber {
 						</tr>
 						<tr>
 							<th class="col-sm-5">TOTAL AMOUNT</th>
-							<td class="col-sm-7"><input type="text" style="color: blue;font-size: 14pt;" class="form-control total_amount_mrp text-right ansrefrsh" name="total_amount_mrp" readonly="" id="total_amount_mrp">
+							<td class="col-sm-7"><input type="text" style="color: blue;font-size: 14pt;" class="clear_bill form-control total_amount_mrp text-right ansrefrsh" name="total_amount_mrp" readonly="" id="total_amount_mrp">
 						</td></tr>
 						<tr>
 							<th class="rt-5">NET Amount</th>
@@ -553,7 +553,7 @@ input#ipnumber {
 					   <div class="form-group  col-sm-12">
 							<label class="control-label text-default clear_bill" for=" ">Amount in Words</label>
 							<div>							
-								<input type=" text" class="form-control clear_bill" id="amt_in_words" placeholder=" " readonly style="text-transform:uppercase;">
+								<input type=" text" class="form-control clear_bill" id="amt_in_words" name="amt_in_words" readonly style="text-transform:uppercase;">
 				           </div>
 					   </div>
 					
@@ -565,14 +565,15 @@ input#ipnumber {
 					   
 					   <div class="form-group">
 					 <div class="panel">
+					 	<input type="hidden" name="saved_val" id='saved_val'>
                        <div class="panel panel-border">
                         <div class="panel-body" style="padding: 6px 7px 8px 35px!important;">					   
 						  <button type="button" value='save_bill' name='saved_bill' style="z-index: 9999;" class="btn btn-success btn-sm fwidth ss_v save_billing" onclick='SaveBilling();' data-toggle="tooltip" title="Ctrl+s"> Save</button>
-						 <button type="button" class="btn  btn-sm btn-warning remove_all">Clear</button>
+						 <button type="button" class="btn  btn-sm btn-warning remove_all" onclick='Reload();'>Clear</button>
 						
 						 <a href="<?php  echo Yii::$app->request->BaseUrl;?>/index.php?r=in-sales/index" class="btn text-right btn-sm btn-default btn-bk" title="Back To Grid">Grid </a>
 
-						<button type="button" class="btn   inp btn-sm btn-default remove_all"  data-toggle="tooltip" title="Ctrl+c">Close</button>						 
+						<button type="button" class="btn   inp btn-sm btn-default remove_all"  data-toggle="tooltip" onclick='Reload();' title="Ctrl+c">Close</button>						 
 			           </div>
 			          </div>
 			          </div>
@@ -1663,14 +1664,14 @@ function() {
 	
 	
 	<script>
-   $(document).ready(function(){
+ /*  $(document).ready(function(){
    jQuery.fn.tabEnter = function() {
 this.keypress(function(e){
-// get key pressed (charCode from Mozilla/Firefox and Opera / keyCode in IE)
+
 var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
 
 if(key == 13) {
-// get tabindex from which element keypressed
+
 
 var ntabindex = parseInt($(this).attr("tabindex")) + 1;
 
@@ -1681,7 +1682,7 @@ return false;
 });
 }
 $("[tabindex]").tabEnter();
-  }); 
+  }); */
    </script>
 	
 	
@@ -2120,10 +2121,13 @@ $(document).ready(function(){
 				     success: function (result) 
 				     {
 				     	 
-				     	 if($('.get_temp_no').val() != '')
-				     	 {
+				     	 //if($('.get_temp_no').val() != '')
+				     	 //{
 				     	 	$("#fetch_update_data tr").remove();  		
-				     	 }
+				     	 //}
+				     	 
+				     	 $('.clear_bill').val('');
+				     	 
 				     	
 				     	$modal = $('#temp_fetch_model');
 	   					$modal.modal('hide'); 
@@ -2134,19 +2138,34 @@ $(document).ready(function(){
 				          $("#total_gst_amount").val(obj[3]);
 				          $("#total_sub_total").val(obj[5]);
 				          $("#total_roundedvalue").val(obj[6]);
-				          $("#total_discountvalue").val(obj[4]);
+				          $("#total_discountamount").val(obj[4]);
 				          
 				          var rounded=Math.ceil(obj[7]);
+				          
+				          $("#total_amount_mrp").val(rounded);
+				          
+				          
 				          $("#total_net_amount").val(rounded);
 				          $('.get_slno').val(obj[8]);
 				     	  $('.get_temp_no').val(obj[9]); 
 				     	  
 				     	  //New Code
-				     	  $("#over_all_discount_percent").val(obj[10]);
+				     	  $("#total_discountvaluetype").val(obj[10]);
 				     	  $("#fetch_update_data").append(obj[0]);  
 				          $('[tabindex="5"]').focus();
 				          
+				           $('#round_off_value').val(obj[11]);
+					    	 $('#cash_value').val(obj[12]);
+					    	 $('#paid_amt').val(obj[13]);
+					    	 $('#due_amt').val(obj[14]);
+					    	 
+					    	 $('#amt_in_words').val(obj[15]);
+					    	 $('#remarks').val(obj[16]);
+				          
+				          $('#total_discountvaluetype').attr('readonly','readonly');
 				          $('#medicines').attr('disabled','disabled');
+				          
+				          $('.save_billing').removeAttr('disabled','disabled');
 				     }
 				  });
    			}
@@ -4287,6 +4306,7 @@ function OverallPercentageDiscount()
 		 	 	var cash_amount=Math.round(net_amount);
 		 	 	$('#cash_value').val(cash_amount);
 		 	 	$('#paid_amt').val(cash_amount);
+		 	 	
 		 	 	$('#due_amt').val(0);
 		 	 	$('#round_off_value').val(0);
 		 	 	
@@ -4416,7 +4436,8 @@ function OverallPercentageDiscount()
       $('#round_off_value').val(calc.toFixed(2));  
       //$('#round_off_value').val(0);
       $('#cash_value').val(discash_amount);
-
+	  $('#paid_amt').val(discash_amount);
+	  
       var cash_amount=$('#cash_value').val();
 
       var amt_in_words=convertNumberToWords(cash_amount);
@@ -4680,6 +4701,15 @@ function OverallPercentageDiscount()
     });
 	
 	
+	$('.save_billing').keydown(function(event) {
+          if (event.keyCode == 13 || event.keyCode == 32) 
+          {
+             event.preventDefault();
+             return false;
+          }
+        });
+	
+	
  });
  
  
@@ -4687,7 +4717,8 @@ function OverallPercentageDiscount()
 
 
 <script type="text/javascript">
-   
+    var onetimesave=1;
+    
     $(function () {
         var crt_id = '<?php echo $_GET['data']; ?>';
    		if(crt_id != '')
@@ -4783,54 +4814,118 @@ $.alert({
 function SaveBilling() 
 { 
 	
-    $ipnumber=$('#ipnumber').val();
-	$pat_name=$('#ippatientname').val();
-	$pat_mob=$('#pat_mob').val();
-	$pat_doctor=$('#pat_doctor').val();
-	$pat_insurance=$('#pat_insurance').val();
-	//$pat_dob=$('#pat_dob').val();
-	if($ipnumber === '' && $pat_name === '')
-	{ 
-		$('#ipnumber').focus();
-		$('.in_pat_validated').delay('fast').fadeIn();
-		$('.in_pat_validated').delay(4000).fadeOut();
-	    alert('In-Patient Details Required');
-	    return false;
-	}
-	else
-	{ 
-		if (confirm('Are You Sure to Save ?')) 
+	//new code 28/11/2018
+	var discount_percentage=$('#total_discountvaluetype').val();
+	if(discount_percentage != '')
+	{
+		var remarks=$('#remarks').val();
+		if(remarks === '')
 		{
-			$.ajax({
-			type: "POST",
-			url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/saveddata";?>",
-			data: $("#saved_data_value_ajax").serialize(),
-			success: function (result) 
-			{ 
-				
-				var data1=result.split("=")[0];
-				var data2=result.split("=")[1];
-				if(data1=="Y")
-				{
-					if(data2=='OPTEMPSAVED')
-					{
-						alert('Data Saved');
-						window.location.reload(true);
-					}
-					else
-					{
-				 		$("#saved_val").val(data2);
-						$(".save_billing").prop('disabled', true);
-					    var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data2;
-			 			window.open(url,'_blank');
-						window.location.reload(true);
-					}
-				}
-			}
-			});
+			Alertment('Remarks Required');
+			return false;
 		}
 	}
-
+	
+	if ($("#inPatient").is(":checked")) 
+	{
+	    $ipnumber=$('#ipnumber').val();
+		$pat_name=$('#ippatientname').val();
+		$pat_mob=$('#pat_mob').val();
+		$pat_doctor=$('#pat_doctor').val();
+		$pat_insurance=$('#pat_insurance').val();
+		//$pat_dob=$('#pat_dob').val();
+		if($ipnumber === '' && $pat_name === '')
+		{ 
+			$('#ipnumber').focus();
+			$('.in_pat_validated').delay('fast').fadeIn();
+			$('.in_pat_validated').delay(4000).fadeOut();
+		    alert('In-Patient Details Required');
+		    return false;
+		}
+		else
+		{ 
+			if (confirm('Are You Sure to Save ?')) 
+			{
+				$("#saved_val").val(1);
+			if(onetimesave === 1)
+	   		{
+	   			$('#load1').show();
+				$.ajax({
+				type: "POST",
+				url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/saveddata";?>",
+				data: $("#saved_data_value_ajax").serialize(),
+				success: function (result) 
+				{ 
+					
+					var data1=result.split("=")[0];
+					var data2=result.split("=")[1];
+					if(data1=="Y")
+					{
+						if(data2=='OPTEMPSAVED')
+						{
+							var data3=result.split("=")[2];
+							alert('Data Saved Succesfully...');
+							var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data3;
+				 			window.open(url,'_blank');
+							//window.location.reload(true);
+						}
+						else
+						{
+					 		$("#saved_val").val(data2);
+							$(".save_billing").prop('disabled', true);
+						    var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data2;
+				 			window.open(url,'_blank');
+							//window.location.reload(true);
+						}
+					}
+				}
+				});
+				 $('#load1').hide();
+			}
+			}
+		}
+	}
+	else if($("#tempPatient").is(":checked"))
+	{
+		var gh=$("#saved_data_value_ajax").serialize();
+		if(gh != '')
+		{
+		
+		   if (confirm('Are You Sure to print Invoice ?')) 
+		   {
+			   	$("#saved_val").val(1);
+			   	if(onetimesave === 1)
+			   {
+				   $('#load1').show();
+				   $.ajax({
+					    type: "POST",
+					url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/saveddata";?>",
+					data: gh,
+					success: function (result) 
+					{ 
+						var data1=result.split("=")[0];
+						var data2=result.split("=")[1];
+						if(data1=="Y")
+						{
+						     $("#saved_val").val(data2);
+						     $('#total_discountvaluetype').attr('disabled','disabled');
+						     $('.delrow').attr('disabled','disabled');
+							 $(".save_billing").prop('disabled', true);
+							 var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data2;
+							 window.open(url,'_blank');
+						}
+					    onetimesave=2;
+					    $('#load1').hide();
+					 }
+					});	
+			     }
+			  	 else 
+			  	 {
+			   		return false;
+				 }
+			}
+		}
+	}
 }
 			
 				
@@ -4845,12 +4940,13 @@ $(window).bind('keydown', function(event) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
         case 's':
             event.preventDefault();
-             $("#saved_val").val(data2);
-              if(saved_val==""){
+            var  saved_val = $("#saved_val").val();
+        
+              if(saved_val===""){
            			SaveBilling();
-           			onetimesave=2;	
+           			//onetimesave=2;	
 	            }else{
-            		alert("already Saved");
+            		alert("Already Saved...");
             	}
             break;
         case 'f':
@@ -4863,7 +4959,7 @@ $(window).bind('keydown', function(event) {
             break;
         case 'c':
             event.preventDefault();
-            alert('ctrl-c');
+            Reload();
             break;
         }
     }
@@ -5353,7 +5449,7 @@ function PaidCalc(data)
 			                if(disc_percentage!='')
 			                {
 				                 setTimeout(function () {                 
-				                 OverallPercentageDiscountProcedure(disc_percentage);
+				                // OverallPercentageDiscountProcedure(disc_percentage);
 				               },200);
 			                } 
 		               	}	
@@ -5588,7 +5684,7 @@ function PaidCalc(data)
 	                if(disc_percentage!='')
 	                {
 		                 setTimeout(function () {                 
-		                 OverallPercentageDiscountProcedure(disc_percentage);
+		                // OverallPercentageDiscountProcedure(disc_percentage);
 		               },200);
 	                } 
                	}						
@@ -5964,7 +6060,7 @@ function PaidCalc(data)
 			                if(disc_percentage!='')
 			                {
 				                 setTimeout(function () {                 
-				                 OverallPercentageDiscountProcedure(disc_percentage);
+				               //  OverallPercentageDiscountProcedure(disc_percentage);
 				               },200);
 			                } 
 		               	}	
@@ -6199,7 +6295,7 @@ function PaidCalc(data)
 	                if(disc_percentage!='')
 	                {
 		                 setTimeout(function () {                 
-		                 OverallPercentageDiscountProcedure(disc_percentage);
+		               //  OverallPercentageDiscountProcedure(disc_percentage);
 		               },200);
 	                } 
                	}						
@@ -6465,6 +6561,12 @@ function PaidCalc(data)
 						
 						//PaidAmountCalculation();
 			
+				}
+				
+				
+				function Reload()
+				{
+					window.location.reload(true);
 				}
 </script>
 

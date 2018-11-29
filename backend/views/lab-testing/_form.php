@@ -72,10 +72,10 @@ use yii\helpers\Url;
    			<?php }?>
    				
     </div>
-    <div class="col-sm-4">
+    <!-- <div class="col-sm-4">
 	 	<?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['options'=>['159'=>['Selected'=>true]],'class'=>'selectpicker', 'data-live-search'=>'true',
     		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?>
-    	</div>
+    </div>  -->
 	</div>
 	<div class="row">
 		<div class="col-sm-3">
@@ -84,10 +84,10 @@ use yii\helpers\Url;
 		</div>
 		
 	
-		<div class="col-sm-1">
+		<!-- <div class="col-sm-1">
 			<?= $form->field($model, 'price')->textInput(['maxlength' => true,'required' => true,'onkeypress'=>'javascript:return isNumber(event)'])->label('Price') ?>
 			<Span class="test_msg_alert" style="color:red;text-align:right;"></span>
-		</div>	
+		</div> -->	
 		    	  
     	<div class="col-sm-4">
 		 	<?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>

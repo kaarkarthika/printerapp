@@ -9,7 +9,7 @@ use yii\helpers\Url;
 /* @var $searchModel backend\models\LabCategorySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Category';
+$this->title = 'Department';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -78,7 +78,10 @@ table.table.table-striped.table-bordered tbody td:last-child {
             ['class' => 'yii\grid\SerialColumn'],
 
            // 'auto_id',
-            'category_name',
+            //'category_name',
+            ['attribute' => 'category_name', 
+            	'label' => 'Department Name',
+            ],
            // 'isactive',
             ['attribute' => 'isactive', 
             	'label' => 'Status ',
@@ -141,7 +144,7 @@ table.table.table-striped.table-bordered tbody td:last-child {
 <script>
  $('body').on("click",".addcat",function(){ 
              var PageUrl = '<?php echo Yii::$app->homeUrl;?>?r=labmaster/create';
-             $('#operationalheader').html('<span> <i class="fa fa-fw fa-plus"></i> Category</span>');
+             $('#operationalheader').html('<span> <i class="fa fa-fw fa-plus"></i> Department </span>');
              $('#operationalmodal').modal('show').find('#modalContenttwo').load(PageUrl);
              return false;
 
@@ -149,13 +152,13 @@ table.table.table-striped.table-bordered tbody td:last-child {
          $('body').on("click",".modalView",function(){
      		
              var url = $(this).attr('value');
-             $('#operationalheader').html('<span> <i class="fa fa-fw fa-th-large"></i>View Category</span>');
+             $('#operationalheader').html('<span> <i class="fa fa-fw fa-th-large"></i>View Department</span>');
              $('#operationalmodal').modal('show').find('#modalContenttwo').load(url);
              return false;
          });
           $('body').on("click",".updatedata",function(){
              var url = $(this).attr('value');
-            $('#operationalheader').html('<span> <i class="fa fa-fw fa-edit"></i> Category</span>');
+            $('#operationalheader').html('<span> <i class="fa fa-fw fa-edit"></i> Department</span>');
              $('#operationalmodal').modal('show').find('#modalContenttwo').load(url);
              return false;
 

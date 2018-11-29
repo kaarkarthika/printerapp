@@ -71,34 +71,11 @@ $this->params['breadcrumbs'][] = $this->title;
             	'label' => 'Test Group Name ',
              	],
              	
-         /*  ['attribute' => 'price', 
+           ['attribute' => 'price', 
             	'label' => 'Price',
              	],
              ['attribute' => 'hsncode', 
             	'label' => 'HSN Code',
-             	],*/
-             	['attribute' => 'price', 
-            	'label' => 'Price ',
-             	'value'=> function($model)
-				{
-						if($model->price==""){
-							return "-";	
-						}else{
-							return $model->price;
-						}
-				}
-             	],
-             	
-               ['attribute' => 'hsncode', 
-            	'label' => 'HSN Code',
-             	'value'=> function($model)
-				{
-						if($model->hsncode==""){
-							return "-";	
-						}else{
-							return $model->hsncode;
-						}
-				}
              	],
             ['attribute' => 'autoid', 
               

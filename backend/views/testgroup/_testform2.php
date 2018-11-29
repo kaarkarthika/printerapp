@@ -22,9 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
     width: 100px;
     float: left;    margin-right: 10px;
 }
-tbody.fetch_data tr {
-    text-align: center;
-}
 </style>
 <div class="container">
    <div class="row">
@@ -63,29 +60,26 @@ tbody.fetch_data tr {
 			<div class="testname_val" id="testname_val" >	
 				
 			<label class="control-label" for="testgroupsearch-testgroupname">Select Test</label>
-			<select id="user_idz" class="selectpicker " name="test_name[]" style="color: #fff !important;" size="4" title="Select Testing" data-style="btn-default btn-custom cus-fld" data-live-search="true" aria-required="true" tabindex="-98" aria-invalid="false" onChange="myNewFunction(this);" >
+			<select id="user_idz" class="selectpicker " name="test_name[]" multiple="" style="color: #fff !important;" size="4" title="Select Testing" data-style="btn-default btn-custom cus-fld" data-live-search="true" aria-required="true" tabindex="-98" aria-invalid="false" >
     		<?php  foreach($res_value as $key => $value ){ ?>
 					<option value="<?php echo $key; ?>"><?php echo $value;?></option>	
 				<?php } ?>
     	
     		</select>
-    	
     		<span class="loadtex" style="display: none; "></span>
     		</div>
-			</div>
-			<div class="col-sm-3">
-				<label>Price</label>
-				<input type="text" name="price" id="price" class=" form-control" onkeypress="javascript:return isNumber(event)">		
-			</div>	
+				
+				
+     		</div>
      		<div class="col-sm-6 save_btn" style="position: relative;top: 25px;">
-     		 		<input type='button' class="btn btn-success" value = ' +' id = 'adddata'>
-     			 <!-- <input type='button' class="btn btn-success" value = ' +' id = 'addtest'> 
+     			 <!-- <input type='button' class="btn btn-success" value = ' +' id = 'addtest'> -->
      			    	<input type="hidden" name="saved_val" id='saved_val'>
-     			 <?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-fw fa-save"></i>Save' : '<i class="fa fa-fw fa-edit "></i>Update', ['class' => $model->isNewRecord ? 'btn btn-success savecategory' : 'btn btn-primary updatecategory']) ?>    
+     			 <!-- <?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-fw fa-save"></i>Save' : '<i class="fa fa-fw fa-edit "></i>Update', ['class' => $model->isNewRecord ? 'btn btn-success savecategory' : 'btn btn-primary updatecategory']) ?> -->   
      			 <button type="button" class="btn  btn-sm btn-success save_billing" id="saves_sucess" onclick="savesdata();">Save</button>
-     			 <a href="/2018/dmcpharmacy/backend/web/index.php?r=testgroup/testgroupmaster" class="btn btn-primary b-width btn btn-bk b-width">Back To Grid </a>
-    			<button type="reset" class="btn btn-warning b-width clearform" onclick="ClearForm();">Clear</button>-->
-     		</div> 
+     			 <a href="/2018/dmcpharmacy/backend/web/index.php?r=testgroup/index" class="btn btn-primary b-width btn btn-bk b-width">Back To Grid </a>
+    			<button type="reset" class="btn btn-warning b-width clearform" onclick="ClearForm();">Clear</button>
+     			 
+     		</div>
      	</div>
      <div class="row">
      	<div class="test_values">
@@ -94,12 +88,9 @@ tbody.fetch_data tr {
       <tr>
         <th style="text-align: center;">SNO</th>
         <th style="text-align: center;">Test Name</th>
-        <th style="text-align: center;">Price</th>
         <th style="text-align: center;">Action</th>
       </tr>
     </thead>
-    <tbody class="fetch_data">
-    </tbody>	 
     </table>
     </div>
     <table class="table table-striped table-bordered cls-norecors"  align="center">
@@ -107,16 +98,6 @@ tbody.fetch_data tr {
     	<tr><td>No Records</td></thead>
     </tbody>
     </table>
-    
-     <div class="col-sm-6 save_btn" style="position: relative;top: 25px;">
-     	
-     			 <!-- <input type='button' class="btn btn-success" value = ' +' id = 'addtest'> -->
-     			    	<input type="hidden" name="saved_val" id='saved_val'>
-     			 <!-- <button type="button" class="btn  btn-sm btn-success save_billing" id="saves_sucess" onclick="savesdata();">Save</button> -->
-     			 <a href="/2018/dmcpharmacy/backend/web/index.php?r=testgroup/testgroupmaster" class="btn btn-primary b-width btn btn-bk b-width">Back To Grid </a>
-    			<button type="reset" class="btn btn-warning b-width clearform" onclick="ClearForm();">Clear</button>
-     			 
-     		</div> 
     </div>  
 			<?php ActiveForm::end(); ?> 
 	</div>
@@ -129,7 +110,7 @@ tbody.fetch_data tr {
 </div>
 </div>
 <style>
-	.field-labtesting-test_name,.test_group{
+	.field-labtesting-test_name,.test_group,input#adddata{
 		display:none;
 	}
 	input#adddata{		     float: left;    margin-right: 15px;	}
@@ -243,7 +224,6 @@ function savesdata(){
 		//alert("Test Group Name is Required..");
 	}
 	$('#labtestingsearch-test_name').focus();
-	window.location.reload();
 }
 
 
@@ -257,7 +237,6 @@ function savesdata(){
             var  saved_val = $("#saved_val").val(); 
               	if(saved_val==""){
               		savesdata();	
-              		window.location.reload();
             	}else{ 
               		alert("already Saved");
             	}	
@@ -284,7 +263,6 @@ function ClearForm () {
 }
  	$(document).ready(function () {
 	$("#testgroupsearch-testgroupname").change(function(){
-		
        if($("#testgroupsearch-testgroupname").val()==""){
        		 $(".loadtex").text('Test Name is Required');
 			$(".loadtex").css("display", "block");
@@ -294,71 +272,7 @@ function ClearForm () {
 		
        }		
 	});
-	
-	 var $fs='<?php echo $i; ?>';
-	 var $inc='<?php echo $inc=1; ?>';
-    $('#adddata').click(function(){ 
-    	
-    	$(".table.table-striped.table-bordered.cls-norecors").css("display", "none");
-    	$(".no-records").css("display", "none");
-    	
-    	var testname = $("#user_idz").val();
-    	
-	    var price = $("#price").val();
-	    var select_testname=$("#user_idz option:selected").text();;
-	    var rowCount = $('tbody.fetch_data tr').length;
-    	rowCount++;
-    	$inc=rowCount;
-    	var $testid=testname;
-    	
-    	 var prime_id=$('#name').val();
-    	$(".calculation").each(function() 
-		{
-		  	var data_id=$(this).attr('dataid');
-		  	if(data_id == prime_id)
-		  	{
-		  		Alertment('Data Already Exist');
-			  		verify = false;
-					return false;
-			} 
-		});	
-    	
-	    if(testname!="" && price!=""){
-	    	
-	    	$fa_testname='<input type="hidden" id="hid_testname'+$fs+'" name="hid_testname[]" value="'+testname+'" >';
-	    	$fa_price='<input type="hidden" id="hid_price'+$fs+'" name="hid_price[]" value="'+price+'">';
-	    	$cls='<span class="remove_li " data-toggle="tooltip" title="Remove">X</span>';
-	    	    
-	    var li = "<tr  class="+$testid+"><td>"+$inc++ + " </td><td>"+ select_testname +$fa_testname+ " </td><td class='gen' style='text-transform: capitalize'>"+price+$fa_price+ "</td><td>" + $cls +"</td></tr>"; 
-	    $(".fetch_data").append(li);
-	     
-	    $fs++;
-	   	 $("#idea").focus();
-	    	document.getElementById('user_idz').value = "";
-	    	document.getElementById('price').value = "";
-	    	savesdata();	
-              		window.location.reload();
-	    		
-	    }else{
-	    		alert("Required..");
-	    }
-	});
-	
-});
-  $('body').on('click','.remove_li', function(){ 	
-    	$(this).closest('tr').remove();
-    });
-
-function myNewFunction(sel) {
-  var selname =sel.options[sel.selectedIndex].text;
-}
-   
-    function isNumber(evt) {
-        var iKeyCode = (evt.which) ? evt.which : evt.keyCode
-        if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
-            return false;
-
-        return true;
-    } 
+});   
+    
     
  </script>

@@ -174,7 +174,7 @@ div#example_wrapper {
 						
 						<div class="col-sm-3 br-rt">
 						     <?= $form->field($model, 'name_initial')->dropDownList([ 'Mr' => 'Mr', 'Miss' => 'Miss','Baby' => 'Baby','Mrs' => 'Mrs','Master' => 'Master','Baby Of' => 'Baby Of','Empty' => 'Empty','Dr' => 'Dr','Ms.' => 'Ms.'],['class' => 'clearfield form-control   w-cus', 'style'=>' ', 'placeholder'=>'Name Inital','tabindex'=>332 ,'required'=> true,'onchange'=>'AutomaticInitial()','style'=>'pointer-events: none;'])->label('Inital') ?>
-							 <?= $form->field($model, 'patient_name')->textInput(['required'=> true,'class'=>'form-control','readonly'=>true]) ?>
+							 <?= $form->field($model, 'patient_name')->textInput(['required'=> true,'class'=>'form-control text-caps','readonly'=>true]) ?>
 							 <?= $form->field($model, 'sex')->dropDownList([ 'Male' => 'Male', 'Female' => 'Female'], ['class' => 'clearfield  form-control w-cus','tabindex'=>339,'required'=> true,'style'=>'pointer-events: none;'])->label('Gender') ?>
 							  <?= $form->field($model, 'marital_status')->dropDownList([ 'Married' => 'Married', 'Unmarried' => 'Unmarried','Widow'=>'Widow'], ['class' => 'clearfield form-control w-cus','required'=> true,'tabindex'=>338,'required'=> true,'style'=>'pointer-events: none;'])->label('Martial Status') ?>
 							  <?= $form->field($model, 'type')->dropDownList($patienttype, ['title'=>'Patient Type','class' => 'clearfield  form-control w-cus','tabindex'=>352,'required'=> true,'onchange'=>'Patienttypemodule(this.value);','style'=>'pointer-events: none;'])->label('Pat Type') ?>
@@ -191,19 +191,19 @@ div#example_wrapper {
 <div class="dob ">
 	<div class="row">
    <div class="col-sm-4">
-      <div class="form-group">
+      <div class=" ">
          <label class="control-label" for="newpatient-pat_age">YEAR(S)</label>
          <input type="text" placeholder="YYYY" name="year_dob" readonly="readonly" id="year_dob" class="clearfield form-control year_dob">  
       </div>
    </div>
    <div class="col-sm-4">
-      <div class="form-group">
+      <div class=" ">
          <label class="control-label" for="newpatient-pat_age">MONTH(S)</label>
          <input type="text" placeholder="MM" name="month_dob" readonly="readonly" id="month_dob" class="clearfield form-control month_dob"> 
       </div>
    </div>
    <div class="col-sm-4">
-      <div class="form-group ">
+      <div class="  ">
          <label class="control-label" for="newpatient-pat_age">DAY(S)</label>
          <input type="text" placeholder="DD" name="date_dob" readonly="readonly" id="date_dob" class="clearfield form-control date_dob"> 
       </div>
@@ -212,7 +212,7 @@ div#example_wrapper {
 </div>
 							 
 							<?= $form->field($model, 'mobile_no')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
-							<?= $form->field($model, 'address')->textarea(['rows' => 1,'required' => true,'class'=>'clearfield form-control txtaddress','readonly'=>true]) ?>	
+							<?= $form->field($model, 'address')->textarea(['rows' => 1,'required' => true,'class'=>'clearfield form-control txtaddress text-caps','readonly'=>true]) ?>	
 						</div>
 
 
@@ -220,20 +220,20 @@ div#example_wrapper {
 
 						
 						<div class="col-sm-2 br-rt">
-						    <?= $form->field($model, 'city')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
-							<?= $form->field($model, 'district')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
-							<?= $form->field($model, 'state')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
-							<?= $form->field($model, 'pincode')->textInput(['class'=>'form-control clearfield','readonly'=>true]) ?>
-							<?= $form->field($model, 'country')->textInput(['class'=>'form-control clearfield','readonly'=>true]) ?>
+						    <?= $form->field($model, 'city')->textInput(['required' => true,'class'=>'form-control clearfield text-caps','readonly'=>true]) ?>
+							<?= $form->field($model, 'district')->textInput(['required' => true,'class'=>'form-control clearfield text-caps','readonly'=>true]) ?>
+							<?= $form->field($model, 'state')->textInput(['required' => true,'class'=>'form-control clearfield text-caps','readonly'=>true]) ?>
+							<?= $form->field($model, 'pincode')->textInput(['class'=>'form-control clearfield text-caps','readonly'=>true]) ?>
+							<?= $form->field($model, 'country')->textInput(['class'=>'form-control clearfield text-caps','readonly'=>true]) ?>
 						</div>
 						
 						
 						
 						<div class="col-sm-2 br-rt">
 							<?= $form->field($model, 'relation_suffix')->dropDownList([ 'S/O' => 'S/O', 'D/O' => 'D/O','W/O' => 'W/O','H/O'=>'H/O','C/O'=>'C/O','Empty'=>'Empty','Sis/O'=>'Sis/O','B/O'=>'B/O','M/O'=>'M/O','F/O'=>'F/O','Self'=>'Self'], ['class' => 'clearfield form-control w-cus','style'=>' ','tabindex'=>336,'required'=> true,'onchange'=>'AutomaticRelation()','style'=>'pointer-events: none;'])->label('Relation') ?>
-							<?= $form->field($model, 'relative_name')->textInput(['required' => true,'class'=>'form-control clearfield','readonly'=>true]) ?>
+							<?= $form->field($model, 'relative_name')->textInput(['required' => true,'class'=>'form-control clearfield text-caps','readonly'=>true]) ?>
 							<?= $form->field($model, 'phone_no')->textInput(['class'=>'form-control clearfield','readonly'=>true]) ?> 
-							<?= $form->field($model, 'religion')->textInput(['class'=>'form-control clearfield','readonly'=>true]) ?>
+							<?= $form->field($model, 'religion')->textInput(['class'=>'form-control clearfield text-caps','readonly'=>true]) ?>
 						</div>
 						
 					 </div>
@@ -272,7 +272,7 @@ div#example_wrapper {
 						    <label class="control-label">Room No</label><br>  
 							<div class="input-group input-group-sm">
 							   
-								<?= $form->field($model, 'room_type')->textInput(['readonly' => true,'class'=>'clearfield form-control ','required'=> true])->label('') ?>
+								<?= $form->field($model, 'room_type')->textInput(['readonly' => true,'class'=>'clearfield form-control text-caps ','required'=> true])->label('') ?>
 								<span class="input-group-btn">
 									<button type="button" class="btn btn-default btn-flat btn  "><i class="ssearch glyphicon glyphicon-search"></i></button>
 								</span>
@@ -282,7 +282,7 @@ div#example_wrapper {
                       </div>
                       <div class="row">					  
 					   <div class="col-sm-6">
-						<?= $form->field($model, 'floor_no')->textInput(['required'=> true,'class'=>'form-control clearfield','readonly'=>true]) ?>
+						<?= $form->field($model, 'floor_no')->textInput(['required'=> true,'class'=>'form-control clearfield text-caps','readonly'=>true]) ?>
 					   </div>
 					   <div class="col-sm-6">
 							<?= $form->field($model, 'paytype')->dropDownList(['Economy' => 'ECONOMY'], ['class' => '  form-control w-cus ','style'=>' ','tabindex'=>338,'required'=> true])->label('Pay Type') ?>

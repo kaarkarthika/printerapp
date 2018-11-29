@@ -18,7 +18,7 @@ use yii\helpers\Url;
 <div class="panel-body" >
     <?php $form = ActiveForm::begin(['id'=>'labmaster-form']); ?>
 
-    <?= $form->field($model, 'category_name')->textInput(['maxlength' => true,'required' => true]) ?>
+    <?= $form->field($model, 'category_name')->textInput(['maxlength' => true,'required' => true])->label("Department Name") ?>
 
     <!-- <?= $form->field($model, 'isactive')->checkbox(['default','checked'=>true, 'value' =>true,'label'=>'Active']) ?> -->
     <?php 

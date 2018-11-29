@@ -141,8 +141,8 @@ class LabTestingController extends Controller
 		   $model->cat_id= $_POST['LabCategorySearch']['category_name'];
 		   $model->subcat_id= $_POST['LabSubcategorySearch']['lab_subcategory'];
 		   $model->test_name= $_POST['LabTestingSearch']['test_name'];
-		   $model->price= $_POST['LabTestingSearch']['price'];
-		   $model->hsncode= $_POST['LabTestingSearch']['hsncode'];
+		   //  $model->price= $_POST['LabTestingSearch']['price'];
+		   // $model->hsncode= $_POST['LabTestingSearch']['hsncode'];
 		   $model->method= $_POST['LabTestingSearch']['method'];      
 		   $model->description= $_POST['LabTestingSearch']['description'];       
 		   $model->result_type= $_POST['LabTestingSearch']['result_type'];       
@@ -186,7 +186,9 @@ class LabTestingController extends Controller
 				$data=array(); 
 		   		foreach ($reference_name as $key => $value) 
 		   		{
-		   			$data[]=[$model->autoid,$value,$_POST['hid_ref_gen'][$key],$_POST['hid_ref_agefrom_cal'][$key],$_POST['hid_ref_ageto_cal'][$key],$_POST['hid_ref_age'][$key],$_POST['hid_ref_range'][$key],$days_from[$key],$days_to[$key],$_POST['hid_ref_from'][$key],$_POST['hid_ref_to'][$key]];       // ss code
+		   			$data[]=[$model->autoid,$value,$_POST['hid_ref_gen'][$key],$_POST['hid_ref_agefrom_cal'][$key],
+		   			$_POST['hid_ref_ageto_cal'][$key],$_POST['hid_ref_age'][$key],$_POST['hid_ref_range'][$key],$days_from[$key],
+		   			$days_to[$key],$_POST['hid_ref_from'][$key],$_POST['hid_ref_to'][$key]];       // ss code
 				}
 				
 				$data_count=count($data);
@@ -316,14 +318,14 @@ class LabTestingController extends Controller
 		   $model->cat_id= $_POST['LabTesting']['cat_id'];
 		   $model->subcat_id= $_POST['LabTesting']['subcat_id'];
 		   $model->test_name= $_POST['LabTesting']['test_name'];
-		   $model->hsncode= $_POST['LabTesting']['hsncode'];
+		   //$model->hsncode= $_POST['LabTesting']['hsncode'];
 		   $model->method= $_POST['LabTesting']['method'];               // ss code
 		   $model->description= $_POST['LabTesting']['description'];      // ss code
 		   $model->result_type= $_POST['LabTesting']['result_type'];       // ss code
 		   $model->result_type_val= $_POST['LabTesting']['result_type_val'];       // ss code
 		   $model->isactive= $_POST['LabTesting']['isactive'];
 		   $model->unit_id= $_POST['LabTesting']['unit_id'];
-		   $model->price= $_POST['LabTesting']['price'];
+		   //$model->price= $_POST['LabTesting']['price'];
 		
 		   if($model->save())
 		   {

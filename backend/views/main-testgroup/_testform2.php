@@ -197,7 +197,7 @@ function savesdata(){
 		            data: $("form#testgroup-form").serialize(),
 		            success: function (result) 
 		            { 
-		            	
+		            	alert(result);
 		            	var obj = $.parseJSON(result); //alert(obj[0]);alert(obj[1]);
 		            	if(obj[0] === 'saved')
 		            	{

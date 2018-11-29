@@ -19,7 +19,7 @@ class InSalesSearch extends InSales
     {
         return [
             [['opsaleid', 'branch_id', 'insurancetype', 'saleincrement'], 'integer'],
-            [['sales_type', 'return_status', 'name', 'dob', 'gender', 'physicianname', 'mrnumber', 'patienttype', 'patient_id', 'ip_no','subvisit_id', 'subvisit_num', 'address', 'phonenumber', 'billnumber', 'invoicedate', 'total', 'tot_no_of_items', 'tot_quantity', 'overalldiscounttype', 'paid_status', 'updated_by', 'updated_on', 'updated_ipaddress', 'created_at','paid_amt','due_amt'], 'safe'],
+            [['sales_type', 'return_status', 'name', 'dob', 'gender', 'physicianname', 'mrnumber', 'patienttype', 'patient_id', 'ip_no','subvisit_id', 'subvisit_num', 'address', 'phonenumber', 'billnumber', 'invoicedate', 'total', 'tot_no_of_items', 'tot_quantity', 'overalldiscounttype', 'paid_status', 'updated_by', 'updated_on', 'updated_ipaddress', 'created_at'], 'safe'],
             [['total_gst_percent', 'total_cgst_percent', 'total_sgst_percent', 'totalgstvalue', 'totalcgstvalue', 'totalsgstvalue', 'totaldiscountvalue', 'totaltaxableamount', 'overalldiscountpercent', 'overalldiscountamount', 'overall_sub_total', 'overalltotal'], 'number'],
         ];
     }

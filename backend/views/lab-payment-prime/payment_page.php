@@ -173,7 +173,7 @@ if(!empty($lab_payment))
 				$status_mg=0;
 				$status_grouptest=0;
 				$status_group=0;
-				$vali=0;
+				$vali=-1;
 				
 				foreach ($lab_payment as $key => $value)  
 				{
@@ -230,15 +230,19 @@ if(!empty($lab_payment))
 								$lab_report=LabReport::find()->asArray()->one();
 								if(!empty($value['autoid'])){ 
 									 $lab_report_val=LabReport::find()->where(['testname_id'=>$value['lab_testing']])->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
-								} 
+								}
 									$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
 									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
 									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
 									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
-						  //	echo"<pre>"; print_r($key); 
-							
-							if($lab_testing['result_type']=="numeric"){
+						  	
+						  	if($lab_testing['result_type']=="numeric"){
+						  		
+								
 								if(!empty($lab_reference_val)){
+									
+								//	echo"<pre>";print_r($lab_testing['test_name']."       ");print_r($lab_report_val[$vali]['result']);
+									 
 									$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
 		    						$result_string.='<tbody>';
 									$result_string.='<tr>';
@@ -314,13 +318,13 @@ if(!empty($lab_payment))
 									$result_string.='<tr>';
 									if(!empty($value['autoid'])){
 									$result_string.='<td style="width:18%;position:relative">'.$lab_testing['test_name'].'
-											<input type="hidden" name="TESTNAME[]" value='.$lab_testing['test_name'].' >
+												<input type="hidden" name="TESTNAME[]" value='.$lab_testing['test_name'].' >
 											<input type="hidden" name="mastergroupid[]" value='.$value['lab_common_id'].'>
 											<input type="hidden" name="TESTNAMEID[]" value='.$value['lab_testing'].'>
 											<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
-											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val['id'].'>
+											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$vali]['id'].'>
 											<input type="hidden" name="LabTestgroup[]" value='.$value['lab_testgroup'].'>
-											<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'>
+											<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'> 
 											 
 											</td>';
 										}else{

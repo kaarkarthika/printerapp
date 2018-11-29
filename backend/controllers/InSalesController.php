@@ -53,6 +53,7 @@ use backend\models\Specialistdoctor;
 use backend\models\InCategorygroup;
 use backend\models\InRoomtypes;
 use backend\models\InCategory;
+use backend\models\Taxgrouping;
 
 /**
  * InSalesController implements the CRUD actions for InSales model.
@@ -1314,7 +1315,7 @@ class InSalesController extends Controller
 
     public function actionTemptabletfetch()
     {
-            $Sale=InSales::find()->where(['sales_type' => 'T'])->orderBy(['opsaleid' => SORT_DESC])->all();
+            $Sale=InSales::find()->where(['sales_type' => 'TEMP'])->orderBy(['opsaleid' => SORT_DESC])->all();
             
             $result_string='';
             $result_string.='<div class="table-responsive"><table class="table table-bordered table-striped">';
@@ -1354,7 +1355,7 @@ class InSalesController extends Controller
     }
 
     //Temp Tablet
-    public function actionTemptabletindividual($id)
+   /* public function actionTemptabletindividual($id)
     {
             $Sale=InSales::find()->where(['opsaleid' => $id])->one();
             $Sale_detail=InSaledetail::find()->where(['opsaleid' => $id])->andWhere(['return_status'=>'N'])->all();
@@ -1459,7 +1460,111 @@ class InSalesController extends Controller
             }
             
             return json_encode($ot);
-    }
+    }*/
+    
+    
+    
+    //Temp Tablet
+public function actionTemptabletindividual($id)
+{
+$Sale=InSales::find()->where(['opsaleid' => $id])->one();
+$Sale_detail=InSaledetail::find()->where(['opsaleid' => $id])->andWhere(['return_status'=>'N'])->all();
+$result_string1='';
+$ot=array();
+if(!empty($Sale_detail))
+{
+	
+	$slno=1;$row=0;
+	
+	$temp_sales_id=array();
+	
+	foreach ($Sale_detail as $key => $value)
+	{
+		$overallstock=Stockresponse::find()->where(['stockresponseid' => $value['stockresponseid']])->one();
+		
+		$Stock_code=Stockmaster::find() -> where(['stockid'=> $value['stockid']]) ->one();
+		
+		$Product = Product::find()->where(['productid'=> $Stock_code->productid ])->one();
+		$Composition=Composition::find()->where(['is_active'=>1])-> andWhere(['composition_id' => $Product->composition_id]) ->asArray()->one();
+	
+$result_string1.='<tr  class="save_data_table" data-id='.$value['stockresponseid'].' id="table_del'.$value['stockresponseid'].'">';
+$result_string1.='<td class="hide">'.$slno.'</td>';
+$result_string1.='<td style="width:7%;"><div class="trunctext ">'.$Product->productname."/".$Composition['composition_name'].'</div></td>';
+$result_string1.='<td style="width:6%;">'.$overallstock->batchnumber.'</td>';
+$result_string1.='<td style="width:8%;">'.date('d-m-Y',strtotime($overallstock->expiredate)).'</td>';
+$result_string1.='<td style="width:5%;" class="quantity_add" id="quantity_add'.$value['stockresponseid'].'">'.$value['productqty'].'</td>';
+$result_string1.='<td style="width:7%;" id="unit_value_medicine'.$value['stockresponseid'].'">'.$value['medicine_type_ins'].'</td>';
+$result_string1.='<td style="width:8%;">
+  <input type="hidden" name="sales_details[]" id="sales_details'.$value['stockresponseid'].'" value='.$value['opsale_detailid'].'>
+  <input type="hidden" name="medicine_type_ins[]" id="medicine_type_ins'.$value['stockresponseid'].'" value='.$value['medicine_type_ins'].'>
+  <input type="hidden" name="tablet_tot_unit_ins[]" id="tablet_tot_unit'.$value['stockresponseid'].'" value='.$value['tablet_tot_unit_ins'].'>
+  <input type="hidden" name="tablet_type[]" id="tablet_type'.$value['stockresponseid'].'" value="'.$value['tablet_type'].'">
+  <input type="hidden" name="mrp_rate_per_unit[]" value="'.$value['mrpperunit'].'">
+  <input type="hidden" name="stock_id[]" value="'.$value['stockid'].'">
+  <input type="hidden" name="unit_id[]" value="'.$value['unitid'].'">
+  <input type="hidden" name="composition_id[]" value="'.$value['compositionid'].'">
+  <input type="hidden" name="stockcode_id[]" value="'.$value['stock_code'].'">
+  <input type="hidden" name="brandcode_id[]" value="'.$value['brandcode'].'">
+  <input type="hidden" name="product_name_id[]" value="'.$value['productid'].'">
+  <input type="hidden" name="expire_date_id[]" value="'.$value['expiredate'].'">
+  <input type="hidden" name="batchnumber[]" value="'.$value['batchnumber'].'">
+  <input type="hidden" name="product_name[]" value="'.$Product->productname."/".$Composition['composition_name'].'">
+  <input type="hidden" name="quantity[]" value="'.$value['productqty'].'">
+  <input type="hidden" name="primeid[]" value="'.$value['stockresponseid'].'">
+  <input type="text" name="price[]" class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
+  </td>';
+						  
+
+$result_string1.='<td><div class="input-group"> <input type="text"  readonly="readonly" name="discount_value[]" data_disc_value='.$value['stockresponseid'].' id="enabledisc'.$value['stockresponseid'].'" value="'.$value['discountvalue'].'" class="enabledisc disctxt w-55" readonly></div></td>';						
+$result_string1.='<td class=""><input type="hidden" class="form-control" data_gst_percent='.$value['stockresponseid'].' name="gst_percent[]" id="gst_percent'.$value['stockresponseid'].'" value="'.$value['gstrate'].'">
+				  <input type="text" name="discountext_value[]" value="'.$value['discountvalueperquantity'].'" readonly="readonly" id="disc_amount'.$value['stockresponseid'].'" class="add_discount text-right disctxt w-55" readonly></td>';
+
+
+$result_string1.='<td class=""><input type="text"  class="form-control disctxt w-55 cgst_percent text-right" name="cgst_percent[]" data_cgst_percent='.$value['stockresponseid'].' id="cgst_percent'.$value['stockresponseid'].'" value="'.$value['cgst_percent'].'" readonly></td>';
+$result_string1.='<td><input type="text"  class="form-control disctxt w-53 cgst_value text-right" name="cgst_value[]" data_cgst_value='.$value['stockresponseid'].' id="cgst_value'.$value['stockresponseid'].'" value="'.$value['cgstvalue'].'"  readonly></td>';
+$result_string1.='<td class=""><input type="text"  class="form-control disctxt w-55 sgst_percent" name="sgst_percent[]" data_sgst_percent='.$value['stockresponseid'].' id="sgst_percent'.$value['stockresponseid'].'"  value="'.$value['sgst_percent'].'"  readonly></td>';
+$result_string1.='<td><input type="text"  class="w-53 disctxt form-control sgst_value text-right" name="sgst_value[]" data_sgst_value='.$value['stockresponseid'].' id="sgst_value'.$value['stockresponseid'].'" value="'.$value['sgstvalue'].'"   readonly></td>';
+$result_string1.='<td><input type="text"  class="w-53 disctxt form-control total_amt_cal text-right" name="total_amt_cal[]" data_total='.$value['stockresponseid'].' id="total_amount'.$value['stockresponseid'].'" value="'.$value['total_price_perqty'].'"    readonly></td>';
+$result_string1.='<td class="text-center"><button type="button" disabled="disabled" class="btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow" data_delete_row='.$value['stockresponseid'].' id="delrow'.$value['stockresponseid'].'"><i class="fa fa-remove"></i></button>
+<input type="hidden" class="form-control total_amt_cal1 text-right" name="total_amt_cal1[]" data_total='.$value['stockresponseid'].' id="total_amount1'.$value['stockresponseid'].'" value="'.$value['total_price_perqty'].'"></td>';
+
+$result_string1.='</tr>';
+
+$slno++;	
+$row++;	
+						
+	}
+
+	$ot[0]=$result_string1;
+	$ot[1]=$Sale->tot_quantity;
+	$ot[2]=$Sale->tot_no_of_items;
+	$ot[3]=$Sale->totalgstvalue;
+	$ot[4]=$Sale->totaldiscountvalue;
+	$ot[5]=$Sale->total;
+	$ot[6]=$Sale->total;
+	$ot[7]=$Sale->overalltotal;
+	$ot[8]=$row;
+	$ot[9]=$Sale->opsaleid;
+	$ot[10]=$Sale->overalldiscountpercent;
+	
+	$ot[11]=$Sale->round_off;
+	$ot[12]=$Sale->cash;
+	$ot[13]=$Sale->paid_amt;
+	$ot[14]=$Sale->due_amt;
+	$ot[15]=$Sale->amt_in_words;
+	$ot[16]=$Sale->remarks;
+	
+	
+}
+else
+{
+	$ot[0]='NULL';
+}
+
+return json_encode($ot);
+}
+    
+    
     
     public function actionGetunitquantity($id)
     {
@@ -1505,242 +1610,490 @@ class InSalesController extends Controller
         $patientdata=new Newpatient();
         
         //Session of Branch Id
-        $session = Yii::$app->session;
-        $branch_id=$session['branch_id'];
-        $saleid='';
-        
-        
-        if($_POST)
-        {
-        
-            $primary_id=$_POST['primeid'];
-            $quantity=$_POST['quantity'];
-            $price=$_POST['price'];
-            $ip_no=$_POST['ip_no'];
-            $discount_method=$_POST['discount_method'];
-            $discount_value=$_POST['discount_value'];
-            $discoun_type=$_POST['discountext_value'];
-            $gst_percent=$_POST['gst_percent'];
-            $cgst_percent=$_POST['cgst_percent'];
-            $cgst_value=$_POST['cgst_value'];
-            $sgst_percent=$_POST['sgst_percent'];
-            $sgst_value=$_POST['sgst_value'];
-            $total_amt_cal=$_POST['total_amt_cal'];
-            $total_net_amount=$_POST['total_net_amount'];
-            
-            $total_disc_original=$_POST['total_disc_original'];
-            $overall_discount_percent=$_POST['overall_discount_percent'];
-            
-            $total_gst=$_POST['total_gst'];
-            $batchnumber=$_POST['batchnumber'];
-            $product_name_id=$_POST['product_name_id'];
-            $brandcode_id=$_POST['brandcode_id'];
-            $stockcode_id=$_POST['stockcode_id'];
-            $composition_id=$_POST['composition_id'];
-            $unit_id=$_POST['unit_id'];
-            $stock_id=$_POST['stock_id'];
-            $expire_date_id=$_POST['expire_date_id'];
-            $mrp_rate_per_unit=$_POST['mrp_rate_per_unit'];
-            $total_items=$_POST['total_items'];
-            $product_name=$_POST['product_name'];
-            $tablet_type=$_POST['tablet_type'];
-            $total_quantity=$_POST['total_quantity'];
-            $medicine_type_ins=$_POST['medicine_type_ins'];
-            $tablet_tot_unit_ins=$_POST['tablet_tot_unit_ins'];
-            
-            
-            $overall_discount_type=$_POST['overall_discount_type'];
-            $overall_sub_total=$_POST['total_sub_total'];
-                    
-             
-                
-                $subvisit=InRegistration::find()->where(['mr_no'=>$_POST['mr_number']])->andWhere(['date(created_date)'=>date('Y-m-d')])->orderBy(['autoid' => SORT_DESC])->one();
-                $patientdata=Newpatient::find()->where(['patientid'=>$subvisit->pat_id])->one();
-                
-                //Entry Tablet
-  
-                $medical_record_number=$_POST['mr_number'];
-                
-                $In_pat_name=$_POST['in_patient'];
-                $In_pat_mob=$_POST['in_patient_mobile'];
-                $In_doctor_name=$_POST['in_doctor_name'];
-                $In_insurance_type=$_POST['insurance_type'];
-                $In_date_of_birth=date('Y-m-d',strtotime($_POST['date_of_birth']));
-                
-                //New Insert 23/08/2018
-                $saledata->patient_id=$patientdata->patientid;
-                $saledata->subvisit_id=$subvisit->autoid;
-                $saledata->subvisit_num=$subvisit->ip_no;
-                $saledata->gender=$_POST['gender'];
-                $saledata->address=$_POST['Address']; 
-                
-                
-                $saledata->ip_no=$ip_no;
-                $saledata->mrnumber=$medical_record_number;
-                $saledata->branch_id=$branch_id;
-                $saledata->sales_type='I';
-                $saledata->name=$In_pat_name;
-                $saledata->dob=$In_date_of_birth;
-                $saledata->physicianname=$In_doctor_name;
-                $saledata->insurancetype=$In_insurance_type;
-                $saledata->patienttype=1;
-                $saledata->phonenumber=$In_pat_mob;
-                $saledata->tot_no_of_items=$total_items;
-                $saledata->tot_quantity=$total_quantity;
-                
-                
-                $saledatainc=InSales::find()->orderBy(['opsaleid' => SORT_DESC])->one();
-                $saleincrement=$saledatainc->saleincrement+1;
-                $billformat = "ECDR".($saleincrement);
-                $saledata->saleincrement=$saleincrement;
-                $saledata -> billnumber = $billformat;
-                $saledata -> invoicedate = date("Y-m-d h:i:s");
-                $saledata -> total = $total_net_amount;
-                foreach ($primary_id as $key => $value)
-                {
-                    $totalcgstvalue+= $cgst_value[$key];
-                    $totalsgstvalue+= $sgst_value[$key];
-                    
-                    $totalsgstpercent+= $sgst_percent[$key];
-                    $totalcgstpercent+= $cgst_percent[$key];
-                }
-                $total_gst_value=$totalcgstvalue+$totalsgstvalue;
-                $total_gst_percent=$totalcgstpercent+$totalsgstpercent;
-                
-                $saledata -> total_gst_percent = $total_gst_percent;
-                $saledata -> total_cgst_percent = $totalcgstpercent;
-                $saledata -> total_sgst_percent = $totalsgstpercent;
-                
-                
-                $saledata -> totalgstvalue = $total_gst_value;
-                $saledata -> totalcgstvalue = $totalcgstvalue;
-                $saledata -> totalsgstvalue = $totalsgstvalue;
-                $saledata -> totaldiscountvalue = $total_disc_original;
-                $saledata -> totaltaxableamount = $total_gst;
-                $saledata -> overall_sub_total = $overall_sub_total;
-                
-                $saledata -> overalltotal = $total_net_amount;
-                $saledata -> paid_status = 'Paid';
-                $saledata -> updated_by = $session['user_id'];
-                $saledata -> updated_ipaddress = $_SERVER['REMOTE_ADDR'];
-                $saledata -> updated_on = date("Y-m-d H:i:s");
-                
-                //new Code
-                $saledata -> overalldiscountpercent = $overall_discount_percent;
-                $saledata -> overalldiscountamount = $total_disc_original;
-                $saledata -> overalldiscounttype = $overall_discount_type;
-                $saledata -> created_at = date("Y-m-d H:i:s");
-                
-                if($saledata ->save())
-                {
-                    $saleid = $saledata -> opsaleid;
-                    $i = 1;
-                    foreach ($primary_id as $key => $value)
-                    {
-                        
-                        $Saledetail = new InSaledetail();
-                        $Saledetail -> opsaleid = $saleid;
-                        $Saledetail -> stockid = $stock_id[$key];
-                        $Saledetail -> stockresponseid = $value;
-                        $Saledetail -> price = $price[$key];
-                        
-                        $Saledetail -> saledate = date('Y-m-d h:i:s');
-                        $Saledetail -> productid =  $product_name_id[$key];
-                        $Saledetail -> batchnumber =  $batchnumber[$key];
-                        $Saledetail -> brandcode = $brandcode_id[$key];
-                        $Saledetail -> stock_code = $stockcode_id[$key];
-                        $Saledetail -> compositionid = $composition_id[$key];
-                        $Saledetail -> unitid = $unit_id[$key];
-                        $Saledetail -> productqty = $quantity[$key];
-                        $Saledetail -> priceperqty = $price[$key];
-                        $Saledetail -> expiredate = date('Y-m-d',strtotime($expire_date_id[$key]));
-                        
-                        $Saledetail -> discountvalueperquantity = $discoun_type[$key];
-                        
-                        $total_gst_value= $cgst_value[$key]+$sgst_value[$key];
-                        
-                        $Saledetail -> gstrate = $gst_percent[$key];
-                        
-                        $Saledetail -> gstvalue = $total_gst_value;
-                        $Saledetail -> cgstvalue = $cgst_value[$key];
-                        $Saledetail -> sgstvalue = $sgst_value[$key];
-                        $Saledetail -> discountvalue = $discount_value[$key];
-                        $Saledetail -> discount_type = $discount_method[$key];
-                        $Saledetail -> mrpperunit = $mrp_rate_per_unit[$key];
-                        $Saledetail -> sgst_percent = $sgst_percent[$key];
-                        $Saledetail -> cgst_percent = $cgst_percent[$key];
-                        
-                        $Saledetail -> total_price_perqty = $total_amt_cal[$key];
-                        
-                        $Saledetail -> product_name = $product_name[$key];
-                        
-                        $Saledetail -> tablet_type = $tablet_type[$key];
-                        $Saledetail ->  medicine_type_ins = $medicine_type_ins[$key];                       
-                        $Saledetail ->  tablet_tot_unit_ins = $tablet_tot_unit_ins[$key];
-                        
-                        
-                        $Saledetail -> is_active = 1;
-                        $Saledetail -> updated_by = $session['user_id'];
-                        $Saledetail -> updated_ipaddress = $_SERVER['REMOTE_ADDR'];
-                        $Saledetail -> updated_on = date("Y-m-d H:i:s");
-                        $Saledetail ->  created_at = date("Y-m-d H:i:s");
-                        if($Saledetail -> save())
-                        {
-                            
-                        }
-                        else {
-                            print_r($Saledetail->getErrors());
-                             die;   
-                        }
-                        
-                    }
-                }   
-                else { //echo "sdf";
-                        print_r($saledata->getErrors());
-                        die;    
-                     }
-                
-                    $overallstock=Stockresponse::find()->where(['IN','stockresponseid',$primary_id])->all();
-                    $overallstock_array=ArrayHelper::toArray($overallstock);
-                        
-                        if(!empty($overallstock_array))
-                {
-                    foreach ($overallstock_array as $key => $value)
-                    {
-                            $Stock_brand=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['stockid'=> $value['stockid']]) -> one();
-                            $overallstock_updated=Stockresponse::find()->where(['stockresponseid'=> $value['stockresponseid']])->one();
-                            $Stock_brand_array=ArrayHelper::toArray($Stock_brand);
-                            $current_quantity=$value['total_no_of_quantity'];
-                            $updated_quantity=$quantity;
-                            $nw_quantity=$current_quantity-$updated_quantity[$key];
-                            $overallstock_updated->total_no_of_quantity=$nw_quantity;
-                            $overallstock_updated->sales_status='Y';
-                            
-                            if($overallstock_updated->save())
-                            {
-                                $stock_quantity=$Stock_brand->total_no_of_quantity;
-                                $updated_stock_quantity=$stock_quantity-$updated_quantity[$key];
-                                $Stock_brand->total_no_of_quantity=$updated_stock_quantity;
-                                if($Stock_brand->save())
-                                {
-                                    
-                                }
-                                else 
-                                {
-                                    print_r($Stock_brand->getErrors());die;
-                                }
-                            }
-                            else 
-                            {
-                                print_r($overallstock_updated->getErrors());die;
-                            }   
-                    }
-                }
-                $saledatainc=InSales::find()->orderBy(['opsaleid' => SORT_DESC])->one();
-                return "Y=".$saledatainc->opsaleid;  
-                }
-	
+ 		$session = Yii::$app->session;
+		$branch_id=$session['branch_id'];
+		$saleid='';
+    	if($_POST)
+		{
+			
+			//echo '<pre>';
+			//print_r($_POST);die;
+			
+			
+		 	$primary_id=$_POST['primeid'];
+			$quantity=$_POST['quantity'];
+			$price=$_POST['price'];
+			$discount_method=$_POST['discount_method'];
+			$discount_value=$_POST['discount_value'];
+			$discoun_type=$_POST['discountext_value'];
+			$gst_percent=$_POST['gst_percent'];
+			$cgst_percent=$_POST['cgst_percent'];
+			$cgst_value=$_POST['cgst_value'];
+			$sgst_percent=$_POST['sgst_percent'];
+			$sgst_value=$_POST['sgst_value'];
+			$total_amt_cal=$_POST['total_amt_cal'];
+			$total_net_amount=$_POST['total_net_amount'];
+			$total_disc_original=$_POST['total_disc_original'];
+			$overall_discount_percent=$_POST['overall_discount_percent'];
+			$total_gst=$_POST['total_gst'];
+			$batchnumber=$_POST['batchnumber'];
+			$product_name_id=$_POST['product_name_id'];
+			$brandcode_id=$_POST['brandcode_id'];
+			$stockcode_id=$_POST['stockcode_id'];
+			$composition_id=$_POST['composition_id'];
+			$unit_id=$_POST['unit_id'];
+			$stock_id=$_POST['stock_id'];
+			$expire_date_id=$_POST['expire_date_id'];
+			$mrp_rate_per_unit=$_POST['mrp_rate_per_unit'];
+			$total_items=$_POST['total_items'];
+			$product_name=$_POST['product_name'];
+			$tablet_type=$_POST['tablet_type'];
+			$total_quantity=$_POST['total_quantity'];
+			$medicine_type_ins=$_POST['medicine_type_ins'];
+			$tablet_tot_unit_ins=$_POST['tablet_tot_unit_ins'];
+			$paid_amt=$_POST['paid_amt'];
+			$due_amt=$_POST['due_amt'];
+			$amt_word=$_POST['amt_in_words'];
+			$round_off=$_POST['round_off_value'];
+			$cash=$_POST['cash_value'];
+			$remarks=$_POST['remarks'];
+			$overall_discount_type=$_POST['overall_discount_type'];
+			$overall_sub_total=$_POST['total_sub_total'];
+			//new code 16/11/2018
+			$new_mrp_perunit=$_POST['mrp_per_unit_amount'];
+			//new code 18/11/2018
+			$multiply_mrp_qty=$_POST['total_amt_cal1'];
+			
+			//IP Bill Number Getting
+			$auto_get_sub=AutoidTable::find()->where(['auto'=>20])->asArray()->one();
+			
+			$inc_value_sub=$auto_get_sub['start_num'];
+		   	$sub_number = str_pad($inc_value_sub, 6, "0", STR_PAD_LEFT);
+			
+			if($_POST['patient'] == 'inpatient')
+			{
+				
+				$patientdata=Newpatient::find()->where(['patientid'=>$subvisit->pat_id])->one();
+				//Entry Tablet
+				if($_POST['get_temp_no'] == '')
+				{
+						
+						$in_registration=InRegistration::find()->where(['ip_no'=>$_POST['ip_no']])->asArray()->one();
+						
+						
+						//New Insert 28/11/2018
+						/*$saledata->patient_id=$patientdata->patientid;
+						$saledata->subvisit_id=$subvisit->sub_id;
+						$saledata->subvisit_num=$subvisit->sub_visit;
+						$saledata->gender=$_POST['gender'];
+						$saledata->address=$_POST['Address'];
+								
+						$saledata->mrnumber=$medical_record_number;
+						$saledata->branch_id=$branch_id;
+						$saledata->sales_type='I';
+						$saledata->name=$In_pat_name;
+						$saledata->dob=$In_date_of_birth;
+						$saledata->physicianname=$In_doctor_name;
+						$saledata->insurancetype=$In_insurance_type;
+						$saledata->patienttype=1;
+						$saledata->phonenumber=$In_pat_mob;*/
+						
+						$saledata->	branch_id=$branch_id;
+						$saledata->	sales_type='IN';
+						$saledata->	return_status='N';
+						if(!empty($in_registration))
+						{
+							$saledata->	name=$in_registration['patient_name'];
+							$saledata->	dob=date('Y-m-d',strtotime($in_registration['dob']));
+							$saledata->	gender=$in_registration['sex'];
+							$saledata->	relative_name=$in_registration['relation_suffix'].' '.$in_registration['relative_name'];
+							$saledata->	unit_name=$in_registration['dr_unit'];
+							$saledata->	mobile=$in_registration['mobile_no'];
+							$saledata->	physicianname=$in_registration['consultant_dr'];
+							$saledata->	mrnumber=$in_registration['mr_no'];
+							$saledata->	ip_no=$in_registration['ip_no'];
+							$saledata->	patienttype=$in_registration['type'];
+							$saledata->	insurancetype=$in_registration['ins_type'];
+							$saledata->	address=$in_registration['address'].','.$in_registration['city'].','.$in_registration['district'];
+							$saledata->	phonenumber=$in_registration['phone_no'];
+							$saledata->	paytype=$in_registration['paytype'];
+							$saledata->	floorno=$in_registration['floor_no'];
+							$saledata->	catno=$in_registration['category_type'];
+							$saledata->	roomtype=$in_registration['room_type'];
+							
+							
+						}
+						
+						
+						
+						
+						$saledata->tot_no_of_items=$total_items;
+						$saledata->tot_quantity=$total_quantity;
+						//Paid Amount Calculation
+						$saledata->due_amt=$due_amt;
+						$saledata->paid_amt	=$paid_amt;
+						$saledata->amt_in_words=$amt_word;
+						$saledata->round_off=$round_off;
+						$saledata->cash	=$cash;
+						$saledata->remarks	=$remarks;
+						
+					
+						$billformat = $sub_number;
+						$saledata->saleincrement=$saleincrement;
+						$saledata -> billnumber = $billformat;
+						$saledata -> invoicedate = date("Y-m-d H:i:s");
+						$saledata -> total = $total_net_amount;
+						foreach ($primary_id as $key => $value)
+						{
+							$totalcgstvalue+= $cgst_value[$key];
+							$totalsgstvalue+= $sgst_value[$key];
+							$totalsgstpercent+= $sgst_percent[$key];
+							$totalcgstpercent+= $cgst_percent[$key];
+							
+							//new code 18/11/2018
+							$totalmrpqty+= $multiply_mrp_qty[$key];
+						}
+						$total_gst_value=$totalcgstvalue+$totalsgstvalue;
+						$total_gst_percent=$totalcgstpercent+$totalsgstpercent;
+						
+						$saledata -> total_gst_percent = $total_gst_percent;
+						$saledata -> total_cgst_percent = $totalcgstpercent;
+						$saledata -> total_sgst_percent = $totalsgstpercent;
+						$saledata -> totalgstvalue = $total_gst_value;
+						$saledata -> totalcgstvalue = $totalcgstvalue;
+						$saledata -> totalsgstvalue = $totalsgstvalue;
+						$saledata -> totaldiscountvalue = $total_disc_original;
+						$saledata -> totaltaxableamount = $total_gst;
+						$saledata -> overall_sub_total = $overall_sub_total;
+						$saledata -> overalltotal = $total_net_amount;
+						$saledata -> paid_status = 'Paid';
+						$saledata -> updated_by = $session['user_id'];
+						$saledata -> updated_ipaddress = $_SERVER['REMOTE_ADDR'];
+						$saledata -> updated_on = date("Y-m-d H:i:s");
+								
+						//new Code
+						$saledata -> overalldiscountpercent = $overall_discount_percent;
+						$saledata -> overalldiscountamount = $total_disc_original;
+						$saledata -> overalldiscounttype = $overall_discount_type;
+						$saledata -> created_at = date("Y-m-d H:i:s");
+						
+						//new code 18/11/2018
+						$saledata -> original_mrp_amount = $totalmrpqty;
+						
+						
+						
+						if($saledata ->save())
+						{
+							
+							
+							
+							$i = 1;
+							foreach ($primary_id as $key => $value)
+							{
+								$Saledetail = new InSaledetail();
+								$Saledetail -> opsaleid = $saledata->opsaleid;
+								$Saledetail -> stockid = $stock_id[$key];
+								$Saledetail -> stockresponseid = $value;
+								$Saledetail -> price = $price[$key];
+								$Saledetail -> saledate = date('Y-m-d H:i:s');
+								$Saledetail -> productid =  $product_name_id[$key];
+								$Saledetail -> batchnumber =  $batchnumber[$key];
+								$Saledetail -> brandcode = $brandcode_id[$key];
+								$Saledetail -> stock_code = $stockcode_id[$key];
+								$Saledetail->  hsncode	="170";
+								$Saledetail -> compositionid = $composition_id[$key];
+								$Saledetail -> unitid = $unit_id[$key];
+								$Saledetail -> productqty = $quantity[$key];
+								$Saledetail -> priceperqty = $price[$key];
+								$Saledetail -> expiredate = date('Y-m-d',strtotime($expire_date_id[$key]));
+								
+								$Saledetail -> discountvalueperquantity = $discoun_type[$key];
+								
+								$total_gst_value= $cgst_value[$key]+$sgst_value[$key];
+								
+								$Saledetail -> gstrate = $gst_percent[$key];
+								
+								$Saledetail -> gstvalue = $total_gst_value;
+								$Saledetail -> cgstvalue = $cgst_value[$key];
+								$Saledetail -> sgstvalue = $sgst_value[$key];
+								$Saledetail -> discountvalue = $discount_value[$key];
+								$Saledetail -> discount_type = $discount_method[$key];
+								
+								//New Code 16/11/2018
+								$Saledetail -> new_mrp_perunit =$new_mrp_perunit[$key];
+								
+								$Saledetail -> mrpperunit = $mrp_rate_per_unit[$key];
+								$Saledetail -> sgst_percent = $sgst_percent[$key];
+								$Saledetail -> cgst_percent = $cgst_percent[$key];
+								
+								$Saledetail -> total_price_perqty = $total_amt_cal[$key];
+								
+								$Saledetail -> product_name = $product_name[$key];
+								
+								$Saledetail -> tablet_type = $tablet_type[$key];
+								$Saledetail -> 	medicine_type_ins = $medicine_type_ins[$key];						
+								$Saledetail -> 	tablet_tot_unit_ins = $tablet_tot_unit_ins[$key];
+								
+								
+								
+								$Saledetail -> is_active = 1;
+								$Saledetail -> updated_by = $session['user_id'];
+								$Saledetail -> updated_ipaddress = $_SERVER['REMOTE_ADDR'];
+								$Saledetail -> updated_on = date("Y-m-d H:i:s");
+								$Saledetail -> 	created_at = date("Y-m-d H:i:s");
+								
+								//new code 18/11/2018
+								$Saledetail -> multiply_mrp_qty =$multiply_mrp_qty[$key];
+										
+								if($Saledetail -> save())
+								{
+									
+								}
+								else {
+									print_r($Saledetail->getErrors());
+					                 die;	
+								}
+										
+							}
+						}	
+					else {
+							print_r($saledata->getErrors());
+							die;	
+						 }
+								
+								
+										
+						if(!empty($primary_id))
+						{
+							foreach ($primary_id as $key => $value) 
+							{
+								$overallstock_updated=Stockresponse::find()->where(['stockresponseid'=> $value])->one();
+								$calculation_total_qty=$overallstock_updated->total_no_of_quantity - $quantity[$key];
+								
+								Stockresponse::updateAll(['total_no_of_quantity' => $calculation_total_qty,'updated_on' => date('Y-m-d H:i:s'),'updated_ipaddress'=> $_SERVER['REMOTE_ADDR'],'updated_by'=>$session['user_id']], ['stockresponseid' => $value ]);
+								
+								$stock_master=Stockmaster::find() -> where(['stockid'=> $stock_id[$key]]) -> one();
+								$calculation_qty=$stock_master->total_no_of_quantity - $quantity[$key];
+								
+								Stockmaster::updateAll(['total_no_of_quantity' => $calculation_qty,'updated_on' => date('Y-m-d H:i:s'),'updated_ipaddress'=> $_SERVER['REMOTE_ADDR'],'updated_by'=>$session['user_id']], ['stockid' => $stock_id[$key]]);	
+							}
+						}
+										
+						AutoidTable::updateAll(['start_num' => $auto_get_sub['start_num']+1,'updated_at' => date('Y-m-d H:i:s'),'ipaddress'=> $_SERVER['REMOTE_ADDR']], ['auto' => 20]);				
+									
+						//$saledatainc=Sales::find()->orderBy(['opsaleid' => SORT_DESC])->one();
+						return "Y=".$saledata->opsaleid;	
+				}
+				elseif ($_POST['get_temp_no'] != '') 
+				{
+					
+					$sales_details=$_POST['sales_details'];
+					$session = Yii::$app->session;
+					
+					
+						
+					$saletempinsert=InSales::find()->where(['opsaleid' => $_POST['get_temp_no']])->one();
+					if(!empty($saletempinsert))
+					{
+						$in_registration=InRegistration::find()->where(['ip_no'=>$_POST['ip_no']])->asArray()->one();
+						
+						//New Code Temp
+						if(!empty($in_registration))
+						{
+							$saletempinsert->branch_id=$branch_id;
+							$saletempinsert->sales_type='IN';
+							$saletempinsert->	name=$in_registration['patient_name'];
+							$saletempinsert->	dob=date('Y-m-d',strtotime($in_registration['dob']));
+							$saletempinsert->	gender=$in_registration['sex'];
+							$saletempinsert->	relative_name=$in_registration['relation_suffix'].' '.$in_registration['relative_name'];
+							$saletempinsert->	unit_name=$in_registration['dr_unit'];
+							$saletempinsert->	mobile=$in_registration['mobile_no'];
+							$saletempinsert->	physicianname=$in_registration['consultant_dr'];
+							$saletempinsert->	mrnumber=$in_registration['mr_no'];
+							$saletempinsert->	ip_no=$in_registration['ip_no'];
+							$saletempinsert->	patienttype=$in_registration['type'];
+							$saletempinsert->	insurancetype=$in_registration['ins_type'];
+							$saletempinsert->	address=$in_registration['address'].','.$in_registration['city'].','.$in_registration['district'];
+							$saletempinsert->	phonenumber=$in_registration['phone_no'];
+							$saletempinsert->	paytype=$in_registration['paytype'];
+							$saletempinsert->	floorno=$in_registration['floor_no'];
+							$saletempinsert->	catno=$in_registration['category_type'];
+							$saletempinsert->	roomtype=$in_registration['room_type'];
+							
+							
+							
+							if($saletempinsert->save())
+							{
+								return "Y=OPTEMPSAVED=".$saletempinsert->opsaleid."";							
+							}
+							else 
+							{
+								print_r($saletempinsert->getErrors());die;
+							}
+						
+						}
+					}		
+					
+						
+				}	
 			}
+			else if($_POST['patient'] == 'temppatient')
+			{
+				
+			//IP Bill Number Getting
+			$auto_get_sub=AutoidTable::find()->where(['auto'=>20])->asArray()->one();
+			
+			$inc_value_sub=$auto_get_sub['start_num'];
+		   	$sub_number = str_pad($inc_value_sub, 6, "0", STR_PAD_LEFT);
+				
+				
+						$saledata->branch_id=$branch_id;
+						$saledata->sales_type='TEMP';
+						$billformat = $sub_number;
+						$saledata -> billnumber = $billformat;
+						$saledata -> invoicedate = date("Y-m-d H:i:s");
+						$saledata -> total = $total_net_amount;
+						foreach ($primary_id as $key => $value)
+						{
+							$totalcgstvalue+= $cgst_value[$key];
+							$totalsgstvalue+= $sgst_value[$key];
+							
+							$totalsgstpercent+= $sgst_percent[$key];
+							$totalcgstpercent+= $cgst_percent[$key];
+							
+							//new code 18/11/2018
+							$totalmrpqty+= $multiply_mrp_qty[$key];	
+						}
+						$total_gst_value=$totalcgstvalue+$totalsgstvalue;
+						$saledata -> totalgstvalue = $total_gst_value;
+						$saledata->tot_no_of_items=$total_items;
+						
+						$saledata->tot_quantity=$total_quantity;
+						
+						$saledata -> totalcgstvalue = $totalcgstvalue;
+						$saledata -> totalsgstvalue = $totalsgstvalue;
+						$saledata -> totaldiscountvalue = $total_disc_original;
+						$saledata -> totaltaxableamount = $total_gst;
+						$saledata -> overalltotal = $total_net_amount;
+						$saledata -> paid_status = 'Paid';
+						$saledata -> updated_by = $session['user_id'];
+						$saledata -> updated_ipaddress = $_SERVER['REMOTE_ADDR'];
+						$saledata -> updated_on = date("Y-m-d H:i:s");
+						
+						//new Code
+						$saledata -> overalldiscountpercent = $overall_discount_percent;
+						$saledata -> overalldiscountamount = $total_disc_original;
+						$saledata -> overalldiscounttype = $overall_discount_type;
+						$saledata -> 	created_at = date('Y-m-d H:i:s');
+						$saledata -> overall_sub_total = $overall_sub_total;
+						
+						//Paid Amount Calculation
+						$saledata->due_amt=$due_amt;
+						$saledata->paid_amt	=$paid_amt;
+						$saledata->amt_in_words=$amt_word;
+						$saledata->round_off=$round_off;
+						$saledata->cash	=$cash;
+						$saledata->remarks	=$remarks;
+						
+						//new code 18/11/2018
+						$saledata -> original_mrp_amount = $totalmrpqty;
+						
+						if($saledata -> save())
+						{
+							$saleid = $saledata -> opsaleid;
+							$i = 1;
+							foreach ($primary_id as $key => $value)
+							{
+								
+								$Saledetail = new InSaledetail();
+								$Saledetail -> opsaleid = $saleid;
+								$Saledetail -> stockid = $stock_id[$key];
+								$Saledetail -> stockresponseid = $value;
+								$Saledetail -> price = $price[$key];
+								
+								$Saledetail -> saledate = date('Y-m-d h:i:s');
+								$Saledetail -> productid =  $product_name_id[$key];
+								$Saledetail -> batchnumber =  $batchnumber[$key];
+								$Saledetail -> brandcode = $brandcode_id[$key];
+								$Saledetail -> stock_code = $stockcode_id[$key];
+								$Saledetail -> compositionid = $composition_id[$key];
+								$Saledetail -> unitid = $unit_id[$key];
+								$Saledetail -> productqty = $quantity[$key];
+								$Saledetail -> priceperqty = $price[$key];
+								$Saledetail -> expiredate = date('Y-m-d',strtotime($expire_date_id[$key]));
+								$Saledetail->hsncode	="170";
+								$Saledetail -> discountvalueperquantity = $discoun_type[$key];
+								
+								$Saledetail -> gstrate = $gst_percent[$key];
+								
+								$total_gst_value= $cgst_value[$key]+$sgst_value[$key];
+								
+								$Saledetail -> gstvalue = $total_gst_value;
+								$Saledetail -> cgstvalue = $cgst_value[$key];
+								$Saledetail -> sgstvalue = $sgst_value[$key];
+								$Saledetail -> discountvalue = $discount_value[$key];
+								$Saledetail -> discount_type = $discount_method[$key];
+								
+								//New Code 16/11/2018
+								$Saledetail -> new_mrp_perunit =$new_mrp_perunit[$key];
+								
+								$Saledetail -> mrpperunit = $mrp_rate_per_unit[$key];
+								
+								$Saledetail -> sgst_percent = $sgst_percent[$key];
+								$Saledetail -> cgst_percent = $cgst_percent[$key];
+								$Saledetail -> total_price_perqty = $total_amt_cal[$key];
+								
+								$Saledetail -> 	product_name = $product_name[$key];
+								$Saledetail ->  tablet_type = $tablet_type[$key];
+								$Saledetail -> 	medicine_type_ins = $medicine_type_ins[$key];
+								$Saledetail -> 	tablet_tot_unit_ins = $tablet_tot_unit_ins[$key];
+								
+								
+								
+								$Saledetail -> is_active = 1;
+								$Saledetail -> updated_by = $session['user_id'];
+								$Saledetail -> updated_ipaddress = $_SERVER['REMOTE_ADDR'];
+								$Saledetail -> updated_on = date("Y-m-d H:i:s");
+								$Saledetail -> 	created_at = date("Y-m-d H:i:s");
+								
+								//new code 18/11/2018
+								$Saledetail -> multiply_mrp_qty =$multiply_mrp_qty[$key];
+								
+								if($Saledetail -> save())
+								{
+									
+								}
+								else {
+									print_r($Saledetail->getErrors());
+					                 die;	
+								}
+								
+							}
+						}
+
+						if(!empty($primary_id))
+						{
+							foreach ($primary_id as $key => $value) 
+							{
+								$overallstock_updated=Stockresponse::find()->where(['stockresponseid'=> $value])->one();
+								$calculation_total_qty=$overallstock_updated->total_no_of_quantity - $quantity[$key];
+								
+								Stockresponse::updateAll(['total_no_of_quantity' => $calculation_total_qty,'updated_on' => date('Y-m-d H:i:s'),'updated_ipaddress'=> $_SERVER['REMOTE_ADDR'],'updated_by'=>$session['user_id']], ['stockresponseid' => $value ]);
+								
+								$stock_master=Stockmaster::find() -> where(['stockid'=> $stock_id[$key]]) -> one();
+								$calculation_qty=$stock_master->total_no_of_quantity - $quantity[$key];
+								
+								Stockmaster::updateAll(['total_no_of_quantity' => $calculation_qty,'updated_on' => date('Y-m-d H:i:s'),'updated_ipaddress'=> $_SERVER['REMOTE_ADDR'],'updated_by'=>$session['user_id']], ['stockid' => $stock_id[$key]]);	
+							}
+						}
+						
+						AutoidTable::updateAll(['start_num' => $auto_get_sub['start_num']+1,'updated_at' => date('Y-m-d H:i:s'),'ipaddress'=> $_SERVER['REMOTE_ADDR']], ['auto' => 20]);
+						
+						return "Y=".$saledata->opsaleid;
+				}
+			}
+
+}
   /*  public function actionSaveddata()
     {
         $saledata = new InSales();
@@ -2747,6 +3100,7 @@ class InSalesController extends Controller
     //OP Returns New Code Alban 24-08-2018
     public function actionOpreturns($id="")
     {
+    	print_r('IP Return Under Testing');die;
         if(is_numeric($id))
         {
            $id=$id;
@@ -5034,7 +5388,7 @@ echo '
     
     
     
-public function actionInvoice($id) {
+/*public function actionInvoice($id) {
             
         require ('../../vendor/tcpdf/tcpdf.php');
         $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -5105,14 +5459,7 @@ if($saledata->patienttype==1)
 
 $headertable.='<tr ><td style="text-align:center;font-size:12px;" colspan="12" ><b>'.strtoupper($pt. " PHARMACY SALES").'</b></td></tr>';
 $headertable.='</table>';
-//echo $headertable; die;
-/*
-<tr>
-   <td colspan="1" style="text-align:left;" >MR Number</td><td colspan="6" style="text-align:left;"> : '.$saledata->mrnumber.'</td> 
 
-   </tr>
-*/
-// $pdf->writeHTML($headertable, true, false, false, false, '');
     $pdf->writeHTML($headertable, true, false, false, false, '');
 $tbl1 = '<table cellspacing="0" cellpadding="1"  border="1" style="text-align:center;">
  
@@ -5207,6 +5554,294 @@ $pdf->writeHTML($words, true, false, false, false, '');
 $pdf->Output('example_001.pdf');
 
     }
+*/
+
+
+
+
+ public function actionInvoice($id) {
+   			
+require ('../../vendor/tcpdf/tcpdf.php');
+$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Nicola Asuni');
+$pdf->SetTitle('Invoice');
+$pdf->SetSubject('TCPDF Tutorial');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+$pdf->SetPrintHeader(false);
+$pdf->SetPrintFooter(false);
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+$pdf->setFontSubsetting(true);
+$pdf->SetFont('helvetica', '', 8, '', true);
+$pdf->AddPage();
+
+$saledata=InSales::find()->where(['opsaleid'=>$id])->one();
+$saledetaildata=InSaledetail::find()->where(['opsaleid'=>$id])->all();
+
+
+//New Code
+$product_map=ArrayHelper::map($saledetaildata,'opsale_detailid','productid');
+$product=Product::find()->where(['productid'=>$product_map])->all();
+$product_index=ArrayHelper::index($product,'productid');
+
+$tax_map=ArrayHelper::map($product,'productid','hsn_code');
+$Taxgrouping=Taxgrouping::find()->where(['taxgroupid'=>$tax_map])->all();
+$Taxgrouping_index=ArrayHelper::index($Taxgrouping,'taxgroupid');
+
+
+//Branch Admin
+$branch=BranchAdmin::find()->where(['ba_autoid'=>$saledata->updated_by])->one();
+
+
+
+$patientdata=Newpatient::find()->where(['mr_no'=>$saledata->mrnumber])->one();
+//$insurancetype=$patientdata->insurancetype;
+$insurancedata=Insurance::find()->where(['insurance_typeid'=>$saledata->insurancetype])->one();
+
+if(empty($insurancedata))
+{
+	$insurance= 'General';
+}
+else {
+	$insurance=$insurancedata->insurance_type;
+}
+
+ $physicaindata=ArrayHelper::map(Physicianmaster::find()->asArray()->all(),'id','physician_name');
+ 
+ $in_categorygroup=InCategorygroup::find()->where(['autoid'=>$saledata['catno']])->one();
+	
+ 	$in_roomtypes_map=ArrayHelper::map(InRoomtypes::find()->asArray()->all(),'autoid','room_types');
+	$in_category_map=ArrayHelper::map(InCategory::find()->asArray()->all(),'autoid','category_name');
+	
+	$category=$in_category_map[$in_categorygroup['category_id']];
+	$roomtype=$in_roomtypes_map[$in_categorygroup['room_typeid']];		
+
+
+$unitlist=ArrayHelper::map(Unit::find()->where(['is_active'=>1])->asArray()->all(), 'unitid', 'unitvalue');
+$productlist=ArrayHelper::map(Product::find()->where(['is_active'=>1])->asArray()->all(), 'productid', 'productname');
+$gender=$saledata->gender;
+$drid=$saledata->physicianname;
+
+
+
+$session = Yii::$app->session;
+$companybranchid=$session['branch_id'];
+
+
+
+$companybranchdata=CompanyBranch::find()->where(['branch_id'=>$companybranchid])->one();
+$companydata=Company::find()->where(['company_code'=>'C001'])->one();
+$companyname=$companybranchdata->branch_name;
+$address=$companybranchdata->address1;
+$gstin=$companybranchdata->gst_number;
+
+
+
+$title="(A UNIT OF CARMEL HEALTHCARE PVT LTD)";
+$headertable='<table cellspacing="0" cellpadding="1" >';
+$headertable.='<tr ><td style="text-align:center;font-size:18px;" colspan="12" ><b>DINESH MEDICAL CENTRE</b></td></tr>';
+$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><b>'.$title.'</b></td></tr>';
+$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><p><b>D.NO:3-7-215-1, FIRST FLOOR BAKARAPURAM, PULIVENDULA - 516390 - KADAPA DIST,PH:08568 287557</b></p></td></tr>';
+$headertable.='<tr><td colspan="3"><b>DL NO-20F: AP/11/03/2017-137691</b></td><td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>21 : AP/11/03/2017-137690</b></td>
+<td colspan="3"><b>&nbsp;&nbsp;&nbsp; 20: AP/11/03/2017-137689</b></td><td colspan="3"><b>GSTIN : 37AADCC7476L1Z3</b></td></tr>';
+
+$headertable.='<tr ><td style="text-align:center;font-size:12px;" colspan="12" ><b>IP MEDICINE ISSUES STD</b></td></tr>';
+
+$headertable.='</table>';
+$pdf->writeHTML($headertable, true, false, false, false, '');
+
+$tbl1 = '<table cellspacing="0" cellpadding="1"  border="1" style="text-align:center;">
+ 
+   <tr><td colspan="10">
+   <table>
+      <tr>
+   <td colspan="1" style="text-align:left;" ><b>IP Number</b></td><td colspan="6" style="text-align:left;"> : '.$saledata->ip_no.'</td> 
+
+   <td colspan="2" style="text-align:right;" ><b>Bill No</b> : </td>  <td style="text-align:left;"> <b> '.$saledata->billnumber.'</b></td> 
+
+     
+   </tr>
+   <tr>
+   <td colspan="1" style="text-align:left;" ><b>Patient Name</b></td><td colspan="6" style="text-align:left;"> : '.strtoupper($saledata->name).'</td> 
+   
+   <td colspan="2" style="text-align:right;" ><b>Bill Date</b> : </td>  <td>'.date("d-m-Y",strtotime($saledata->invoicedate)).'</td>
+   </tr>
+    <tr>
+    <td colspan="1" style="text-align:left;" ><b>DR Name</b>:</td><td colspan="6" style="text-align:left;"> : '.strtoupper($physicaindata[$saledata['physicianname']]).'</td> 
+   
+ <td colspan="2" style="text-align:right;" ><b>Bill Time</b>:</td>  <td>'.date("h:i:s A",strtotime($saledata->created_at)).'</td>
+   </tr>
+     
+    <tr>
+ 		<td colspan="1" style="text-align:left;" ><b>Type</b></td><td colspan="6" style="text-align:left;"> : '.strtoupper($insurance).'</td> 
+	</tr>
+     
+    <tr>
+ 		<td colspan="1" style="text-align:left;" ><b>CATEGORY/ROOM TYPE</b></td><td colspan="6" style="text-align:left;"> : '.strtoupper($category.'/'.$roomtype).'</td> 
+	</tr>
+     
+   <tr><td></td></tr>
+   </table>
+   </td>
+     </tr>
+<tr><td ><b>S.No</b></td><td style="width:100px;"><b>Item <br>Description</b></td><td width="60"><b>HSN Code</b></td><td width="50" ><b>Batch No</b></td><td width="60"><b>EXP</b></td><td width="40"><b>Qty</b></td>
+<td width="40"><b>MRP </b></td><td width="50"><b>Amount</b></td><td width="206">
+<table>
+<tr ><td colspan="2" style="border-bottom:1px solid #000;border-right:1px solid #000;"><b>CGST</b></td>
+<td colspan="2" style="border-bottom:1px solid #000;border-right:1px solid #000;"><b>SGST</b></td>
+
+</tr>
+<tr><td style="font-size:10px;font-weight:bold;">Tax(%)</td><td style="font-size:10px;font-weight:bold;">Amt</td>
+<td style="font-size:10px;font-weight:bold;">Tax(%)</td><td style="font-size:10px;font-weight:bold;">Amt</td>
+
+</tr>
+</table>
+
+</td>	
+</thead></tr>';
+
+$i=0;
+$totalrate=0;
+$totaldiscount=0;
+$totalgst=0;
+$netrate=0;
+$mrp=0;
+$totalcgstrate=0;
+$totalsgstrate=0;
+$mrptotal=0;
+$totalgstrate=0;
+$totalgstvalue=0;
+foreach($saledetaildata as $k)
+{
+$gstvalueperqty=$k->gstvalueperquantity;
+$discountvalueperqty=$k->productqty*$k->discountvalueperquantity;
+$mrpperunit=$gstvalueperqty+$k->priceperqty;
+$gstvalue=$gstvalueperqty*$k->productqty;
+$mrp=$mrpperunit*$k->productqty;
+
+if(isset($k->productid))
+{
+	$prd_hsn_index=$product_index[$k->productid]['hsn_code'];
+	$hsncode=$Taxgrouping_index[$prd_hsn_index]['hsncode'];
+}
+//$unitid[]=$k->unitid;
+//$newunitdata=array_intersect_key($unitlist, array_flip($unitid));
+//$unitval=array_values($newunitdata);
+//$productid[]=$k->productid;
+//$newproductdata=array_intersect_key($productlist, array_flip($productid));
+//$productval=array_values($newproductdata);
+//$productdata=Product::find()->where(['productid'=>$k->productid])->one();
+//$hsncode=$productdata->hsn_code;
+//$pdata=Product::find()->where(['is_active'=>1])->andwhere(['productid'=>$k->productid])->one();
+//$ptypeid=$pdata->product_typeid;
+//$ptypedata=Producttype::find()->where(['is_active'=>1])->andwhere(['product_typeid'=>$ptypeid])->one();
+//$type=$ptypedata->product_type;
+$mrptotal+=$mrp;
+
+if($k->new_mrp_perunit == '')
+{
+if($k->productqty == 0)
+{
+	$mrp_calc=0;	
+}
+else 
+{
+	$mrp_calc=number_format($k->total_price_perqty/$k->productqty,2);
+}
+}
+else 
+{
+	$mrp_calc=number_format($k->new_mrp_perunit,2);
+}
+
+
+if($k->multiply_mrp_qty < 0)
+{
+	$total_mrp_amt=0;
+}
+else 
+{
+	$total_mrp_amt=number_format($k->multiply_mrp_qty,2);
+}
+
+$tbl1.= '<tr>
+	<td >'.++$i.'</td><td>'.$product_index[$k->productid]['productname'].'</td><td>'.$hsncode.'</td><td>'.$k->batchnumber.'</td><td>'.date("d-m-Y",strtotime($k->expiredate)).'</td><td>'.$k->productqty.'</td>
+	<td align="center">'.$mrp_calc.'</td>
+	<td align="center">'.$total_mrp_amt.'</td><td>
+	<table>
+<tr><td style="font-size:10px;">'.number_format($k->cgst_percent,2).'</td><td>'.number_format($k->cgstvalue,2).'</td>
+<td >'.number_format($k->sgst_percent,2).'</td><td >'.number_format($k->sgstvalue,2).'</td>
+
+</tr>
+</table></td></tr>';
+//$hsncode="";
+$totalrate+=number_format($k->price,2);
+$totalgstrate+=($k->gstrate/2);
+$totalgstvalue+=($gstvalue/2);
+$totaldiscount+=$discountvalueperqty;
+$totalgst+=$gstvalue;
+//$newunitdata=array(); $unitid=array();$unitval="";
+//$newproductdata=array(); $productid=array();$productval="";
+$totalcgstrate+=$k->cgst_percent;
+$totalsgstrate+=$k->sgst_percent;
+}
+
+if($saledata->tot_quantity == 0)
+{
+	$total_price=0;
+}
+else 
+{
+	$total_price=number_format($saledata->original_mrp_amount,2);
+} 
+$tbl1.='<tr>
+	<td colspan="7" style="text-align:right;"><b>Total Amount</b></td>
+	<td>'.$total_price.'</td>
+	<td width="206">
+		<table>
+		  	<tr>
+				<td style="font-size:10px;"></td>
+				<td style="">'.number_format($saledata->totalcgstvalue,2).'</td>
+				<td style="font-size:10px;"></td>
+				<td style="">'.number_format($saledata->totalsgstvalue,2).'</td>
+			</tr>
+		</table>
+	</td>
+
+</thead></tr>
+<tr>
+	<td colspan="3" style="text-align:right;"><b>Discount Percentage (%) </b></td>
+	<td>'.number_format($saledata->overalldiscountpercent,2).' %</td>
+	<td colspan="3" style="text-align:right;"><b>Discount Amount</b></td>
+	<td>'.number_format($saledata->overalldiscountamount,2).'</td>
+</tr>
+<tr>
+	<td colspan="7" style="text-align:right;"><b>Paid Amount</b></td>
+	<td>'.number_format($saledata->paid_amt,2).'</td>
+</tr>
+<tr>
+	<td colspan="7" style="text-align:right;"><b>Due Amount</b></td>
+	<td>'.number_format($saledata->due_amt,2).'</td>
+</tr>	
+</table>';
+	$pdf->writeHTML($tbl1, true, false, false, false, '');
+	$words='<table><tr><td colspan="8" align="left"><b>Amount in Words : </b> Rupees '.ucwords($this->actionReadnumber(round($saledata->total))).' only </td><td colspan="8" align="right"><b>USER NAME</b>: '.$branch['ba_name'].' </td></tr></table>';
+	$words.='<br><br><div style="text-align:center;"><b>Goods once sold will not be returned without bill.</b></div>';
+	$pdf->writeHTML($words, true, false, false, false, '');
+	$pdf->Output('example_001.pdf');
+ }  
+
+
+
+
+
 
 
 

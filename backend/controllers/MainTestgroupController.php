@@ -44,8 +44,7 @@ class MainTestgroupController extends Controller
     {
         $searchModel = new MainTestgroupSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-      	
-      	
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -287,7 +286,7 @@ class MainTestgroupController extends Controller
     }
 	
 	public function actionAddcreate()
-    {  
+    {  //echo"<pre>"; print_r($_POST	); die;
     	$model = new MainTestgroup();
 		$model_group = new LabAddgroup();
 		$searchModel = new MainTestgroupSearch();
@@ -309,11 +308,11 @@ class MainTestgroupController extends Controller
 					}
 				} 
 		
-		
+		//	 echo"<pre>"; print_r($res_value); die;
 			 
 		if($_POST)
 		{
-			 
+		
 		 
 		 if(!empty($_POST['test_name']))
 			{ 	
@@ -322,29 +321,23 @@ class MainTestgroupController extends Controller
 				$res=$_POST['test_name'];
 			}
 		  		
-			$id=$_POST['MainTestgroupSearch']['testgroupname'];
-				
+			
+				$id=$_POST['MainTestgroupSearch']['testgroupname'];
+				//LabTestgroup::deleteAll(['testgroupid'=>$id]);
 				$data=array();
 				$date_id=date('Y-m-d H:i:s');
 				
-				$totalval=0;
 				foreach ($res as $key => $value) 
 				{
 					$data[]=[$id, $value,$date_id];
-					$testgroupname =Testgroup::find()->where(['autoid'=>$value])->asArray()->one();
-					$totalval=$totalval+$testgroupname['price'];
-					
-				}
-				$group_test_tbl=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
-				$priceval=$group_test_tbl['price'];
-				$totalval=$totalval+$priceval;
-				 
+				} 
+			 // echo"<pre>";	print_r($data); die;
 				$data_count=count($data);
 				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_addgroup', ['mastergroupid','testgroupid', 'created_date'],$data)->execute();
-				$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$totalval],'autoid='.$id.'')->execute();
 				if($status_count == $data_count)
 				{
-					
+					//Yii::$app->getSession()->setFlash('success', 'Saved Successfully.');  
+					//return $this->refresh();
 					$res[0]="saved";
 						$res[1]="2";
 						return json_encode($res);
@@ -495,18 +488,7 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
  		$testlist=ArrayHelper::map(Testgroup::find()->where(['isactive'=>1])->asArray()->all(), 'autoid', 'testgroupname');
 		$test_list_tbl=  Testgroup::find()->where(['isactive'=>1])->asArray()->all();
 		$group_list_tbl=LabAddgroup::find()->where(['mastergroupid'=>$id])->asArray()->all();
-		$remove_tbl=LabAddgroup::find()->where(['autoid'=>$id])->asArray()->one();
 		$array_index_key=ArrayHelper::index($group_list_tbl,'testgroupid');
-		
-		$removetest =Testgroup::find()->where(['isactive'=>1])->where(['autoid'=>$remove_tbl['testgroupid']])->asArray()->one();
-		
-		$group_test_tbl=MainTestgroup::find()->where(['autoid'=>$remove_tbl['mastergroupid']])->asArray()->one();
-		$priceval=$removetest['price'];
-		$totalval1=$group_test_tbl['price']-$priceval;
-
-		$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$totalval1],'autoid='.$remove_tbl['mastergroupid'].'')->execute();
-
-//		
 		
 		foreach ($test_list_tbl as $key => $value) {
 		      		if(array_key_exists($value['autoid'],$array_index_key)) {
@@ -577,22 +559,13 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 		  		$id=$_POST['MainTestgroupSearch']['testgroupname'];
 				$data=array();
 				$date_id=date('Y-m-d H:i:s');
-				$totalval=0;
 				foreach ($res as $key => $value) 
 				{
 					$data[]=[$id, $value,$date_id];
-					$testgroupname =Testgroup::find()->where(['autoid'=>$value])->asArray()->one();
-					$totalval=$totalval+$testgroupname['price'];
-					
-				}
-				$group_test_tbl=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
-				$priceval=$group_test_tbl['price'];
-				$totalval=$totalval+$priceval;
-				 
+				} 
+				//print_r($data); die;
 				$data_count=count($data);
 				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_addgroup', ['mastergroupid','testgroupid', 'created_date'],$data)->execute();
-				$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$totalval],'autoid='.$id.'')->execute();
-				
 				if($status_count == $data_count)
 				{
 					//Yii::$app->getSession()->setFlash('success', 'Saved Successfully.');  

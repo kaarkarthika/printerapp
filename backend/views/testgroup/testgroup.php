@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		<div class="panel panel-border panel-custom">
 			<div class="panel-heading">
 					</div>
-	<div class="panel-body" style="    height: 3000px;">  
+	<div class="panel-body" style="    height: 500px;">  
 <div class="testgroup-index">
 <div class="row"> 	
 	<?php Pjax::begin(); ?>
@@ -70,35 +70,12 @@ $this->params['breadcrumbs'][] = $this->title;
             	'label' => 'Test Group Name ',
              	],
              	
-           // ['attribute' => 'price', 
-            	// 'label' => 'Price',
-             	// ],
-             // ['attribute' => 'hsncode', 
-            	// 'label' => 'HSN Code',
-             	// ],
-               ['attribute' => 'price', 
-            	'label' => 'Price ',
-             	'value'=> function($model)
-				{
-						if($model->price==""){
-							return "-";	
-						}else{
-							return $model->price;
-						}
-				}
+           ['attribute' => 'price', 
+            	'label' => 'Price',
              	],
-             	
-               ['attribute' => 'hsncode', 
+             ['attribute' => 'hsncode', 
             	'label' => 'HSN Code',
-             	'value'=> function($model)
-				{
-						if($model->hsncode==""){
-							return "-";	
-						}else{
-							return $model->hsncode;
-						}
-				}
-             	],	
+             	],
             ['attribute' => 'autoid', 
               
             'label' => 'Test Count',

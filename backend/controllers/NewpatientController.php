@@ -2633,12 +2633,13 @@ public function actionAjaxsinglefetch($id)
 				$pdf->SetMargins(10, false, 10, true); // set the margins 
 				$pdf->AddPage();
 				 
-				$tbl1='	<div><h2 style="text-align:center;color:#000;">FORM-Q</h2>';
+				$tbl1='	<div><h2 style="text-align:center;color:#000;">FORM-O</h2>';
 				$tbl1.='<p style="text-align:center;line-height:2px;font-size:14px;">(See Rules 29 F(2) and 29 L)</p>';
 				$tbl1.='<p style="text-align:center;line-height:2px;font-size:14px;">Report of Medical Examination under Rule 29 B</p>';
 				$tbl1.='<p style="text-align:center;line-height:2px;font-size:14px;"> (To be issued in triplicate)**</p>';
 				$tbl1.='<p style="border-top:1px solid #000;"></p>';
-				$tbl1.='<p style=" line-height:2px;font-size:14px;"> Certificate No :  ......................</p>';
+				$tbl1.=' <p> </p>';
+				$tbl1.='<p style=" line-height:2px;font-size:14px;"> Certificate No :  .................................</p>';
 				$tbl1.=' <p> </p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;"> Certified that Shri/Smt ..<b>'.$patname.'</b>................................................... employed as</p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;"> .............................................. in UCIL Tummalapalle Mine.</p>';
@@ -2648,7 +2649,7 @@ public function actionAjaxsinglefetch($id)
 				$tbl1.='<p style=" line-height:2px;font-size:14px;">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;              (i) and employement in mine;or</p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;">   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             (ii) any employement below ground;or</p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;">   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(iii) any employement or work .............</p>';
-				$tbl1.='<p style=" line-height:1.7;font-size:14px;"> *(c) is suffering from ..... and shoud give this disability * cured/controlled and should be again examined within a period of ......................... months. He/She* will appear For re-examination with the result of test of ................................* and the opinion of  ................................ specialist from ................. He/She* may be permitted/not* permitted to Carry on his duties during this period.</p>';
+				$tbl1.='<p style=" line-height:1.7;font-size:14px;"> *(c) is suffering from .................... and shoud give this disability * cured/controlled and should be again examined within a period of ......................... months. He/She* will appear For re-examination with the result of test of ................................* and the opinion of  ................................ specialist from ................. He/She* may be permitted/not* permitted to Carry on his duties during this period.</p>';
 			    $tbl1.='<table><tr><td><img src="images/square-box.png" width="150" height="150"></td><td>
 				<p ><h4 style="font-size:14px;line-height:2px;">Signature of the examining authority</h4></p>
 				<p style="font-size:14px;line-height:2px;">...............................................................</p>
@@ -2657,6 +2658,155 @@ public function actionAjaxsinglefetch($id)
 				$tbl1.='<p style=" line-height:2px;font-size:14px;">*Delete Whatever is not applicable.</p>';
 				$tbl1.='<p style=" line-height:1.5;font-size:14px;">** One copy of the certificate shall be handed over to the person concerned and anothercopy shall be sent to the manager of the mine concerned by registered post, And the third copy shall be  retained by the examining authority.</p>';
 				$pdf->writeHTML($tbl1, true, false, false, false, '');
+				
+				
+				
+				$pdf->AddPage();
+				
+				$tbl3='<p style="text-align:center;"><b><h3> -2- </h3></b></p>';
+				$tbl3.='<p style="text-align:center;"><b><h3> Report of the Examining Authority</h3></b></p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">(to be filled in for every medical examination whether Initial or Periodical of re-examination or after cure / control of disablity).</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">Annexture to Certificate No ................................. as a result of medical examination on ............................. </p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">Identification Mark <b  style="font-size:12px;">'.$id1.' '.$id2.'</b></p>';
+				$tbl3.='<p style="font-size:14px;text-align:right;"> </p>';
+				$tbl3.='<p style="font-size:14px;text-align:right;">Left Thump Impression of the Candidate </p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">1.General Development</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">2.Height................... Cms.</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">3.Weight................... Kg.</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">4.Eyes:</p>';
+				$tbl3.='<ul>';
+				$tbl3.='<li style="font-size:14px;">Visual Acuity ............... Distant Vision (With or Without Glassess) Right Eye Left Eye.</li><br>';
+				$tbl3.='<li style="font-size:14px;">Any Organic Disease of Eyes.</li><br>';
+				$tbl3.='<li style="font-size:14px;">Night Blindness.<font size="13">*</font></li><br>';
+				$tbl3.='<li style="font-size:14px;">Colour Blindness.<font size="13">*</font></li><br>';
+				$tbl3.='<li style="font-size:14px;">Squint.<font size="13">*</font></li><br>';
+				$tbl3.='</ul><p style="font-size:14px;text-align:left;">                       ( <font size="13">*</font> To Be Tested in Special Cases)</p>';
+				
+  				$tbl3.='<p style="font-size:14px;text-align:left;">5.Ears:</p>';
+  				$tbl3.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) Hearing: Right Ear ........................................ Left Ear .......................................</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) Any Organic Disease.</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">6.Respiratory System:</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;Chest Measurement:</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) After Full Expiration ..................... cms.</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) After Full Inspiration ..................... cms.</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">7.Circulatory System:</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Blood Pressure:</p>';
+				$tbl3.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) Pulse:</p>';
+				
+				$pdf->writeHTML($tbl3, true, false, false, false, '');
+				
+				$pdf->AddPage();
+				
+				$tbl4='<p style="text-align:center;"><b><h3> -3- </h3></b></p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">8.Abdomen:</p>';
+  				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) Tenderness&nbsp;&nbsp;:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2)&nbsp;Liver&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3)&nbsp;Spleen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4)&nbsp;Tumour&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">9.Nervous System:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;History of Fits or Epilepsy:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;Paralysis:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;Mental Health</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">10.Locomotor System:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">11.Skin:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">12.Hernia:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">13.Hydrocele:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">14.Any Other Abnormality:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">15.Urine:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Reaction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) Albumin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) Sugar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">16.Skiagram of Chest:</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">17.Any Other *C Test Considered Necessary By the Examining Authority.</p>';
+				$tbl4.='<p style="font-size:14px;text-align:left;">18.Any Opinion of Specialist Considered Necessary.</p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p></p>';
+				$tbl4.='<p><div style="font-size:14px;">Place:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Signature of the Examining Authority.</div></p>';
+				
+				$pdf->writeHTML($tbl4, true, false, false, false, '');
+				
+				$pdf->AddPage();
+				
+				$tbl5='<p style="text-align:center;"><b><h3> Report Off Medical Examination as per the Recommendations of Natk Rial Safety Conferences in Mines <br>(To Be Used in Continuation With Form O)</h3></b></p>';
+				
+				$tbl5.='<p style="text-align:left;font-size:14px;">Certificate No:</p>';
+				$tbl5.='<p style="text-align:left;font-size:14px;">Name:</p>';
+				$tbl5.='<p style="text-align:left;font-size:14px;">Identification Marks: <b style="font-size:12px;">'.$id1.' .'.$id2.'</b></p>';
+				//$tbl5.='<p style="text-align:left;font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>';
+				$tbl5.='<p style="text-align:left;font-size:12px;">1.Cardiological Assessment:</p>';
+				$tbl5.='<p><table border="1" cellpadding="10" style="font-size:12px;"> <thead><tr><th rowspan="3" style="text-align:center;">Auscultation</th><th>S1</th><th></th></tr>
+						<tr><th>S2</th><th></th></tr><tr><th>Additional Sound</th><th></th></tr><tr><th colspan="2">Electrocardiograph (12 leads) findings:</th><th>Normal/Abnormal</th></tr>
+				</thead></table></p>';
+				$tbl5.='<p style="text-align:left;font-size:12px;">Enclosed ECG</p>';
+				$tbl5.='<p style="text-align:left;font-size:12px;">2.Neurological Assessment</p>';
+				$tbl5.='<p><table border="1" cellpadding="10" style="font-size:12px;"> <thead><tr><th>Findings</th><th style="text-align:center;">Normal/Abnormal</th></tr>
+						<tr><th>Superfical Reflexes</th><th></th></tr>
+						<tr><th>Deep Reflexes</th><th></th></tr>
+						<tr><th>Peripheral Circulation</th><th></th></tr>
+						<tr><th>Vibrational Syndromes</th><th></th></tr>
+				</thead></table></p>';
+				$tbl5.='<p style="text-align:left;font-size:12px;">3.ILO Classification of Chest Radiograph:</p>';
+				$tbl5.='<p><table border="1" cellpadding="10" style="font-size:12px;"> <thead><tr><th>Profusion of Pneumoconiotic Opacities</th><th style="text-align:center;">Grades</th><th style="text-align:center;">Types</th></tr>
+							<tr><th rowspan="3">Present/Absent</th><th></th><th></th></tr>
+							<tr><th></th><th></th></tr>
+							<tr><th></th><th></th></tr>
+				</thead></table></p>';
+				$tbl5.='<p style="text-align:left;font-size:12px;">Enclosed Chest Radiograph</p>';
+				$tbl5.='<p></p>';
+				$tbl5.='<p></p>';
+				$tbl5.='<p style="text-align:left;font-size:14px;">Place:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Signature of the Examining Authority.</p>';
+				$pdf->writeHTML($tbl5, true, false, false, false, '');
+				
+				
+				
+				
+				$pdf->AddPage();
+				
+				
+				//$tbl5='<p style="text-align:center;"><b><h3> Report Off Medical Examination as per the Recommendations of Natk Rial Safety Conferences in Mines <br>(To Be Used in Continuation With Form O)</h3></b></p>';
+				
+				
+				//$tbl5.='<p style="text-align:left;font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>';
+				$tbl6='<p></p>';
+				$tbl6.='<p style="text-align:left;font-size:12px;">4.Audiometry Findings:</p>';
+				$tbl6.='<p><table border="1" cellpadding="10" style="font-size:12px;"> <thead><tr><th style="text-align:center;">Conduction Type</th><th style="text-align:center;">Left Ear</th><th  style="text-align:center;">Right Ear</th></tr>
+						<tr><th style="text-align:center;">EarConduction</th><th style="text-align:center;">Normal/Abnormal</th><th style="text-align:center;">Normal/Abnormal</th></tr><tr><th style="text-align:center;">Bone Conduction</th><th style="text-align:center;">Normal/Abnormal</th><th style="text-align:center;">Normal/Abnormal</th></tr>
+				</thead></table></p>';
+				$tbl6.='<p style="text-align:left;font-size:12px;">Enclosed Audiometry Report</p>';
+				$tbl6.='<p style="text-align:left;font-size:12px;">5.Pathological/Microbiological Investigations</p>';
+				$tbl6.='<p><table border="1" cellpadding="10" style="font-size:12px;"> <thead><tr><th style="text-align:center;">S.No.</th><th style="text-align:center;">Tests</th><th  style="text-align:center;">Findings</th></tr>
+						<tr><th style="text-align:center;">1</th><th>Blood - Tc.Dc.Hb.FSR, Platelets</th><th>WNI/Abnormal</th></tr>
+						<tr><th style="text-align:center;">2</th><th>Blood Sugar-Fasting & PP</th><th>WNI/Abnormal</th></tr>
+						<tr><th style="text-align:center;">3</th><th>Lipid Profile</th><th>WNL/Abnormal</th></tr>
+						<tr><th style="text-align:center;">4</th><th>Blood Urea, Creatinine</th><th>WNL/Abnormal</th></tr>
+						<tr><th style="text-align:center;">5</th><th>Urine Routine</th><th>WNL/Abnormal</th></tr>
+						<tr><th style="text-align:center;">5</th><th>Stool Routine</th><th>WNL/Abnormal</th></tr>
+				</thead></table></p>';
+				$tbl6.='<p style="text-align:left;font-size:12px;">Enclosed Investigations Report</p>';
+				$tbl6.='<p style="text-align:left;font-size:12px;">6.Special Tests for MN Exposure</p>';
+				$tbl6.='<p><table border="1" cellpadding="10" style="font-size:12px;"> <thead><tr><th style="text-align:center;" colspan="2">Behavioral Disturbances</th><th style="text-align:center;" >Present / Not Present</th></tr>
+						<tr><th></th><th>Speech Defect</th><th style="text-align:center;">Present / Not Present</th></tr>
+						<tr><th></th><th>Tremor</th><th style="text-align:center;">Present / Not Present</th></tr>
+						<tr><th>Neurological Disturbances</th><th>Adiadocokinesia</th><th style="text-align:center;">Present / Not Present</th></tr>
+						<tr><th></th><th>Emotional Changes</th><th style="text-align:center;">Present / Not Present</th></tr>
+				</thead></table></p>';
+				$tbl6.='<p style="text-align:left;font-size:12px;">7.Any Other Special Test Required:</p>';
+				$tbl6.='<p></p>';
+				$tbl6.='<p></p>';
+				$tbl6.='<p></p>';
+				$tbl6.='<p></p>';$tbl6.='<p></p>';
+				$tbl6.='<p style="text-align:center;font-size:14px;">Signature of Examination Authority</p>';
+				$pdf->writeHTML($tbl6, true, false, false, false, '');
+				
+				
+				
 				
 				$pdf->AddPage();
 				
@@ -2682,8 +2832,7 @@ public function actionAjaxsinglefetch($id)
 				$tbl2.=' <p> </p>';
 				$tbl2.=' <p style="text-align:center;font-size:12px;"> Signature of Examination Authority</p>';
 				$pdf->writeHTML($tbl2, true, false, false, false, '');
-	
-			
+				
 				$pdf->Output('report_medical_examination.pdf');
  		}
 	

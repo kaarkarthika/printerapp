@@ -93,7 +93,6 @@ class TestgroupController extends Controller
    	      
    	       $model = new Testgroup();
 		   $model->testgroupname=$_POST['Testgroup']['testgroupname'];
-		   
 		   $model->isactive=$_POST['Testgroup']['isactive'];
 		   if($model->save()){}else{
 		  	 	print_r($model->getErrors());die;
@@ -334,13 +333,7 @@ class TestgroupController extends Controller
 		$test_list_tbl=  LabTesting::find()->where(['isactive'=>1])->asArray()->all();
 		$group_list_tbl=LabTestgroup::find()->where(['testgroupid'=>$id])->asArray()->all();
 		$array_index_key=ArrayHelper::index($group_list_tbl,'test_nameid');
-
-$remove_tbl=LabTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
-$removetest=Testgroup::find()->where(['autoid'=>$remove_tbl['testgroupid']])->asArray()->one();
-	
-		$priceval=$remove_tbl['price'];
-		$totalval1=$removetest['price']-$priceval;
-		$status_count1=Yii::$app->db->createCommand()->update('testgroup', ['price'=>$totalval1],'autoid='.$remove_tbl['testgroupid'].'')->execute();
+		
 		foreach ($test_list_tbl as $key => $value) {
 		      		if(array_key_exists($value['autoid'],$array_index_key)) {
 					}else{
@@ -454,32 +447,30 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
       			$res_str['tbl'].="<tr>";
         			$res_str['tbl'].="<th style='text-align: center;'>SNO</th>";
         			$res_str['tbl'].="<th style='text-align: center;'>Test Name</th>";
-					$res_str['tbl'].="<th style='text-align: center;'>Price</th>";
         			$res_str['tbl'].="<th style='text-align: center;'>Action</th>";
       			$res_str['tbl'].="</tr>";
     			$res_str['tbl'].="</thead>";
-    		$res_str['tbl'].="<tbody class='fetch_data'>";
+    		$res_str['tbl'].="<tbody>";
 		if(!empty($group_list_tbl)){
 	  		$i++;	
 		
-		
      foreach ($group_list_tbl as $key => $value) {
-     	//print_r($value); 
        	if(array_key_exists($value['test_nameid'],$test_list_tbl_val)) {
        		$testgroupid=$test_list_tbl_val[$value['test_nameid']]['test_name'];
-		}else{
+			// print_r($value['test_nameid']);
+			// print_r($group_list_tbl);
+	   	}else{
 	   		$testgroupid="-";
 	   	}
       
       	$res_str['tbl'].='<tr><td style="text-align: center;">'. $i++ .'</td>
       	<td style="text-align: center;">'. $testgroupid .'</td>
-      	<td style="text-align: center;">'. $value['price'] .'</td>
       	<td style="text-align:center"><span class="remove_li rem_item" data-id="'.$value['autoid'].'" data-toggle="tooltip" title="Remove">X</span>	
        	</td>';
     	  $res_str['tbl'].='</tr>';
-      }  //die;
+      } // die;
 		}else{
-      	$res_str['tbl'].="<table class='table table-striped table-bordered cls-norecors'  align='center'><tr class='no-records'><td style='text-align: center;'> No Records</td></tr> </table>";
+      	$res_str['tbl'].="<tr><td style='text-align: center;'> No Records</td></tr>";
        }
 			/*foreach ($test_list_tbl as $key => $value) {
       		      if(array_key_exists($value['autoid'],$array_index_key)) { 
@@ -514,9 +505,11 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 		$testgrouplist=ArrayHelper::map(Testgroup::find()->where(['isactive'=>1])->asArray()->all(), 'autoid', 'testgroupname');
  		$testlist=ArrayHelper::map(LabTesting::find()->where(['isactive'=>1])->asArray()->all(), 'autoid', 'test_name');
 		$test_list_tbl=LabTesting::find()->where(['isactive'=>1])->asArray()->all();
+	
 		$group_list_tbl=LabTestgroup::find()->where(['testgroupid'=>$id])->asArray()->all();
 		$array_index_key=ArrayHelper::index($group_list_tbl,'test_nameid');
-	
+	/*	$group_list_tbl=LabTestgroup::find()->where(['testgroupid'=>$id])->asArray()->all();
+		$array_index_key=ArrayHelper::index($group_list_tbl,'test_nameid'); */
 		if(!empty($test_list_tbl)){
 		foreach ($test_list_tbl as $key => $value) {
 		      		if(array_key_exists($value['autoid'],$array_index_key)) {
@@ -529,55 +522,40 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 		if(empty($res_value)){
 			
 		}
-				 		 
+
+		//echo"<pre>"; print_r($_POST); die;			 		 
 		if($_POST)
 		{
-			if(!empty($_POST['hid_testname']))
+		 
+		 if(!empty($_POST['test_name']))
 			{
 			$res=array();		
-			// if(!empty($_POST['Checked'])){
-				// $check=$_POST['Checked'];
-			// }else{
-				// $check=array();
-			// }
-			if(!empty($_POST['hid_testname'])){
-				$testname=$_POST['hid_testname'];
+			if(!empty($_POST['Checked'])){
+				$check=$_POST['Checked'];
+			}else{
+				$check=array();
 			}
-			if(!empty($_POST['hid_price'])){
-				$hid_price=$_POST['hid_price'];
+			if(!empty($_POST['test_name'])){
+				$testname=$_POST['test_name'];
 			}
-				//$res=array_merge($testname,$check);
+		  		$res=array_merge($testname,$check);
 				
 				$id=$_POST['TestgroupSearch']['testgroupname'];
 				//LabTestgroup::deleteAll(['testgroupid'=>$id]);
 				$data=array();
-					
 				$date_id=date('Y-m-d H:i:s');
-				$totalval=0;
 				
-				foreach ($hid_price as $key1 => $price) {
-					$totalval=$totalval+$price;	
-				}
-				
-				foreach ($testname as $key => $value) 
+				foreach ($res as $key => $value) 
 				{
-					$data[]=[$id, $value,$hid_price[$key],$date_id];
-					
+					$data[]=[$id, $value,$date_id];
 				} 
-		
-				$group_test_tbl=Testgroup::find()->where(['autoid'=>$id])->asArray()->one();
-				$priceval=$group_test_tbl['price'];
-				$totalval=$totalval+$priceval;
-				$data_count=count($data);
-				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_testgroup', ['testgroupid','test_nameid','price', 'created_date'],$data)->execute();
-				$status_count1=Yii::$app->db->createCommand()->update('testgroup', ['price'=>$totalval],'autoid='.$id.'')->execute();
 				
-								
+				$data_count=count($data);
+				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_testgroup', ['testgroupid','test_nameid', 'created_date'],$data)->execute();
 				if($status_count == $data_count)
 				{
 					//Yii::$app->getSession()->setFlash('success', 'Saved Successfully.');  
 					//return $this->refresh();
-					
 					$res[0]="saved";
 					$res[1]="2";
 					return json_encode($res);
@@ -599,11 +577,9 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 					if(!empty($_POST['test_name'])){
 						$data=array();
 						$date_id=date('Y-m-d H:i:s');
-						//$totalval="0";
 					foreach ($_POST['test_name'] as $key => $value) 
 					{
 						$data[]=[$test_group_name,$value,$date_id];
-						
 					}
 					$data_count=count($data);
 					

@@ -14,13 +14,10 @@ use yii\helpers\Url;
       <?php $form = ActiveForm::begin(['id'=>'main-testgroup-form']); ?>
 
     <?= $form->field($model, 'testgroupname')->textInput(['maxlength' => true,'required' => true])->label('Group Name') ?>
-     <!-- <?= $form->field($model, 'price')->textInput()->label('Price') ?> --> 
+     <?= $form->field($model, 'price')->textInput()->label('Price') ?> 
     
-     	<!--<?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['prompt'=>'Select HSN Code',  'options' => [$model->hsncode1 => ['Selected'=>'selected']],'data-live-search'=>'true',
-    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?> -->
-    	<!-- <?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['options'=>['159'=>['Selected'=>true]],'class'=>'', 'data-live-search'=>'true',
-    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?>	  -->
-    		 
+     	<?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['prompt'=>'Select HSN Code',  'options' => [$model->hsncode1 => ['Selected'=>'selected']],'data-live-search'=>'true',
+    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?>
      <?php 
      	if($model->isNewRecord){
      	$model->isactive = 1;
@@ -73,12 +70,6 @@ table.table.table-striped.table-bordered.detail-view thead td {
     display: none;
 }.main-testgroup-update table.table.table-striped.table-bordered.detail-view {
     margin-top: 30px;
-}
-#maintestgroup-hsncode {
-    width: 100%;
-    padding: 3px 5px;
-    pointer-events: none;
-    cursor: pointer;
 }
 </style>
 

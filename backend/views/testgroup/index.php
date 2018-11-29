@@ -63,36 +63,13 @@ $this->params['breadcrumbs'][] = $this->title;
             	'label' => 'Test Group Name ',
              	],
              	
-           // ['attribute' => 'price', 
-            	// 'label' => 'Price',
-             	// ],
-             	
            ['attribute' => 'price', 
-            	'label' => 'Price ',
-             	'value'=> function($model)
-				{
-						if($model->price==""){
-							return "-";	
-						}else{
-							return $model->price;
-						}
-				}
+            	'label' => 'Price',
              	],
-             	
-               ['attribute' => 'hsncode', 
+           
+		   ['attribute' => 'hsncode', 
             	'label' => 'HSN Code',
-             	'value'=> function($model)
-				{
-						if($model->hsncode==""){
-							return "-";	
-						}else{
-							return $model->hsncode;
-						}
-				}
-             	],	
-           // ['attribute' => 'hsncode', 
-            	// 'label' => 'HSN Code',
-             	// ],
+             	],
             ['attribute' => 'isactive', 
             	'label' => 'Active ',
              	'value'=> function($model)
@@ -102,6 +79,8 @@ $this->params['breadcrumbs'][] = $this->title;
 						}else{
 							return "InActive";
 						}
+						
+					
 				}
              	],
             //'created_at',

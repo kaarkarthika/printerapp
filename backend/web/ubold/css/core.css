@@ -3367,7 +3367,7 @@ tbody#fetch_update_data input{border:none!important;}
 	    padding: 2px 12px!important;
 }
 .input-group.bootstrap-datetimepicker-widget.dropdown-menu ul.list-unstyled{
-	background-color:#fff!imortant;
+	background-color:#fff!important;
 }
 .dtblock{
 padding:0px!important;height:57px; background-color:#ebeff2;
@@ -3426,3 +3426,7 @@ select.product-select {
 td div.input-group div.input-group-btn label.inp.btn.btn-default{
 	font-size:10px!important;
 }
+#wrapper.enlarged .left.side-menu #sidebar-menu ul > li:hover > ul{
+	display: block !important;
+}
+

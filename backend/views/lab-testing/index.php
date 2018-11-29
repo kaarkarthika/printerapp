@@ -64,33 +64,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            //'autoid',
+           
             'test_name',
-            //'testgroupid',
              ['attribute' => 'category_name', 
             	'label' => 'Category',
-             	//'value'=> function($catmodel)
-				//{ // echo"<pre>"; print_r($catmodel); die;
-				/*	if($catmodel->auto_id!=''){
-						return $catmodel->category_name;
-					}else{
-						return '-';
-					}*/
-				//}
-             	],
-           //  ['attribute' => 'lab_subcategory','label' => 'Sub Category ',],
-           ['attribute' => 'unit_name', 
+             ],
+            ['attribute' => 'unit_name', 
             	'label' => 'Unit ',
              	
             ],
-            ['attribute' => 'hsncode', 
+            /* ['attribute' => 'hsncode', 
             	'label' => 'HSN Code ',
-             	
             ],
             ['attribute' => 'price', 
             	'label' => 'Price',
-             	
-            ],
+            ], */
             //'referencevalue',
             //'isactive',
             //'created_at',

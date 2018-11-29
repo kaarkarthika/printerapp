@@ -79,8 +79,7 @@ class LabPaymentPrimeController extends Controller
     {
        $searchModel = new LabPaymentPrimeSearch();
        $dataProvider = $searchModel->searchlabtest(Yii::$app->request->queryParams);
-	 //  echo"<pre>";print_r($dataProvider); die;
-        return $this->render('labtestpending', [
+	    return $this->render('labtestpending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -350,8 +349,7 @@ class LabPaymentPrimeController extends Controller
 	
  	public function actionTestsave($id)
     {
-    	echo"<pre>"; print_r($_POST); die;
-		
+    	
     	$originalDate = $_POST['sample'];
 		$newDate = date("Y-m-d H:i ", strtotime($originalDate));
 		$command = Yii::$app->db->createCommand("UPDATE lab_payment_prime SET sample_test='1',outsourcetest='".$_POST['outsourcetest']."',sample_date='".$newDate."',remarks='".$_POST['remark']."'  WHERE lab_id=".$id);
@@ -391,7 +389,7 @@ class LabPaymentPrimeController extends Controller
 				$result_string.='<thead><tr><th>MR Number</th><th>Name</th><th>Age</th><th>Gender</th><th>Mobile No</th><th>Last Consultant Doctor</th><th>Insurance</th></tr></thead>';
                 $result_string.='<tbody><tr><td>'.$new_patient['mr_no'].'</td><td>'.$new_patient['patientname'].'</td><td>'.$age.' Year(s) </td><td>'.$new_patient['pat_sex'].'</td><td>'.$new_patient['pat_mobileno'].'</td><td>'.$lab_payment_prime['physican_name'].'</td><td>'. $val .'</td></tr></body></table>';
 			}
-		//	echo"<pre>";
+		
     		  if(!empty($lab_payment)){
     		  	 	$result_string.='<h4 class="lab_class" style="margin-top: 4%;background: #4682b4;color: #fff;text-align: left;padding: 7px 15px;margin-bottom: 1px;"> Testing List</h4>';
     				$result_string.='<table class="table table-bordered">';
@@ -1485,7 +1483,7 @@ public function actionAjaxsinglefetchdetails($id)
 				$status_group=0;$repeat_test="";
 				$vali=0;
 				 	$i=0;
-			
+				$altg=0;			
 				foreach ($lab_payment as $key => $value){
 					$split_group=explode('_', $value['lab_test_name']);
 				if($split_group[0]=="LabTesting"){
@@ -1504,26 +1502,35 @@ public function actionAjaxsinglefetchdetails($id)
 				  
 				  	$lab_testing=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->andWhere(['isactive'=>1])->asArray()->one();
 				  	$mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$value['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
-				  
+					
+				 //echo"<pre>";  print_r($altg);
+				   
 				foreach ($main_testgroup as $key => $main) {
-				  		 //echo"<pre>";
-				  		// print_r($main['autoid']);
-					  	//print_r($value['lab_common_id']);
-					  
-				   /* if($main['autoid']==$value['lab_common_id']){
-				  	          	$status_mg=0;
-									  	  	
-					  }else{
-					  	      	$status_mg=1;
-					  	 } */ 
-						  if($status_mg==0){
+					// print_r($main['autoid']."  ");
+					//print_r($value['lab_common_id']."<br>");
+				  
+				  if($altg==0){
+				  	
+					if($main['autoid']===$value['lab_common_id']){
+						// print_r("match       ");
+				    	if($status_mg==0){
 					    	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER" background="#eee" >
 						 		<tbody><tr><td style="padding: 3px 10px;    text-align: center;"><b>'.$mastergroupname[$value['lab_common_id']].'</b></td></tr></tbody>
 						 		</table>';      
 							  	$status_mg++;
-						 	}	
-
+						 	}
+						$altg=1;
+						//print_r($altg);
+					 }else{
+					 	
+					 //	print_r("not-match       ");
+					 	$altg=0;
+					
+					 } 
+				  }else{
+				  	$altg=0;
 				  }
+				 }
 				  
 				  $testgroupname=ArrayHelper::map(Testgroup::find()->where(['autoid'=>$value['lab_testgroup']])->asArray()->all(), 'autoid', 'testgroupname');
 								if($repeat_test!=$value['lab_testgroup']){
@@ -1649,7 +1656,7 @@ public function actionAjaxsinglefetchdetails($id)
 								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-										<td style="">'.$lab_report_val[0]['result'].'</td>
+										<td style="">'.$lab_report_val[$key]['result'].'</td>
 										<td style="">'.$lab_unit['unit_name'].'</td>';
 									
 									if('numeric'==$lab_testing['result_type']){
@@ -1663,7 +1670,7 @@ public function actionAjaxsinglefetchdetails($id)
 									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-		    						<td style="">'.$lab_report_val[0]['result'].'</td>
+		    						<td style="">'.$lab_report_val[$key]['result'].'</td>
 		    						<td style="">'.$lab_unit['unit_name'].'</td>';
 									if('numeric'==$lab_testing['result_type']){
 										$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
@@ -1671,9 +1678,9 @@ public function actionAjaxsinglefetchdetails($id)
 										foreach ($normal_multext as $key => $value) {
 											$mul.=",".$value;
 										}
-											$string = trim($mul,",");
-											$tbl_res.='<td style="text-align:left">'.$string.'</td>';
-											$mul="";
+										$string = trim($mul,",");
+										$tbl_res.='<td style="text-align:left">'.$string.'</td>';
+										$mul="";
 									}else{
 										$tbl_res.='<td style="text-align:Center">-<input type="hidden" name="REFERENCENAME[]" ></td>';
 									}
@@ -1711,14 +1718,14 @@ public function actionAjaxsinglefetchdetails($id)
 									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
 									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
 								
-							//	echo "<pre>"; print_r($lab_report_val);
+								//echo "<pre>"; print_r($key);
 								
 							if($lab_testing['result_type']=="numeric"){
 							  	 if(!empty($lab_reference_val)){
 								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-										<td style="">'.$lab_report_val[0]['result'].'</td>
+										<td style="">'.$lab_report_val[$key]['result'].'</td>
 										<td style="">'.$lab_unit['unit_name'].'</td>';
 									
 									if('numeric'==$lab_testing['result_type']){
@@ -1732,7 +1739,7 @@ public function actionAjaxsinglefetchdetails($id)
 									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-		    						<td style="">'.$lab_report_val[0]['result'].'</td>
+		    						<td style="">'.$lab_report_val[$key]['result'].'</td>
 		    						<td style="">'.$lab_unit['unit_name'].'</td>';
 									if('numeric'==$lab_testing['result_type']){
 										$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	

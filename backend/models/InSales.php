@@ -65,9 +65,9 @@ class InSales extends \yii\db\ActiveRecord
     {
         return [
             //   [['name', 'dob', 'gender', 'mrnumber',   'phonenumber', 'physicianname','branch_id','billnumber', 'invoicedate'], 'required'],
-            [['dob', 'invoicedate', 'updated_on','mrnumber',  'branch_id','patienttype','updated_by', 'updated_ipaddress','billnumber','name', 'address','physicianname','paid_status','paid_amt','due_amt'], 'safe'],
+            [['dob', 'invoicedate', 'updated_on','mrnumber',  'branch_id','patienttype','updated_by', 'updated_ipaddress','billnumber','name', 'address','physicianname','paid_status'], 'safe'],
            // [['name', 'emailid','physicianname'], 'string', 'max' => 100],
-            [['gender'], 'string', 'max' => 5],
+            [['gender'], 'string', 'max' => 255],
            // [['mrnumber',  'updated_by', 'updated_ipaddress'], 'string', 'max' => 20],
            // [['billnumber'], 'string', 'max' => 25],
           //  ['emailid', 'email'],
