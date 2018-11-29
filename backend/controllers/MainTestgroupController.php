@@ -485,7 +485,8 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 		$group_list_tbl=LabAddgroup::find()->where(['mastergroupid'=>$id])->asArray()->all();
 		$array_index_key=ArrayHelper::index($group_list_tbl,'testgroupid');
 		
-		
+		$main_test=MainTestgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$id])->asArray()->one();
+		$main_testprice=$main_test['price'];
 		
 		foreach ($test_list_tbl as $key => $value) {
 		      		if(array_key_exists($value['autoid'],$array_index_key)) {
