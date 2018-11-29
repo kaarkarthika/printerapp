@@ -11,7 +11,7 @@ use backend\models\Taxgrouping;
 /* @var $model backend\models\Testgroup */
 /* @var $form yii\widgets\ActiveForm */
 
-$this->title = 'Test Grouping';
+$this->title = 'Master Grouping';
 $this->params['breadcrumbs'][] = ['label' => 'Products', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -66,8 +66,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				
 			<span id="loadtex" style="display: none; ">Test  Name Already Exists</span>
      		</div>
-     		<div class="col-sm-3" style="position: relative;top: 25px;">
+     		<div class="col-sm-3 save_btn" style="position: relative;top: 25px;">
      				<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-fw fa-save"></i>Save Test' : '<i class="fa fa-fw fa-edit "></i>Update', ['class' => $model->isNewRecord ? 'btn btn-success save_test' : 'btn btn-primary updatecategory']) ?>
+     				 <a href="/2018/dmcpharmacy/backend/web/index.php?r=main-testgroup/makegroupmaster" class="btn btn-primary b-width btn btn-bk b-width">Back To Grid </a>
      			
      		</div>
      	</div>
@@ -110,7 +111,10 @@ $this->params['breadcrumbs'][] = $this->title;
     border-radius: 6px;
     color: #fff;
 }
-
+.save_btn button,.save_btn a {
+    width: 100px;
+    float: left;    margin-right: 10px;
+}
 </style>
 <script>
 
@@ -121,7 +125,6 @@ $this->params['breadcrumbs'][] = $this->title;
 	        url: '<?php echo Yii::$app->homeUrl . '?r=main-testgroup/remove&id='?>'+std,
 	        success: function (data) {
 	        if(data){
-	        	alert("sucss");
 	        	 location.reload();
 	        }else{
 	        	Alert(data);

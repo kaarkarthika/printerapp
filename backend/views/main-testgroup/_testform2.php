@@ -12,7 +12,7 @@ use backend\models\Taxgrouping;
 /* @var $model backend\models\Testgroup */
 /* @var $form yii\widgets\ActiveForm */
 
-$this->title = 'Test Grouping';
+$this->title = 'Master Grouping';
 $this->params['breadcrumbs'][] = ['label' => 'Products', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -197,7 +197,7 @@ function savesdata(){
 		            data: $("form#testgroup-form").serialize(),
 		            success: function (result) 
 		            { 
-		            	alert(result);
+		            	
 		            	var obj = $.parseJSON(result); //alert(obj[0]);alert(obj[1]);
 		            	if(obj[0] === 'saved')
 		            	{

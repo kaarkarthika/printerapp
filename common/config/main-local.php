@@ -5,7 +5,7 @@ return [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=dmcpharmacy_local',
             'username' => 'root',
-           'password' => '',
+           'password' => 'dmcpass!@#',
 		    
             'charset' => 'utf8',
             'on afterOpen' => function($event) {

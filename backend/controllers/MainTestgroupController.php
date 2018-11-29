@@ -281,7 +281,7 @@ class MainTestgroupController extends Controller
     }
 	
 	public function actionAddcreate()
-    {  //echo"<pre>"; print_r($_POST	); die;
+    { 
     	$model = new MainTestgroup();
 		$model_group = new LabAddgroup();
 		$searchModel = new MainTestgroupSearch();
@@ -305,15 +305,28 @@ class MainTestgroupController extends Controller
 		
 		if($_POST)
 		{
+			// echo"<pre>"; print_r($_POST); die; 
 		  if(!empty($_POST['test_name']))
 			{ 	
 			$res=array();		
 			if(!empty($_POST['test_name'])){
 				$res=$_POST['test_name'];
 			}
-		  		
+			
+				foreach ($_POST['test_name'] as $key => $val) {
+				  $price_val=Testgroup::find()->select(['price','hsncode'])->where(['isactive'=>1])->andWhere(['autoid'=>$val])->asArray()->one();
+				  $tot_price=$price_val['price'];
+				  $total_price+=$tot_price;
+				}
+			
 			$id=$_POST['MainTestgroupSearch']['testgroupname'];
-				//LabTestgroup::deleteAll(['testgroupid'=>$id]);
+				
+				$price_prev=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
+				$total_price=$total_price+$price_prev['price'];
+								
+		  		
+			
+			
 				$data=array();
 				$date_id=date('Y-m-d H:i:s');
 				
@@ -321,13 +334,13 @@ class MainTestgroupController extends Controller
 				{
 					$data[]=[$id, $value,$date_id];
 				} 
-			 // echo"<pre>";	print_r($data); die;
+			 
 				$data_count=count($data);
 				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_addgroup', ['mastergroupid','testgroupid', 'created_date'],$data)->execute();
+				$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$total_price,'hsncode'=>$price_val['hsncode']],'autoid='.$id.'')->execute();
+
 				if($status_count == $data_count)
 				{
-					//Yii::$app->getSession()->setFlash('success', 'Saved Successfully.');  
-					//return $this->refresh();
 					$res[0]="saved";
 						$res[1]="2";
 						return json_encode($res);
@@ -468,12 +481,8 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 	
 	public function actionRemove($id,$rid='')
     {
-    	echo"<pre>";
-		 print_r($id);
-		 print_r($rid);
-		die;
-		
-    	$model = new MainTestgroup();
+    	
+		$model = new MainTestgroup();
 		$model_group = new LabAddgroup();
 		$searchModel = new MainTestgroupSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -485,8 +494,11 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 		$group_list_tbl=LabAddgroup::find()->where(['mastergroupid'=>$id])->asArray()->all();
 		$array_index_key=ArrayHelper::index($group_list_tbl,'testgroupid');
 		
-		$main_test=MainTestgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$id])->asArray()->one();
-		$main_testprice=$main_test['price'];
+		$main_gr=LabAddgroup::find()->where(['autoid'=>$id])->asArray()->one();
+		
+		$main_test=MainTestgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$main_gr['mastergroupid']])->asArray()->one();
+		$test_price=Testgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$main_gr['testgroupid']])->asArray()->one();
+		$price_va=$main_test['price']-$test_price['price'];
 		
 		foreach ($test_list_tbl as $key => $value) {
 		      		if(array_key_exists($value['autoid'],$array_index_key)) {
@@ -496,11 +508,12 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 					}
 				} 
 			 
-	
+		
 	
 		if($id!="")
 		{
 				if(LabAddgroup::deleteAll(['autoid'=>$id])){
+					$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$price_va],'autoid='.$main_gr['mastergroupid'].'')->execute();
 					echo true;
 				}else{
 					echo "Error";
@@ -555,6 +568,7 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 					$res=$_POST['test_name'];
 				}
 				$total_price=0;
+				
 				foreach ($_POST['test_name'] as $key => $val) {
 				  $price_val=Testgroup::find()->select(['price','hsncode'])->where(['isactive'=>1])->andWhere(['autoid'=>$val])->asArray()->one();
 				  $tot_price=$price_val['price'];
@@ -564,11 +578,7 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 				$price_prev=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
 				$total_price=$total_price+$price_prev['price'];
 								
-			/*	print_r($price_val['hsncode']);
-				print_r($total_price);
-				die;			
-			*/		
-		  		$id=$_POST['MainTestgroupSearch']['testgroupname'];
+				$id=$_POST['MainTestgroupSearch']['testgroupname'];
 				$data=array();
 				$date_id=date('Y-m-d H:i:s');
 				foreach ($res as $key => $value) 

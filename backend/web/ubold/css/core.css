@@ -3422,6 +3422,9 @@ select.product-select {
 }
 .text-caps{
 	text-transform:uppercase;
+<<<<<<< HEAD
+}
+=======
 }
 td div.input-group div.input-group-btn label.inp.btn.btn-default{
 	font-size:10px!important;
@@ -3430,3 +3433,4 @@ td div.input-group div.input-group-btn label.inp.btn.btn-default{
 	display: block !important;
 }
 
+>>>>>>> 02a76c083d551a732a4c13161d5b80f7c9041548
