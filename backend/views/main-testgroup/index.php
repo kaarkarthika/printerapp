@@ -63,13 +63,13 @@ $this->params['breadcrumbs'][] = $this->title;
             	'label' => 'Test Group Name ',
              	],
              	
-           ['attribute' => 'price', 
+       /*    ['attribute' => 'price', 
             	'label' => 'Price',
              	],
            
 		   ['attribute' => 'hsncode', 
             	'label' => 'HSN Code',
-             	],
+             	], */
             ['attribute' => 'isactive', 
             	'label' => 'Active ',
              	'value'=> function($model)

@@ -70,26 +70,42 @@ $this->params['breadcrumbs'][] = $this->title;
            ['attribute' => 'testgroupname', 
             	'label' => 'Test Group Name ',
              	],
-             	
+           
            ['attribute' => 'price', 
             	'label' => 'Price',
-             	],
-             ['attribute' => 'hsncode', 
-            	'label' => 'HSN Code',
-             	],
+            'value'=> function($model)
+				{
+				if($model->price==""){
+					return "-";	
+				}else{
+				  return $model->price;	
+				}
+			}	
+            ],
+            
+			['attribute' => 'hsncode', 
+               'label' => 'HSN Code',
+            'value'=> function($model)
+			{
+				if($model->hsncode==""){
+					return "-";	
+				}else{
+				  return $model->hsncode;	
+				}
+			}],
+			 	
+				
             ['attribute' => 'autoid', 
-              
             'label' => 'Group Count',
             'value'=> function($model)
 			{
 				$group_list_tbl=LabAddgroup::find()->where(['mastergroupid'=>$model->autoid])->asArray()->count(); 
-				//echo"<pre>";print_r($group_list_tbl); die;
-						if($model->autoid!=""){
-							return $group_list_tbl;	
-						}else{
-						  return "-";	
-						}
-				}],
+				if($model->autoid!=""){
+					return $group_list_tbl;	
+				}else{
+				  return "-";	
+				}
+			}],
             ['attribute' => 'isactive', 
             	'label' => 'Active ',
             'value'=> function($model)

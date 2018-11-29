@@ -13,11 +13,10 @@ use yii\helpers\Url;
 
       <?php $form = ActiveForm::begin(['id'=>'main-testgroup-form']); ?>
 
-    <?= $form->field($model, 'testgroupname')->textInput(['maxlength' => true,'required' => true])->label('Group Name') ?>
-     <?= $form->field($model, 'price')->textInput()->label('Price') ?> 
-    
-     	<?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['prompt'=>'Select HSN Code',  'options' => [$model->hsncode1 => ['Selected'=>'selected']],'data-live-search'=>'true',
-    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?>
+     <?= $form->field($model, 'testgroupname')->textInput(['maxlength' => true,'required' => true])->label('Group Name') ?>
+     <!-- <?= $form->field($model, 'price')->textInput()->label('Price') ?>--> 
+     <!-- <?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['prompt'=>'Select HSN Code',  'options'=>['159'=>['Selected'=>true]],'data-live-search'=>'true',
+    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?> -->
      <?php 
      	if($model->isNewRecord){
      	$model->isactive = 1;
