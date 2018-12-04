@@ -141,8 +141,9 @@ class LabTestingController extends Controller
 		   $model->cat_id= $_POST['LabCategorySearch']['category_name'];
 		   $model->subcat_id= $_POST['LabSubcategorySearch']['lab_subcategory'];
 		   $model->test_name= $_POST['LabTestingSearch']['test_name'];
-		   //  $model->price= $_POST['LabTestingSearch']['price'];
-		   // $model->hsncode= $_POST['LabTestingSearch']['hsncode'];
+		   $model->price= $_POST['LabTestingSearch']['price'];
+		   $model->hsncode= $_POST['LabTestingSearch']['hsncode'];
+		   $model->shortcode= $_POST['LabTestingSearch']['shortcode'];
 		   $model->method= $_POST['LabTestingSearch']['method'];      
 		   $model->description= $_POST['LabTestingSearch']['description'];       
 		   $model->result_type= $_POST['LabTestingSearch']['result_type'];       
@@ -318,14 +319,15 @@ class LabTestingController extends Controller
 		   $model->cat_id= $_POST['LabTesting']['cat_id'];
 		   $model->subcat_id= $_POST['LabTesting']['subcat_id'];
 		   $model->test_name= $_POST['LabTesting']['test_name'];
-		   //$model->hsncode= $_POST['LabTesting']['hsncode'];
-		   $model->method= $_POST['LabTesting']['method'];               // ss code
-		   $model->description= $_POST['LabTesting']['description'];      // ss code
-		   $model->result_type= $_POST['LabTesting']['result_type'];       // ss code
-		   $model->result_type_val= $_POST['LabTesting']['result_type_val'];       // ss code
+		   $model->hsncode= $_POST['LabTesting']['hsncode'];
+		   $model->shortcode= $_POST['LabTesting']['shortcode'];
+		   $model->method= $_POST['LabTesting']['method'];            
+		   $model->description= $_POST['LabTesting']['description'];  
+		   $model->result_type= $_POST['LabTesting']['result_type'];  
+		   $model->result_type_val= $_POST['LabTesting']['result_type_val'];      
 		   $model->isactive= $_POST['LabTesting']['isactive'];
 		   $model->unit_id= $_POST['LabTesting']['unit_id'];
-		   //$model->price= $_POST['LabTesting']['price'];
+		   $model->price= $_POST['LabTesting']['price'];
 		
 		   if($model->save())
 		   {

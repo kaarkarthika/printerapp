@@ -21,7 +21,7 @@ class TestgroupSearch extends Testgroup
     {
         return [
             [['autoid', 'testnameid', 'price', 'created_at', 'updated_at'], 'integer'],
-            [['testgroupname', 'isactive', 'created_date', 'updated_date','test_name','hsncode'], 'safe'],
+            [['testgroupname', 'isactive', 'created_date', 'updated_date','test_name','hsncode','shortcode'], 'safe'],
         ];
     }
 

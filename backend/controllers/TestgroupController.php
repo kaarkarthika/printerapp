@@ -199,6 +199,20 @@ class TestgroupController extends Controller
 	   }
 
     }
+	public function actionShortcheck($testname)
+   	{
+   	
+	   if($testname != '')
+	   {
+	 	 $lab_testing=Testgroup::find()->where(['shortcode'=>$testname])->asArray()->one();
+	   	 if(!empty($lab_testing)){
+		 	return true;
+		 }else{
+		 	return false;
+		 }
+	   }
+
+    }
 		
 	public function actionAdd($id)
     {

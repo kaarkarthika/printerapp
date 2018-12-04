@@ -16,7 +16,9 @@ use yii\helpers\Url;
     <?php $form = ActiveForm::begin(['id'=>'testgroup-form']); ?>
 
     <?= $form->field($model, 'testgroupname')->textInput(['maxlength' => true,'required' => true])->label('Group Name') ?>
-     <?= $form->field($model, 'price')->textInput()->label('Price') ?> 
+    <?= $form->field($model, 'price')->textInput(['required' => true,'required' => true])->label('Price') ?> 
+    <?= $form->field($model, 'shortcode')->textInput(['maxlength' => true,'required' => true]) ?>
+    	  
     
      	<?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['prompt'=>'Select HSN Code', 'options'=>['159'=>['Selected'=>true]],'data-live-search'=>'true',
     		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?>
@@ -88,13 +90,35 @@ $("#testgroup-testgroupname").change(function() {
 	          if(result=="1"){
 	          	alert(testgname+" Already exists");
 	          	$(".savecategory").css("pointer-events","none");
+	          	$(".updatecategory").css("pointer-events","none");
 	          } else{
 	          	$(".savecategory").css("pointer-events","auto");
+	          	$(".updatecategory").css("pointer-events","auto");
 	          }
 	        }
 	    });
  	 });
  	
+ 	$("#testgroup-shortcode").change(function() {
+ 		var testgname=$("#testgroup-shortcode").val();
+ 			$.ajax({
+	        type: "POST",
+	        url: "<?php echo Yii::$app->homeUrl . "?r=testgroup/shortcheck&testname=";?>"+testgname,
+	        success: function (result) 
+	        {
+	          if(result=="1"){
+	          	alert(testgname+" Already exists");
+	          	$(".savecategory").css("pointer-events","none");
+	          	$(".updatecategory").css("pointer-events","none");
+	          	
+	          } else{
+	          	$(".savecategory").css("pointer-events","auto");
+	          	$(".updatecategory").css("pointer-events","auto");
+	          }
+	        }
+	    });
+ 	 });
+ 	 
  	
 	$('#testgroup-form').on('beforeSubmit', function(e) {
 	$("#load").show();

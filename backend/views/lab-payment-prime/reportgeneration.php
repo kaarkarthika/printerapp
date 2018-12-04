@@ -188,9 +188,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									    }
                                     },
                         // ss code end   
-                               
-								  
-								       /*'delete' => function ($url, $model, $key) {
+                             	       /*'delete' => function ($url, $model, $key) {
                                   $session = Yii::$app->session;
 								  if($session[Yii::$app->controller->id]!=""){
                                   if(in_array('d', $session[Yii::$app->controller->id])) {      

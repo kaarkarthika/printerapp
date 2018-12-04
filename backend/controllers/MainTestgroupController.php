@@ -16,6 +16,7 @@ use backend\models\Taxgrouping;
 use backend\models\LabAddgroup;
 use yii\helpers\ArrayHelper;
 
+
 /**
  * MainTestgroupController implements the CRUD actions for MainTestgroup model.
  */
@@ -80,7 +81,7 @@ class MainTestgroupController extends Controller
      * @return mixed
      */
      
-     public function actionTestnamecheck($testname)
+    public function actionTestnamecheck($testname)
    	{
    	
 	   if($testname != '')
@@ -92,7 +93,19 @@ class MainTestgroupController extends Controller
 		 	return false;
 		 }
 	   }
-
+    }
+	public function actionShortcheck($testname)
+   	{
+   	
+	   if($testname != '')
+	   {
+	 	 $lab_testing=MainTestgroup::find()->where(['shortcode'=>$testname])->asArray()->one();
+	   	 if(!empty($lab_testing)){
+		 	return true;
+		 }else{
+		 	return false;
+		 }
+	   }
     }
 	
     public function actionCreate()
@@ -105,6 +118,9 @@ class MainTestgroupController extends Controller
    	     
    	       $model = new MainTestgroup();
 		   $model->testgroupname=$_POST['MainTestgroup']['testgroupname'];
+		    $model->shortcode=$_POST['MainTestgroup']['shortcode'];
+			$model->price=$_POST['MainTestgroup']['price'];
+			
 		   $model->isactive=$_POST['MainTestgroup']['isactive'];
 		   if($model->save()){}else{
 		   	print_r($model->getErrors());die;
@@ -159,6 +175,8 @@ class MainTestgroupController extends Controller
 		 $grouplist1=ArrayHelper::map($testgroup, 'autoid', 'testgroupid');
 		 $testname_det=Testgroup::find()->where(['IN','autoid',$grouplist1])->all();
 		 $testname_det_index=ArrayHelper::index($testname_det,'autoid');
+		// $model->shortcode=$_POST['MainTestgroup']['shortcode'];
+		 //$model->price=$_POST['MainTestgroup']['price'];
 		
 		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -311,7 +329,7 @@ class MainTestgroupController extends Controller
 			$res=array();		
 			if(!empty($_POST['test_name'])){
 				$res=$_POST['test_name'];
-			}
+		
 			
 				foreach ($_POST['test_name'] as $key => $val) {
 				  $price_val=Testgroup::find()->select(['price','hsncode'])->where(['isactive'=>1])->andWhere(['autoid'=>$val])->asArray()->one();
@@ -320,24 +338,76 @@ class MainTestgroupController extends Controller
 				}
 			
 			$id=$_POST['MainTestgroupSearch']['testgroupname'];
+			
+			$price_prev=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
+				//$price_prev=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
 				
-				$price_prev=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
-				$total_price=$total_price+$price_prev['price'];
-								
-		  		
-			
-			
+				   
+				$total_price+=$price_prev['total_group_price'];
+				$cal_price=abs($total_price-$price_prev['price']);
+				$pre_cal=($cal_price*100)/$total_price;
+				   
+				$id=$_POST['MainTestgroupSearch']['testgroupname'];
 				$data=array();
 				$date_id=date('Y-m-d H:i:s');
 				
-				foreach ($res as $key => $value) 
+				$res_group=LabAddgroup::find()->where(['mastergroupid'=>$id])->asArray()->all();
+				
+				if($total_price >= $price_prev['price']){
+					
+					foreach ($res_group as $rekey => $revalue) {
+						$grp_priceval=Testgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$revalue['testgroupid']])->asArray()->one();
+						$grp_price=($grp_priceval['price']*$pre_cal)/100;
+						$final_price=number_format($grp_priceval['price']-$grp_price,'2','.','');
+						$status_update1=Yii::$app->db->createCommand()->update('lab_addgroup', ['price'=>$final_price],'autoid='.$revalue['autoid'].'')->execute();
+					}
+					foreach ($res as $key => $value) 
+					{
+						$group_price=Testgroup::find()->select(['price','hsncode'])->where(['isactive'=>1])->andWhere(['autoid'=>$value])->asArray()->one();
+						$tot_price=($group_price['price']*$pre_cal)/100;
+						$final_price=number_format($group_price['price']-$tot_price,'2','.','');
+						$data[]=[$id, $value,$final_price,$date_id];
+					}
+						
+				}else{
+					foreach ($res_group as $rekey => $revalue) {
+						$grp_priceval=Testgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$revalue['testgroupid']])->asArray()->one();
+						$grp_price=($grp_priceval['price']*$pre_cal)/100;
+						$final_price=number_format($grp_priceval['price']+$grp_price,'2','.','');
+						$status_update1=Yii::$app->db->createCommand()->update('lab_addgroup', ['price'=>$final_price],'autoid='.$revalue['autoid'].'')->execute();
+					}
+					foreach ($res as $key => $value) 
+					{
+						$group_price=Testgroup::find()->select(['price','hsncode'])->where(['isactive'=>1])->andWhere(['autoid'=>$value])->asArray()->one();
+						$tot_price=($group_price['price']*$pre_cal)/100;
+						$final_price=number_format($group_price['price']+$tot_price,'2','.','');
+						$data[]=[$id, $value,$final_price,$date_id];
+					}
+				}
+				
+				 
+				 /*		$price_prev=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
+						$total_price=$total_price+$price_prev['price'];
+				*/
+				
+				$data=array();
+				$date_id=date('Y-m-d H:i:s');
+				
+			 /*	foreach ($res as $key => $value) 
 				{
-					$data[]=[$id, $value,$date_id];
+					$group_price=Testgroup::find()->select(['price','hsncode'])->where(['isactive'=>1])->andWhere(['autoid'=>$value])->asArray()->one();
+					$tot_price=($group_price['price']*$pre_cal)/100;
+					$final_price=number_format($group_price['price']-$tot_price,'2','.','');
+					$data[]=[$id, $value,$final_price,$date_id];
 				} 
 			 
 				$data_count=count($data);
 				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_addgroup', ['mastergroupid','testgroupid', 'created_date'],$data)->execute();
-				$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$total_price,'hsncode'=>$price_val['hsncode']],'autoid='.$id.'')->execute();
+				$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$total_price,'hsncode'=>$price_val['hsncode']],'autoid='.$id.'')->execute();*/
+				$data_count=count($data);
+				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_addgroup', ['mastergroupid','testgroupid','price','created_date'],$data)->execute();
+				$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['total_group_price'=>$total_price],'autoid='.$id.'')->execute();
+				
 
 				if($status_count == $data_count)
 				{
@@ -350,7 +420,7 @@ class MainTestgroupController extends Controller
 					return $this->redirect(['makegroupmaster']);
 					Yii::$app->getSession()->setFlash('error', 'Reference Table Not Insert Successfully');
 				}
-				
+				}
 			}
 			else if(!empty($_POST['MainTestgroupSearch']))
 			{ 
@@ -496,9 +566,9 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 		
 		$main_gr=LabAddgroup::find()->where(['autoid'=>$id])->asArray()->one();
 		
-		$main_test=MainTestgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$main_gr['mastergroupid']])->asArray()->one();
+		$main_test=MainTestgroup::find()->select(['total_group_price'])->where(['isactive'=>1])->andWhere(['autoid'=>$main_gr['mastergroupid']])->asArray()->one();
 		$test_price=Testgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$main_gr['testgroupid']])->asArray()->one();
-		$price_va=$main_test['price']-$test_price['price'];
+		$price_va=$main_test['total_group_price']-$test_price['price'];
 		
 		foreach ($test_list_tbl as $key => $value) {
 		      		if(array_key_exists($value['autoid'],$array_index_key)) {
@@ -508,18 +578,42 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 					}
 				} 
 			 
-		
-	
+			 	
 		if($id!="")
 		{
+			$price_prev=MainTestgroup::find()->where(['autoid'=>$main_gr['mastergroupid']])->asArray()->one();
+		
+				$total_price=$price_prev['total_group_price'];
+				$cal_price=abs($total_price-$price_prev['price']);
+				$pre_cal=($cal_price*100)/$total_price;
+				
+				$data=array();
+				$date_id=date('Y-m-d H:i:s');
+				$res_group=LabAddgroup::find()->where(['mastergroupid'=>$main_gr['mastergroupid']])->asArray()->all();
+				
+				if($price_prev['price']<=$price_prev['total_group_price']){
+					foreach ($res_group as $rekey => $revalue) {
+						$grp_priceval=Testgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$revalue['testgroupid']])->asArray()->one();
+						$grp_price=($grp_priceval['price']*$pre_cal)/100;
+						$final_price=number_format($grp_priceval['price']-$grp_price,'2','.','');
+						$status_update1=Yii::$app->db->createCommand()->update('lab_addgroup', ['price'=>$final_price],'autoid='.$revalue['autoid'].'')->execute();
+					}	
+				}else{
+					foreach ($res_group as $rekey => $revalue) {
+						$grp_priceval=Testgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$revalue['testgroupid']])->asArray()->one();
+						$grp_price=($grp_priceval['price']*$pre_cal)/100;
+						$final_price=number_format($grp_priceval['price']+$grp_price,'2','.','');
+						$status_update1=Yii::$app->db->createCommand()->update('lab_addgroup', ['price'=>$final_price],'autoid='.$revalue['autoid'].'')->execute();
+					}
+				}
+				
 				if(LabAddgroup::deleteAll(['autoid'=>$id])){
-					$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$price_va],'autoid='.$main_gr['mastergroupid'].'')->execute();
+					$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['total_group_price'=>$price_va],'autoid='.$main_gr['mastergroupid'].'')->execute();
 					echo true;
 				}else{
 					echo "Error";
 				}
-
-			
+						
 		}else {
 			$searchModel->testgroupname='';
 			if($id){ $searchModel->testgroupname=$id; 	}
@@ -563,10 +657,11 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 		 	
 		 if(!empty($_POST['test_name']))
 			{
+				
 			$res=array();		
 				if(!empty($_POST['test_name'])){
 					$res=$_POST['test_name'];
-				}
+				
 				$total_price=0;
 				
 				foreach ($_POST['test_name'] as $key => $val) {
@@ -575,20 +670,61 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 				  $total_price+=$tot_price;
 				}
 				
+				
 				$price_prev=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
-				$total_price=$total_price+$price_prev['price'];
-								
+				//$price_prev=MainTestgroup::find()->where(['autoid'=>$id])->asArray()->one();
+				$total_price+=$price_prev['total_group_price'];
+				$cal_price=abs($total_price-$price_prev['price']);
+				$pre_cal=($cal_price*100)/$total_price;
+				
 				$id=$_POST['MainTestgroupSearch']['testgroupname'];
 				$data=array();
 				$date_id=date('Y-m-d H:i:s');
+				
+				$res_group=LabAddgroup::find()->where(['mastergroupid'=>$id])->asArray()->all();
+				
+			 
+			 if($total_price>=$price_prev['price']){
+				
+				foreach ($res_group as $rekey => $revalue) {
+					$grp_priceval=Testgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$revalue['testgroupid']])->asArray()->one();
+					$grp_price=($grp_priceval['price']*$pre_cal)/100;
+					$final_price=number_format($grp_priceval['price']-$grp_price,'2','.','');
+					$status_update1=Yii::$app->db->createCommand()->update('lab_addgroup', ['price'=>$final_price],'autoid='.$revalue['autoid'].'')->execute();
+				}
 				foreach ($res as $key => $value) 
 				{
-					$data[]=[$id, $value,$date_id];
+					$group_price=Testgroup::find()->select(['price','hsncode'])->where(['isactive'=>1])->andWhere(['autoid'=>$value])->asArray()->one();
+					$tot_price=($group_price['price']*$pre_cal)/100;
+					$final_price=number_format($group_price['price']-$tot_price,'2','.','');
+					$data[]=[$id, $value,$final_price,$date_id];
 				}
-				$data_count=count($data);
-				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_addgroup', ['mastergroupid','testgroupid', 'created_date'],$data)->execute();
-				$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['price'=>$total_price,'hsncode'=>$price_val['hsncode']],'autoid='.$id.'')->execute();
+							 	
+			 }else{
+			 	
+				foreach ($res_group as $rekey => $revalue) {
+					$grp_priceval=Testgroup::find()->select(['price'])->where(['isactive'=>1])->andWhere(['autoid'=>$revalue['testgroupid']])->asArray()->one();
+					$grp_price=($grp_priceval['price']*$pre_cal)/100;
+					$final_price=number_format($grp_priceval['price']+$grp_price,'2','.','');
+					$status_update1=Yii::$app->db->createCommand()->update('lab_addgroup', ['price'=>$final_price],'autoid='.$revalue['autoid'].'')->execute();
+				}
+				foreach ($res as $key => $value) 
+				{
+					$group_price=Testgroup::find()->select(['price','hsncode'])->where(['isactive'=>1])->andWhere(['autoid'=>$value])->asArray()->one();
+					$tot_price=($group_price['price']*$pre_cal)/100;
+					$final_price=number_format($group_price['price']+$tot_price,'2','.','');
+					$data[]=[$id, $value,$final_price,$date_id];
+				}
+			 	
+			 }	
 				
+				
+
+
+
+				$data_count=count($data);
+				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_addgroup', ['mastergroupid','testgroupid','price','created_date'],$data)->execute();
+				$status_count1=Yii::$app->db->createCommand()->update('main_testgroup', ['total_group_price'=>$total_price],'autoid='.$id.'')->execute();
 				if($status_count == $data_count)
 				{
 					//Yii::$app->getSession()->setFlash('success', 'Saved Successfully.');  
@@ -599,7 +735,7 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 					return $this->redirect(['makegroupmaster']);
 					Yii::$app->getSession()->setFlash('error', 'Reference Table Not Insert Successfully');
 				}
-				
+			  }
 			}
 			else if(!empty($_POST['MainTestgroupSearch']))
 			{ 

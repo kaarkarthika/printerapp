@@ -14,6 +14,7 @@ use backend\models\MainTestgroup;
 use backend\models\LabAddgroup;
 use backend\models\LabPaymentPrime;
 use backend\models\LabMulChoice;
+use backend\models\LabPayment;
 /* @var $this yii\web\View */
 /* @var $model backend\models\LabPayment */
 /* @var $form yii\widgets\ActiveForm */
@@ -152,6 +153,7 @@ div#group_lab_fetch span,.testing-list span {
 	$year_val=$interval->y;
 	
  $lab_payment_prime_val=LabPaymentPrime::find()->where(['lab_id'=>$lab_payment[0]['lab_prime_id']])->asArray()->one();
+ //$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
 	
 $result_string.='';
 		
@@ -163,87 +165,84 @@ if(!empty($lab_payment))
 			<?php
 			 
 			 //$maincount=ArrayHelper::map(MainTestgroup::find()->select(['autoid'])->asArray()->all(),'autoid','autoid');
-		//	 $maincount=MainTestgroup::find()->asArray()->all();
+		//	 $maincount=MainTestgroup::find()->asArray()->all(); 
+		
 			 
 			 $result_string='';
 			 $result_string.='<input type="hidden" name="labtest" id="labtest" value='.$lab_payment_prime_val['lab_id'].' >';
 			 	$result_string.='<table class="table table-bordered algincss " style="margin-bottom: -2px;">
 				<thead><tr><th style="width:20%;">Test Name</th><th style="width:14%;">Result</th><th style="width:10%;">Units</th><th style="width:13%;">Normal Values</th><th style="width:20%;">Method</th><th style="width:40%;">Description</th></tr></thead></table>';
-		   		$ia=1;$inc=0;
-				$status_mg=0;
-				$status_grouptest=0;
-				$status_group=0;
-				$vali=-1;
+		   		$i=0;
+				$ia=1;
+				$mgtest=0;
+				$testgrp=0;
 				
 				foreach ($lab_payment as $key => $value)  
 				{
+					
 					 $split_group=explode('_', $value['lab_test_name']);
+/** Master Group **/
 					 if($split_group[0]=="MasterGroup"){
+					 	 
 					 	$mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$value['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
-						/* echo"<pre>";
-						 	print_r($maincount[$key]['autoid']);
-						 //	print_r($value['lab_common_id']);
+						if(!empty($mastergroupname)){
 							
-						 if($maincount==$value['lab_common_id']){
-						 	 print_r("found");
-						 }else{
-						   	//print_r("not found");
-						 }
-						 */
+							$result_string.='<table class="table table-bordered algincss" ALIGN="Center" style="margin-bottom: -2px;background: #ffd9d9;">
+						 	<tr><td style="padding: 3px 10px;    text-align: center;"><b>'.$mastergroupname[$value['lab_common_id']].'</b></td></tr></table>';
+						}
+							
+						 $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
+						 $testgroup_list=LabAddgroup::find()->where(['mastergroupid'=>$value['lab_common_id']])->andWhere(['testgroupid'=>$value['lab_testgroup']])->asArray()->all();
 						 
-						 
-						 if($status_mg=="0"){
-						 	$result_string.='<table class="table table-bordered algincss" ALIGN="Center" style="margin-bottom: -2px;background: #ffd9d9;"><tr><td style="padding: 3px 10px;    text-align: center;"><b>'.$mastergroupname[$value['lab_common_id']].'</b></td></tr></table>';
-							$status_mg=1; 
+						 foreach ($testgroup_list as $grpkey => $testgrpval) {
+							$testgroup_name=Testgroup::find()->where(['autoid'=>$testgrpval['testgroupid']])->asArray()->one();
+							 $lab_grouptest=LabTestgroup::find()->where(['testgroupid'=>$testgrpval['testgroupid']])->asArray()->all();
+
+							if(!empty($lab_grouptest)){
+								$result_string.='<table class="table table-bordered algincss" style="margin-bottom: -2px;background: #eaeaea;"><tr><td style="padding: 3px 10px;"><b>'.$testgroup_name['testgroupname'].'</b><td></tr></table>';
 							}
-							$testgroupname=ArrayHelper::map(Testgroup::find()->where(['autoid'=>$value['lab_testgroup']])->asArray()->all(), 'autoid', 'testgroupname');
-								if($repeat_test!=$value['lab_testgroup']){
-								 if($status_grouptest==0){
-								 	 $repeat_test=$value['lab_testgroup'];
-									 $result_string.='<table class="table table-bordered algincss" style="margin-bottom: -2px;background: #eaeaea;"><tr><td style="padding: 3px 10px;"><b>'.$testgroupname[$value['lab_testgroup']].'</b><td></tr></table>';
-									// $status_grouptest++; 
-								 }
-								}
-							$i=1; 	
-							$lab_testing=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->andWhere(['isactive'=>1])->asArray()->one();
-							 
-							$lab_unit=LabUnit::find()->where(['auto_id'=>$lab_testing['unit_id']])->asArray()->one();
-							$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$lab_testing['autoid']])->asArray()->one();
+					
+						foreach ($lab_grouptest as $keytest => $testval) {
+							
+							$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$testval['test_nameid']])->asArray()->one();
+							
+								if('Male'==$newpatient['pat_sex'])
+									{
+										$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$testval['test_nameid']])
+										->andWhere(['or',['gender'=>"male"],['gender'=>"both"]])
+										->andWhere(['and',['<=','days_from',$day_val],['>=','days_to',$day_val]])
+										->asArray()->one();
+									}
+								if('Female'==$newpatient['pat_sex']){
+									    $lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$testval['test_nameid']])
+										->andWhere(['and',['<=','days_from',$day_val],['>=','days_to',$day_val]])
+										->andWhere(['or',['gender'=>"female"],['gender'=>"both"]])
+										->asArray()->one();
+									} 
 										
-											if('Male'==$newpatient['pat_sex'])
-											{
-												$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$lab_testing['autoid']])
-												->andWhere(['or',['gender'=>"male"],['gender'=>"both"]])
-												->andWhere(['and',['<=','days_from',$day_val],['>=','days_to',$day_val]])
-												->asArray()->one();
-											}
-											if('Female'==$newpatient['pat_sex']){
-											    $lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$lab_testing['autoid']])
-												->andWhere(['and',['<=','days_from',$day_val],['>=','days_to',$day_val]])
-												->andWhere(['or',['gender'=>"female"],['gender'=>"both"]])
-												->asArray()->one();
-											} 
-										
-											$ref_from=$lab_reference_val['days_from'];
-											$ref_to=$lab_reference_val['days_to'];
-										
-								$lab_report=LabReport::find()->asArray()->one();
-								if(!empty($value['autoid'])){ 
-									 $lab_report_val=LabReport::find()->where(['testname_id'=>$value['lab_testing']])->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
-								}
-									$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
-									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
-									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
-									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
-						  	
-						  	if($lab_testing['result_type']=="numeric"){
-						  		
+								$ref_from=$lab_reference_val['days_from'];
+								$ref_to=$lab_reference_val['days_to'];
+							
 								
-								if(!empty($lab_reference_val)){
-									
-								//	echo"<pre>";print_r($lab_testing['test_name']."       ");print_r($lab_report_val[$vali]['result']);
-									 
-									$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
+							$lab_testing=LabTesting::find()->where(['autoid'=>$testval['test_nameid']])->andWhere(['isactive'=>1])->asArray()->one();		
+							//$lab_testing=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->andWhere(['isactive'=>1])->asArray()->one();
+							$lab_unit=LabUnit::find()->where(['auto_id'=>$lab_testing['unit_id']])->asArray()->one();
+							
+							$lab_report=LabReport::find()->asArray()->one();
+							if(!empty($value['autoid'])){ 
+								 $lab_report_val=LabReport::find()->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
+							}
+							$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
+							$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
+							$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
+							$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
+							
+							
+							if($lab_testing['result_type']=="numeric"){
+						  				
+								 //if(!empty($lab_reference_val)){
+								 			
+										$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
 		    						$result_string.='<tbody>';
 									$result_string.='<tr>';
 							  
@@ -253,7 +252,7 @@ if(!empty($lab_payment))
 											<input type="hidden" name="mastergroupid[]" value='.$value['lab_common_id'].'>
 											<input type="hidden" name="TESTNAMEID[]" value='.$value['lab_testing'].'>
 											<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
-											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$vali]['id'].'>
+											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$mgtest]['id'].'>
 											<input type="hidden" name="LabTestgroup[]" value='.$value['lab_testgroup'].'>
 											<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'> 
 											</td>';
@@ -271,7 +270,7 @@ if(!empty($lab_payment))
 										}
 									
 									if($lab_testing['result_type']=="numeric"){  
-											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$vali]['result'].' ></td>';	
+											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 										}elseif($lab_testing['result_type']=="multichoice"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><select class="form-control result-val" data-id="'.$ia.'" id="result-val_'.$ia.'" name="RESULT[]" required>';
 								  			$result_string.='<option value="">- Select -</option>';
@@ -283,21 +282,21 @@ if(!empty($lab_payment))
 														$dftype='';
 													}
 														
-											  		if($lab_report_val[$vali]['result']==$val_a1['mulname']){
+											  		if($lab_report_val[$mgtest]['result']==$val_a1['mulname']){
 											  			$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'" selected>'.$val_a1['mulname'].'</option>';
 											  			}	
 											  		$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'">'.$val_a1['mulname'].'</option>';	
 													}  
 												$result_string.='</select></td>';
 										}elseif($lab_testing['result_type']=="posneg"){
-											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';
+											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
 										}
 								$result_string.='<td style="width:8.6%;">'.$lab_unit['unit_name'].'<input type="hidden" name="UNITNAME[]" value='.$lab_unit['unit_name'].'></td>';
 									if('numeric'==$lab_testing['result_type']){
 											$result_string.='<td style="width:10.5%;">'.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'<input type="hidden" name="REFERENCENAME[]" value='.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'></td>';
 										}else if('multichoice'==$lab_testing['result_type']){
-											foreach ($normal_multext as $key => $value) {
-												$mul.=",".$value;
+											foreach ($normal_multext as $key => $value1) {
+												$mul.=",".$value1;
 											}
 											$string = trim($mul,",");
 											$result_string.='<td style="width:10.5%;">'.$string.'</td>';
@@ -309,10 +308,11 @@ if(!empty($lab_payment))
 											$result_string.='<td style="width:20%;">'.$lab_testing['description'].'</td>';
 											$result_string.='</tr></tbody></table>';
 											$i++;
-											$ia++;
-										}								 
+											$ia++;	
+										//}								 
 								}else{
-									
+									//echo "<pre>"; print_r($value);
+								
 								  	$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
 		    						$result_string.='<tbody>';
 									$result_string.='<tr>';
@@ -322,26 +322,25 @@ if(!empty($lab_payment))
 											<input type="hidden" name="mastergroupid[]" value='.$value['lab_common_id'].'>
 											<input type="hidden" name="TESTNAMEID[]" value='.$value['lab_testing'].'>
 											<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
-											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$vali]['id'].'>
+											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$mgtest]['id'].'>
 											<input type="hidden" name="LabTestgroup[]" value='.$value['lab_testgroup'].'>
 											<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'> 
 											 
 											</td>';
 										}else{
 											$result_string.='<td style="width:18%;position:relative">'.$lab_testing['test_name'].'
-												<input type="hidden" name="TESTNAME[]" value="" >
-												<input type="hidden" name="LabTesting[]" value="">
-												<input type="hidden" name="TESTNAMEID[]" value="">
-												<input type="hidden" name="LABPAYMENTPRIME[]" value="">
-												<input type="hidden" name="LABPAYMENTID[]" value="">
-												<input type="hidden" name="LabTestgroup[]" value="">
-												<input type="hidden" name="MRNUMBER[]" value=""> 
+													<input type="hidden" name="TESTNAME[]" value='.$lab_testing['test_name'].' >
 											<input type="hidden" name="mastergroupid[]" value="">
+											<input type="hidden" name="TESTNAMEID[]" value="">
+											<input type="hidden" name="LABPAYMENTPRIME[]" value="">
+											<input type="hidden" name="LABPAYMENTID[]" value="">
+											<input type="hidden" name="LabTestgroup[]" value="">
+											<input type="hidden" name="MRNUMBER[]" value="">
 											</td>';
 										}
 										
 										if($lab_testing['result_type']=="numeric"){  
-											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';	
+											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 										}elseif($lab_testing['result_type']=="multichoice"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><select class="form-control result-val" data-id="'.$ia.'" id="result-val_'.$ia.'" name="RESULT[]" required>';
 								  			$result_string.='<option value="">- Select -</option>';
@@ -353,14 +352,14 @@ if(!empty($lab_payment))
 														$dftype='';
 													}
 														
-											  		if($lab_report_val[$key1]['result']==$val_a1['mulname']){
+											  		if($lab_report_val[$mgtest]['result']==$val_a1['mulname']){
 											  			$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'" selected>'.$val_a1['mulname'].'</option>';
 											  			}	
 											  		$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'">'.$val_a1['mulname'].'</option>';	
 													}  
 												$result_string.='</select></td>';
 										}elseif($lab_testing['result_type']=="posneg"){
-											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';
+											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
 										}
 										
 
@@ -368,8 +367,8 @@ if(!empty($lab_payment))
 										if('numeric'==$lab_testing['result_type']){
 											$result_string.='<td style="width:10.5%;">'.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'<input type="hidden" name="REFERENCENAME[]" value='.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'></td>';
 										}else if('multichoice'==$lab_testing['result_type']){
-											foreach ($normal_multext as $key => $value) {
-												$mul.=",".$value;
+											foreach ($normal_multext as $key => $value1) {
+												$mul.=",".$value1;
 											}
 											$string = trim($mul,",");
 											$result_string.='<td style="width:10.5%;">'.$string.'</td>';
@@ -380,26 +379,28 @@ if(!empty($lab_payment))
 											$result_string.='<td style="width:18%;">'.$lab_testing['method'].'</td>';
 											$result_string.='<td style="width:20%;">'.$lab_testing['description'].'</td>';
 											$result_string.='</tr></tbody></table>';
-											$i++;
+												$i++;
 											$ia++;
-								  		  } 
-								  		   
-										$vali=$vali+1;
-								   		//}  
-					  				  } 
+								  		  }
+									$mgtest++;
+								 }
+							 }	
+						 } 
 					  			
-   
-					 		$result_string.='<div style="   margin-top: 0px;">';
+   /** TESTGROUP  $mgtest **/
+					 	$result_string.='<div style="   margin: 20px 0;">';
 					 		if($split_group[0]=="TestGroup"){
 					 			
 					 		 $testgroupname=ArrayHelper::map(Testgroup::find()->where(['autoid'=>$value['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
-							 if($status_group=="0"){
+							 if(!empty($testgroupname)){
 							 	$result_string.='<table class="table table-bordered algincss" style="margin-bottom: -2px;background: #eaeaea; "><tr><td style="padding: 3px 10px;"><b>'.$testgroupname[$value['lab_common_id']].'</b><td></tr></table>';
-								 $status_group++;	
 							 }
-							
-							if(!empty($value)){
-									$lab_testing=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->andWhere(['isactive'=>1])->asArray()->one();
+							 
+							 $lab_grouptest=LabTestgroup::find()->where(['testgroupid'=>$value['lab_testgroup']])->asArray()->all();
+							 
+								 	
+							foreach ($lab_grouptest as $grpkey => $grpvalue) {
+								$lab_testing=LabTesting::find()->where(['autoid'=>$grpvalue['test_nameid']])->andWhere(['isactive'=>1])->asArray()->one();
 									$lab_unit=LabUnit::find()->where(['auto_id'=>$lab_testing['unit_id']])->asArray()->one();
 									$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$lab_testing['autoid']])->asArray()->one();
 										
@@ -428,12 +429,13 @@ if(!empty($lab_payment))
 									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
 									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
 									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
-								
-								
-															
+							
+							
+									
+									
 							if($lab_testing['result_type']=="numeric"){
-						  	   
-							  if(!empty($lab_reference_val)){
+								
+								//if(!empty($lab_reference_val)){
 									$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
 		    						$result_string.='<tbody>';
 									$result_string.='<tr>';
@@ -444,7 +446,7 @@ if(!empty($lab_payment))
 											<input type="hidden" name="mastergroupid[]" value='.$value['lab_common_id'].'>
 											<input type="hidden" name="TESTNAMEID[]" value='.$value['lab_testing'].'>
 											<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
-											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$vali]['id'].'>
+											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$mgtest]['id'].'>
 											<input type="hidden" name="LabTestgroup[]" value='.$value['lab_common_id'].'>
 											<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'> 
 											</td>';
@@ -462,7 +464,8 @@ if(!empty($lab_payment))
 										}
 									
 									if($lab_testing['result_type']=="numeric"){  
-											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$vali]['result'].' ></td>';	
+											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span>
+											<input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 										}elseif($lab_testing['result_type']=="multichoice"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><select class="form-control result-val" data-id="'.$ia.'" id="result-val_'.$ia.'" name="RESULT[]" required>';
 								  			$result_string.='<option value="">- Select -</option>';
@@ -474,14 +477,14 @@ if(!empty($lab_payment))
 														$dftype='';
 													}
 														
-											  		if($lab_report_val[$vali]['result']==$val_a1['mulname']){
+											  		if($lab_report_val[$mgtest]['result']==$val_a1['mulname']){
 											  			$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'" selected>'.$val_a1['mulname'].'</option>';
 											  			}	
 											  		$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'">'.$val_a1['mulname'].'</option>';	
 													}  
 												$result_string.='</select></td>';
 										}elseif($lab_testing['result_type']=="posneg"){
-											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';
+											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
 										}
 										
 
@@ -502,10 +505,13 @@ if(!empty($lab_payment))
 											$result_string.='<td style="width:20%;">'.$lab_testing['description'].'</td>';
 											$result_string.='</tr></tbody></table>';
 											$i++;
-											$ia++;
-								  	 }
+											$ia++;		
+								  	 //}
 								  }else{
-								  	   
+								  	
+									 
+									//echo"<pre>"; print_r($lab_report_val); die;
+									   
 									$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
 		    						$result_string.='<tbody>';
 									$result_string.='<tr>';
@@ -515,7 +521,7 @@ if(!empty($lab_payment))
 											<input type="hidden" name="mastergroupid[]" value='.$value['lab_common_id'].'>
 											<input type="hidden" name="TESTNAMEID[]" value='.$value['lab_testing'].'>
 											<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
-											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$vali]['id'].'>
+											<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$mgtest]['id'].'>
 											<input type="hidden" name="LabTestgroup[]" value='.$value['lab_common_id'].'>
 											<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'>
 											 
@@ -534,7 +540,7 @@ if(!empty($lab_payment))
 										}
 										
 										if($lab_testing['result_type']=="numeric"){  
-											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';	
+											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 										}elseif($lab_testing['result_type']=="multichoice"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><select class="form-control result-val" data-id="'.$ia.'" id="result-val_'.$ia.'" name="RESULT[]" required>';
 								  			$result_string.='<option value="">- Select -</option>';
@@ -546,14 +552,14 @@ if(!empty($lab_payment))
 														$dftype='';
 													}
 														
-											  		if($lab_report_val[$key1]['result']==$val_a1['mulname']){
+											  		if($lab_report_val[$mgtest]['result']==$val_a1['mulname']){
 											  			$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'" selected>'.$val_a1['mulname'].'</option>';
 											  			}	
 											  		$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'">'.$val_a1['mulname'].'</option>';	
 													}  
 												$result_string.='</select></td>';
 										}elseif($lab_testing['result_type']=="posneg"){
-											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';
+											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
 										}
 										
 
@@ -573,15 +579,16 @@ if(!empty($lab_payment))
 											$result_string.='<td style="width:18%;">'.$lab_testing['method'].'</td>';
 											$result_string.='<td style="width:20%;">'.$lab_testing['description'].'</td>';
 											$result_string.='</tr></tbody></table>';
-											$i++;
+												$i++;
 											$ia++;
-								  		  }
-										$vali++;			 	       		
-				 	       		   }
+										  } 
+									$mgtest++;
+									}		
 				 	       		 }
 				 	       		 $result_string.="</div>";
-				 	       		} 
-				 	   	
+				 	       		}
+ 
+/** TEST **/
 				 	   	  foreach ($lab_payment as $key => $value)  
 							{
 							
@@ -619,15 +626,17 @@ if(!empty($lab_payment))
 									 $lab_report_val=LabReport::find()->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
 								} 
 
-											$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
-											$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
-											$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
-											$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
+									$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
+									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
+									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
+									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
+								
+								
 											 
-											
-										if($lab_testing['result_type']=="numeric"){  	 
-										  	 if(!empty($lab_reference_val)){
-										  	 		$result_string.='<table class="table table-bordered algincss test" style="margin-bottom: -2px;" >';
+								 if($lab_testing['result_type']=="numeric"){
+								 	  	 
+								  	 //if(!empty($lab_reference_val)){
+								 	 		$result_string.='<table class="table table-bordered algincss test" style="margin-bottom: -2px;" >';
 				    						$result_string.='<tbody>';
 											$result_string.='<tr>';
 											$result_string.='<td style="width:18%;position:relative">'.$lab_testing['test_name'].'
@@ -635,13 +644,13 @@ if(!empty($lab_payment))
 												<input type="hidden" name="LabTesting[]" value='.$value['lab_common_id'].'>
 												<input type="hidden" name="TESTNAMEID[]" value="">
 												<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
-												<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$vali]['id'].'>
+												<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$mgtest]['id'].'>
 												<input type="hidden" name="LabTestgroup[]" value='.$value['lab_testgroup'].'>
 												<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'> 
 											</td>';
 											
 										if($lab_testing['result_type']=="numeric"){  
-											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' "id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$vali]['result'].' ></td>';	
+											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' "id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 										}elseif($lab_testing['result_type']=="multichoice"){
 												$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><select class="form-control result-val" data-id="'.$ia.'" id="result-val'.$ia.'" name="RESULT[]" required>';
 												  	$result_string.='<option value="">- Select -</option>';
@@ -653,7 +662,7 @@ if(!empty($lab_payment))
 														$dftype='';
 													}
 														
-										if($lab_report_val[$key1]['result']==$val_a1['mulname']){
+										if($lab_report_val[$mgtest]['result']==$val_a1['mulname']){
 											  	$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'" selected>'.$val_a1['mulname'].'</option>';
 											  }	
 												  $result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'">'.$val_a1['mulname'].'</option>';	
@@ -682,9 +691,11 @@ if(!empty($lab_payment))
 											$result_string.='</tr></tbody></table>';
 											
 											$i++;$ia++;
-											 }
-											}
-											else{
+											// }
+										}
+										else{
+										// echo"<pre>"; print_r($lab_report_val[$testgrp]['result']);
+												
 											$result_string.='<table class="table table-bordered algincss test" style="margin-bottom: -2px;" >';
 				    						$result_string.='<tbody>';
 											$result_string.='<tr>';
@@ -694,30 +705,30 @@ if(!empty($lab_payment))
 												<input type="hidden" name="LabTestgroup[]" value='.$value['lab_testgroup'].'>
 												<input type="hidden" name="TESTNAMEID[]" value='.$value['lab_prime_id'].'>
 												<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
-												<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$vali]['id'].'>
+												<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$mgtest]['id'].'>
 												<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'> 
 											</td>';
 											if($lab_testing['result_type']=="numeric"){  
-												$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' "id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$vali]['result'].' ></td>';	
+												$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' "id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 											}elseif($lab_testing['result_type']=="multichoice"){
 												$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><select class="form-control result-val" data-id="'.$ia.'" id="result-val'.$ia.'" name="RESULT[]" required>';
 												  	$result_string.='<option value="">- Select -</option>';
 													foreach($mul_choice as $val_a1){
-													$dftype='';
+														$dftype='';
 													if($val_a1['normal_value']){
 														$dftype='1';
 													}else{
 														$dftype='';
 													}
 														
-													  if($lab_report_val[$key1]['result']==$val_a1['mulname']){
+													  if($lab_report_val[$mgtest]['result']==$val_a1['mulname']){
 													  	$result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'" selected>'.$val_a1['mulname'].'</option>';
 													  }	
 													  $result_string.='<option data-df="'.$dftype.'" value="'.$val_a1['mulname'].'">'.$val_a1['mulname'].'</option>';	
 													}  
 												$result_string.='</select></td>';
 											}elseif($lab_testing['result_type']=="posneg"){
-												$result_string.='<td style="width:12%;"><span "id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';
+												$result_string.='<td style="width:12%;"><span "id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><input type="text" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
 											}
 											
 											$result_string.='<td style="width:8.6%;">'.$lab_unit['unit_name'].'<input type="hidden" name="UNITNAME[]" value='.$lab_unit['unit_name'].'></td>';
@@ -741,9 +752,9 @@ if(!empty($lab_payment))
 											
 											$i++;$ia++;
 											}
+											$mgtest++;	
 										}
 									  }
-									$vali++;	
 									}
 							  	 }  
 							 

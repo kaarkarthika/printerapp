@@ -118,14 +118,15 @@ class LabPaymentPrimeController extends Controller
 	
 	public function actionReport($id)
     {
-    	//echo"<pre>"; print_r($id); print_r($_POST); die;
+    	
     	$model = $this->findModel($id);
 		$labmodel= new LabPaymentPrime();
     	$newpatient=Newpatient::find()->where(['mr_no'=>$model->mr_number])->asArray()->one();
 		$sub_visit=SubVisit::find()->where(['mr_number'=>$model->mr_number])->orderBy(['sub_id'=>SORT_DESC])->asArray()->one();
 		$physicianmaster=Physicianmaster::find()->where(['id'=>$sub_visit['consultant_doctor']])->asArray()->one();
 		$insurance=Insurance::find()->where(['insurance_typeid'=>$sub_visit['insurance_type']])->asArray()->one();
-		$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
+		// $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
+		 $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
 		
 		$age=$this->Getage($newpatient['dob']);
 		
@@ -152,7 +153,7 @@ class LabPaymentPrimeController extends Controller
 		if($_POST)
 		{
 			 
-			// 
+			// echo"<pre>"; print_r($id); print_r($_POST); die; 
 		  if("save_lab"==$_POST['status']){
 		  		
 		  	$command = Yii::$app->db->createCommand("UPDATE lab_payment_prime SET status='report' WHERE lab_id=".$id);
@@ -226,7 +227,117 @@ class LabPaymentPrimeController extends Controller
         	]);
 		}
 	}
-	
+public function actionReportview($id)
+    {
+    	
+    	$model = $this->findModel($id);
+		$labmodel= new LabPaymentPrime();
+    	$newpatient=Newpatient::find()->where(['mr_no'=>$model->mr_number])->asArray()->one();
+		$sub_visit=SubVisit::find()->where(['mr_number'=>$model->mr_number])->orderBy(['sub_id'=>SORT_DESC])->asArray()->one();
+		$physicianmaster=Physicianmaster::find()->where(['id'=>$sub_visit['consultant_doctor']])->asArray()->one();
+		$insurance=Insurance::find()->where(['insurance_typeid'=>$sub_visit['insurance_type']])->asArray()->one();
+		 $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
+		// $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
+		
+		$age=$this->Getage($newpatient['dob']);
+		
+		$set_id=array();
+		if(!empty($lab_payment))
+		{
+			foreach ($lab_payment as $key => $value) 
+			{
+				if($value['lab_testgroup'] != '' )
+				{
+					$hide='show';
+					$set_id[]=$value['lab_testgroup'];
+				}
+			}
+			$set_id_val=implode(',', $set_id);
+		}
+			$id=$model->lab_id;
+			$setid=$set_id_val;
+		if($id != '' && $setid != '')
+		{	$set=explode(',', $setid);
+			$lab_payment1=LabPayment::find()->where(['lab_prime_id'=>$id])->andWhere(['in','lab_testgroup',$set])->asArray()->all();
+		}
+		
+		if($_POST)
+		{
+			 
+			// echo"<pre>"; print_r($id); print_r($_POST); die; 
+		  if("save_lab"==$_POST['status']){
+		  		
+		  	$command = Yii::$app->db->createCommand("UPDATE lab_payment_prime SET status='report' WHERE lab_id=".$id);
+			$command->execute();
+			
+				$data=array();
+				$date_id=date('Y-m-d H:i:s');
+				$session = Yii::$app -> session;
+				foreach ($_POST['TESTNAME'] as $key => $value) 
+				{
+					$data[]=['N',$value,$_POST['LabTesting'][$key],$_POST['TESTNAMEID'][$key],$_POST['LABPAYMENTPRIME'][$key],$_POST['LabTestgroup'][$key],$_POST['mastergroupid'][$key],
+							$_POST['MRNUMBER'][$key],$_POST['RESULT'][$key],$_POST['UNITNAME'][$key],$_POST['REFERENCENAME'][$key],$_POST['TextArea'],'T',$date_id,$session['user_id'],$_SERVER['REMOTE_ADDR']
+					];
+				}
+		
+				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_report', ['status','testname', 'lab_testing','testname_id','lab_payment_id','lab_test_group','mastergroupid','mr_number','result','unit_name','reference_name','textarea','grouping_status','created_at','user_id','updated_ipaddress'],$data)->execute();
+				Yii::$app->getSession()->setFlash('success', 'Saved Successfully.');  
+				return $this->redirect(['lab-index-grid']);
+			
+			}else if("update_lab"==$_POST['status']){
+				  	
+				  $data=array();
+				$date_id=date('Y-m-d H:i:s');
+				$session = Yii::$app -> session;
+				 
+				foreach ($_POST['TESTNAME'] as $key => $value) 
+				{
+					//$data[]=['N',$value,$_POST['LabTesting'][$key],$_POST['TESTNAMEID'][$key],$_POST['LABPAYMENTID'][$key],$_POST['LabTestgroup'][$key],$_POST['mastergroupid'][$key],$_POST['MRNUMBER'][$key],$_POST['RESULT'][$key],$_POST['UNITNAME'][$key],$_POST['REFERENCENAME'][$key],$_POST['TextArea'],'T',$date_id,$session['user_id'],$_SERVER['REMOTE_ADDR']];
+				$labpaymentid=$_POST['LABPAYMENTID'][$key];
+				 
+				
+					$status_count=Yii::$app->db->createCommand()->update('lab_report', [
+					'status'=>'N',
+					'testname'=>$value,
+					'lab_testing'=>$_POST['LabTesting'][$key],
+					'testname_id'=>$_POST['TESTNAMEID'][$key],
+					'lab_payment_id'=>$_POST['LABPAYMENTPRIME'][$key],
+					'lab_test_group'=>$_POST['LabTestgroup'][$key],
+					'mastergroupid'=>$_POST['mastergroupid'][$key],
+					'mr_number'=>$_POST['MRNUMBER'][$key],
+					'result'=>$_POST['RESULT'][$key],
+					'unit_name'=>$_POST['UNITNAME'][$key],
+					'reference_name'=>$_POST['REFERENCENAME'][$key],
+					'textarea'=>$_POST['TextArea'],
+					'grouping_status'=>'T',
+					'created_at'=>$date_id,
+					'user_id'=>$session['user_id'],
+					'updated_ipaddress'=>$_SERVER['REMOTE_ADDR']], 
+					'id="'.$labpaymentid.'"')->execute();
+					
+				} 
+					//$del_count=Yii::$app->db->createCommand()->delete('lab_report', ['testname_id'=>$res])->execute();       // ss code
+					//$status_count=Yii::$app->db->createCommand()->batchInsert('lab_report', ['status','testname', 'lab_testing','testname_id','lab_payment_id','lab_test_group','mastergroupid','mr_number','result','unit_name','reference_name','textarea','grouping_status','created_at','user_id','updated_ipaddress'],$data)->execute();
+				
+				Yii::$app->getSession()->setFlash('success', 'Saved Successfully.');  
+				return $this->redirect(['report-index-grid']);
+			}
+
+		} 
+		else
+		{ 
+			return $this->render('report_page', [
+            'model' => $model,
+            'newpatient' => $newpatient,
+            'sub_visit' => $sub_visit,
+            'physicianmaster' => $physicianmaster,
+            'insurance' => $insurance,
+            'age' => $age,
+            'lab_payment' => $lab_payment,
+            'lab_testgroup'=>$lab_testgroup,
+        	]);
+		}
+	}	
 	
 	public function actionGrouppack($id,$setid)
     { 
@@ -476,6 +587,7 @@ class LabPaymentPrimeController extends Controller
 		
 		if ($main->load(Yii::$app->request->post())) 
         {
+        	
         	$subvisit=SubVisit::find()->where(['mr_number'=>Yii::$app->request->post('LabPaymentPrime')['mr_number']])->orderBy(['sub_id' => SORT_DESC])->asArray()->one();
 			$patientdata=Newpatient::find()->where(['patientid'=>$subvisit['pat_id']])->asArray()->one();
 			$auto_get=AutoidTable::find()->where(['auto'=>10])->asArray()->one();
@@ -552,7 +664,6 @@ class LabPaymentPrimeController extends Controller
 							foreach (Yii::$app->request->post('LabPayment')['lab_common_id'] as $key => $value) 
 							{
 								$split_group=explode('_', $value);
-								
 								$data[]=[$main->lab_id,$split_group[1],$split_group[0],$main->mr_number,$main->payment_status,
 										$_POST['default_labid'][$key],$_POST['testgroupid'][$key],$_POST['LabPayment']['price'][$key],
 										$_POST['LabPayment']['cgst_percentage'][$key]+$_POST['LabPayment']['sgst_percentage'][$key],
@@ -564,8 +675,8 @@ class LabPaymentPrimeController extends Controller
 										$session['user_id'],date('Y-m-d H:i:s'),$_SERVER['REMOTE_ADDR']];
 							}
 							//echo"<pre>";print_r($data);die;
-							Yii::$app->db->createCommand()->batchInsert('lab_payment', ['lab_prime_id','lab_common_id', 'lab_test_name','mr_number','paid_status','lab_testing',
-							'lab_testgroup','price','gst_percentage','cgst_percentage','sgst_percentage','gst_amount','cgst_amount','sgst_amount',
+							Yii::$app->db->createCommand()->batchInsert('lab_payment', ['lab_prime_id','lab_common_id', 'lab_test_name','mr_number','paid_status','lab_testgroup',
+							'lab_testing','price','gst_percentage','cgst_percentage','sgst_percentage','gst_amount','cgst_amount','sgst_amount',
 							'total_amount','net_amount','discount_percent','discount_amount','user_id','created_at','ip_address'],$data)->execute();
 						}
 
@@ -891,10 +1002,10 @@ class LabPaymentPrimeController extends Controller
 	public function actionLabset($id)
     {    
        if($id != '')
-	   {  
-	   	//	$check=array();	
+	   {
 	   		$split_group=explode('_', $id);
 			$result_string='';
+			
 			if($split_group[0] == 'LabTesting')
 			{
 				$lab_testing=LabTesting::find()->where(['autoid'=>$split_group[1]])->asArray()->one();
@@ -905,19 +1016,14 @@ class LabPaymentPrimeController extends Controller
 				$gstpercent_divided=$percentage/2;
 				
 				$calculation=($lab_testing['price']*$percentage)/100;
-				//print_r($percentage); die;
-				
 				
 				if(!empty($lab_testing))
 				{
-					//$check[$lab_testing['autoid']]=$lab_testing['autoid'];
-					$result_string.='<tr class="calculation duplicatelab'.$lab_testing['autoid'].'" id="lab_test'.$lab_testing['autoid'].'" dataida="'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'">';
-					$result_string.='<td style="text-align:center;width:15.6%;" id="lab_name'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'">'.$lab_testing['test_name'].'<input type="hidden" name="LabPayment[lab_common_id][]" value="'.$id.'" >
-					<input type="hidden" name="default_labid[]" id="default_labid'.$lab_testing['autoid'].'" data-id="'.$lab_testing['autoid'].'" class="default_labid duplicatelab'.$lab_testing['autoid'].'">
+					//$result_string.='<tr class="calculation" id="lab_test'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'">';
+					$result_string.='<tr class="calculation lab_test'.$lab_testing['autoid'].'"  id="lab_test'.$lab_testing['autoid'].'" dataida="T_'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'">';
 					
-					</td>';
-				    $result_string.='<td style="text-align:center;width:10.2%;" ><input type="text" readonly="readonly" id="price_test_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[price][]" value="'.number_format($lab_testing['price'],2, '.', '').'" >
-				    <input type="hidden" name="identify_test[]" id="identify_test'.$lab_testing['autoid'].'" data-id="'.$lab_testing['autoid'].'" value="LabTesting_'.$lab_testing['autoid'].'"></td>';
+					$result_string.='<td style="text-align:center;width:15.6%;" id="lab_name'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'">'.$lab_testing['test_name'].'<input type="hidden" name="LabPayment[lab_common_id][]" value="'.$id.'" ></td>';
+				    $result_string.='<td style="text-align:center;width:10.2%;" ><input type="text" readonly="readonly" id="price_test_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[price][]" value="'.number_format($lab_testing['price'],2, '.', '').'" ></td>';
 				   
 					//$result_string.='<td  style="text-align:center" id="gst_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'">'.number_format($calculation,2, '.', '').'</td>';
 				   $result_string.='<td  style="text-align:center;width:9.8%;" ><input type="text" readonly="readonly" id="cgst_per_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[cgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" ></td>';
@@ -928,11 +1034,13 @@ class LabPaymentPrimeController extends Controller
 				  
 				   $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_percent_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[discount_percent][]" value="0" ></td>';
 				   $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_amount_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[discount_amount][]" value="0" ></td>';
+				  
+				  
 				   
-				   $result_string.='<td  style="text-align:center;" ><input type="text" readonly="readonly" id="net_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[total_amount][]" value="'.number_format($calculation+$lab_testing['price'],2, '.', '').'" ></td>';
-				   $result_string.='<td  class="hide" style="text-align:center" ><input type="text" readonly="readonly" id="net_lab_hidden'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[total_amount_hidden][]" value="'.number_format($calculation+$lab_testing['price'],2, '.', '').'" ></td>';
-				   $result_string.='<td  style="text-align:center;width:6.2%;"  id="remove_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'"><button dataid="LabTesting_'.$lab_testing['autoid'].'" class="remove btn btn-danger btn-xs" type="button"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>';
-				$result_string.='</tr>';
+				    $result_string.='<td  style="text-align:center;" ><input type="text" readonly="readonly" id="net_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[total_amount][]" value="'.number_format($calculation+$lab_testing['price'],2, '.', '').'" ></td>';
+				     $result_string.='<td  class="hide" style="text-align:center" ><input type="text" readonly="readonly" id="net_lab_hidden'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'" name="LabPayment[total_amount_hidden][]" value="'.number_format($calculation+$lab_testing['price'],2, '.', '').'" ></td>';
+					$result_string.='<td  style="text-align:center;width:6.2%;"  id="remove_lab'.$lab_testing['autoid'].'" dataid="LabTesting_'.$lab_testing['autoid'].'"><button dataid="LabTesting_'.$lab_testing['autoid'].'" class="remove btn btn-danger btn-xs" type="button"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>';
+					$result_string.='</tr>';
 				}
 			
 			}
@@ -945,44 +1053,36 @@ class LabPaymentPrimeController extends Controller
 				$percentage=$tax_grouping_log['tax'];
 				$gstpercent_divided=$percentage/2;
 				
-				$lab_testgroup=LabTestgroup::find()->where(['testgroupid'=>$testgroup['autoid']])->asArray()->all();
-				$strtest="";
-				foreach ($lab_testgroup as $key1 => $value1) 
-				{
-					$lab_testing1=LabTesting::find()->where(['autoid'=>$value1['test_nameid']])->asArray()->one();
-					$calculation=($value1['price']*$percentage)/100;
-				//	echo"<pre>";print_r($value1['price']); 
-					//$strtest.=$lab_testing1['test_name'].",";
-				
-				//$strtest=rtrim($strtest,",");
+				$calculation=($testgroup['price']*$percentage)/100;
 				
 				if(!empty($testgroup))
 				{
-					$result_string.='<tr class="calculation test_group'.$testgroup['autoid'].' duplicatelab'.$lab_testing1['autoid'].'"  id="lab_test'.$lab_testing1['autoid'].'" dataida="'.$lab_testing1['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'">'; 
-					$result_string.='<td style="text-align:center;width:15.6%;" id="test_group_name'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'"><B>'.$lab_testing1['test_name'] .'</B><input type="hidden" value="'.$id.'"  name="LabPayment[lab_common_id][]">
-					<input type="hidden" name="default_labid[]" id="default_labid'.$lab_testing1['autoid'].'" data-id="'.$lab_testing1['autoid'].'" class="default_labid duplicatelab'.$lab_testing1['autoid'].'" value="'.$lab_testing1['autoid'].'"></td>';
+					//$result_string.='<tr class="calculation"  id="test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">';
+					$result_string.='<tr class="calculation test_group'.$testgroup['autoid'].' duplicatelab'.$testgroup['autoid'].'"  id="testgroup'.$testgroup['autoid'].'" dataida="'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">';
 					
-					$result_string.='<td style="text-align:center;width:10.2%;" >
-					<input type="text" readonly="readonly" id="price_test_lab'.$lab_testing1['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'" name="LabPayment[price][]" value="'.number_format($value1['price'],2, '.', '').'" >
-					<input type="hidden" name="identify_test[]" id="identify_test'.$testgroup['autoid'].'" data-id="'.$testgroup['autoid'].'" value="TestGroup_'.$testgroup['autoid'].'"></td>';
+					$result_string.='<td style="text-align:center;width:15.6%;" id="test_group_name'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">'.$testgroup['testgroupname'].'<input type="hidden" value="'.$id.'"  name="LabPayment[lab_common_id][]"></td>';
+				    $result_string.='<td style="text-align:center;width:10.2%;" ><input type="text" readonly="readonly" id="price_test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[price][]" value="'.number_format($testgroup['price'],2, '.', '').'" >
+				    <input type="hidden" name="default_labid[]" id="default_labid'.$testgroup['autoid'].'" data-id="'.$testgroup['autoid'].'" class="default_labid duplicatelab'.$testgroup['autoid'].'" value="'.$testgroup['autoid'].'">
+				    </td>';
 				   
 					//$result_string.='<td style="text-align:center" id="gst_test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">'.number_format($calculation,2, '.', '').'</td>';
-				     $result_string.='<td  style="text-align:center;width:9.8%;" ><input type="text" readonly="readonly" id="cgst_per_lab'.$lab_testing1['autoid'].'" dataid="TestGroup_'.$lab_testing1['autoid'].'" name="LabPayment[cgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" ></td>';
-				   	 $result_string.='<td  style="text-align:center;width:9.8%;" ><input type="text" readonly="readonly" id="sgst_per_lab'.$lab_testing1['autoid'].'" dataid="TestGroup_'.$lab_testing1['autoid'].'" name="LabPayment[sgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" ></td>';
+				     $result_string.='<td  style="text-align:center;width:9.8%;" ><input type="text" readonly="readonly" id="cgst_per_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[cgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" ></td>';
+				   	 $result_string.='<td  style="text-align:center;width:9.8%;" ><input type="text" readonly="readonly" id="sgst_per_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[sgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" ></td>';
 				   
-				   	 $result_string.='<td  style="text-align:center;width:11.4%;" ><input type="text" readonly="readonly" id="cgst_amt_lab'.$lab_testing1['autoid'].'" dataid="TestGroup_'.$lab_testing1['autoid'].'" name="LabPayment[cgst_amount][]" value="'.number_format(($testgroup['price']*$gstpercent_divided/100),2, '.', '').'" ></td>';
-				     $result_string.='<td  style="text-align:center;width:11.4%;" ><input type="text" readonly="readonly" id="sgst_amt_lab'.$lab_testing1['autoid'].'" dataid="TestGroup_'.$lab_testing1['autoid'].'" name="LabPayment[sgst_amount][]" value="'.number_format(($testgroup['price']*$gstpercent_divided/100),2, '.', '').'" ></td>';
+				   	 $result_string.='<td  style="text-align:center;width:11.4%;" ><input type="text" readonly="readonly" id="cgst_amt_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[cgst_amount][]" value="'.number_format(($testgroup['price']*$gstpercent_divided/100),2, '.', '').'" ></td>';
+				     $result_string.='<td  style="text-align:center;width:11.4%;" ><input type="text" readonly="readonly" id="sgst_amt_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[sgst_amount][]" value="'.number_format(($testgroup['price']*$gstpercent_divided/100),2, '.', '').'" ></td>';
 				  
-				   	 $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_percent_lab'.$lab_testing1['autoid'].'" dataid="TestGroup_'.$lab_testing1['autoid'].'" name="LabPayment[discount_percent][]" value="0" ></td>';
-				     $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_amount_lab'.$lab_testing1['autoid'].'" dataid="TestGroup_'.$lab_testing1['autoid'].'" name="LabPayment[discount_amount][]" value="0" ></td>';
+				   	 $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_percent_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[discount_percent][]" value="0" ></td>';
+				     $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_amount_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[discount_amount][]" value="0" ></td>';
 				  
-				  	 $result_string.='<td  style="text-align:center;" ><input type="text" readonly="readonly" id="net_lab'.$lab_testing1['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'" name="LabPayment[total_amount][]" value="'.number_format($calculation+$value1['price'],2, '.', '').'" ></td>';
- 				     $result_string.='<td  class="hide" style="text-align:center" ><input type="text" readonly="readonly" id="net_lab_hidden'.$lab_testing1['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'" name="LabPayment[total_amount_hidden][]" value="'.number_format($calculation+$value1['price'],2, '.', '').'" ></td>';
+				  
+				     $result_string.='<td style="text-align:center;" ><input type="text" readonly="readonly" id="net_test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[total_amount][]" value="'.number_format($calculation+$testgroup['price'],2, '.', '').'" ></td>';
+					 $result_string.='<td class="hide" style="text-align:center" ><input type="text" readonly="readonly" id="net_test_group_hidden'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[total_amount_hidden][]" value="'.number_format($calculation+$testgroup['price'],2, '.', '').'" ></td>';
 					
-					 $result_string.='<td style="text-align:center;width:6.2%;" id="remove_test_group'.$testgroup['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'"><button dataid="LabTesting_'.$lab_testing1['autoid'].'"  class="remove btn btn-danger btn-xs"  type="button"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>';
+					 $result_string.='<td style="text-align:center;width:6.2%;" id="remove_test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'"><button dataid="TestGroup_'.$testgroup['autoid'].'"  class="remove btn btn-danger btn-xs"  type="button"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>';
 					 $result_string.='</tr>';
 				}
-				}
+			
 			}elseif ($split_group[0] == 'MasterGroup') 
 			{
 				
@@ -991,6 +1091,8 @@ class LabPaymentPrimeController extends Controller
 				$tax_grouping_log=TaxgroupingLog::find()->where(['taxgroupid'=>$hsn_code])->andWhere(['is_active'=>1])->one();
 				$percentage=$tax_grouping_log['tax'];
 				$gstpercent_divided=$percentage/2;
+				
+				//echo"<pre>";
 				$calculation=($mastergroup['price']*$percentage)/100;
 				
 				$lab_mastergroup=LabAddgroup::find()->where(['mastergroupid'=>$split_group[1]])->asArray()->all();
@@ -998,54 +1100,90 @@ class LabPaymentPrimeController extends Controller
 				{
 					foreach ($lab_mastergroup as $key2 => $masvalue) 
 					 {
-					 	$lab_testgroup=LabTestgroup::find()->where(['testgroupid'=>$masvalue['testgroupid']])->asArray()->all();
-						$strtest="";
-						  
-						foreach ($lab_testgroup as $key1 => $value1) 
-						{
-							//echo"<pre>";print_r($lab_testgroup[$key1]['testgroupid']);
-							$lab_testing1=LabTesting::find()->where(['autoid'=>$value1['test_nameid']])->asArray()->one();
-						//	$strtest.=$lab_testing1['test_name'].",";
-						 
-				//$strtest=rtrim($strtest,",");
+					 	$testgroup=Testgroup::find()->where(['autoid'=>$masvalue['testgroupid']])->asArray()->one();
+						$labgroup=LabAddgroup::find()->where(['testgroupid'=>$masvalue['testgroupid']])->andWhere(['mastergroupid'=>$masvalue['mastergroupid']])->asArray()->one();
+				//echo"<pre>";		print_r($masvalue); die;  
 				
-				if(!empty($mastergroup))
+				if(!empty($testgroup))
 				{
-					$result_string.='<tr class="calculation master_group'.$mastergroup['autoid'].' duplicatelab'.$lab_testing1['autoid'].'"  id="lab_test'.$lab_testing1['autoid'].'" dataida="'.$lab_testing1['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'">';
-					$result_string.='<td style="text-align:center;width:15.6%;" ><B>'.$lab_testing1['test_name'].'</B>
-					<input type="hidden" readonly="readonly" value="'.$id.'"  name="LabPayment[lab_common_id][]">
-					<input type="hidden" readonly="readonly" value="'.$lab_testgroup[$key1]['testgroupid'].'"  name="testgroupid[]" id="TestGroup_'.$lab_testgroup[$key1]['testgroupid'].'">
-					<input type="hidden" name="default_labid[]" id="default_labid'.$lab_testing1['autoid'].'" data-id="'.$lab_testing1['autoid'].'" class="default_labid duplicatelab'.$lab_testing1['autoid'].'" value="'.$lab_testing1['autoid'].'"></td>';
+					/*$result_string.='<tr class="calculation"  id="master_group'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'">';
+					$result_string.='<td style="text-align:center;width:15.6%;" >'.$mastergroup['testgroupname'].'<input type="hidden" readonly="readonly" value="'.$id.'"  name="LabPayment[lab_common_id][]"></td>';
+				    $result_string.='<td style="text-align:center;width:10.2%;" ><input type="text" readonly="readonly" id="price_master_group'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[price][]" value="'.number_format($mastergroup['price'],2, '.', '').'" ></td>';
+				   
 					
-				    $result_string.='<td style="text-align:center;width:10.2%;" ><input type="text" readonly="readonly" id="price_test_lab'.$lab_testing1['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'" name="LabPayment[price][]" value="'.number_format($value1['price'],2, '.', '').'" >
-				    <input type="hidden" name="identify_test[]" id="identify_test'.$mastergroup['autoid'].'" data-id="'.$mastergroup['autoid'].'" value="MasterGroup_'.$mastergroup['autoid'].'"></td>';
+				     $result_string.='<td  style="text-align:center;width:9.8%;" >
+					 	<input type="text" readonly="readonly" id="cgst_per_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[cgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" >
+					  </td>';
+				   	 $result_string.='<td  style="text-align:center;width:9.8%;" >
+					    <input type="text" readonly="readonly" id="sgst_per_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[sgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" >
+					  </td>';
 				   
-					//$result_string.='<td style="text-align:center" id="gst_test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">'.number_format($calculation,2, '.', '').'</td>';
-				     $result_string.='<td  style="text-align:center;width:9.8%;" ><input type="text" readonly="readonly" id="cgst_per_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[cgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" ></td>';
-				   	 $result_string.='<td  style="text-align:center;width:9.8%;" ><input type="text" readonly="readonly" id="sgst_per_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[sgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" ></td>';
-				   
-				   	 $result_string.='<td  style="text-align:center;width:11.4%;" ><input type="text"  readonly="readonly" id="cgst_amt_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[cgst_amount][]" value="'.number_format(($mastergroup['price']*$gstpercent_divided/100),2, '.', '').'" ></td>';
-				     $result_string.='<td  style="text-align:center;width:11.4%;" ><input type="text" readonly="readonly" id="sgst_amt_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[sgst_amount][]" value="'.number_format(($mastergroup['price']*$gstpercent_divided/100),2, '.', '').'" ></td>';
+				   	 $result_string.='<td  style="text-align:center;width:11.4%;" >
+					  <input type="text"  readonly="readonly" id="cgst_amt_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[cgst_amount][]" value="'.number_format(($mastergroup['price']*$gstpercent_divided/100),2, '.', '').'" >
+					 * </td>';
+				     $result_string.='<td  style="text-align:center;width:11.4%;" >
+					 * <input type="text" readonly="readonly" id="sgst_amt_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[sgst_amount][]" value="'.number_format(($mastergroup['price']*$gstpercent_divided/100),2, '.', '').'" >
+					 * </td>';
 				  
 				   	 $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_percent_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[discount_percent][]" value="0" ></td>';
 				     $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_amount_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[discount_amount][]" value="0" ></td>';
 				  
 				  
-				     $result_string.='<td  style="text-align:center;" ><input type="text" readonly="readonly" id="net_lab'.$lab_testing1['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'" name="LabPayment[total_amount][]" value="'.number_format($calculation+$value1['price'],2, '.', '').'" ></td>';
- 				     $result_string.='<td  class="hide" style="text-align:center" ><input type="text" readonly="readonly" id="net_lab_hidden'.$lab_testing1['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'" name="LabPayment[total_amount_hidden][]" value="'.number_format($calculation+$value1['price'],2, '.', '').'" ></td>';
+				     $result_string.='<td style="text-align:center;" >
+					   <input type="text" readonly="readonly" id="net_master_group'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[total_amount][]" value="'.number_format($calculation+$mastergroup['price'],2, '.', '').'" >
+					 * </td>';
+				     $result_string.='<td class="hide" style="text-align:center" ><input type="text" readonly="readonly" id="net_test_master_hidden'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[total_amount_hidden][]" value="'.number_format($calculation+$mastergroup['price'],2, '.', '').'" ></td>';
+					 $result_string.='<td style="text-align:center;width:6.2%;" id="remove_master_group'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'"><button dataid="MasterGroup_'.$mastergroup['autoid'].'"  class="remove btn btn-danger btn-xs"  type="button"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>';
+					 $result_string.='</tr>'; */
+					 
+					 //print_r($testgroup['testgroupname']);
+					 
+					 //$result_string.='<tr class="calculation"  id="test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">';
+					 $result_string.='<tr class="calculation master_group'.$mastergroup['autoid'].' duplicatelab'.$testgroup['autoid'].'"  id="testgroup'.$testgroup['autoid'].'" dataida="'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">';
+					 
+					$result_string.='<td style="text-align:center;width:15.6%;" id="test_group_name'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">'.$testgroup['testgroupname'].'
+					<input type="hidden" value="'.$id.'"  name="LabPayment[lab_common_id][]">
+					<input type="hidden" name="default_labid[]" id="default_labid'.$testgroup['autoid'].'" data-id="'.$testgroup['autoid'].'" class="default_labid duplicatelab'.$testgroup['autoid'].'" value="'.$testgroup['autoid'].'">
+					</td>';
+				    $result_string.='<td style="text-align:center;width:10.2%;" >
+				    <input type="text" readonly="readonly" id="price_test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[price][]" value="'.number_format($labgroup['price'],2, '.', '').'" >
+				    <input type="hidden" readonly="readonly" id="price_master_group'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[price][]" value="'.number_format($mastergroup['price'],2, '.', '').'" >
+				    </td>';
+				   
+					//$result_string.='<td style="text-align:center" id="gst_test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'">'.number_format($calculation,2, '.', '').'</td>';
+				     $result_string.='<td  style="text-align:center;width:9.8%;" >
+				     <input type="text" readonly="readonly" id="cgst_per_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[cgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" >
+				     <input type="hidden" readonly="readonly" id="cgst_per_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[cgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" >
+				     </td>';
+				   	 $result_string.='<td  style="text-align:center;width:9.8%;" >
+				   	 <input type="text" readonly="readonly" id="sgst_per_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[sgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" >
+				   	  <input type="hidden" readonly="readonly" id="sgst_per_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[sgst_percentage][]" value="'.number_format($gstpercent_divided,2, '.', '').'" >
+				   	 </td>';
+				   
+				   	 $result_string.='<td  style="text-align:center;width:11.4%;" ><input type="text" readonly="readonly" id="cgst_amt_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[cgst_amount][]" value="'.number_format(($labgroup['price']*$gstpercent_divided/100),2, '.', '').'" >
+				   	  <input type="hidden"  readonly="readonly" id="cgst_amt_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[cgst_amount][]" value="'.number_format(($mastergroup['price']*$gstpercent_divided/100),2, '.', '').'" >
+				   	 </td>';
+				     $result_string.='<td  style="text-align:center;width:11.4%;" ><input type="text" readonly="readonly" id="sgst_amt_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[sgst_amount][]" value="'.number_format(($labgroup['price']*$gstpercent_divided/100),2, '.', '').'" >
+				     <input type="hidden" readonly="readonly" id="sgst_amt_master'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[sgst_amount][]" value="'.number_format(($mastergroup['price']*$gstpercent_divided/100),2, '.', '').'" >
+				     </td>';
+				  
+				   	 $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_percent_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[discount_percent][]" value="0" ></td>';
+				     $result_string.='<td  style="text-align:center;width:8.5%;" ><input type="text" readonly="readonly" id="discount_amount_test'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[discount_amount][]" value="0" ></td>';
+				  
+				     $result_string.='<td style="text-align:center;" >
+				     	<input type="text" readonly="readonly" id="net_test_group'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[total_amount][]" value="'.number_format($calculation+$labgroup['price'],2, '.', '').'" >
+				     	<input type="hidden" readonly="readonly" id="net_master_group'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'" name="LabPayment[total_amount][]" value="'.number_format($calculation+$mastergroup['price'],2, '.', '').'" >
+				     </td>';
+					 $result_string.='<td class="hide" style="text-align:center" ><input type="text" readonly="readonly" id="net_test_group_hidden'.$testgroup['autoid'].'" dataid="TestGroup_'.$testgroup['autoid'].'" name="LabPayment[total_amount_hidden][]" value="'.number_format($calculation+$labgroup['price'],2, '.', '').'" ></td>';
 					
-				     
-					 $result_string.='<td style="text-align:center;width:6.2%;" id="remove_master_group'.$mastergroup['autoid'].'" dataid="LabTesting_'.$lab_testing1['autoid'].'"><button dataid="LabTesting_'.$lab_testing1['autoid'].'"  class="remove btn btn-danger btn-xs"  type="button"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>';
-					 $result_string.='</tr>';
+					 $result_string.='<td style="text-align:center;width:6.2%;" id="remove_master_group'.$mastergroup['autoid'].'" dataid="MasterGroup_'.$mastergroup['autoid'].'"><button dataid="MasterGroup_'.$mastergroup['autoid'].'"  class="remove btn btn-danger btn-xs"  type="button"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>';
+					 $result_string.='</tr>'; 
+					 
+					}
+				  }
 				}
-				}
-					 }   
-				 }
-			
 			}
-  
-			return $result_string;
-	   
+  			return $result_string;
 		}   
     }
 
@@ -1184,7 +1322,8 @@ public function actionAjaxsinglefetchdetails($id)
 	public function actionBillreport($id)
 	{
 	
-		$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$id])->asArray()->all();
+		//$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$id])->asArray()->all();
+		$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
 		$labprime_list=LabPaymentPrime::find()->where(['lab_id'=>$id])->asArray()->one();
 		$branch_det=BranchAdmin::find()->where(['ba_autoid'=>$labprime_list['user_id']])->asArray()->one();
 		$insurance=Insurance::find()->where(['insurance_typeid'=>$labprime_list['insurance']])->asArray()->one();
@@ -1243,38 +1382,41 @@ public function actionAjaxsinglefetchdetails($id)
 				<tbody>'; 
 				if(!empty($lab_payment)){  $i=1; 
 				$status_mg=0; $repeat_test=""; $status_grouptest=0;
+				
+				//echo"<pre>"; print_r($lab_payment); 
+				
 				foreach ($lab_payment as $key => $val)  
 				{
 					 $split_group=explode('_', $val['lab_test_name']);
 					 if($split_group[0]=="MasterGroup"){
-					 		
-					 $mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$val['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
-						 $labtest_list=LabTesting::find()->where(['isactive'=>1])->andWhere(['autoid'=>$val['lab_testing']])->asArray()->one();
-						/*  if($status_mg=="0"){
-						  	$tbl1.='<tr colspan="3"><td style="width:15%;text-align:center;">'. $mastergroupname[$val['lab_common_id']] .'</td></tr>';
-						 	$status_mg=1;
-						 }
-						$testgroupname=ArrayHelper::map(Testgroup::find()->where(['autoid'=>$val['lab_testgroup']])->asArray()->all(), 'autoid', 'testgroupname');
-								if($repeat_test!=$val['lab_testgroup']){
-								 if($status_grouptest==0){
-								 	 $repeat_test=$val['lab_testgroup'];
-									 $tbl1.='<tr colspan="3"><td style="width:15%;text-align:center;">'. $testgroupname[$val['lab_testgroup']] .'</td></tr>';
-									 $status_grouptest++;
-								 }
-								} */
-
-						 	$tbl1.='<tr><td style="width:15%;text-align:left;">'. $i++.'</td>
-								<td style="width:70%;text-align:left;"><b>'.$labtest_list['test_name'].'</b></td>
-								<td style="width:15%;text-align:right;">'. $val['net_amount'] .'</td>
-							</tr>';
+					 	$lab_list=LabPayment::find()->where(['lab_prime_id'=>$id])->andWhere(['lab_test_name'=>"MasterGroup"])->groupBy(['lab_common_id'])->asArray()->one();
+							
+						$mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$val['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
+						/* $tbl1.='<tr style="background-color:#f2f2f2;" ><td style="width:15%;text-align:left;"><B>'. $mastergroupname[$val['lab_common_id']].'</B></td>
+								<td style="width:70%;text-align:left;"></td>
+								<td style="width:15%;text-align:right;"></td>
+							</tr>'; */
+							
+						 $testgroup_list=LabAddgroup::find()->where(['mastergroupid'=>$lab_list['lab_common_id']])->asArray()->all();
+						 foreach ($testgroup_list as $key => $value) {
 						
-						 }
+						 	$testgroup_name=Testgroup::find()->where(['autoid'=>$value['testgroupid']])->asArray()->one();
+							
+							 	$tbl1.='<tr><td style="width:15%;text-align:left;">'. $i++.'</td>
+								<td style="width:70%;text-align:left;"><b>'.$testgroup_name['testgroupname'].'</b></td>
+								<td style="width:15%;text-align:right;">'. $value['price'] .'</td>
+							</tr>';
+							
+						 } 
+					 }
 				
 					if($split_group[0]=="TestGroup"){
 					 		 
-							 $lab_testing1=LabTesting::find()->where(['autoid'=>$val['lab_testing']])->asArray()->one();
+							 $testgroup_name=Testgroup::find()->where(['autoid'=>$val['lab_testgroup']])->asArray()->one();
+							// $lab_testing1=LabTesting::find()->where(['autoid'=>$val['lab_testing']])->asArray()->one();
+							 
 							 	$tbl1.='<tr><td style="width:15%;text-align:left;">'. $i++.'</td>
-								<td style="width:70%;text-align:left;"><b>'.$lab_testing1['test_name'].'</b></td>
+								<td style="width:70%;text-align:left;"><b>'.$testgroup_name['testgroupname'].'</b></td>
 								<td style="width:15%;text-align:right; ">'. $val['net_amount'] .'</td>
 							</tr>'; 
 					}

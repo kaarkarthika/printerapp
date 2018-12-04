@@ -94,7 +94,7 @@ class LabPaymentPrimeSearch extends LabPaymentPrime
 
 	public function searchlabtest($params)
     {
-        $query = LabPaymentPrime::find()->where(['payment_status'=>'P'])->andWhere(['outsourcetest'=>'0'])->andWhere(['LIKE','status','pending']);
+        $query = LabPaymentPrime::find()->where(['payment_status'=>'P'])->andWhere(['outsourcetest'=>'0'])->andWhere(['LIKE','status','pending'])->orderBy(['created_at' => SORT_DESC]);;
 
 		//echo"<pre>";print_r($query); die;
         // add conditions that should always apply here
@@ -144,7 +144,7 @@ class LabPaymentPrimeSearch extends LabPaymentPrime
     }
 public function searchlabtest_out($params)
     {
-        $query = LabPaymentPrime::find()->where(['payment_status'=>'P'])->andWhere(['outsourcetest'=>'1']);
+        $query = LabPaymentPrime::find()->where(['payment_status'=>'P'])->andWhere(['outsourcetest'=>'1'])->orderBy(['created_at' => SORT_DESC]);;
 	
         // add conditions that should always apply here
 
@@ -194,7 +194,10 @@ public function searchlabtest_out($params)
 
  public function searchreportlabtest($params)
     {
-        $query = LabPaymentPrime::find()->where(['payment_status'=>'P'])->andWhere(['outsourcetest'=>'0'])->andWhere(['status'=>'report']);
+        $query = LabPaymentPrime::find()->where(['payment_status'=>'P'])
+        ->andWhere(['outsourcetest'=>'0'])
+        ->andWhere(['status'=>'report'])
+        ->orderBy(['created_at' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -243,7 +246,7 @@ public function searchlabtest_out($params)
     }
 public function searchreportlabtest_out($params)
     {
-        $query = LabPaymentPrime::find()->where(['payment_status'=>'P'])->andWhere(['outsourcetest'=>'1'])->andWhere(['status'=>'report']);
+        $query = LabPaymentPrime::find()->where(['payment_status'=>'P'])->andWhere(['outsourcetest'=>'1'])->andWhere(['status'=>'report'])->orderBy(['created_at' => SORT_DESC]);;
 
         // add conditions that should always apply here
 

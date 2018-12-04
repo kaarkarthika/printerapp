@@ -66,19 +66,32 @@ $this->params['breadcrumbs'][] = $this->title;
 
            
             'test_name',
+             ['attribute' => 'shortcode', 
+            	'label' => 'Test Code',
+            	'value'=> function($model)
+				{
+						if($model->shortcode==""){
+							return "-";	
+						}else{
+							return $model->shortcode;
+						}
+				}
+             	], 
+             	
              ['attribute' => 'category_name', 
             	'label' => 'Category',
              ],
+             
             ['attribute' => 'unit_name', 
             	'label' => 'Unit ',
              	
             ],
-            /* ['attribute' => 'hsncode', 
+             ['attribute' => 'hsncode', 
             	'label' => 'HSN Code ',
             ],
             ['attribute' => 'price', 
             	'label' => 'Price',
-            ], */
+            ], 
             //'referencevalue',
             //'isactive',
             //'created_at',

@@ -203,6 +203,7 @@ function savesdata(){
 		            	{
                    			$("#saved_val").val(obj[1]);
 		            		$('.save_billing').attr('disabled','disabled');
+		            		 location.reload();
 		            	}else if(obj[0] === 'notsave'){
 		            		alert("Amount Value is Zero, So Not Saved ..");
 		            		$("#saved_val").val(obj[1]);

@@ -20,7 +20,7 @@ class MainTestgroupSearch extends MainTestgroup
     {
         return [
             [['autoid', 'created_at', 'updated_at'], 'integer'],
-            [['testgroupname', 'price', 'hsncode', 'isactive', 'created_date', 'updated_date'], 'safe'],
+            [['testgroupname', 'price', 'hsncode', 'isactive', 'created_date', 'updated_date','shortcode'], 'safe'],
         ];
     }
 

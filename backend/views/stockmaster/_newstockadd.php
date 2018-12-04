@@ -14,6 +14,7 @@
 
 <link rel="stylesheet" type="text/css" media="screen" href="ubold/dist/css/select2.css" />
 <script  src="ubold/dist/js/select2.js"></script>
+<script  src="js/arrow-table.js"></script>
 
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo Url::base(); ?>/jq_grid/css/datatables.min.css" />
  
@@ -135,7 +136,8 @@
                                  </div>
 								  <div class="  form-group col-sm-1">
                                     <label class="control-label   lbl-width">Credit Date</label>
-                                    <input type="text" class="form-control h-20" style="padding:0px;" name=" " id="datepicker" readonly>
+                                    <!--input type="text" class="form-control h-20" style="padding:0px;" name=" " id="datepicker" readonly-->
+                                     <input type="text" class="form-control  h-20" style="padding:0px;" name=" " id="datepicker1" readonly>
                                  </div>
 								 
                               </div>
@@ -239,7 +241,7 @@
                                        	
                                        </select> 								  		 					 
                                        <span class="ipt input-group-btn " value=" ">
-                                       <button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-plus"></i></button>
+                                       <button type="button" class="btn inp btn-default" id='product_popup1' onclick="Product(1);"  data-id='1'><i class="glyphicon glyphicon-plus"></i></button>
                                        </span>   
                                     </div>
                                   
@@ -417,6 +419,39 @@
 </div> 
 
 
+
+<div id="product_details" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header tmp-head">
+        <button type="button" class="close tmp-close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Product Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="" id="product_details_brief">
+	      <table id="product_table" class="display" style="width:100%">
+	        <thead>
+	            <tr>
+	                <th>Product Name</th>
+	                <th>Prduct Type</th>
+	                <th>GST (%)</th>
+	            </tr>
+	        </thead>
+	    </table>    
+    </div>
+      </div>
+      <div class="inp modal-footer">
+        <button type="button" class="btn btn-dnnger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div> 
+
+
+
 <script type="text/javascript" src="js/shortcut.js" ></script>
 <script>
 
@@ -427,6 +462,7 @@ var vendor_json=$.parseJSON('<?php echo $vendor_branch_json;?>');
 
 
 $(document).ready(function(){
+
 
 //$('#invoice_bill').focus();	
    	 
@@ -483,7 +519,7 @@ var dd = parseInt(current_date.getUTCDate());
 var mm  = parseInt(current_date.getUTCMonth()+1);
 var yy = parseInt(current_date.getUTCFullYear());
 $('#invoicedate').val(dd+'-'+mm+'-'+yy);
-$('#datepicker').val(dd+'-'+mm+'-'+yy);
+$('#datepicker1').val(dd+'-'+mm+'-'+yy);
 $('#fromDate').val(dd+'-'+mm+'-'+yy);
 $('#toDate').val(dd+'-'+mm+'-'+yy);
 
@@ -594,15 +630,22 @@ $.ajax({
 });
 
 
-$("body").on('mouseenter', '.expired_date', function () 
+$("body").on('focus', '.expired_date', function () 
 {
 var data_id=$(this).attr('data-id');
 $('#expired_date'+data_id).datepick({
 	dateFormat: 'dd-mm-yyyy',
-	minDate: 0
+	minDate: 0,
+	autoClose:true
 	});
 
 });
+
+
+
+ 
+
+
 
 
 $('#fromDate,#toDate').datepick({ 
@@ -956,7 +999,7 @@ function Add_Grid()
 	
 var appended_text='<tr id="tr_fetch_table'+increment+'"  class="tr_fetch_table" data-id="'+increment+'"><td style="width:6%"><button type="button" data-id="'+increment+'" onclick="Add_Grid();" class=" freezed add_grid btn btn-xs btn-success">Add</button>  '+
 '<button type="button" data-id="'+increment+'" onclick="Del_Grid('+increment+');" class=" freezed del_grid btn btn-xs btn-success">Del</button></td><td style="width:18%">'+
-'<div class="input-group input-group-sm product-select"><select id="product_name'+increment+'" name="PRODUCT_NAME[]"   data-id="'+increment+'" class=" freezed product_name form-control tabind " required></select><span class="ipt input-group-btn"><button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-plus"></i></button></span></div></td>'+
+'<div class="input-group input-group-sm product-select"><select id="product_name'+increment+'" name="PRODUCT_NAME[]"   data-id="'+increment+'" class=" freezed product_name form-control tabind " required></select><span class="ipt input-group-btn"><button type="button" class="btn inp btn-default" id="product_popup'+increment+'" onclick="Product('+increment+');" data-id="'+increment+'"><i class="glyphicon glyphicon-plus"></i></button></span></div></td>'+
 '<td style="width:4%"><input type="text" id="quantity'+increment+'" data-id="'+increment+'" required onkeypress="return isNumberKey(event);" onkeyup="Quantity(this.value,event,'+increment+');" class=" freezed quantity text-right ip-btn-style f-11" name="QUANTITY[]"></td>'+
 '<td style="width:4%"><input type="text" id="free_quantity'+increment+'" data-id="'+increment+'"  onkeypress="return isNumberKey(event);" onkeyup="FreeQuantity(this.value,event,'+increment+');" class=" freezed free_quantity text-right ip-btn-style f-11" name="FREE_QUANTITY[]"></td>'+
 '<td style="width:4%"><input type="text" id="pack_size'+increment+'" data-id="'+increment+'" readonly required onkeypress="return isNumberKey(event);" class=" freezed pack_size text-right ip-btn-style f-11" name="PACK_SIZE[]"></td>'+
@@ -1451,15 +1494,138 @@ function formatDate1(date)
  {
  	window.location.reload(true);
  }
-</script>
-
-<script type="text/javascript">
-$(function() {               
-    $("#datepicker" ).datepicker({
-      dateFormat: 'dd-mm-yyyy',
-        defaultDate: new Date()
+ 
+ function Product(data)
+ {
+ 	product_datatable(data);
+ 	
+ 	$modal = $('#product_details');
+	$modal.modal('show');
+ }
+ 
+function product_datatable(data_id){
+  
+     
+  var url=('<?php echo Url::base('http'); ?>');
+  var ajax_url=url+'/index.php?r=stockmaster/productdetails';
+  var table_reg= $('#product_table').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "destroy": true,
+         "ajax": {
+          "url": ajax_url,
+           "type": "POST"
+          },
+          keys: {
+              keys: [ 13 /* ENTER */, 38 /* UP */, 40 /* DOWN */ ]
+          },
+          "columns": [
+            { "data": "productname"},
+            { "data": "producttype"},
+            { "data": "gst"},
+           
+          ],
+        initComplete: function() {
+        this.api().row( {order: 'current' }, 0).select();
+ 
+    }
     });
-    // $("#datepicker").datepicker('setDate', new Date());  
+    
+   $('#product_table').on('key-focus.dt', function(e, datatable, cell){
+        // Select highlighted row
+      //  table_reg.row(cell.index().row).select();
+      //  $('#reg_table_filter input').val("");
+         $('#product_table_filter input').focus();
+    });
+    
+  $('#product_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
+        
+       
+        var table_as = $("#product_table").DataTable();
+        if(key === 13){
+          
+          $('#product_table thead').on( 'click', 'th', function () {
+          var columnData = table_as.column( this ).data();
+          //alert(columnData);
+        } );
+            
+        var data_reg = table_as.row(cell.index().row).data();
+           $('#product_table_filter input').focus();
+        }
+    }); 
+    
+$('#product_table').off( 'click.rowClick' ).on('click.rowClick', 'td', function () {
+    var data = table_reg.row( this ).id();
+    
+    ProductDetailsFetch(data,data_id);
+});
+
+$('#product_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
+     if(key === 13){
+      
+      var data = table_reg.row(cell.index().row).id();
+      
+    //  BillDetailsFetch(data);
+  }
+});    
+   
+}
+
+
+function ProductDetailsFetch(data,data_id)
+{
+if(data !== '' && data_id !== '')
+{	
+	
+	//var value = $(this).children("option:selected").attr('value');
+	//var data_id=$(this).attr('data-id');
+	$.ajax({
+	type: "POST",
+  	url:'<?php echo Yii::$app->homeUrl . "?r=stockmaster/singleproductfetchselect&id=";?>'+data,
+    success: function (result) 
+    { 
+    	var obj = $.parseJSON(result);
+    	
+    	//ClearTableValue(data_id);
+    	
+    	$('#quantity'+data_id).focus();
+    	
+    	if(obj[1]['no_of_unit'] !== null)
+    	{
+    		$('#pack_size'+data_id).val(obj[1]['no_of_unit']);
+    	}
+    	else if(obj[1] === null)
+    	{
+    		Alertment('Pls Choose Pack Size in Product Master');
+    	}
+    	
+    	if(obj[3]['tax'] !== null)
+    	{
+    		$('#gst_percent'+data_id).val(obj[3]['tax']);
+    	}
+    	else if(obj[3] === null)
+    	{
+    		Alertment('Check GST Percentage Not Fetched');
+    		
+    	}
+    	
+    	$('#product_name'+data_id).html('<option value='+obj[0]['productid']+'>'+obj[0]['productname']+'</option>');
+    	
+    	$('.select2-selection__rendered').trigger('click');
+    	
+    	$modal = $('#product_details');
+		$modal.modal('hide');
+    	
+    }
+	});
+}
+} 
+ 
+</script>
+  
+  <script>
+  $('#tbUser').arrowTable({
+
 });
 </script>
  

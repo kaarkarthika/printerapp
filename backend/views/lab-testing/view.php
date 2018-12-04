@@ -19,7 +19,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             //'autoid',
             'test_name',
-           // 'testgroupid',
+            ['attribute' => 'shortcode', 
+            	'label' => 'Test Code',
+            	'value'=> function($model)
+				{
+						if($model->shortcode==""){
+							return "-";	
+						}else{
+							return $model->shortcode;
+						}
+				}
+             	], 
            ['attribute' => 'category_name', 
             	'label' => 'Category',
              	

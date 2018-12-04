@@ -24,7 +24,7 @@ class LabTestingSearch extends LabTesting
     {
         return [
             [['autoid', 'testgroupid', 'cat_id', 'subcat_id', 'unit_id', 'created_at', 'updated_at'], 'integer'],
-            [['test_name', 'price', 'isactive', 'created_date', 'updated_date','category_name','lab_subcategory','unit_name','method','description','hsncode','result_type','result_type_val' ], 'safe'],
+            [['test_name', 'price', 'isactive', 'created_date', 'updated_date','category_name','lab_subcategory','unit_name','method','description','hsncode','result_type','result_type_val','shortcode' ], 'safe'],
         ];
     }
 

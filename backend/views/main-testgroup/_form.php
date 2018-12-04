@@ -14,9 +14,10 @@ use yii\helpers\Url;
       <?php $form = ActiveForm::begin(['id'=>'main-testgroup-form']); ?>
 
      <?= $form->field($model, 'testgroupname')->textInput(['maxlength' => true,'required' => true])->label('Group Name') ?>
-     <!-- <?= $form->field($model, 'price')->textInput()->label('Price') ?>--> 
-     <!-- <?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['prompt'=>'Select HSN Code',  'options'=>['159'=>['Selected'=>true]],'data-live-search'=>'true',
-    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?> -->
+     <?= $form->field($model, 'price')->textInput(['required' => true])->label('Price') ?> 
+     <?= $form->field($model, 'shortcode')->textInput(['required' => true])?>
+     <?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['prompt'=>'Select HSN Code',  'options'=>['159'=>['Selected'=>true]],'data-live-search'=>'true',
+    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?> 
      <?php 
      	if($model->isNewRecord){
      	$model->isactive = 1;
@@ -107,8 +108,29 @@ table.table.table-striped.table-bordered.detail-view thead td {
 	          if(result=="1"){
 	          	alert(testgname+" Already exists");
 	          	$(".savecategory").css("pointer-events","none");
+	          	$(".updatecategory").css("pointer-events","none");
+	          	
+	          } else{
+	          	$(".updatecategory").css("pointer-events","auto");
+	          	$(".savecategory").css("pointer-events","auto");
+	          }
+	        }
+	    });
+ 	 });
+ 	 $("#maintestgroup-shortcode").change(function() {
+ 		var testgname=$("#maintestgroup-shortcode").val();
+ 			$.ajax({
+	        type: "POST",
+	        url: "<?php echo Yii::$app->homeUrl . "?r=main-testgroup/shortcheck&testname=";?>"+testgname,
+	        success: function (result) 
+	        {
+	          if(result=="1"){
+	          	alert(testgname+" Already exists");
+	          	$(".savecategory").css("pointer-events","none");
+	          	$(".updatecategory").css("pointer-events","none");
 	          } else{
 	          	$(".savecategory").css("pointer-events","auto");
+	          	$(".updatecategory").css("pointer-events","auto");
 	          }
 	        }
 	    });

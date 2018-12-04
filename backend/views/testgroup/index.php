@@ -62,14 +62,24 @@ $this->params['breadcrumbs'][] = $this->title;
            ['attribute' => 'testgroupname', 
             	'label' => 'Test Group Name ',
              	],
-             	
+            ['attribute' => 'shortcode', 
+            	'label' => 'Short Code',
+            	'value'=> function($model)
+				{
+						if($model->shortcode==""){
+							return "-";	
+						}else{
+							return $model->shortcode;
+						}
+				}
+             	], 	
            ['attribute' => 'price', 
             	'label' => 'Price',
              	],
-           
-		   ['attribute' => 'hsncode', 
+           ['attribute' => 'hsncode', 
             	'label' => 'HSN Code',
              	],
+             	
             ['attribute' => 'isactive', 
             	'label' => 'Active ',
              	'value'=> function($model)
@@ -79,8 +89,6 @@ $this->params['breadcrumbs'][] = $this->title;
 						}else{
 							return "InActive";
 						}
-						
-					
 				}
              	],
             //'created_at',

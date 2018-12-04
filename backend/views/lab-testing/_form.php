@@ -52,15 +52,9 @@ use yii\helpers\Url;
 			 	<?php } ?>
 	
    	</div>
-   	<!-- <div class="col-sm-3">
-			 <?php if($model->isNewRecord){  ?>
- 				<?= $form->field($subcatmodel, 'lab_subcategory')->dropdownlist([],['prompt'=>'Select Sub Category','class'=>'selectpicker', 'data-live-search'=>'true',
-    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('Select Subcategory') ?>   	
-			<?php }else{ ?>
-					<?= $form->field($model, 'subcat_id')->dropdownlist($subcatgorylist,['prompt'=>'Select Sub Category','class'=>'selectpicker', 'data-live-search'=>'true',
-    		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('Select Subcategory') ?>  
-    		<?php } ?>
-	</div> -->
+   	
+   	
+   	
 	<div class="col-sm-4">
 			
 			<?php if($model->isNewRecord){  ?>
@@ -72,26 +66,31 @@ use yii\helpers\Url;
    			<?php }?>
    				
     </div>
-    <!-- <div class="col-sm-4">
+    <div class="col-sm-4">
 	 	<?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['options'=>['159'=>['Selected'=>true]],'class'=>'selectpicker', 'data-live-search'=>'true',
     		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?>
-    </div>  -->
+    	</div>
 	</div>
 	<div class="row">
+		<div class="col-sm-1">
+		 	<?= $form->field($model, 'shortcode')->textInput(['maxlength' => true,'required' => true]) ?>
+    	</div>	  
 		<div class="col-sm-3">
 				<?= $form->field($model, 'test_name')->textInput(['maxlength' => true,'required' => true]) ?>
 					<Span class="test_msg_price" style="color:red"></span>		
 		</div>
 		
 	
-		<!-- <div class="col-sm-1">
+		<div class="col-sm-2">
 			<?= $form->field($model, 'price')->textInput(['maxlength' => true,'required' => true,'onkeypress'=>'javascript:return isNumber(event)'])->label('Price') ?>
 			<Span class="test_msg_alert" style="color:red;text-align:right;"></span>
-		</div> -->	
-		    	  
-    	<div class="col-sm-4">
+		</div>	
+		    
+		
+    	<div class="col-sm-2">
 		 	<?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
     	</div>
+    	
     	
   		 <div class="col-sm-4">
 		<?php
@@ -466,8 +465,11 @@ table#list tbody tr:nth-child(even) {
 	          if(result=="1"){
 	          	alert(testname+" Already exists");
 	          	$(".savecategory").css("pointer-events","none");
+	          	$(".updatecategory").css("pointer-events","none");
+	          	
 	          } else{
 	          	$(".savecategory").css("pointer-events","auto");
+	          	$(".updatecategory").css("pointer-events","auto");
 	          }
 	        }
 	    });

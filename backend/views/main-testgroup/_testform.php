@@ -125,9 +125,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	        url: '<?php echo Yii::$app->homeUrl . '?r=main-testgroup/remove&id='?>'+std,
 	        success: function (data) {
 	        if(data){
+	        	
 	        	 location.reload();
 	        }else{
-	        	Alert(data);
+	        	alert(data);
 	        }
 	      },
 	       

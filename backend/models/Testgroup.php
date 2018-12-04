@@ -37,7 +37,7 @@ class Testgroup extends \yii\db\ActiveRecord
         return [
           //  [[''], 'required'],
             [[ 'price','created_at', 'updated_at' ,'isactive'], 'integer'],
-            [['created_date', 'updated_date','testnameid','testnameid', 'testgroupname','isactive','price','hsncode'], 'safe'],
+            [['created_date', 'updated_date','testnameid','testnameid', 'testgroupname','isactive','price','hsncode','shortcode'], 'safe'],
             [['testgroupname'], 'string', 'max' => 100],
             //[[''], 'string', 'max' => 4],
         ];
@@ -54,6 +54,7 @@ class Testgroup extends \yii\db\ActiveRecord
             'testnameid' => 'Testnameid',
             'price' => 'Price',
             'isactive' => 'Isactive',
+            'shortcode'=>'Short Code',
             'created_at' => 'Created At',
             'created_date' => 'Created Date',
             'updated_at' => 'Updated At',

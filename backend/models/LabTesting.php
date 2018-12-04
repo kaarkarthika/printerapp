@@ -43,7 +43,7 @@ class LabTesting extends \yii\db\ActiveRecord
             [[  'cat_id', 'unit_id',  'isactive' ], 'required'],
             [['testgroupid','subcat_id','created_at', 'updated_at'], 'integer'],
             [['isactive','hsncode'], 'string'],
-            [['created_date','cat_id' , 'unit_id', 'updated_date','updated_at','created_at','testgroupid','test_name','price','hsncode','method','description','subcat_id','result_type','result_type_val' ], 'safe'], // ss code
+            [['created_date','cat_id' , 'unit_id', 'updated_date','updated_at','created_at','testgroupid','test_name','price','hsncode','method','description','subcat_id','result_type','result_type_val','shortcode' ], 'safe'], // ss code
             [['test_name', 'price'], 'string', 'max' => 100],
         ];
     }
@@ -60,6 +60,7 @@ class LabTesting extends \yii\db\ActiveRecord
             'cat_id' => 'Cat ID',
             'subcat_id' => 'Subcat ID',
             'unit_id' => 'Unit ID',
+            'shortcode'=>'Test Code',
             'price' => 'price',
             'isactive' => 'Isactive',
             'created_at' => 'Created At',

@@ -20,7 +20,17 @@ $this->params['breadcrumbs'][] = $this->title;
            ['attribute' => 'testgroupname', 
             	'label' => 'Master Group Name ',
              	],
-             	
+             	['attribute' => 'shortcode', 
+            	'label' => 'Short Code',
+             	'value'=> function($model)
+				{
+						if($model->shortcode==""){
+							return "-";	
+						}else{
+							return $model->shortcode;
+						}
+				}
+             	],
            ['attribute' => 'price', 
             	'label' => 'Price',
              	],

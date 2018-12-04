@@ -3,6 +3,11 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use backend\models\LabTesting; 
+use backend\models\Testgroup;
+use backend\models\LabPayment;
+use backend\models\MainTestgroup;
+use backend\models\LabAddgroup;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\LabPaymentPrime */
@@ -17,19 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </style>
 <div class="lab-payment-prime-view">
 
-    <!-- <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->lab_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->lab_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p> -->
-
+    
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -78,48 +71,94 @@ $this->params['breadcrumbs'][] = $this->title;
     			<td>RATE</td>
     			<td>GST(%)</td>
     			<td>GST(AMT)</td>
-    			<td>Discount<br>(%)</td>
-    			<td>Discount <br>(AMT)</td>
+    			<!--  <td>Discount<br>(%)</td>
+    			<td>Discount <br>(AMT)</td> -->
     			<td>Total</td>
     		</tr>
     	</thead>
     	<tbody>
-    		<?php  			//print_r($labpayment_list);   
+    		<?php    
 	if(!empty($labpayment_list)){  $i=1;
 		foreach($labpayment_list as $val){
+			
 			$split_group=explode('_', $val['lab_test_name']);
 			
-			if($split_group[0]=="LabTesting"){
+			if("LabTesting"==$split_group[0]){
 				$labtest_list=LabTesting::find()->where(['isactive'=>1])->andWhere(['autoid'=>$val['lab_common_id']])->asArray()->one();
-			
-			}else{
-				$labtest_list=LabTesting::find()->where(['isactive'=>1])->andWhere(['autoid'=>$val['lab_testing']])->asArray()->one();
-			}
-			
-		//echo"<pre>"; print_r($val); die;
-			 $tot_rate+=$val['price'];
-			 $tot_gstpre+=$val['gst_percentage'];
-			 $tot_gstval+=$val['gst_amount'];
-			 $tot_discount_percent+=$val['discount_percent'];
-			 $tot_discount_val+=$val['discount_amount'];
-			 $total_price+=$val['net_amount'];
-	?>
-	<tr><td><?php echo $i++; ?></td>
+				
+			?>
+			<tr><td><?php echo $i++; ?></td>
 				<td><?php echo $labtest_list['test_name']; ?></td>
-				<td><?php echo $val['price']; ?></td>
+				<td style="text-align:right"><?php echo $labtest_list['price']; ?></td>
 				<td><?php echo $val['gst_percentage']; ?></td>
 				<td><?php echo $val['gst_amount']; ?></td>
-				<td><?php if($val['discount_percent']!=0){echo $val['discount_percent'];}else{echo"-";} ?></td>
-				<td><?php if($val['discount_amount']!=0){echo $val['discount_amount'];}else{echo"-";} ?></td>
-				<td style="text-align:right"><?php if($val['net_amount']!=0){echo $val['net_amount'];}else{echo"0";} ?></td>
-    			<!-- <td style="text-align:right"><?php echo $val['total_amount']; ?></td> -->
-    				
+				<!-- <td><?php if($val['discount_percent']!=0){echo $val['discount_percent'];}else{echo"-";} ?></td>
+				<td><?php if($val['discount_amount']!=0){echo $val['discount_amount'];}else{echo"-";} ?></td> -->
+				<td style="text-align:right"><?php if($labtest_list['price']!=0){echo $labtest_list['price'];}else{echo"0";} ?></td>
+			<?php	
+						  	$tot_rate+=$labtest_list['price'];
+				$total_price+=$labtest_list['price'];
+			
+			}	
+			if($split_group[0]=="TestGroup"){
+				
+			  $labtest_list=Testgroup::find()->where(['autoid'=>$val['lab_testgroup']])->asArray()->one();
+			  
+			  ?>
+			  	<tr><td><?php echo $i++; ?></td>
+				<td><?php echo $labtest_list['testgroupname']; ?></td>
+				<td style="text-align:right"><?php echo $labtest_list['price']; ?></td>
+				<td><?php echo $val['gst_percentage']; ?></td>
+				<td><?php echo $val['gst_amount']; ?></td>
+				<!-- <td><?php if($val['discount_percent']!=0){echo $val['discount_percent'];}else{echo"-";} ?></td>
+				<td><?php if($val['discount_amount']!=0){echo $val['discount_amount'];}else{echo"-";} ?></td> -->
+				<td style="text-align:right"><?php if($labtest_list['price']!=0){echo $labtest_list['price'];}else{echo"0";} ?></td>
+			  <?php
+			    	$tot_rate+=$labtest_list['price'];
+				$total_price+=$labtest_list['price'];
+			  
+			}
+			if($split_group[0]=="MasterGroup"){
+			
+			 //$lab_list=LabPayment::find()->where(['lab_prime_id'=>$id])->andWhere(['lab_test_name'=>"MasterGroup"])->groupBy(['lab_common_id'])->asArray()->one();
+			 $mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$val['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
+			 $testgroup_list=LabAddgroup::find()->where(['mastergroupid'=>$val['lab_common_id']])->andWhere(['testgroupid'=>$val['lab_testgroup']])->asArray()->all();
+			 foreach ($testgroup_list as $key => $value) {
+			 	 $testgroup_name=Testgroup::find()->select(['testgroupname'])->where(['autoid'=>$value['testgroupid']])->asArray()->one();
+						
+					?>
+			  	<tr><td><?php echo $i++; ?></td>
+				<td><?php echo $testgroup_name['testgroupname']; ?></td>
+				<td style="text-align:right"><?php echo $value['price']; ?></td>
+				<td><?php echo $val['gst_percentage']; ?></td>
+				<td><?php echo $val['gst_amount']; ?></td>
+				<!--  <td><?php if($val['discount_percent']!=0){echo $val['discount_percent'];}else{echo"-";} ?></td>
+				<td><?php if($val['discount_amount']!=0){echo $val['discount_amount'];}else{echo"-";} ?></td> -->
+				<td style="text-align:right"><?php if($value['price']!=0){echo $value['price'];}else{echo"0";} ?></td>
+			  <?php
+			  	$tot_rate+=$value['price'];
+				$total_price+=$value['price'];
+			  		
+			  } 
+			}
+			
+				 //$tot_rate+=$val['price'];
+			 $tot_gstpre+=$val['gst_percentage'];
+			 $tot_gstval+=$val['gst_amount'];
+			 //$tot_discount_percent+=$val['discount_percent'];
+			 //$tot_discount_val+=$val['discount_amount'];
+			// $total_price+=$val['net_amount'];
+			 //echo"<pre>";print_r($val['net_amount']);
+	?>
+					
 	</tr>	
 <?php } ?>
 	<tr class="total"><td></td>
 		<td> Total</td>
-		<td><?php echo $tot_rate; ?></td>
-		<td><?php echo $tot_gstpre; ?></td><td><?php echo $tot_gstval; ?></td><td><?php echo $tot_discount_percent; ?></td><td><?php echo $tot_discount_val; ?></td><td><?php echo $total_price; ?></td>	
+		<td style="text-align:right"><?php echo round($tot_rate); ?></td>
+		<td><?php echo round($tot_gstpre); ?></td><td><?php echo round($tot_gstval); ?></td>
+		<!-- <td><?php echo $tot_discount_percent; ?></td><td><?php echo $tot_discount_val; ?></td> -->
+		<td style="text-align:right"><?php echo round($total_price); ?></td>	
 	</tr>		
 <? }else{ ?>
 	<tr><td>No Records</td></tr>

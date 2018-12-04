@@ -36,7 +36,7 @@ class MainTestgroup extends \yii\db\ActiveRecord
         return [
             [['isactive'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
-            [['created_date', 'updated_date'], 'safe'],
+            [['created_date', 'updated_date','shortcode'], 'safe'],
             [['testgroupname', 'hsncode'], 'string', 'max' => 100],
             [['price'], 'string', 'max' => 20],
             [['isactive'], 'string', 'max' => 4],
@@ -54,6 +54,7 @@ class MainTestgroup extends \yii\db\ActiveRecord
             'price' => 'Price',
             'hsncode' => 'Hsncode',
             'isactive' => 'Isactive',
+            'shortcode'=>'Short Code',
             'created_at' => 'Created At',
             'created_date' => 'Created Date',
             'updated_at' => 'Updated At',

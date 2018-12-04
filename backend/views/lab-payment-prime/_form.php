@@ -6,9 +6,6 @@ use yii\helpers\Url;
 use backend\models\LabTesting;
 use backend\models\Testgroup;
 use backend\models\MainTestgroup;
-/* @var $this yii\web\View */
-/* @var $model backend\models\LabPayment */
-/* @var $form yii\widgets\ActiveForm */
  Html::encode($this->title) ;
  
 ?>
@@ -24,7 +21,7 @@ use backend\models\MainTestgroup;
 
 td div.input-group-btn .btn {
     height: 23px!important;
-   /* padding: 3px 12px!important; */
+   
 }
 
 label.control-label{
@@ -172,25 +169,6 @@ tbody#fetch_update_data input {
 <div class="inpatientblock  desc" style="position: relative;top: 9px;"> 
 						<div class="row">
 						<div class="col-sm-2">
-						<!-- <div class="form-group col-sm-10 ">
-						
-                           <div class="input-group add-on fwidth mr-num">
-                           		<!--input class="form-control mrn inrefrsh" placeholder="MRN Search" name="mr_number" onkeyup="Patient_details(event)" id="mrnumber" type="text" tabindex="8">
-								<?php //= $form->field($main, 'mr_number')->textInput(['required' => true,'class'=>'mrnumber number   mrn inrefrsh','placeholder'=>'MRN Search','id'=>'mrnumber'])->label('MRN Search') ?>
-								<?php //= $form->field($main, 'mr_id')->hiddenInput(['required' => true,'class'=>'mrnumber number form-control mrn inrefrsh','placeholder'=>'MRN Search'])->label(false) ?>
-								<?php //= $form->field($main, 'sub_id')->hiddenInput(['required' => true,'class'=>'mrnumber number form-control mrn inrefrsh','placeholder'=>'MRN Search'])->label(false) ?>
-								<?php //= $form->field($main, 'subvisit_num')->hiddenInput(['required' => true,'class'=>'mrnumber number form-control mrn inrefrsh','placeholder'=>'MRN Search'])->label(false) ?>
-								
-								<input type='hidden' name='HIDDENMRNUMBER' id='hidenmrnumber'>
-								<div class="ipt input-group-btn fetch_record" value="click" >
-									<span class="btn btn-default patient_fetch_details" style="position: relative;top: 11px;left: 0px;"><i class="glyphicon glyphicon-search"></i></span>
-								</div>
-								
-							</div>
-								<span id="mr_validated" style="color: red; display: none;" hidden="">Invalid MR Number</span>
-							   <span class="in_pat_validated" style="color: red; display: none;" hidden="">Enter Patient Record</span>
-                        </div> -->
-						
 						 <div class="form-group col-sm-10 ">
 						<label class="control-label">MRN Search</label><br>  
 						<div class="input-group input-group-sm mr-num">	   
@@ -211,28 +189,17 @@ tbody#fetch_update_data input {
 						
 						
 						<div class="form-group col-sm-2" style="position: relative;  z-index: 1;    padding: 0;">
-							<!--button type="button" style="float: left;background: #800080 !important;   margin-right: 5px;" class="btn  btn-sm" id="patient_history_detils" onclick="Patient_modal()"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> </button-->
 							<button type="button" style=" background: #800080 !important;   margin-top: 23px;color:#fff;" class="btn btn-xs" id="patient_history_detils1" onclick="Patientdetails_modal()"> Details  </button>
-						    <!--button type="button" class="btn btn-default btn-sm" id="history_detils">Details</button-->
-						
+						    
 						</div>
 						</div>
 						
 						<div class="col-sm-9">
 						 <div class="form-group col-sm-3">
-                     
-                           <!--input type="text" placeholder="Patient Name" class="form-control text-cap fwidth mrn inrefrsh" name="in_patient" id="pat_name" required readonly=""-->
                           <?= $form->field($main, 'name')->textInput(['placeholder'=>"Patient Name",'required' => true,'readonly'=>true,'class'=>'form-control text-cap fwidth mrn inrefrsh','id'=>'pat_name'])->label('Patient name') ?>
-                           
-                           
-                                 
                         </div>
 						 <div class="form-group col-sm-2">
-                       
-                           <!--input type="text" placeholder="Mobile Number" class="form-control fwidth mrn number phone inrefrsh" name="in_patient_mobile" onkeypress="phoneno()" id="pat_mob" readonly=""-->
-                        
                         	<?= $form->field($main, 'ph_number')->textInput(['readonly' => true,'class'=>'form-control fwidth mrn number phone inrefrsh','placeholder'=>'Mobile Number','id'=>'pat_mob'])->label('Mobile Number') ?>
-                        
                         </div>
 						<div class="form-group col-sm-3">
                          <label class="control-label">Doctor Name</label>
@@ -244,54 +211,36 @@ tbody#fetch_update_data input {
                                     <option>Mrs</option>
                                  </select>
                               </span>
-                             
-                             
                               <?= $form->field($main, 'physican_name')->textInput(['readonly' => true,'class'=>'form-control mrn inrefrsh text-cap','placeholder'=>'Doctor Name','id'=>'pat_doctor'])->label(false) ?>
-                              
                            </div>
                         </div>
-						
                         <div class=" form-group col-sm-2">
-                        
                              <?= $form->field($main, 'insurance')->dropDownList([],['readonly' => true,'class'=>'form-control fwidth key mrn inrefrsh text-cap','placeholder'=>'Insurance Type','id'=>'pat_insurance'])->label('Insurance Type') ?>
-                          
                         </div>
                         <div class="form-group col-sm-2">
-                        
-                           
                            <?= $form->field($main, 'dob')->textInput(['readonly' => true,'class'=>'form-control fwidth key mrn inrefrsh','placeholder'=>'Date of Birth','id'=>'pat_dob'])->label('Date of Birth') ?>
                         </div>
                         </div>
-						
-						
-						
 						</div>
-						 
-					
                         </div>
-
-						
-						
-						
-
 <?php
-	
 	$lab_testing=LabTesting::find()->where(['isactive'=>'1'])->asArray()->all();
 	$merge_lab_array=array();
 	if(!empty($lab_testing))
 	{
 		foreach ($lab_testing as $key => $value) 
 		{
-			$merge_lab_array[]=array('value' =>$value['test_name'],'value1' => 'LabTesting_'.$value['autoid'],'value2' => $value['price']);
+			$testcode=$value['shortcode']." - ".$value['test_name'];
+			$merge_lab_array[]=array('value' =>$testcode,'value1' => 'LabTesting_'.$value['autoid'],'value2' => $value['price']);
 		}
 	}
-	//$productlist_col_val[] = array('value' => $value['productname'].' - '.$comp_index[$value['composition_id']]['composition_name'],'value1' => $value['productid']);
 	$testgroup=Testgroup::find()->where(['isactive'=>'1'])->asArray()->all();
 	if(!empty($testgroup))
 	{
 		foreach ($testgroup as $key => $value) 
 		{
-			$merge_lab_array[]=array('value'=>$value['testgroupname'],'value1' => 'TestGroup_'.$value['autoid'],'value2' => $value['price']);			
+			$testcode=$value['shortcode']." - ".$value['testgroupname'];
+			$merge_lab_array[]=array('value'=>$testcode,'value1' => 'TestGroup_'.$value['autoid'],'value2' => $value['price']);			
 		}
 	}
 	
@@ -299,28 +248,24 @@ tbody#fetch_update_data input {
 	if(!empty($mastergroup))
 	{
 		foreach ($mastergroup as $key => $value) 
-		{ 
-			$merge_lab_array[]=array('value'=>$value['testgroupname'],'value1' => 'MasterGroup_'.$value['autoid'],'value2' => $value['price']);			
+		{
+			$testcode=$value['shortcode']." - ".$value['testgroupname']; 
+			$merge_lab_array[]=array('value'=>$testcode,'value1' => 'MasterGroup_'.$value['autoid'],'value2' => $value['price']);			
 		}
 	}
 	
 	$merge_lab_json = json_encode($merge_lab_array);
 
 ?>
-
-
-
 </div>	
 </div>
 </div>
 </div>
-
-			<div class="row">
-			<div class="col-sm-12">
-<div class="panel panel-border panel-custom">
-<div class="panel-heading">
-
-</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-border panel-custom">
+			<div class="panel-heading">
+			</div>
 <div class="panel-body "  >
          <div class="col-sm-9">
 		 <div class=" form-group  col-sm-9" style="margin: auto !important;width: 100%;">
@@ -375,7 +320,7 @@ tbody#fetch_update_data input {
 								<div class="form-group field-total_sub_total">
 									<input type="text" id="bill_total" class="  form-control total_sub_total ansrefrsh text-right" name="LabPaymentPrime[bill_total]" readonly="">
 								</div>
-								<!-- <?= $form->field($main, 'overall_sub_total')->textInput(['readonly' => true,'class'=>'  form-control total_sub_total ansrefrsh text-right','id'=>'total_sub_total'])->label(' ') ?> -->
+								
 								
 								</td>
 							
@@ -425,19 +370,7 @@ tbody#fetch_update_data input {
 						</tr>
 					  </table>
 					   
-					  
-					  
-				  <!-- <div class="form-group col-sm-12">
-					<label class="">Authority</label>
-					    <select class="form-control">
-							<option>-Select-</option>
-							<option>Dinesh</option>
-							<option>Select 1 </option>
-							<option>Select 2</option>
-						</select>
-						<!-- <input type="text" class="form-control Authority ansrefrsh" name="authority" id="authority"> -->
-				  <!-- </div> -->
-               <div class="col-sm-12">
+				<div class="col-sm-12">
 				  <?= $form->field($main,'authority')->dropdownlist($authority_master,['class'=>'form-control cus-fld Authority ansrefrsh','prompt'=>'Select'])->label('Authority')?>
                </div>
 
@@ -465,13 +398,7 @@ tbody#fetch_update_data input {
 				  
 					 
 				     <div class="row">
-					   <!-- <div class="col-sm-4">
-				          <?= $form->field($main, 'overall_item')->textInput(['readonly' => true,'class'=>'form-control   ansrefrsh','id'=>' '])->label('ID') ?>
-					    </div>
-					    <div class="col-sm-4">
-				          <?= $form->field($main, 'overall_item')->textInput(['readonly' => true,'class'=>'form-control total_items ansrefrsh','id'=>'no_of_items'])->label('QTY') ?>
-					    </div> -->
-						
+					
 						<div class="col-sm-4">
 							 <?//= $form->field($main, 'overall_sub_total')->textInput(['readonly' => true,'class'=>'form-control total_sub_total ansrefrsh','id'=>'total_sub_total'])->label('Price') ?>
 						</div>
@@ -502,29 +429,10 @@ tbody#fetch_update_data input {
 					     </div>
 					    </div>
 					
-				    <!-- 
-                      <div class="form-group">	
-					<label class="">Remarks</label>
-						<textarea class="form-control remarks ansrefrsh" style="min-height: 60px;" name="remarks" id="remarks"></textarea>
-				  </div>
-				  <div class="form-group">
-					<label class="">Authority</label>
-						<input type="text" class="form-control Authority ansrefrsh" name="authority" id="authority">
-				  </div>				     
-					-->
-		     
-				  
-				  
-				  
-				 
-				  </div>
+				    	  </div>
 				  </div>
 				  </div>
                
-			   
-			   
-			   
-			   
 			   </div>
 			 
 			   
@@ -657,45 +565,13 @@ tbody#fetch_update_data input {
   </div>
 </div> 
  <div id="load1" style='display:none;text-align: center;position: relative;'><img  style="width:15%;margin:auto;    position: absolute; left: 34%;top: 55px;z-index: 9999;"  src="<?= Url::to('@web/loader1.gif') ?>" /></div>
- 
- 
- 
- 
- 
-<!-- 
-		
-<div class="row finanical">
 
-			<fieldset class="scheduler-border  ">
-			<legend class="scheduler-border form-head">FINANCIAL DETAILS</legend>
-			
-			
-			
-			
-			
-		<div class="row">	
-			
-			<div class="col-sm-3 patient_details" style="border-right: 1px solid #dee6e4;">
-				<div class="inner-des">
-					<?//= $form->field($main, 'overall_item')->textInput(['readonly' => true,'class'=>'form-control total_items ansrefrsh','id'=>'no_of_items'])->label('QTY') ?>
-					<?//= $form->field($main, 'overall_sub_total')->textInput(['readonly' => true,'class'=>'form-control total_sub_total ansrefrsh','id'=>'total_sub_total'])->label('RATE') ?>
-					<!-- <?= $form->field($main, 'overall_item')->textInput(['readonly' => true,'class'=>'form-control total_items ansrefrsh','id'=>'no_of_items_qty'])->label('QTY') ?> 
-					<?= $form->field($main, 'overall_sub_total')->textInput(['readonly' => true,'class'=>'form-control total_sub_total ansrefrsh','id'=>'total_sub_total1'])->label('Rate') ?>-->
 					<div class="form-group">
-						
-						
 						<?//= $form->field($main, 'overall_dis_percent')->textInput(['class'=>'form-control total_sub_total ansrefrsh number','id'=>'total_discountvaluetype','onkeyup'=>'DiscountPercent(this,event);'])->label('Less Discount(%)') ?>
-						
-						
 					</div>
 					<div class="form-group">
-						
-						
-						
 							<?//= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total ansrefrsh number','id'=>'total_discountamount','onkeyup'=>'DiscountAmount(this,event);'])->label('Less Disc Amount') ?>				
 					</div>
-			 
-	 
 			<div class="col-sm-3 " style="border-right: 1px solid #dee6e4;">
 				<div class="inner-des">
 					<?//= $form->field($main, 'overall_net_amt')->textInput(['readonly' => true,'class'=>'form-control total-netamt ansrefrsh ','id'=>'total_net_amount','required' => true])->label('Net Amount') ?>
@@ -709,30 +585,7 @@ tbody#fetch_update_data input {
 					
 					</div>
 			</div>
-			<!--<div class="col-sm-3 " style="border-right: 1px solid #dee6e4;">
-				<div class="inner-des">
-				  <div class="form-group">	
-					<label class="">Remarks</label>
-						<textarea class="form-control remarks ansrefrsh" style="min-height: 60px;" name="remarks" id="remarks"></textarea>
-				  </div>
-				  <div class="form-group">
-					<label class="">Authority</label>
-						<input type="text" class="form-control Authority ansrefrsh" name="authority" id="authority">
-				  </div>					
-				</div>
-			</div> -->
-			<!-- <div class="col-sm-3" style="border-right: 1px solid #dee6e4;">
-				<div class="inner-des button-select-re">
-				<button type="button" class="btn btn-success save_billing" id='saves_sucess' onclick="SaveLabBill();">Save</button>
-	        	<button type="button" class="btn btn-success remove_all">Clear</button>
-	        	<button type="button" class="btn btn-success remove_all">Close</button>
-	        				
-			</div>
-		</div>  
-		</fieldset>
-		</div>	
-		</div>	-->
-	
+			
     
 
 
@@ -838,7 +691,7 @@ $(".list-unstyled").css("display","none");
  		displayText: function(item)
  		{ 
  		   row=item.value1;
- 			//console.log(row[0]);
+ 			
     		if(row[0]=="L"){
     			var text ="<span class='first_gr'> T </span><span >"+item.value+"</span><span >"+item.value2+"</span>";
     		}if(row[0]=="T"){
@@ -846,7 +699,6 @@ $(".list-unstyled").css("display","none");
     		}if(row[0]=="M"){
     			var text ="<span class='first_gr'> MG </span><span >"+item.value+"</span><span >"+item.value2+"</span>";
     		}
-    		//alert($(text).text());
     		
     		 return (text) ; 
  		},
@@ -1076,7 +928,7 @@ function formatDate1(date)
           if(!object[item])
               object[item] = 0;
             object[item] += 1;
-        })
+         })
 
         for (var prop in object) {
            if(object[prop] >= 2) {
@@ -1095,7 +947,7 @@ function formatDate1(date)
  	$('#medicines').keyup(function(e)
    	{
 	 	 var prime_id=$('#name').val();  
-	 	// alert(prime_id);
+	 
 	 	 var keycode = (e.keyCode ? e.keyCode : e.which);
 	 	 if(e.keyCode == 13 && prime_id != '')
 	     {
@@ -1104,31 +956,24 @@ function formatDate1(date)
 	        url: "<?php echo Yii::$app->homeUrl . "?r=lab-payment-prime/labset&id=";?>"+prime_id,
 	        success: function (result) 
 	        { 
-	        	
 	        	if(result != '')
 	        	{
 	        		var verify=true;
-					/*$(".calculation").each(function() 
+					$(".calculation").each(function() 
 					{
-						
 					  	var data_id=$(this).attr('dataid');
-					  
 					  	if(data_id == prime_id)
 					  	{
 					  		Alertment('Data Already Exist');
 					  		verify = false;
 					  		return false;
-					  	} 
-					});	*/
-					
-					
-									
+					  	}
+					});					
 					
 					if(verify == true)
 					{
-						$('#fetch_update_data').append(result);
 						
-						//New Code of Duplicate Removed
+						$('#fetch_update_data').append(result);
 						var tab_length=$('#fetch_update_data tr').length;
 						
 						if(tab_length > 0)
@@ -1137,30 +982,39 @@ function formatDate1(date)
 							var duplicated=[];
 							var adding=[];
 							var seen = {};
-							$(".calculation").each(function() 
-							{
-								var data_id=$(this).attr('dataida');
-								duplicated.push(data_id);
-							});	
 							
-							
-							adding=find_duplicate_in_array(duplicated);
-							
-							
-							
-							$(".calculation").each(function () {
-						        var tdText = $(this).attr('dataida');
-						        
-						        $("#fetch_update_data tr").filter(function () { 
-						                return tdText == $(this).attr('dataida');
-						            }).not(":first").remove();
-						
-						    });
-							
-							
-							
-						}
-						
+								$(".calculation").each(function() 
+								{
+									var data_addid=$(this).attr('dataid');
+						  			var data1=data_addid.split("_")[0];
+        							var data2=data_addid.split("_")[1];
+        							//alert(data1);
+        							// alert(data2);
+        							if(data1 != 'LabTesting')
+        							{
+        								var data_id=$(this).attr('dataida');
+										duplicated.push(data_id);
+									}
+								});	
+								
+								adding=find_duplicate_in_array(duplicated);
+								
+								$(".calculation").each(function () {
+									var data_addid=$(this).attr('dataid');
+						  			var data1=data_addid.split("_")[0];
+        							var data2=data_addid.split("_")[1];
+        							if(data1 != 'LabTesting')
+        							{
+        								var tdText = $(this).attr('dataida');
+							        	
+							        	$("#fetch_update_data tr").filter(function () { 
+							                return tdText == $(this).attr('dataida');
+							            }).not(":last").remove();
+							          
+									}
+							  	});
+						    
+        				}
 						
 						var discount_per=$('#total_discountvaluetype').val();
 						//alert(discount_per);
@@ -1210,7 +1064,7 @@ function formatDate1(date)
         							gst_amt=gst_amt+parseFloat($('#sgst_amt_lab'+data2).val());	
         						}
         						
-        						//alert($('#net_lab'+data2).val());
+        						
         						//Net Amount
         						if(isNaN(parseFloat($('#net_lab'+data2).val())))
         						{
@@ -1221,11 +1075,9 @@ function formatDate1(date)
         							net=net+parseFloat($('#net_lab'+data2).val());	
         						}
         					}
-        					/* else if(data1 == 'TestGroup')
+        					else if(data1 == 'TestGroup')
         					{
         						//Price Amount
-        						
-        						alert(parseFloat($('#price_test_group'+data2).val()));
         						if(isNaN(parseFloat($('#price_test_group'+data2).val())))
    								{
         							price=price+0;
@@ -1297,6 +1149,8 @@ function formatDate1(date)
         							gst_amt=gst_amt+parseFloat($('#sgst_amt_master'+data2).val());	
         						}
         						
+        						
+        						
         						//Net Amount
         						if(isNaN(parseFloat($('#net_master_group'+data2).val())))
         						{
@@ -1306,18 +1160,19 @@ function formatDate1(date)
         						{
         							net=net+parseFloat($('#net_master_group'+data2).val());	
         						}
-        					} */
+        					}
         					i++;
 						});
 						
 						$('#no_of_items').val(i);
-						$('#total_gst_amount').val(gst_amt);
-						$('#total_gst_amount1').val(gst_amt);
-						$('#bill_total').val(price+gst_amt);
+						$('#total_gst_amount').val(Math.round(gst_amt.toFixed(2)));
+						$('#total_gst_amount1').val(Math.round(gst_amt.toFixed(2)));
+						var billtotal=price+gst_amt;
+						$('#bill_total').val(Math.round(billtotal.toFixed(2)));
 						
-						$('#total_sub_total').val(price);
-						$('#total_net_amount').val(net);
-						$('#total_net_amount1').val(net);
+						$('#total_sub_total').val(Math.round(price.toFixed(2)));
+						$('#total_net_amount').val(Math.round(net.toFixed(2)));
+						$('#total_net_amount1').val(Math.round(net.toFixed(2)));
 						
 						
 						
@@ -1326,25 +1181,18 @@ function formatDate1(date)
 						
 						if(insurance=="1" || insurance=="3" ){
 							$('#total_paid_amount').attr('readonly','readonly');
-							document.getElementById("total_discountvaluetype").disabled = true;
-							document.getElementById("total_discountamount").disabled = true;
-							//	$('#total_paid_amount').attr('readonly','readonly');
 							$('#total_paid_amount').val('0');
-							$('#total_due_amount').val(net);
+							$('#total_due_amount').val(Math.round(net.toFixed(2)));
 						}else {
-							$('#total_paid_amount').attr('readonly',false);
-							document.getElementById("total_paid_amount").disabled = false;
-							document.getElementById("total_discountvaluetype").disabled = false;
-							document.getElementById("total_discountamount").disabled = false;
 							
-							$('#total_paid_amount').val(net);
+							$('#total_paid_amount').val(Math.round(net.toFixed(2)));
 							$('#total_due_amount').val('0');
 							
 						}
 					
 						
 						$('#no_of_items_qty').val(i);
-						$('#total_sub_total1').val(price);
+						$('#total_sub_total1').val(Math.round(price.toFixed(2)));
 						
 						$('#name').val('');
 						$('.stock_no').hide();
@@ -1355,7 +1203,7 @@ function formatDate1(date)
 						
 					}
 	        	}
-	        }
+	         }
 	    	});
 	     }
 	     else if(e.keyCode == 27)
@@ -1366,6 +1214,10 @@ function formatDate1(date)
 		 }
     });
     
+    
+     
+ 
+ 
     
     $("body").on('keypress', '.number', function (e) 
 	{
@@ -1388,8 +1240,6 @@ function formatDate1(date)
         var data2=data_addid.split("_")[1];
         var item_less=1;
   		
-  		alert(data1);
-  		alert(data2);
   		
   		var total_items=parseInt($('#no_of_items').val());
 		var total_gst=parseFloat($('#total_gst_amount').val());
@@ -1408,40 +1258,37 @@ function formatDate1(date)
          }
         else if(data1 == 'TestGroup')
         {
-        /*	var price_test_lab=parseFloat($('#price_test_group'+data2).val());
+        	var price_test_lab=parseFloat($('#price_test_group'+data2).val());
 			var cgst_amt_test=parseFloat($('#cgst_amt_test'+data2).val());
         	var sgst_amt_test=parseFloat($('#sgst_amt_test'+data2).val());
         	var gst_lab=cgst_amt_test+sgst_amt_test;
-        	var net_lab=parseFloat($('#net_test_group'+data2).val()); */
-        	var price_test_lab=parseFloat($('#price_test_lab'+data2).val());
-			var cgst_lab_amt=parseFloat($('#cgst_amt_lab'+data2).val());
-			var sgst_lab_amt=parseFloat($('#sgst_amt_lab'+data2).val());
-        	var gst_lab=cgst_lab_amt+sgst_lab_amt;
-        	var net_lab=parseFloat($('#net_lab'+data2).val());
+        	var net_lab=parseFloat($('#net_test_group'+data2).val()); 
         	
         }
         else if(data1 == 'MasterGroup')
         {
-        /* 	var price_test_lab=parseFloat($('#price_master_group'+data2).val());
+        	
+         	/* var price_test_lab=parseFloat($('#price_test_group'+data2).val());
+			var cgst_amt_test=parseFloat($('#cgst_amt_test'+data2).val());
+        	var sgst_amt_test=parseFloat($('#sgst_amt_test'+data2).val());
+        	var gst_lab=cgst_amt_test+sgst_amt_test;
+        	var net_lab=parseFloat($('#net_test_group'+data2).val()); */
+        	
+        	var price_test_lab=parseFloat($('#price_master_group'+data2).val());
 			var cgst_amt_test=parseFloat($('#cgst_amt_master'+data2).val());
         	var sgst_amt_test=parseFloat($('#sgst_amt_master'+data2).val());
         	var gst_lab=cgst_amt_test+sgst_amt_test;
-        	var net_lab=parseFloat($('#net_master_group'+data2).val()); */
-        	var price_test_lab=parseFloat($('#price_test_lab'+data2).val());
-			var cgst_lab_amt=parseFloat($('#cgst_amt_lab'+data2).val());
-			var sgst_lab_amt=parseFloat($('#sgst_amt_lab'+data2).val());
-        	var gst_lab=cgst_lab_amt+sgst_lab_amt;
-        	var net_lab=parseFloat($('#net_lab'+data2).val());
+        	var net_lab=parseFloat($('#net_master_group'+data2).val());  
         	
         }
         
        
-        $('#no_of_items').val(parseInt(total_items-item_less));
-		$('#total_gst_amount').val(parseFloat(total_gst-gst_lab));
-		$('#total_sub_total').val(parseFloat(total_sub_total-price_test_lab));
-		$('#total_net_amount').val(parseFloat(total_net_amount-net_lab));
-		$('#total_net_amount1').val(parseFloat(total_net_amount-net_lab));
-		$('#total_paid_amount').val(parseFloat(total_net_amount-net_lab));
+        $('#no_of_items').val(parseInt(total_items-item_less).toFixed(2));
+		$('#total_gst_amount').val(parseFloat(total_gst-gst_lab).toFixed(2));
+		$('#total_sub_total').val(parseFloat(total_sub_total-price_test_lab).toFixed(2));
+		$('#total_net_amount').val(parseFloat(total_net_amount-net_lab).toFixed(2));
+		$('#total_net_amount1').val(parseFloat(total_net_amount-net_lab).toFixed(2));
+		$('#total_paid_amount').val(parseFloat(total_net_amount-net_lab).toFixed(2));
 		$('#total_due_amount').val(parseFloat($('#total_net_amount').val())-parseFloat($('#total_paid_amount').val()));
 		
 		$('#bill_total').val(parseFloat(total_sub_total-price_test_lab)+parseFloat(total_gst-gst_lab));

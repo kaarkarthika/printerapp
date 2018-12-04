@@ -1680,7 +1680,8 @@ else
 		['like','purchase_data.invoice_no',$s_val],
 		['like','vendor.vendorname',$s_val]]
 		)
-        ->limit(100000)->all(); 
+      ->limit($length)
+		->offset($sfd)->all();
 		$command1 = $query_da->createCommand();
 		$data1 = $command1->queryAll();
 		//echo '<pre>';
@@ -1770,5 +1771,107 @@ if(!empty($purchase_data_fetch))
 }
 		}
 	}
+	
+	
+	
+	public function actionProductdetails()
+    {
+    	
+		
+		
+    	$sfd=0;
+    	if(isset($_POST['start']) && $_POST['start']!="0"){
+    		$sfd=$_POST['start'];
+    	}
+    	$draw=0;
+		if(isset($_POST['draw']) && $_POST['draw']!=""){
+		  $draw=$_POST['draw'];
+		}
+		$length=10;
+		if(isset($_POST['length']) && $_POST['length']!=""){
+		  $length=$_POST['length'];
+		}
+		$s_val='';
+		if(isset($_POST['search'])){
+		  $s_val=$_POST['search']['value'];
+		}
+		
+		
+		
+		
+		$query = new Query;
+		$query	->select([
+        'product.productid','product.productname','product.product_typeid','product.hsn_code','producttype.product_typeid','producttype.product_type','taxgrouping_log.taxgroupid','taxgrouping_log.tax'])  
+        ->from('product')
+        ->join('LEFT OUTER JOIN', 'producttype',
+            'product.product_typeid =producttype.product_typeid')
+		->join('LEFT OUTER JOIN', 'taxgrouping_log',
+            'product.hsn_code =taxgrouping_log.taxgroupid')
+					
+        ->where(['taxgrouping_log.is_active'=>'1'])
+        ->where(['or',
+		['like','product.productname',$s_val],
+		['like','producttype.product_type',$s_val],
+		['like','taxgrouping_log.tax',$s_val]]
+		)
+        ->limit(100000)->all(); 
+		$command = $query->createCommand();
+		$data = $command->queryAll();
+		
+		//echo $query->createCommand()->sql;
+		
+		$query_da = new Query;
+		$query_da	->select([
+        'product.productid','product.productname','product.product_typeid','product.hsn_code','producttype.product_typeid','producttype.product_type','taxgrouping_log.taxgroupid','taxgrouping_log.tax'])  
+        ->from('product')
+        ->join('LEFT OUTER JOIN', 'producttype',
+            'product.product_typeid =producttype.product_typeid')
+		->join('LEFT OUTER JOIN', 'taxgrouping_log',
+            'product.hsn_code =taxgrouping_log.taxgroupid')
+					
+        ->where(['taxgrouping_log.is_active'=>'1'])
+        ->where(['or',
+		['like','product.productname',$s_val],
+		['like','producttype.product_type',$s_val],
+		['like','taxgrouping_log.tax',$s_val]]
+		)
+         ->limit($length)
+		->offset($sfd)->all();
+		$command1 = $query_da->createCommand();
+		$data1 = $command1->queryAll();
+		
+		
+			$response=array();
+			
+			if(!empty($data1))
+			{
+				$fetch_array=array();
+				$i=0;
+				$responce['draw']=$draw;
+				$responce['recordsTotal']= $length;
+				$responce['recordsFiltered']= count($data);
+				foreach ($data1 as $key => $value) 
+				{
+					// $responce->rows[$i]=array('mr_no'=>$value['mr_no'],'patientname'=>$value['patientname'],
+													// 'par_relationname'=>$value['par_relationname'],'pat_mobileno'=>$value['pat_mobileno']);
+					$responce['data'][]=array("DT_RowId"=>$value['productid'],"productname"=>$value['productname'],"producttype"=>$value['product_type'],"gst"=>$value['tax']);
+					$i++;
+				}
+			
+				return json_encode($responce);
+			die;
+				
+			}
+
+			
+	}
+	
+	public function actionProductdetailsfetch()
+    {
+    	
+		
+    	
+	}
+	
 	
 }
