@@ -54,6 +54,9 @@ use backend\models\InCategorygroup;
 use backend\models\InRoomtypes;
 use backend\models\InCategory;
 use backend\models\Taxgrouping;
+use backend\models\ProductPackagemaster;
+use backend\models\ProductPackageLog;
+use yii\db\Query;
 
 /**
  * InSalesController implements the CRUD actions for InSales model.
@@ -338,6 +341,9 @@ class InSalesController extends Controller
         $patient=new Newpatient();
     	$subvisit=SubVisit::find()->where(['mr_number'=>$mrnumber])->andWhere(['date(created_at)' => date('Y-m-d')])->all();
 	    $saledatainc=InSales::find()->orderBy(['opsaleid' => SORT_DESC])->one();
+		
+	
+		
     	if(!empty($saledatainc))
     	{
         	$saleincrement=$saledatainc->opsaleid+1;    
@@ -348,6 +354,7 @@ class InSalesController extends Controller
                 'model'=>$product,
                 'billformat' => $billformat,
                 'patient' => $patient,
+                'product_packagemaster' => $product_packagemaster,
         ]); 
     
      } 
@@ -651,7 +658,63 @@ class InSalesController extends Controller
             return 'invalid';       
         }   
     }
-
+	
+	
+	 public function actionFetchmrnumberdatatable($mrnumber)
+    {
+        $mrnumber = json_decode($mrnumber);
+        
+        
+        $fetch_element=array();
+        
+        $in_registeration=InRegistration::find()->where(['autoid'=>$mrnumber])->orderBy(['autoid' => SORT_DESC])->one();
+        
+        if(!empty($in_registeration))
+        {
+           $in_registeration_active=InRegistration::find()->where(['autoid'=>$mrnumber])->andWhere(['is_active'=>1])->orderBy(['autoid' => SORT_DESC])->asArray()->one();
+		 
+		   if(!empty($in_registeration_active['category_type']))
+			{
+				$in_categorygroup=InCategorygroup::find()->where(['autoid'=>$in_registeration_active['category_type']])->one();
+				
+				$in_roomtypes_map=ArrayHelper::map(InRoomtypes::find()->asArray()->all(),'autoid','room_types');
+				$in_category_map=ArrayHelper::map(InCategory::find()->asArray()->all(),'autoid','category_name');
+				
+				$category=$in_category_map[$in_categorygroup['category_id']];
+				$roomtype=$in_roomtypes_map[$in_categorygroup['room_typeid']];	
+			
+			}
+		 	
+		   if(!empty($in_registeration_active))
+		   {
+			   $insurnce=ArrayHelper::map(Insurance::find()->asArray()->all(),'insurance_typeid','insurance_type');
+			   $patient_type=ArrayHelper::map(PatientType::find()->asArray()->all(),'type_id','patient_type');
+			   $physician_master=ArrayHelper::map(Physicianmaster::find()->asArray()->all(),'id','physician_name');   	
+		 	   $specialistdoctor=ArrayHelper::map(Specialistdoctor::find()->asArray()->all(),'s_id','specialist');   	
+		 	   $new_patient=Newpatient::find()->where(['patientid'=>$in_registeration['mr_no']])->asArray()->one();   	
+		 	   	
+				
+	           $fetch_element[0]=$in_registeration_active;
+			   $fetch_element[1]=$insurnce;
+			   $fetch_element[2]=$patient_type;
+			   $fetch_element[3]=$physician_master;
+			   $fetch_element[4]=$specialistdoctor;
+			   $fetch_element[5]=$new_patient;
+			   $fetch_element[6]=$this->Getagebriefscript($in_registeration['dob']);
+			   $fetch_element[7]=array('1'=>$in_registeration_active['paytype'],'2'=>$in_registeration_active['floor_no'],'3'=>strtoupper($category),'4'=>strtoupper($roomtype));
+	           return json_encode($fetch_element,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);   
+	       }
+		   else 
+		   {
+				return 'discharge';	
+		   } 
+            
+        }
+        else 
+        {
+            return 'invalid';       
+        }   
+    }
 
     //Updated Tablet
     public function actionUpdateTablet($tablet_id,$tablet_qty,$tablet_type)
@@ -977,7 +1040,11 @@ class InSalesController extends Controller
     
     public function actionMedicinefetch($product_id)
 	{
-			$Stock_code=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['productid'=> $product_id]) -> all();
+		
+		//Session of Branch Id
+		$session = Yii::$app->session;
+		$branch_id=$session['branch_id'];
+			$Stock_code=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['productid'=> $product_id])->andWhere(['branch_id'=>$branch_id]) -> all();
 				
 			if(!empty($Stock_code))
 			{	
@@ -986,9 +1053,7 @@ class InSalesController extends Controller
 					$stock_p_id[]=$key['stockid'];
 				}
 				
-				//Session of Branch Id
-				$session = Yii::$app->session;
-				$branch_id=$session['branch_id'];
+				
 				
 				$overallstock=Stockresponse::find()->where(['IN','stockid',$stock_p_id])->andWhere(['!=', 'total_no_of_quantity', 0])->andWhere(['branch_id'=>$branch_id])->orderBy(['expiredate'=>SORT_ASC])->asArray()->all();
 				//$overallstock=Stockresponse::find()->where(['IN','stockid',$stock_p_id])->andWhere(['!=', 'total_no_of_quantity', 0])->orderBy(['expiredate'=>SORT_ASC])->asArray()->all();
@@ -1568,14 +1633,23 @@ return json_encode($ot);
     
     public function actionGetunitquantity($id)
     {
-        $unit_id = json_decode($id);
-        $rows=Unit::find()->where(['unitid'=>$unit_id])->one();
-        $get_name=array();
-        $get_name[0]=$rows->no_of_unit;
-        $get_name[1]=$rows->unitvalue;
-        
+    	$unit_id = json_decode($id);
+		$rows=Unit::find()->where(['unitid'=>$unit_id])->one();
+		$get_name=array();
+		
+		if($rows->is_tablet == 1)
+		{
+			$get_name[0]=1;
+			$get_name[1]=$rows->unitvalue;
+		}
+		else 
+		{
+			$get_name[0]=$rows->no_of_unit;
+			$get_name[1]=$rows->unitvalue;
+		}
+		
        return json_encode($get_name);
-    }
+	}
 
     //Fetch Bill Number
     public function actionGetbillcounter($id)
@@ -3098,9 +3172,9 @@ return json_encode($ot);
     
     
     //OP Returns New Code Alban 24-08-2018
-    public function actionOpreturns($id="")
+  	/*public function actionOpreturns($id="")
     {
-    	print_r('IP Return Under Testing');die;
+    	
         if(is_numeric($id))
         {
            $id=$id;
@@ -3108,7 +3182,8 @@ return json_encode($ot);
         else
         {
            $id=base64_decode(urldecode($id));
-        }   //echo $id; die;
+        } 
+		
         $product=new Product();
         $patient=new Newpatient();
         $session = Yii::$app->session;
@@ -3384,11 +3459,337 @@ return json_encode($ot);
                     
             ]);
         }
-    }
+    }*/
         
     
-    
-    
+    //ready
+    public function actionOpreturns($id="")
+    {
+    	if(is_numeric($id))
+		{
+		   $id=$id;
+		}
+		else
+		{
+		   $id=base64_decode(urldecode($id));
+		}
+			
+		$product=new Product();
+		$patient=new Newpatient();
+		$session = Yii::$app->session;
+		
+		if(Yii::$app -> request -> post())
+		{
+			
+			$saledata_updated=InSales::find()->where(['opsaleid'=>Yii::$app -> request -> post('SALE_ID')])->one();
+			
+			if(!empty($saledata_updated))
+			{
+				
+				$previous_net_amount=$saledata_updated->overalltotal;
+				$previous_quantity=$saledata_updated->tot_quantity;
+				
+				//PREVIOUS GST PERCENTAGE
+				$previous_gst_percentage=$saledata_updated->total_gst_percent;
+				$previous_cgst_percentage=$saledata_updated->total_cgst_percent;
+				$previous_sgst_percentage=$saledata_updated->total_sgst_percent;
+				
+				//PREVIOUS GST VALUE
+				$previous_gst_value=$saledata_updated->totalgstvalue;
+				$previous_cgst_value=$saledata_updated->totalcgstvalue;
+				$previous_sgst_value=$saledata_updated->totalsgstvalue;
+				
+				//Discount Amount
+				$previous_discount_percentage=$saledata_updated->overalldiscountpercent;
+				$previous_discount_value=$saledata_updated->overalldiscountamount;
+				
+				$saledata_updated->overalltotal=$previous_net_amount-$_POST['total_net_amount'];
+				$saledata_updated->tot_quantity=$previous_quantity-$_POST['total_quantity'];
+				$saledata_updated->totalgstvalue=$previous_gst_value-$_POST['total_gst'];
+				$saledata_updated->totalcgstvalue=$previous_cgst_value-array_sum($_POST['cgst_value']);
+				$saledata_updated->totalsgstvalue=$previous_sgst_value-array_sum($_POST['sgst_value']);
+				
+				if(!empty($previous_discount_percentage))
+				{
+					$saledata_updated->overalldiscountamount=$previous_discount_value-$_POST['total_disc_original'];
+					//$saledata_updated->overalldiscountpercent=$previous_discount_percentage-$_POST['overall_discount_percent'];
+				}
+				
+				
+				if($_POST['INSURANCE'] == 1 || $_POST['INSURANCE'] == 2 || $_POST['INSURANCE'] == 3)
+				{
+					//Paid Amount
+					$previous_due_amount=$saledata_updated->due_amt;
+					$saledata_updated->due_amt=$previous_due_amount - $_POST['total_paid_amount'];
+				}
+				else 
+				{
+					//Paid Amount
+					$previous_paid_amount=$saledata_updated->paid_amt;
+					$saledata_updated->paid_amt=$previous_paid_amount - $_POST['total_paid_amount'];
+				}
+				
+				
+				
+				
+				if($saledata_updated->save())
+				{
+					if(!empty($_POST['primeid']))
+					{
+						foreach ($_POST['primeid'] as $key => $value) 
+						{
+							$saledetails_updated=InSaledetail::find()->where(['opsale_detailid'=>$value])->one();
+							
+							$previous_saledetail_product=$saledetails_updated->productqty;
+							$previous_saledetail_priceperqty=$saledetails_updated->priceperqty;
+							$previous_saledetail_gstvalue=$saledetails_updated->gstvalue;
+							$previous_saledetail_cgstvalue=$saledetails_updated->cgstvalue;
+							$previous_saledetail_sgstvalue=$saledetails_updated->sgstvalue;
+							$previous_saledetail_total_price_perqty=$saledetails_updated->total_price_perqty;
+							
+							//Discount
+							$previous_saledetail_discountvalue=$saledetails_updated->discountvalue;
+							$previous_saledetail_discountvalueperquantity=$saledetails_updated->discountvalueperquantity;
+							
+							
+							//Updated
+							$saledetails_updated->productqty=$previous_saledetail_product-$_POST['quantity'][$key];
+							$saledetails_updated->priceperqty=$previous_saledetail_priceperqty-$_POST['price'][$key];
+							$saledetails_updated->gstvalue=$previous_saledetail_gstvalue-($_POST['cgst_value'][$key]+$_POST['sgst_value'][$key]);
+							$saledetails_updated->cgstvalue=$previous_saledetail_cgstvalue-$_POST['cgst_value'][$key];
+							$saledetails_updated->sgstvalue=$previous_saledetail_sgstvalue-$_POST['sgst_value'][$key];
+							$saledetails_updated->total_price_perqty=$previous_saledetail_total_price_perqty-$_POST['total_amt_cal'][$key];
+							if(!empty($previous_saledetail_discountvalue))
+							{
+								//$saledetails_updated->discountvalue=$previous_saledetail_discountvalue-$_POST['discount_value'][$key];
+								$saledetails_updated->discountvalueperquantity=$previous_saledetail_discountvalueperquantity-$_POST['discountext_value'][$key];
+								
+							}
+							if($saledetails_updated->save())
+							{
+								
+								$stockdetails_updated=Stockmaster::find()->where(['stockid'=>$_POST['stock_id'][$key]])->one();
+								$add_total_qty=$stockdetails_updated->total_no_of_quantity+$_POST['quantity'][$key];
+								Stockmaster::updateAll(['total_no_of_quantity' => $add_total_qty,'updated_on' => date('Y-m-d H:i:s'),'updated_ipaddress'=> $_SERVER['REMOTE_ADDR'],'updated_by'=>$session['user_id']], ['stockid' => $_POST['stock_id'][$key]]);
+								
+								$overallstock_updated=Stockresponse::find()->where(['stockresponseid'=> $_POST['stock_respose_id'][$key]])->one();
+								$add_overall_total_qty=$overallstock_updated->total_no_of_quantity+$_POST['quantity'][$key];
+								Stockresponse::updateAll(['total_no_of_quantity' => $add_overall_total_qty,'updated_on' => date('Y-m-d H:i:s'),'updated_ipaddress'=> $_SERVER['REMOTE_ADDR'],'updated_by'=>$session['user_id']], ['stockresponseid' => $_POST['stock_respose_id'][$key]]);
+							}
+						}
+
+						$auto_get=AutoidTable::find()->where(['auto'=>21])->asArray()->one();
+						$autoget=$auto_get['start_num'];
+						$inc_value=$autoget+1;
+					   	$rtno = str_pad($autoget, 6, "0", STR_PAD_LEFT);
+						
+						
+						$salesreturn=new InSalesreturn();
+						
+						$salesreturn->saleid = $saledata_updated->	opsaleid;
+						$salesreturn->return_invoicenumber = $rtno;
+						$salesreturn->patient_type = $saledata_updated->patienttype;
+						$salesreturn->returndate = date('Y-m-d H:i:s');
+						$salesreturn->name = $saledata_updated->name;
+						$salesreturn->ip_no = $saledata_updated->ip_no;
+						$salesreturn->mrnumber = $saledata_updated->mrnumber;
+						$salesreturn->patient_id = $saledata_updated->patient_id;
+						$salesreturn->sub_visit_id = $saledata_updated->subvisit_id;
+						$salesreturn->subvisit_num = $saledata_updated->subvisit_num;
+						
+						
+						$salesreturn->branch_id = $session['branch_id'];
+						$salesreturn->unit_price = array_sum($_POST['price']);
+						$salesreturn->return_qty = array_sum($_POST['quantity']);
+						$salesreturn->total = $_POST['total_net_amount'];
+						$salesreturn->return_amount = $_POST['total_paid_amount'];
+						$salesreturn->totalgstvalue = array_sum($_POST['sgst_value'])+array_sum($_POST['cgst_value']);
+						$salesreturn->totalcgstvalue = array_sum($_POST['cgst_value']);
+						$salesreturn->totalsgstvalue = array_sum($_POST['sgst_value']);
+						
+						$salesreturn->totalcgstpercentage = array_sum($_POST['cgst_percent']);
+						$salesreturn->totalsgstpercentage = array_sum($_POST['sgst_percent']);
+						$salesreturn->totalgstpercentage = array_sum($_POST['gst_percent']);
+						if(!empty($_POST['discount_value']))
+						{
+							$salesreturn->totaldiscountpercentage = array_sum($_POST['discount_value']);
+							$salesreturn->totaldiscountvalue = array_sum($_POST['discountext_value']);
+						}
+						
+						
+						
+						
+						$salesreturn->paid_status = 'Y';
+						$salesreturn->is_active = 1;
+						$salesreturn->updated_by = $session['user_id'];
+						$salesreturn->created_at = date('Y-m-d H:i:s');
+						$salesreturn->updated_ipaddress = $_SERVER['REMOTE_ADDR'];
+						
+						if($salesreturn->save())
+						{
+							foreach ($_POST['primeid'] as $key => $value) 
+							{
+								$saledetails_updated=InSaledetail::find()->where(['opsale_detailid'=>$value])->one();
+								//Returndetails
+								$returndetails=new InReturndetail();
+								$returndetails->return_id = $salesreturn->return_id;
+								$returndetails->sale_detailid = $saledetails_updated->opsale_detailid;
+								$returndetails->stockid = $saledetails_updated->stockid;
+								$returndetails->stockresponseid = $saledetails_updated->stockresponseid;
+								$returndetails->returndate = date('Y-m-d H:i:s');
+								$returndetails->productid = $saledetails_updated->productid;
+								$returndetails->brandcode = $saledetails_updated->brandcode;
+								$returndetails->stock_code = $saledetails_updated->stock_code;
+								$returndetails->compositionid = $saledetails_updated->compositionid;
+								$returndetails->unitid = $saledetails_updated->unitid;
+								$returndetails->batchnumber = $saledetails_updated->batchnumber;
+								$returndetails->expiredate = date('Y-m-d',strtotime($saledetails_updated->expiredate));
+								
+								$returndetails->productqty =$_POST['quantity'][$key];
+								$returndetails->price = $_POST['price'][$key];
+								//$returndetails->discount_type = $sale_details->price;
+								$returndetails->gstvalue = $_POST['cgst_value'][$key]+$_POST['sgst_value'][$key];
+								$returndetails->cgstvalue =  $_POST['cgst_value'][$key];
+								$returndetails->sgstvalue = $_POST['sgst_value'][$key];
+								if(!empty($_POST['discount_value']))
+								{
+									$returndetails->discountvalue = $_POST['discountext_value'][$key];
+									$returndetails->discountrate = $_POST['discount_value'][$key];
+								}
+								$returndetails->priceperqty =  $_POST['price'][$key];
+								$returndetails->mrp =  $_POST['total_amt_cal'][$key];
+								
+								//New Code 16/11/2018
+								$previous_mrp_perunit=$saledetails_updated->new_mrp_perunit;
+								if($previous_mrp_perunit != '')
+								{
+									$returndetails->mrp_per_unit = $previous_mrp_perunit;
+								}
+								
+								$returndetails->gst_percentage = $_POST['gst_percent'][$key];
+								$returndetails->cgst_percentage =  $_POST['cgst_percent'][$key];
+								$returndetails->sgst_percentage = $_POST['sgst_percent'][$key];
+							
+								$returndetails->is_active = 1;
+								$returndetails->updated_by = $session['user_id'];
+								$returndetails->created_at = date('Y-m-d H:i:s');
+								$returndetails->updated_ipaddress = $_SERVER['REMOTE_ADDR'];
+								if($returndetails->save())
+								{
+									
+								}
+							}
+
+							$valid_sub_number=AutoidTable::updateAll(['start_num' => $inc_value,'updated_at' => date('Y-m-d H:i:s'),'ipaddress'=> $_SERVER['REMOTE_ADDR']], ['auto' => 21]);
+							
+							if($valid_sub_number == 1)
+							{ 
+								$saved_data_array=array();
+								$saved_data_array[0]='Saved';
+								$saved_data_array[1]=$salesreturn->return_id;
+								$saved_data_array_json=json_encode($saved_data_array);
+								return $saved_data_array_json;
+							}							
+						}else {
+							print_r($salesreturn->getErrors());die;	
+						}
+						
+					}
+				}
+			else {
+				print_r($saledata_updated->getErrors());die;	
+			}
+
+			}
+		}
+		else
+		{
+			
+			$saledatainc=InSales::find()->orderBy(['opsaleid' => SORT_DESC])->one();
+			/*if(!empty($saledatainc))
+			{
+				$saleincrement=$saledatainc->opsaleid+1;	
+				$billformat = "ECDR".($saleincrement);
+			}*/
+			
+			$sales=InSales::find()->where(['opsaleid'=>$id])->asArray()->one();
+			
+			if(empty($sales))
+			{
+				$sales =new InSales();
+				$newpatient=new Newpatient();
+				
+			}
+			else 
+			{
+			   //GET PATIENT NAME
+			   $newpatient=Newpatient::find()->where(['mr_no'=>$sales['mrnumber']])->one();
+			}
+			
+			$sales_detail=InSaledetail::find()->where(['opsaleid'=>$id])->asArray()->all();
+			
+			if(empty($sales_detail))
+			{
+				$sales_detail= new InSaledetail();	
+			}
+			
+			$sales_index=ArrayHelper::index($sales_detail,'opsale_detailid');
+			$sales_json=json_encode($sales_index, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+			
+			
+			
+		
+			//GET INSURANCE
+			$ins=Insurance::find()->where(['insurance_typeid'=>$sales['insurancetype']])->one();
+			$insurance_name=(!empty($ins)) ?  $ins->insurance_type: '';
+			$insurance_type=(!empty($ins)) ?  $ins->insurance_typeid: '';
+			
+			$physicianlist=ArrayHelper::map(Physicianmaster::find()->where(['is_active'=>1])->asArray()->all(), 'id', 'physician_name');
+			$physician_name=(!empty($physicianlist[$sales['physicianname']])) ?  $physicianlist[$sales['physicianname']]: '';
+			
+			
+			
+			//GET SELECTED PRODUCT
+			$product_map=ArrayHelper::map($sales_detail,'opsale_detailid','productid');
+			$product=Product::find()->where(['IN','productid',$product_map])->asArray()->all();
+			$product_index=ArrayHelper::index($product,'productid');
+			$product_json=json_encode($product_index, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+			
+			//GET UNIT
+			$unit_map=ArrayHelper::map($sales_detail,'opsale_detailid','unitid');
+			$unit=Unit::find()->where(['IN','unitid',$unit_map])->asArray()->all();
+			$unit_index=ArrayHelper::index($unit,'unitid');
+			$unit_json=json_encode($unit_index, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+			
+			//GET COMPOSITION
+			$composition_map=ArrayHelper::map($sales_detail,'opsale_detailid','compositionid');
+			$composition=Composition::find()->select(['composition_id'=>'composition_id','composition_name'=>'composition_name'])->where(['IN','composition_id',$composition_map])->asArray()->all();
+			$composition_index=ArrayHelper::index($composition,'composition_id');
+			$composition_json=json_encode($composition_index, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+			
+			
+			
+	        return $this->render('billreturns', [
+	        		'productname'=>$productname,
+	        		'model'=>$product,
+	        		'billformat' => $billformat,
+	        		'patient' => $patient,
+	        		'sales' => $sales,
+	        		'sales_detail' => $sales_detail,
+	        		'product_map' => $product_map,
+	        		'product' => $product,
+	        		'product_index' => $product_index,
+	        		'newpatient' => $newpatient,
+	        		'insurance_type' => $insurance_type,
+	        		'insurance_name' => $insurance_name,
+	        		'sales_json' => $sales_json,
+	        		'product_json' => $product_json,
+	        		'composition_json' => $composition_json,
+	        		'unit_json' => $unit_json,
+	        		'physician_name' => $physician_name,
+	        ]);
+		}
+	}
     
     
     
@@ -5559,7 +5960,7 @@ $pdf->Output('example_001.pdf');
 
 
 
- public function actionInvoice($id) {
+ /*public function actionInvoice($id) {
    			
 require ('../../vendor/tcpdf/tcpdf.php');
 $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -5652,7 +6053,7 @@ $headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" >
 $headertable.='<tr><td colspan="3"><b>DL NO-20F: AP/11/03/2017-137691</b></td><td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>21 : AP/11/03/2017-137690</b></td>
 <td colspan="3"><b>&nbsp;&nbsp;&nbsp; 20: AP/11/03/2017-137689</b></td><td colspan="3"><b>GSTIN : 37AADCC7476L1Z3</b></td></tr>';
 
-$headertable.='<tr ><td style="text-align:center;font-size:12px;" colspan="12" ><b>IP MEDICINE ISSUES STD</b></td></tr>';
+$headertable.='<tr><td style="text-align:center;font-size:12px;" colspan="12" ><b>PHARMACY IP SALES</b></td></tr>';
 
 $headertable.='</table>';
 $pdf->writeHTML($headertable, true, false, false, false, '');
@@ -5836,7 +6237,258 @@ $tbl1.='<tr>
 	$words.='<br><br><div style="text-align:center;"><b>Goods once sold will not be returned without bill.</b></div>';
 	$pdf->writeHTML($words, true, false, false, false, '');
 	$pdf->Output('example_001.pdf');
- }  
+ }  */
+ 
+ public function actionInvoice($id) {
+   			
+require ('../../vendor/tcpdf/tcpdf.php');
+$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Nicola Asuni');
+$pdf->SetTitle('Invoice');
+$pdf->SetSubject('TCPDF Tutorial');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+$pdf->SetPrintHeader(false);
+$pdf->SetPrintFooter(false);
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+$pdf->setFontSubsetting(true);
+$pdf->SetFont('helvetica', '', 8, '', true);
+$pdf->AddPage();
+
+$saledata=InSales::find()->where(['opsaleid'=>$id])->one();
+$saledetaildata=InSaledetail::find()->where(['opsaleid'=>$id])->all();
+
+
+//New Code
+$product_map=ArrayHelper::map($saledetaildata,'opsale_detailid','productid');
+$product=Product::find()->where(['productid'=>$product_map])->all();
+$product_index=ArrayHelper::index($product,'productid');
+
+$tax_map=ArrayHelper::map($product,'productid','hsn_code');
+$Taxgrouping=Taxgrouping::find()->where(['taxgroupid'=>$tax_map])->all();
+$Taxgrouping_index=ArrayHelper::index($Taxgrouping,'taxgroupid');
+
+
+//Branch Admin
+$branch=BranchAdmin::find()->where(['ba_autoid'=>$saledata->updated_by])->one();
+
+
+
+$patientdata=Newpatient::find()->where(['mr_no'=>$saledata->mrnumber])->one();
+//$insurancetype=$patientdata->insurancetype;
+$insurancedata=Insurance::find()->where(['insurance_typeid'=>$saledata->insurancetype])->one();
+
+if(empty($insurancedata))
+{
+	$insurance= 'General';
+}
+else {
+	$insurance=$insurancedata->insurance_type;
+}
+
+ $physicaindata=ArrayHelper::map(Physicianmaster::find()->asArray()->all(),'id','physician_name');
+ 
+ $in_categorygroup=InCategorygroup::find()->where(['autoid'=>$saledata['catno']])->one();
+	
+ 	$in_roomtypes_map=ArrayHelper::map(InRoomtypes::find()->asArray()->all(),'autoid','room_types');
+	$in_category_map=ArrayHelper::map(InCategory::find()->asArray()->all(),'autoid','category_name');
+	
+	$category=$in_category_map[$in_categorygroup['category_id']];
+	$roomtype=$in_roomtypes_map[$in_categorygroup['room_typeid']];		
+
+
+$unitlist=ArrayHelper::map(Unit::find()->where(['is_active'=>1])->asArray()->all(), 'unitid', 'unitvalue');
+$productlist=ArrayHelper::map(Product::find()->where(['is_active'=>1])->asArray()->all(), 'productid', 'productname');
+$gender=$saledata->gender;
+$drid=$saledata->physicianname;
+
+
+
+$session = Yii::$app->session;
+$companybranchid=$session['branch_id'];
+
+
+
+$companybranchdata=CompanyBranch::find()->where(['branch_id'=>$companybranchid])->one();
+$companydata=Company::find()->where(['company_code'=>'C001'])->one();
+$companyname=$companybranchdata->branch_name;
+$address=$companybranchdata->address1;
+$gstin=$companybranchdata->gst_number;
+
+
+
+$title="(A UNIT OF CARMEL HEALTHCARE PVT LTD)";
+$headertable='<table cellspacing="0" cellpadding="1" >';
+$headertable.='<tr ><td style="text-align:center;font-size:18px;" colspan="12" ><b>DINESH MEDICAL CENTRE</b></td></tr>';
+$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><b>'.$title.'</b></td></tr>';
+$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><p><b>D.NO:3-7-215-1, FIRST FLOOR BAKARAPURAM, PULIVENDULA - 516390 - KADAPA DIST,PH:08568 287557</b></p></td></tr>';
+$headertable.='<tr><td colspan="3"><b>DL NO-20F: AP/11/03/2017-137691</b></td><td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>21 : AP/11/03/2017-137690</b></td>
+<td colspan="3"><b>&nbsp;&nbsp;&nbsp; 20: AP/11/03/2017-137689</b></td><td colspan="3"><b>GSTIN : 37AADCC7476L1Z3</b></td></tr>';
+
+$headertable.='<tr><td style="text-align:center;font-size:12px;" colspan="12" ><b>PHARMACY IP SALES</b></td></tr>';
+
+$headertable.='</table>';
+$pdf->writeHTML($headertable, true, false, false, false, '');
+
+$tbl1 = '<table cellspacing="0" cellpadding="1"  border="1" style="text-align:center;font-size:10.5px;">
+ 
+   <tr><td colspan="10">
+   <table>
+      <tr>
+   <td colspan="1" style="text-align:left;" ><b>IP Number</b></td><td colspan="6" style="text-align:left;"> : '.$saledata->ip_no.'</td> 
+
+   <td colspan="2" style="text-align:right;" ><b>Bill No</b> : </td>  <td style="text-align:left;"> <b> '.$saledata->billnumber.'</b></td> 
+
+     
+   </tr>
+   <tr>
+   <td colspan="1" style="text-align:left;" ><b>Patient Name</b></td><td colspan="6" style="text-align:left;"> : '.strtoupper($saledata->name).'</td> 
+   
+   <td colspan="2" style="text-align:right;" ><b>Bill Date</b> : </td>  <td>'.date("d-m-Y",strtotime($saledata->invoicedate)).'</td>
+   </tr>
+    <tr>
+    <td colspan="1" style="text-align:left;" ><b>DR Name</b>:</td><td colspan="6" style="text-align:left;"> : '.strtoupper($physicaindata[$saledata['physicianname']]).'</td> 
+   
+ <td colspan="2" style="text-align:right;" ><b>Bill Time</b>:</td>  <td>'.date("h:i:s A",strtotime($saledata->created_at)).'</td>
+   </tr>
+     
+    <tr>
+ 		<td colspan="1" style="text-align:left;" ><b>Type</b></td><td colspan="6" style="text-align:left;"> : '.strtoupper($insurance).'</td> 
+	</tr>
+     
+    <tr>
+ 		<td colspan="1" style="text-align:left;" ><b>CATEGORY/ROOM TYPE</b></td><td colspan="6" style="text-align:left;"> : '.strtoupper($category.'/'.$roomtype).'</td> 
+	</tr>
+     
+   <tr><td></td></tr>
+   </table>
+   </td>
+     </tr>
+<tr style="font-size:12px;"><td ><b>S.No</b></td><td style="width:30%;"><b>Item Description</b></td><td style="width:10%;"><b>HSN Code</b></td><td style="width:10%;" ><b>Batch No</b></td><td style="width:10%;"><b>EXP DATE</b></td><td style="width:10%;"><b>Qty</b></td>
+<td style="width:10%;"><b>MRP </b></td><td style="width:10%;"><b>Amount</b></td>
+</thead></tr>';
+
+$i=0;
+$totalrate=0;
+$totaldiscount=0;
+$totalgst=0;
+$netrate=0;
+$mrp=0;
+$totalcgstrate=0;
+$totalsgstrate=0;
+$mrptotal=0;
+$totalgstrate=0;
+$totalgstvalue=0;
+foreach($saledetaildata as $k)
+{
+$gstvalueperqty=$k->gstvalueperquantity;
+$discountvalueperqty=$k->productqty*$k->discountvalueperquantity;
+$mrpperunit=$gstvalueperqty+$k->priceperqty;
+$gstvalue=$gstvalueperqty*$k->productqty;
+$mrp=$mrpperunit*$k->productqty;
+
+if(isset($k->productid))
+{
+	$prd_hsn_index=$product_index[$k->productid]['hsn_code'];
+	$hsncode=$Taxgrouping_index[$prd_hsn_index]['hsncode'];
+}
+//$unitid[]=$k->unitid;
+//$newunitdata=array_intersect_key($unitlist, array_flip($unitid));
+//$unitval=array_values($newunitdata);
+//$productid[]=$k->productid;
+//$newproductdata=array_intersect_key($productlist, array_flip($productid));
+//$productval=array_values($newproductdata);
+//$productdata=Product::find()->where(['productid'=>$k->productid])->one();
+//$hsncode=$productdata->hsn_code;
+//$pdata=Product::find()->where(['is_active'=>1])->andwhere(['productid'=>$k->productid])->one();
+//$ptypeid=$pdata->product_typeid;
+//$ptypedata=Producttype::find()->where(['is_active'=>1])->andwhere(['product_typeid'=>$ptypeid])->one();
+//$type=$ptypedata->product_type;
+$mrptotal+=$mrp;
+
+if($k->new_mrp_perunit == '')
+{
+if($k->productqty == 0)
+{
+	$mrp_calc=0;	
+}
+else 
+{
+	$mrp_calc=number_format($k->total_price_perqty/$k->productqty,2);
+}
+}
+else 
+{
+	$mrp_calc=number_format($k->new_mrp_perunit,2);
+}
+
+
+if($k->multiply_mrp_qty < 0)
+{
+	$total_mrp_amt=0;
+}
+else 
+{
+	$total_mrp_amt=number_format($k->multiply_mrp_qty,2);
+}
+
+$tbl1.= '<tr style="font-size:12px;">
+	<td >'.++$i.'</td><td>'.$product_index[$k->productid]['productname'].'</td><td>'.$hsncode.'</td><td>'.$k->batchnumber.'</td><td>'.date("d-m-Y",strtotime($k->expiredate)).'</td><td>'.$k->productqty.'</td>
+	<td align="center">'.$mrp_calc.'</td>
+	<td align="center">'.$total_mrp_amt.'</td></tr>';
+//$hsncode="";
+$totalrate+=number_format($k->price,2);
+$totalgstrate+=($k->gstrate/2);
+$totalgstvalue+=($gstvalue/2);
+$totaldiscount+=$discountvalueperqty;
+$totalgst+=$gstvalue;
+//$newunitdata=array(); $unitid=array();$unitval="";
+//$newproductdata=array(); $productid=array();$productval="";
+$totalcgstrate+=$k->cgst_percent;
+$totalsgstrate+=$k->sgst_percent;
+}
+
+if($saledata->tot_quantity == 0)
+{
+	$total_price=0;
+}
+else 
+{
+	$total_price=number_format($saledata->original_mrp_amount,2);
+} 
+$tbl1.='
+<tr style="font-size:12px;">
+	<td colspan="7" style="text-align:right;"><b>Total Amount</b></td>
+	<td>'.$total_price.'</td>
+</tr>
+<tr style="font-size:12px;">
+	<td colspan="3" style="text-align:right;"><b>Discount Percentage (%) </b></td>
+	<td>'.number_format($saledata->overalldiscountpercent,2).' %</td>
+	<td colspan="3" style="text-align:right;"><b>Discount Amount</b></td>
+	<td>'.number_format($saledata->overalldiscountamount,2).'</td>
+</tr>
+<tr style="font-size:12px;">
+	<td colspan="7" style="text-align:right;"><b>Paid Amount</b></td>
+	<td>'.number_format($saledata->paid_amt,2).'</td>
+</tr>
+<tr style="font-size:12px;">
+	<td colspan="7" style="text-align:right;"><b>Due Amount</b></td>
+	<td>'.number_format($saledata->due_amt,2).'</td>
+</tr>	
+</table>';
+	$pdf->writeHTML($tbl1, true, false, false, false, '');
+	$words='<table style="font-size:12px;"><tr><td colspan="8" align="left"><b>Amount in Words : </b> Rupees '.ucwords($this->actionReadnumber(round($saledata->total))).' only </td><td colspan="8" align="right"><b>USER NAME</b>: '.$branch['ba_name'].' </td></tr></table>';
+	$words.='<br><br><div style="text-align:center;font-size:12px;"><b>Goods once sold will not be returned without bill.</b></div>';
+	$pdf->writeHTML($words, true, false, false, false, '');
+	$pdf->Output('example_001.pdf');
+	}
 
 
 
@@ -5846,7 +6498,7 @@ $tbl1.='<tr>
 
 
 
-    public function actionReturntabletbill($id)
+   /* public function actionReturntabletbill($id)
     {
         
         $salesreturn=InSalesreturn::find()->where(['return_id'=>$id])->asArray()->one();
@@ -5867,10 +6519,7 @@ $tbl1.='<tr>
         
         if(!empty($returndetails))
         {
-            /*$billno="18043522";
-            $pat_name="CC";
-            $rcptno="1955";
-            $rc_date="10/9/2018 12:00AM";*/
+          
         
             require ('../../vendor/tcpdf/tcpdf.php');
                 $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -5957,7 +6606,154 @@ $tbl1.='<tr>
                 $pdf->Output('OPD Registeration.pdf');
         }
         
-    }
+    }*/
+    
+    
+    
+    
+    //code ready
+    
+    public function actionReturntabletbill($id)
+	{
+		
+		$salesreturn=InSalesreturn::find()->where(['return_id'=>$id])->asArray()->one();
+		
+		$sales=InSales::find()->where(['opsaleid'=>$salesreturn['saleid']])->asArray()->one();
+		
+		
+		$returndetails=InReturndetail::find()->where(['return_id'=>$id])->asArray()->all();
+		
+		//Product Details
+		$product_map=ArrayHelper::map($returndetails,'return_detailid','productid');
+		$product=Product::find()->where(['IN','productid',$product_map])->all();
+		$product_index=ArrayHelper::index($product,'productid');
+		
+		//Branch Admin
+		$branch_admin=BranchAdmin::find()->where(['ba_autoid'=>$salesreturn['updated_by']])->one();
+		
+		
+		if(!empty($returndetails))
+		{
+			/*$billno="18043522";
+			$pat_name="CC";
+			$rcptno="1955";
+			$rc_date="10/9/2018 12:00AM";*/
+		
+		   require ('../../vendor/tcpdf/tcpdf.php');
+$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Nicola Asuni');
+$pdf->SetTitle('Invoice');
+$pdf->SetSubject('TCPDF Tutorial');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+$pdf->SetPrintHeader(false);
+$pdf->SetPrintFooter(false);
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+$pdf->setFontSubsetting(true);
+$pdf->SetFont('helvetica', '', 8, '', true);
+$pdf->AddPage();
+				
+				$tbl1='<html>
+				<head>
+				</head>
+				<style>
+				.replace_pro td{
+					border:1px solid #000;
+				}
+				</style>
+				<body>';
+				
+				$title="(A UNIT OF CARMEL HEALTHCARE PVT LTD)";
+$headertable='<table cellspacing="0" cellpadding="1" >';
+$headertable.='<tr ><td style="text-align:center;font-size:18px;" colspan="12" ><b>DINESH MEDICAL CENTRE</b></td></tr>';
+$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><b>'.$title.'</b></td></tr>';
+$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><p><b>D.NO:3-7-215-1, FIRST FLOOR BAKARAPURAM, PULIVENDULA - 516390 - KADAPA DIST,PH:08568 287557</b></p></td></tr>';
+$headertable.='<tr><td colspan="3"><b>DL NO-20F: AP/11/03/2017-137691</b></td><td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>21 : AP/11/03/2017-137690</b></td>
+<td colspan="3"><b>&nbsp;&nbsp;&nbsp; 20: AP/11/03/2017-137689</b></td><td colspan="3"><b>GSTIN : 37AADCC7476L1Z3</b></td></tr>';
+
+$headertable.='<tr ><td style="text-align:center;font-size:12px;" colspan="12" ><b>PHARMA IP RETURN SLIP</b></td></tr>';
+
+$headertable.='</table><p></p>';
+//$pdf->writeHTML($headertable, true, false, false, false, '');
+				
+				
+				//$tbl1.='<p style="text-align:left;line-height:2px;font-size:12px;">A Unit Of Carmel HealthCare PVT LTD</p>';
+				//$tbl1.='<p style="text-align:left;line-height:2px;font-size:12px;">D.No.3-7-215/1,First Floor,Bakarapuram,Pulivendula-516390,Kadapa Dist,A.P</p>';
+				//$tbl1.='<p style="text-align:left;line-height:2px;font-size:12px;">Ph : 08568287557</p>';
+				//$tbl1.='<p style="text-align:right;line-height:2px;font-size:12px;">DL NO-20F:AP/11/03/2017-137691,21:Ap/11/03/2017-137690,20:AP/11/03/2017-137689</p>';
+				//$tbl1.='<p style="text-align:right;line-height:2px;font-size:12px;">TIN.NO :37141115904</p>';
+				//$tbl1.='<div style="background-color:#eee;" ><span style="text-align:center;line-height:30px;font-size:14px;padding:10px 0px 0px 5px;margin-top:15px"><U><B>PHARMA RETURN SLIP</B></U></span></div>';
+				$tbl1.='<table style="border:1px solid #000;padding:5px 10px;" ALIGN="left"><tr>
+				<td style="width:15%;"><b>Bill No.  </b></td>';
+				$tbl1.='<td style="width:35%;"> : '.$sales['billnumber'].' </td>';
+				$tbl1.='<td style="width:15%;"><b> Receipt No </b></td>';
+				$tbl1.='<td style="width:35%;"> : '.$salesreturn['return_invoicenumber'].' </td>';
+				$tbl1.='</tr>';
+				$tbl1.='<tr><td><b>Patient Name </b></td>';
+				$tbl1.='<td> : '.$salesreturn['name'].'</td>';
+				$tbl1.='<td><b>Receipt Date</b></td>';
+				$tbl1.='<td> : '.date('d-m-Y H:i A',strtotime($salesreturn['created_at'])).'</td>';
+				$tbl1.='</tr>';
+				$tbl1.='</table>';
+				$tbl1.='<table style="border:1px solid #000;padding:5px 10px;" class="replace_pro" ALIGN="left"><tr>
+				<td style="width:5%;text-align:center"><b>SI.No </b></td>';
+				$tbl1.='<td style="width:25%;"><b> Product Name </b></td>';
+				$tbl1.='<td style="width:13%;text-align:center"><b> BATCHNO </b></td>';
+				$tbl1.='<td style="width:13%;text-align:center"><b> EXPDT </b></td>';
+				$tbl1.='<td style="width:14%;text-align:center"><b> QTY </b></td>';
+				$tbl1.='<td style="width:15%;text-align:center"><b> RATE </b></td>';
+				$tbl1.='<td style="width:15%;text-align:center"><b> AMOUNT </b></td>';
+				
+				$tbl1.='</tr>';
+				
+				$i=1;
+				foreach ($returndetails as $key => $value) 
+				{
+					$tbl1.='<tr><td >'.$i.'</td>';
+					$tbl1.='<td style="text-align:center" >'.$product_index[$value['productid']]['productname'].'</td>';
+					$tbl1.='<td style="text-align:center" >'.$value['batchnumber'].'</td>';
+					$tbl1.='<td style="text-align:center">'.date('d-m-Y',strtotime($value['expiredate'])).'</td>';
+					$tbl1.='<td style="text-align:center">'.$value['productqty'].'</td>';
+					$tbl1.='<td style="text-align:center">'.$value['mrp_per_unit'].'</td>';
+					$tbl1.='<td style="text-align:right">'.$value['mrp'].'</td></tr>';
+					$i++;
+				}
+				$tbl1.='</table>';
+				
+				//Modification Condition
+				if($salesreturn['return_amount'] == '')
+				{
+					$RETURN_AMOUNT=round($salesreturn['total']);
+				}
+				else 
+				{
+					$RETURN_AMOUNT=$salesreturn['return_amount'];
+				}
+
+				$tbl1.='<table style="border:1px solid #000;padding:5px 10px;"  ALIGN="left">';
+				$tbl1.='<tr><td style="width:85%; text-align:right"> Total Amount </td>';
+				$tbl1.='<td style="text-align:right;border:1px solid #000;width:15%"> '.$salesreturn['total'].' </td></tr>';
+				$tbl1.='<tr><td style="width:85%; text-align:right;border:1px solid #000;"><b> Return Amount </b></td>';
+				$tbl1.='<td style="text-align:right;border:1px solid #000;width:15%"> <b>'.$RETURN_AMOUNT.'</b> </td></tr>';
+				$tbl1.='</table>';
+				$tbl1.='<div><p style="width:50%"> User Name : '.$branch_admin['ba_name'].'</span><p style="text-align:right;width:50%">Patient Signature</p>';
+				
+				$pdf->writeHTML($headertable.$tbl1, true, false, false, false, '');
+				$tbl1.='</body></html>';
+				//$pdf->writeHTML($tbl1, true, false, false, false, '');
+				$pdf->Output('OPD Registeration.pdf');
+		}
+		
+	}
+    
+    
     
 public  function actionReadnumber($num, $depth=0)
 {
@@ -6333,5 +7129,426 @@ public function actionPatientkey1($id)
 		//Print it out.
 		return $year."/".$month."/".$day."/";
 	}
+	
+	
+	public function actionInjqgrid()
+    {
+    	$sfd=0;
+    	if(isset($_POST['start']) && $_POST['start']!="0"){
+    		$sfd=$_POST['start'];
+    	}
+    	$draw=0;
+		if(isset($_POST['draw']) && $_POST['draw']!=""){
+		  $draw=$_POST['draw'];
+		}
+		$length=10;
+		if(isset($_POST['length']) && $_POST['length']!=""){
+		  $length=$_POST['length'];
+		}
+		$s_val='';
+		if(isset($_POST['search'])){
+		  $s_val=$_POST['search']['value'];
+		}
+    		$Newpatient=InRegistration::find()->select(['autoid'=>'autoid'])
+    		//->where(['temporary_blocked'=>'N'])
+			//->andwhere(['like','patientname',$s_val])
+			//->andwhere(['like','mr_nAo',$s_val])
+			->where(['is_active'=>1])
+			->where(['or',
+				['like','mr_no',$s_val],
+				['like','ip_no',$s_val],
+				['like','patient_name',$s_val],
+				['like','relative_name',$s_val]]
+				)
+			->limit(100000)
+			->orderBy(['autoid'=>SORT_DESC])->asArray()->all();
+			//echo count($Newpatient); die;
+			$Newpatient_da=InRegistration::find()->select(['autoid'=>'autoid','ip_no'=>'ip_no','mr_no'=>'mr_no','patient_name'=>'patient_name',
+			'name_initial'=>'name_initial','dob'=>'dob','sex'=>'sex','marital_status'=>'marital_status',
+			'relation_suffix'=>'relation_suffix','relative_name'=>'relative_name','address'=>'address',
+			'city'=>'city','district'=>'district','state'=>'state','pincode'=>'pincode',
+			'phone_no'=>'phone_no','mobile_no'=>'mobile_no'])
+			->where(['is_active'=>1])
+			->andwhere(['or',
+				['like','ip_no',$s_val],
+				['like','patient_name',$s_val],
+			    ['like','relative_name',$s_val]])
+			->limit($length)
+			->offset($sfd)->orderBy(['autoid'=>SORT_DESC])->asArray()->all();
+
+			
+			
+			if(!empty($Newpatient_da))
+			{
+				$response=array();
+				
+				$fetch_array=array();
+				$i=0;
+				$responce['draw']=$draw;
+				$responce['recordsTotal']= $length;
+				$responce['recordsFiltered']= count($Newpatient);
+				foreach ($Newpatient_da as $key => $value) 
+				{
+					$responce['data'][]=array("DT_RowId"=>$value['autoid'],"ipno"=>$value['ip_no'],"mrno"=>$value['mr_no'],"pname"=>$value['patient_name'],"rname"=>$value['relative_name'],"mno"=>$value['mobile_no']);
+					$i++;
+				}
+			
+				return json_encode($responce);
+				die;
+				
+			}
+
+			
+	}
+
+public function actionPackagemedicinefetch()
+{
+$product_packagemaster=ProductPackagemaster::find()->where(['is_active'=>'1'])->all();
+
+if(!empty($product_packagemaster))
+{
+	$result_string='';
+	$i=1;
+	 $result_string.='<div class="table-responsive"><table class="table table-bordered table-striped">';
+	    $result_string.='<thead style="font-style:normal";><tr>';
+	    $result_string.='<th  width="10%" class="text-center">#</th>';
+	    $result_string.='<th rowspan="2" width="50%"  class="text-center">Package Name</th>';
+	  	 $result_string.='<th  class="text-center" width="40%" >Action</th>';
+	  
+	    
+	    $result_string.='</tr></thead><tbody>';
+	foreach ($product_packagemaster as $key => $value) 
+	{
+		$result_string.='<tr><td class="text-center">'.$i.'</td><td class="text-center">'.$value['pack_name'].'</td><td class="text-center"><button type="button" onclick="PackageAdd('.$value['id'].')" class="btn btn-xs btn-primary">Select</button></td></tr>';
+		$i++;
+	}
+	$result_string.='</tbody></table>';
+	$fetch_array=array();
+	$fetch_array[0]=$result_string;
+	return json_encode($fetch_array, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);	
+}
+
+}
+
+public function actionPackagemedicineselect($id)
+{
+//Session of Branch Id
+$session = Yii::$app->session;
+$branch_id=$session['branch_id'];
+		
+//echo '<pre>';
+
+$product_package_log=ProductPackageLog::find()->where(['pack_id'=>$id])->asArray()->all();
+$product_package_log_map=ArrayHelper::map($product_package_log,'id','product_id');
+$product_package_log_index=ArrayHelper::index($product_package_log,'product_id');
+
+
+
+if(!empty($product_package_log))
+{
+$stockmaster=Stockmaster::find()->where(['IN','productid',$product_package_log_map])->andWhere(['branch_id'=>$branch_id])->orderBy(['expiredate'=>SORT_DESC])->asArray()->all();
+$stockmaster_map=ArrayHelper::map($stockmaster,'stockid','stockid');
+$stockmaster_index=ArrayHelper::index($stockmaster,'stockid');
+
+
+$stockresponse=Stockresponse::find()->where(['IN','stockid',$stockmaster_map])->andWhere(['branch_id'=>$branch_id])->orderBy(['expiredate'=>SORT_DESC])->asArray()->all();
+$stockresponse_index=ArrayHelper::index($stockresponse,'stockresponseid');
+
+
+
+$product_map=ArrayHelper::map($stockmaster,'stockid','productid');
+$product=Product::find()->where(['IN','productid',$product_map])->asArray()->all();
+$product_index=ArrayHelper::index($product,'productid');
+
+$composition_map=ArrayHelper::map($product,'productid','composition_id');
+$composition=Composition::find()->where(['IN','composition_id',$composition_map])->asArray()->all();
+$composition_index=ArrayHelper::index($composition,'composition_id');
+
+$unit_map=ArrayHelper::map($stockresponse,'stockresponseid','unitid');
+$unit=Unit::find()->where(['IN','unitid',$unit_map])->asArray()->all();
+$unit_index=ArrayHelper::index($unit,'unitid');
+
+
+$tax_groupinglog_map=ArrayHelper::map($product,'productid','hsn_code');
+$tax_groupinglog=TaxgroupingLog::find()->where(['is_active'=>1])-> andWhere(['IN','taxgroupid',$tax_groupinglog_map])->asArray()->all();
+$tax_groupinglog_index=ArrayHelper::index($tax_groupinglog,'taxgroupid');
+
+$pack_array=array();
+
+if(!empty($stockresponse))
+{
+
+$fetch_array=array();
+$un_available_array_find=array();
+$zero_qty_array=array();	
+$unavailable_stock=array();
+foreach ($stockresponse as $key => $value) 
+{
+$stock_id=$value['stockid'];
+
+if(key_exists($stock_id, $stockmaster_index))
+{
+	$stock_product_id=$stockmaster_index[$stock_id]['productid'];
+	
+	if(key_exists($stock_product_id,$product_package_log_index))
+	{
+		$package_product_qty=$product_package_log_index[$stock_product_id]['qty'];
+		$stock_product_qty=$value['total_no_of_quantity'];
+		
+		
+		if($package_product_qty <= $stock_product_qty )
+		{
+			$pack_array[$stock_product_id]=array('stockcheck'=>'Available','stockresponse'=>$value['stockresponseid'],'qty_need'=>$package_product_qty,'original_required'=>$package_product_qty,'stock_qty'=>$stock_product_qty,'stock_id'=>$stock_id,'product_id'=>$stock_product_id);
+		
+		}
+		else if($stock_product_qty >= 1)
+		{
+			$un_available_array_find[]=$value['stockresponseid'];
+			$stockresponse_less_available=Stockresponse::find()->where(['NOT IN','stockresponseid',$un_available_array_find])->andWhere(['stockid'=>$stock_id])->andWhere(['>=','total_no_of_quantity',1])->andWhere(['branch_id'=>$branch_id])->orderBy(['expiredate'=>SORT_DESC])->asArray()->one();
+		
+			if(!empty($stockresponse_less_available))
+			{
+				if($package_product_qty  <= $stockresponse_less_available['total_no_of_quantity'])
+				{
+					$temp_stock_id=$stockresponse_less_available['stockid'];
+					$pack_array[$stockmaster_index[$temp_stock_id]['productid']]=array('stockcheck'=>'Available','stockresponse'=>$stockresponse_less_available['stockresponseid'],'qty_need'=>$package_product_qty,'original_required'=>$package_product_qty,'stock_qty'=>$stockresponse_less_available['total_no_of_quantity'],'stock_id'=>$stockresponse_less_available['stockid'],'product_id'=>$stock_product_id);
+				
+				}
+				else 
+				{
+					//$pack_array[$stockmaster_index[$temp_stock_id]['productid']]=array('stockcheck'=>'LessStock','stockresponse'=>$stockresponse_less_available['stockresponseid'],'qty_need'=>$stockresponse_less_available['total_no_of_quantity'],'original_required'=>$package_product_qty,'stock_qty'=>$stockresponse_less_available['total_no_of_quantity'],'stock_id'=>$stockresponse_less_available['stockid']);
+				$pack_array[$stock_product_id]=array('stockcheck'=>'LessStock','stockresponse'=>$value['stockresponseid'],'qty_need'=>$stock_product_qty,'original_required'=>$package_product_qty,'stock_qty'=>$stock_product_qty,'stock_id'=>$stock_id,'product_id'=>$stock_product_id);
+				}
+			}
+			/*else 
+			{
+				$pack_array[$stock_product_id]=array('stockcheck'=>'LessStock','stockresponse'=>$value['stockresponseid'],'qty_need'=>$stock_product_qty,'original_required'=>$package_product_qty,'stock_qty'=>$stock_product_qty,'stock_id'=>$stock_id);
+			}*/
+			
+		}
+		else if($stock_product_qty <= 0)
+		{
+			
+			$stockmaster_zero=Stockmaster::find()->where(['productid'=>$stock_product_id])->andWhere(['branch_id'=>$branch_id])->asArray()->all();
+			$stockmaster_zero_map=ArrayHelper::map($stockmaster_zero,'stockid','stockid');
+			
+			$stockresponse_zero=Stockresponse::find()->select(['stockresponseid'=>'stockresponseid','total_no_of_quantity'=>'SUM(total_no_of_quantity)'])->where(['IN','stockid',$stockmaster_zero_map])->andWhere(['branch_id'=>$branch_id])->asArray()->one();
+			if($stockresponse_zero['total_no_of_quantity'] == 0)
+			{
+				$unavailable_stock[$stockresponse_zero['stockresponseid']]=array('stockresponseid'=>$stockresponse_zero['stockresponseid'],'total_no_of_quantity'=>$stockresponse_zero['total_no_of_quantity'],'product_id'=>$stock_product_id,'product_name'=>$product_index[$stock_product_id]['productname']);
+			}
+		}
+	}
+	
+	
+}	
+}
+
+
+
+
+if(!empty($stockresponse))
+{
+$result_string='';	$i=1;
+$ii=0;
+$total_no_of_items=0;
+$total_no_of_qty=0;
+$total_no_of_price=0;
+$total_no_of_gst=0;
+$total_no_of_mrp_amount=0;
+$total_no_of_net_amount=0;
+$total_no_of_cash_amount=0;
+
+
+$less_stock_array=array();
+foreach ($pack_array as $key => $value) 
+{
+if($value['stockcheck'] == 'Available')
+{
+	if(key_exists($value['stockresponse'], $stockresponse_index))
+	{
+		$stock_id=$stockresponse_index[$value['stockresponse']]['stockid'];
+		$batchnumber=$stockresponse_index[$value['stockresponse']]['batchnumber'];
+		$expireddate=date('d-m-Y',strtotime($stockresponse_index[$value['stockresponse']]['expiredate']));
+		
+		
+		
+		if(key_exists($stock_id,$stockmaster_index))
+		{
+			$product_id=$stockmaster_index[$stock_id]['productid'];
+			
+			$stockcode=$stockmaster_index[$stock_id]['stockcode'];
+			$brandcode=$stockmaster_index[$stock_id]['brandcode'];
+			
+			if(key_exists($product_id,$product_index))
+			{
+				$product_name=$product_index[$product_id]['productname'];
+				$composition_id=$product_index[$product_id]['composition_id'];
+				$tax_id=$product_index[$product_id]['hsn_code'];
+				if(key_exists($composition_id,$composition_index))
+				{
+					$composition_name=$composition_index[$composition_id]['composition_name'];
+				}	
+				
+				if(key_exists($tax_id, $tax_groupinglog_index))
+				{
+					$tax_percent=$tax_groupinglog_index[$tax_id]['tax'];
+					
+				}
+				
+			}
+			
+			$unit_id=$stockresponse_index[$value['stockresponse']]['unitid'];
+			if(key_exists($unit_id, $unit_index))
+			{
+				$unit_name=$unit_index[$unit_id]['unitvalue'];
+				$no_of_unit=$unit_index[$unit_id]['no_of_unit'];
+			}
+	
+			
+		
+		
+		}
+	}
+
+$total_unit=$no_of_unit*$value['qty_need'];
+
+if($stockresponse_index[$value['stockresponse']]['is_tablet'] == 1)
+{
+	$percentage=$tax_percent;
+	$mrp=$stockresponse_index[$value['stockresponse']]['mrpperunit']/$stockresponse_index[$value['stockresponse']]['size_qty'];
+	$newprice=100*$mrp/(100+$percentage);
+	$calculation = number_format($newprice,2, '.', '');
+}
+else 
+{
+	$percentage=$tax_percent;
+	$mrp=$stockresponse_index[$value['stockresponse']]['mrpperunit'];
+	$newprice=100*$mrp/(100+$percentage);
+	$calculation = number_format($newprice,2, '.', '');
+}
+$price_per_quantity=$total_unit*$calculation;
+
+$cgst_sgst=$percentage/2;
+
+$cgst_sgst_value=$price_per_quantity*$cgst_sgst;
+$cgst_sgst_amount=$cgst_sgst_value/100;
+
+$total_amount=$mrp*$value['qty_need'];
+
+$multiply_unit_price=$mrp*$value['qty_need'];
+		
+$result_string.='<tr class="save_data_table" data-id='.$value['stockresponse'].' id="table_del'.$value['stockresponse'].'">';
+$result_string.='<td class="hide">'.$i.'</td><td style="width:7%">';
+$result_string.='<div class="trunctext " style=" " data-original-title="" title="">'.$product_name.'/'.$composition_name.'</div></td>';
+$result_string.='<td style="width:6%;" >'.$batchnumber.'</td>';
+$result_string.='<td style="width:8%;">'.$expireddate.'</td>';
+$result_string.='<td style="width:5%;" class="quantity_add" id="quantity_add'.$value['stockresponse'].'">'.$value['qty_need'].'</td>';
+$result_string.='<td style="width:7%"; id="unit_value_medicine'.$value['stockresponse'].'">'.$unit_name.'</td>';
+$result_string.='<td style="width:8%;"><input type="hidden" name="medicine_type_ins[]" id="medicine_type_ins'.$value['stockresponse'].'" value='.$unit_name.'>';
+$result_string.='<input type="hidden" name="tablet_tot_unit_ins[]" id="tablet_tot_unit'.$value['stockresponse'].'" value='.$total_unit.'>';
+$result_string.='<input type="hidden" name="tablet_type[]" id="tablet_type'.$value['stockresponse'].'" value='.$unit_id.'>';
+$result_string.='<input type="hidden" name="mrp_rate_per_unit[]" value='.$calculation.'>';
+$result_string.='<input type="hidden" name="stock_id[]" value='.$stock_id.'>';
+$result_string.='<input type="hidden" name="unit_id[]" value='.$unit_id.'>';
+$result_string.='<input type="hidden" name="composition_id[]" value='.$composition_id.'>';
+$result_string.='<input type="hidden" name="mrp_per_unit_amount[]" value='.$mrp.'>';
+$result_string.='<input type="hidden" name="stockcode_id[]" value='.$stockcode.'>';
+$result_string.='<input type="hidden" name="brandcode_id[]" value='.$brandcode.'>';
+$result_string.='<input type="hidden" name="product_name_id[]" value='.$product_id.'>';
+$result_string.='<input type="hidden" name="expire_date_id[]" value='.$expireddate.'>';
+$result_string.='<input type="hidden" name="batchnumber[]" value='.$batchnumber.'>';
+$result_string.='<input type="hidden" name="product_name[]" value='.$product_name.'/'.$composition_name.'>';
+$result_string.='<input type="hidden" name="quantity[]" value='.$value['qty_need'].'>';
+$result_string.='<input type="hidden" name="primeid[]" value='.$value['stockresponse'].'>';
+$result_string.='<input type="hidden" name="price[]" class="price_mrp text-right  disctxt w-53" data_price_mrp='.$value['stockresponse'].' value='.$price_per_quantity.' id="price'.$value['stockresponse'].'">';
+$result_string.='<input type="text" readonly name="showmrp[]" class="showmrp text-right disctxt w-53" data_price_mrp='.$value['stockresponse'].' value='.$mrp.' id="show_mrp'.$value['stockresponse'].'"></td>';
+$result_string.='<td><div class="input-group"> <input type="text" name="discount_value[]" data_disc_value='.$value['stockresponse'].' id="enabledisc'.$value['stockresponse'].'"  class="enabledisc disctxt w-55" readonly></div></td>';
+$result_string.='<td><div class="input-group"> <input type="text" name="discountext_value[]" id="disc_amount'.$value['stockresponse'].'" class="add_discount text-right disctxt w-55" readonly></div></td>';
+$result_string.='<td class="w-xss hide"><input type="hidden" class="form-control w-50" data_gst_percent='.$value['stockresponse'].' name="gst_percent[]" id="gst_percent'.$value['stockresponse'].'" value='.$percentage.' readonly>';
+$result_string.='<input type="text" class="form-control" data_igst_percent='.$value['stockresponse'].' id="igst_percent'.$value['stockresponse'].'" readonly></td>';
+$result_string.='<td class="hide"><input type="text"  class="form-control w-50" data_igst_value='.$value['stockresponse'].' id="igst_value'.$value['stockresponse'].'" readonly></td>';
+$result_string.='<td class=""><input type="text"  class="cgst_percent disctxt w-55 text-right" name="cgst_percent[]" data_cgst_percent='.$value['stockresponse'].' id="cgst_percent'.$value['stockresponse'].'" value='.$cgst_sgst.'  readonly></td>';
+$result_string.='<td><input type="text"  class="cgst_value disctxt w-53 text-right" name="cgst_value[]" data_cgst_value='.$value['stockresponse'].' id="cgst_value'.$value['stockresponse'].'"  value='.$cgst_sgst_amount.'  readonly></td>';
+$result_string.='<td class=""><input type="text"  class="sgst_percent  disctxt w-55" name="sgst_percent[]" data_sgst_percent='.$value['stockresponse'].' id="sgst_percent'.$value['stockresponse'].'" value='.$cgst_sgst.' readonly></td>';
+$result_string.='<td><input type="text"  class="w-53 disctxt sgst_value text-right" name="sgst_value[]" data_sgst_value='.$value['stockresponse'].' id="sgst_value'.$value['stockresponse'].'" value='.$cgst_sgst_amount.' readonly></td>';
+$result_string.='<td><input type="text"  class="w-53 disctxt total_amt_cal text-right" name="total_amt_cal[]" data_total='.$value['stockresponse'].' id="total_amount'.$value['stockresponse'].'" value='.$total_amount.' readonly>';
+$result_string.='<input type="hidden"  class="form-control reduired_qty_hidden text-right" name="reduired_qty_hidden[]" data_total='.$value['stockresponse'].' value='.$value['qty_need'].' id="reduired_qty_hidden'.$value['stockresponse'].'">';
+$result_string.='<input type="hidden"  class="form-control price_hidden text-right" name="price_hidden[]" data_total='.$value['stockresponse'].' id="price_hidden'.$value['stockresponse'].'" value='.$multiply_unit_price.'>';
+$result_string.='<input type="hidden"  class="form-control cgst_percentage_hidden text-right" name="cgst_percentage_hidden[]" data_total='.$value['stockresponse'].' id="cgst_percentage_hidden'.$value['stockresponse'].'" value='.$cgst_sgst.' >';
+$result_string.='<input type="hidden"  class="form-control cgst_value_hidden text-right" name="cgst_value_hidden[]" data_total='.$value['stockresponse'].' id="cgst_value_hidden'.$value['stockresponse'].'" value='.$cgst_sgst_amount.'>';
+$result_string.='<input type="hidden"  class="form-control sgst_percentage_hidden text-right" name="sgst_percentage_hidden[]" data_total='.$value['stockresponse'].' id="sgst_percentage_hidden'.$value['stockresponse'].'"  value='.$cgst_sgst.' >';
+$result_string.='<input type="hidden"  class="form-control sgst_value_hidden text-right" name="sgst_value_hidden[]" data_total='.$value['stockresponse'].' id="sgst_value_hidden'.$value['stockresponse'].'" value='.$cgst_sgst_amount.'>';
+$result_string.='<input type="hidden"  class="form-control total_amt_cal1 text-right" name="total_amt_cal1[]" data_total='.$value['stockresponse'].' id="total_amount1'.$value['stockresponse'].'" value='.$multiply_unit_price.'></td>';
+$result_string.='<td class="text-center"><button disabled type="button" class="btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow" data_delete_row='.$value['stockresponse'].' id="delrow'.$value['stockresponse'].'" ><i class="fa fa-remove"></i></button></td></tr>';
+
+
+$total_no_of_items=$ii;
+$total_no_of_qty=$total_no_of_qty+$value['qty_need'];
+$total_no_of_price=$total_no_of_price+$price_per_quantity;
+$total_no_of_gst=$total_no_of_gst+($cgst_sgst_amount*2);
+$total_no_of_mrp_amount=$total_no_of_mrp_amount+$total_amount;
+$total_no_of_net_amount=$total_no_of_net_amount+$total_amount;
+$total_no_of_cash_amount=$total_no_of_cash_amount+$total_amount;
+
+
+
+$i++;
+
+$ii++;
+
+
+	
+}
+else if ($value['stockcheck'] == "LessStock") 
+{
+	$product_less_id=$value['product_id'];
+	$less_stock_array[]=array('product_name'=>$product_index[$product_less_id]['productname']);
+}
+
+
+}
+}
+
+$total_no_of_cash_amount=round($total_no_of_cash_amount);
+$round_off=$total_no_of_cash_amount - $total_no_of_net_amount;
+
+$total_no_of_price=number_format($total_no_of_price, 2, '.', '');
+$total_no_of_gst=number_format($total_no_of_gst, 2, '.', '');
+$total_no_of_mrp_amount=number_format($total_no_of_mrp_amount, 2, '.', '');
+$total_no_of_net_amount=number_format($total_no_of_net_amount, 2, '.', '');
+$total_no_of_cash_amount=number_format($total_no_of_cash_amount, 2, '.', '');
+$round_off=number_format($round_off, 2, '.', '');
+
+
+$fetch_array[0]=$result_string;
+$fetch_array[1]=$total_no_of_items;
+$fetch_array[2]=$total_no_of_qty;
+$fetch_array[3]=$total_no_of_price;
+$fetch_array[4]=$total_no_of_gst;
+$fetch_array[5]=$total_no_of_mrp_amount;
+$fetch_array[6]=$total_no_of_net_amount;
+$fetch_array[7]=$total_no_of_cash_amount;
+$fetch_array[8]=$round_off;
+$fetch_array[9]=$unavailable_stock;
+$fetch_array[10]=$less_stock_array;
+
+
+
+//print_r($unavailable_stock);die;
+
+return json_encode($fetch_array, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+								
+
+
+
+
+
+}
+
+
+}
+}
+
 	
 }

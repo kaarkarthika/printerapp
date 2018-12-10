@@ -341,7 +341,7 @@ tbody#fetch_update_data input {
                                        <input   type="radio" name="discount" class="enable-textbox-flat" value="flat" disabled autocomplete="off">$
                                      </label>         
                                   </div>
-		                          <?= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total   ansrefrsh number text-right','id'=>'total_discountamount','onkeyup'=>'DiscountAmount(this,event);'])->label(false) ?>
+		                          <?= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total   ansrefrsh number text-right','id'=>'total_discountamount'])->label(false) ?>
                                  </div> 
 							   </td>
 						</tr>
@@ -385,7 +385,7 @@ tbody#fetch_update_data input {
                         <div class="panel-body padding-btns"  >		
                            <button type="button" class="btn   inp btn-xs btn-default remove_all pull-right ml-5">Close</button>	
                             <a href="<?php echo Yii::$app->request->BaseUrl;?>/index.php?r=lab-payment-prime/index" class="btn text-right btn-xs btn-default btn-bk pull-right ml-5" Title="Back To Grid">Grid </a>
-						     <button type="button" class="btn  btn-xs btn-warning remove_all pull-right ml-5">Refresh</button>						
+						     <button type="button" class="btn  btn-xs btn-warning remove_all pull-right ml-5">Clear</button>						
                         	<input type="hidden" name="saved_val" id='saved_val'>
 						 <button type="button" class="btn  btn-xs btn-success save_billing pull-right ml-5" id='saves_sucess' onclick="SaveLabBill();">Save</button>
 						
@@ -788,6 +788,7 @@ function PatientDetailsFetch(data)
         url:'<?php echo Yii::$app->homeUrl . "?r=lab-payment-prime/ajaxsinglefetchdetails&id=";?>'+data,
         success: function (result) 
         { 
+        	
         	var obj = $.parseJSON(result);
         	
         	$('#mrnumber').val(obj[0]['mr_number']);
@@ -1227,6 +1228,66 @@ function formatDate1(date)
 		return false;
 	}
 	}); 
+	
+	function calc_price(){
+		var price=0;
+  		var gst_amt=0;
+  		var net=0;var billtotal=0;
+  		
+		$(".calculation").each(function(){
+			var data_addid = $(this).attr('dataid')
+			var data1=data_addid.split("_")[0];
+        	var data2=data_addid.split("_")[1];
+        	
+       	if(data1 == 'LabTesting')
+        {
+        	var price_test_lab1=parseFloat($('#price_test_lab'+data2).val());
+			var cgst_amt_test=parseFloat($('#cgst_amt_lab'+data2).val());
+			var sgst_amt_test=parseFloat($('#sgst_amt_lab'+data2).val());
+        	var gst_lab1=cgst_amt_test+sgst_amt_test;
+        	var net_lab1=parseFloat($('#net_lab'+data2).val());
+        		price=price+price_test_lab1;
+        		gst_amt=gst_amt+gst_lab1;
+        		net=net+net_lab1;
+       			billtotal=price+gst_amt;
+        	 
+        } else if(data1 == 'TestGroup')
+        {
+        	var price_test_lab1=parseFloat($('#price_test_group'+data2).val());
+			var cgst_amt_test=parseFloat($('#cgst_amt_test'+data2).val());
+        	var sgst_amt_test=parseFloat($('#sgst_amt_test'+data2).val());
+        	var gst_lab1=cgst_amt_test+sgst_amt_test;
+        	var net_lab1=parseFloat($('#net_test_group'+data2).val());
+        			price=price+price_test_lab1;
+        		 	gst_amt=gst_amt+gst_lab1;
+        			net=net+net_lab1;
+       				billtotal=price+gst_amt;
+        		 	
+       	}
+     
+      });
+      
+				
+			$('#total_gst_amount').val(Math.round(gst_amt.toFixed(2)));
+				$('#total_gst_amount1').val(Math.round(gst_amt.toFixed(2)));
+				$('#bill_total').val(Math.round(billtotal.toFixed(2)));
+					
+				$('#total_sub_total').val(Math.round(price.toFixed(2)));
+				$('#total_net_amount').val(Math.round(net.toFixed(2)));
+				$('#total_net_amount1').val(Math.round(net.toFixed(2)));
+						
+				var insurance=$("#pat_insurance").val();
+				if(insurance=="1" || insurance=="3" ){
+					$('#total_paid_amount').attr('readonly','readonly');
+					$('#total_paid_amount').val('0');
+					$('#total_due_amount').val(Math.round(net.toFixed(2)));
+				}else {
+					$('#total_paid_amount').val(Math.round(net.toFixed(2)));
+					$('#total_due_amount').val('0');
+				}
+		
+	}
+	
     
     $("body").on('click', '.remove', function () 
 	{
@@ -1239,7 +1300,9 @@ function formatDate1(date)
   		var data1=data_addid.split("_")[0];
         var data2=data_addid.split("_")[1];
         var item_less=1;
-  		
+  		var price_test_lab=0;
+  		var gst_lab=0;
+  		var net_lab=0;
   		
   		var total_items=parseInt($('#no_of_items').val());
 		var total_gst=parseFloat($('#total_gst_amount').val());
@@ -1267,32 +1330,64 @@ function formatDate1(date)
         }
         else if(data1 == 'MasterGroup')
         {
-        	
-         	/* var price_test_lab=parseFloat($('#price_test_group'+data2).val());
-			var cgst_amt_test=parseFloat($('#cgst_amt_test'+data2).val());
-        	var sgst_amt_test=parseFloat($('#sgst_amt_test'+data2).val());
-        	var gst_lab=cgst_amt_test+sgst_amt_test;
-        	var net_lab=parseFloat($('#net_test_group'+data2).val()); */
-        	
-        	var price_test_lab=parseFloat($('#price_master_group'+data2).val());
-			var cgst_amt_test=parseFloat($('#cgst_amt_master'+data2).val());
-        	var sgst_amt_test=parseFloat($('#sgst_amt_master'+data2).val());
-        	var gst_lab=cgst_amt_test+sgst_amt_test;
-        	var net_lab=parseFloat($('#net_master_group'+data2).val());  
+        	//$(".calculation").each(function(){
+			/*	var data_addid=$(this).attr('dataval');
+				var data1=data_addid.split("_")[0];
+        		var data2=data_addid.split("_")[1]; */
+        		
+        		var price_test_lab1=parseFloat($('#price_test_group'+data2).val());
+				var cgst_amt_test=parseFloat($('#cgst_amt_test'+data2).val());
+        		var sgst_amt_test=parseFloat($('#sgst_amt_test'+data2).val());
+        		var gst_lab1=cgst_amt_test+sgst_amt_test;
+        		var net_lab1=parseFloat($('#net_test_group'+data2).val());
+        		 	price_test_lab=price_test_lab+price_test_lab1;
+        		 	gst_lab=gst_lab+gst_lab1;
+        			net_lab=net_lab+net_lab1;
+        	//}); 
         	
         }
+        	 
+        	 
+        	 
+      var total_price=total_sub_total-price_test_lab;
+      var total_netprice=total_net_amount-net_lab;
+      var total_gst_price=total_gst-gst_lab;
+      var bill_total_val=parseFloat(total_sub_total-price_test_lab)+parseFloat(total_gst-gst_lab);
+      
+      if(isNaN(bill_total_val) && (0 < bill_total_val)){
+      	$('#bill_total').val(0);
+      }
+      else{
+      	$('#bill_total').val(parseFloat(total_sub_total-price_test_lab)+parseFloat(total_gst-gst_lab));	
+      }
+      if(isNaN(total_gst_price) && (0<total_gst_price)){
+      		$('#total_gst_amount').val(0);
+      	}else{
+      		$('#total_gst_amount').val(parseFloat(total_gst-gst_lab).toFixed(2));
+      	}	 
         
-       
-        $('#no_of_items').val(parseInt(total_items-item_less).toFixed(2));
-		$('#total_gst_amount').val(parseFloat(total_gst-gst_lab).toFixed(2));
-		$('#total_sub_total').val(parseFloat(total_sub_total-price_test_lab).toFixed(2));
-		$('#total_net_amount').val(parseFloat(total_net_amount-net_lab).toFixed(2));
-		$('#total_net_amount1').val(parseFloat(total_net_amount-net_lab).toFixed(2));
-		$('#total_paid_amount').val(parseFloat(total_net_amount-net_lab).toFixed(2));
-		$('#total_due_amount').val(parseFloat($('#total_net_amount').val())-parseFloat($('#total_paid_amount').val()));
-		
-		$('#bill_total').val(parseFloat(total_sub_total-price_test_lab)+parseFloat(total_gst-gst_lab));
-		
+       if(isNaN(total_price) && (0 < total_price)){
+       		$('#total_sub_total').val(0);
+       }else{
+       		$('#total_sub_total').val(parseFloat(total_price).toFixed(2));
+       }
+       if(isNaN(total_price) && (0 < total_price)){
+       		$('#total_net_amount').val(0);
+       		$('#total_net_amount1').val(0);
+       		$('#total_paid_amount').val(0);
+       }else{
+       		$('#total_net_amount').val(parseFloat(total_net_amount-net_lab).toFixed(2));
+       		$('#total_net_amount1').val(parseFloat(total_net_amount-net_lab).toFixed(2));
+       		$('#total_paid_amount').val(parseFloat(total_net_amount-net_lab).toFixed(2));
+       }
+       var due_paid=parseFloat($('#total_net_amount').val())-parseFloat($('#total_paid_amount').val());
+      if(isNaN(due_paid) && (0 < due_paid)){
+      	$('#total_due_amount').val('');
+      }else{
+      	$('#total_due_amount').val(parseFloat($('#total_net_amount').val())-parseFloat($('#total_paid_amount').val()));
+      }
+       $('#no_of_items').val(parseInt(total_items-item_less).toFixed(2));
+	   
 		if(data1 == 'LabTesting')
         {
         	$('#lab_test'+data2).remove();
@@ -1304,66 +1399,17 @@ function formatDate1(date)
         else if(data1 == 'MasterGroup')
         {
         	$('.master_group'+data2).remove();
+        	calc_price();
         }
 
       	 var discount_per=$('#total_discountvaluetype').val();
-			//alert(discount_per);
+			
 			if(discount_per!=''){
-				//alert('test');
+			
 				DiscountPercentProcedure(discount_per,window.event);	
 			}
 		});
-/*
-  $("body").on('click', '.remove', function () 
-	{
-  		var data_addid = $(this).attr('dataid')
-  		var data1=data_addid.split("_")[0];
-        var data2=data_addid.split("_")[1];
-        var item_less=1;
-        alert(data1);
-        alert(data2);
-        alert(item_less); 
-        var total_items=parseInt($('#no_of_items').val());
-		var total_gst=parseFloat($('#total_gst_amount').val());
-		var total_sub_total=parseFloat($('#total_sub_total').val());
-		var total_net_amount=parseFloat($('#total_net_amount').val());
-        
-        if(data1 == 'LabTesting')
-        {
-        	var price_test_lab=parseFloat($('#price_test_lab'+data2).html());
-        	var cgst_lab_amt=parseFloat($('#cgst_amt_lab'+data2).html());
-        	var sgst_lab_amt=parseFloat($('#sgst_amt_lab'+data2).html());
-        	var gst_lab=cgst_lab_amt+sgst_lab_amt;
-        	var net_lab=parseFloat($('#net_lab'+data2).html());
-        	
-        }
-        else if(data1 == 'TestGroup')
-        {
-        	var price_test_lab=parseFloat($('#price_test_group'+data2).html());
-        	
-        	var cgst_amt_test=parseFloat($('#cgst_amt_test'+data2).html());
-        	var sgst_amt_test=parseFloat($('#sgst_amt_test'+data2).html());
-        	var gst_lab=cgst_amt_test+sgst_amt_test;
-        	var net_lab=parseFloat($('#net_test_group'+data2).html());
-        }
-        
-        $('#no_of_items').val(parseInt(total_items-item_less));
-		$('#total_gst_amount').val(parseFloat(total_gst-gst_lab));
-		$('#total_sub_total').val(parseFloat(total_sub_total-price_test_lab));
-		$('#total_net_amount').val(parseFloat(total_net_amount-net_lab));
-		$('#total_net_amount1').val(parseFloat(total_net_amount-net_lab));
-		$('#total_paid_amount').val(parseFloat(total_net_amount-net_lab));
-		if(data1 == 'LabTesting')
-        {
-        	$('#lab_test'+data2).remove();
-        }
-        else if(data1 == 'TestGroup')
-        {
-        	$('#test_group'+data2).remove();
-        }
-  
-});
-  */
+
 
 	
     
@@ -1424,6 +1470,7 @@ function formatDate1(date)
 	  			success:function(data)
 	  			{   
 	  			 
+	  			 $("#total_paid_amount").removeAttr("readonly");
 	  				$('#pat_name').val(data[1]['patientname']);
 	  				$('#pat_mob').val(data[1]['pat_mobileno']); 
 	  				$('#pat_doctor').val(data[2]['physician_name']);
@@ -1501,30 +1548,52 @@ $.alert({
 
 function DiscountPercent(data,event)
 {
-	$('#total_due_amount').val('');
-	var tbl_len=$('#fetch_update_data tr').length;
-	if(tbl_len !== 0)
-	{
-		var percentage=data.value;
+		var pat_name=$('#pat_name').val();
+		var mrnumber=$('#mrnumber').val();
+		var get_insurance=$('#pat_insurance').val();
 		
-		if(percentage <= 100)
+		if(pat_name !== '' && mrnumber !== '')
 		{
-			OverallDiscountPercentage(percentage);
-			$('#total_discountvaluetype').val(percentage);
+			if(get_insurance === "1" || get_insurance === "2" || get_insurance === "3")
+			{
+				$('#total_discountvaluetype').val('');
+				Alertment('This is Organization Patient not allowed to Discount');
+				return false;
+			}else{
+				$('#total_due_amount').val('');
+				var tbl_len=$('#fetch_update_data tr').length;
+				if(tbl_len !== 0)
+				{
+					var percentage=data.value;
+					
+					if(percentage <= 100)
+					{
+						OverallDiscountPercentage(percentage);
+						$('#total_discountvaluetype').val(percentage);
+					}
+					else if(percentage > 100)
+					{
+						percentage=100;
+						OverallDiscountPercentage(percentage);
+						$('#total_discountvaluetype').val(percentage);
+						Alertment('Discount Percent Not More Than 100%');
+					}
+				}
+				else
+				{
+					$('#total_discountvaluetype').val('');
+					Alertment('No Test Row Added');
+				}
+			}
 		}
-		else if(percentage > 100)
+		else
 		{
-			percentage=100;
-			OverallDiscountPercentage(percentage);
-			$('#total_discountvaluetype').val(percentage);
-			Alertment('Discount Percent Not More Than 100%');
+			$('#mrnumber').focus();
+			$('#total_discountvaluetype').val('');
+			Alertment('Add Patient Name');
+			return false;
 		}
-	}
-	else
-	{
-		$('#total_discountvaluetype').val('');
-		Alertment('No Test Row Added');
-	}
+	
 }
 
 //
@@ -1574,7 +1643,7 @@ function DefaultAmount()
 			
 			if(!isNaN(hiden_amt))
 			{
-				net_hidden_amount.push(hiden_amt);
+				net_hidden_amount.push(Math.round(hiden_amt.toFixed(2)));
 			}
 			
 		}
@@ -1584,20 +1653,13 @@ function DefaultAmount()
 			
 			if(!isNaN(hiden_amt))
 			{
-				net_hidden_amount.push(hiden_amt);
+				net_hidden_amount.push(Math.round(hiden_amt.toFixed(2)));
 			}
 		}
-		else if(data1 == 'MasterGroup')
-		{
-			var hiden_amt=parseFloat($('#net_test_master_hidden'+data2).val());
-			
-			if(!isNaN(hiden_amt))
-			{
-				net_hidden_amount.push(hiden_amt);
-			}
-		}
+		
 	});
 	var amt=net_hidden_amount.reduce((a, b) => a + b, 0);
+	//alert(net_hidden_amount);
 	return amt;
 }
 
@@ -1809,58 +1871,82 @@ $(window).bind('keydown', function(event) {
 });
 
 
+
 function PaidAmountCalculation(data,event) 
 {
+	//OverallDiscountPercentage(0);
 	var paid_amount=data.value;
 	var overall_net_amount=DefaultAmount();
 	var grid_length=$("#fetch_update_data tr").length;
-	
 	$('#total_discountvaluetype').val('');
-	$('#total_discountamount').val('');
+	$dis=$('#total_discountamount').val('');
+	var get_insurance=$('#pat_insurance').val();
+	var mrnumber=$('#mrnumber').val();
+	var pat_name=$('#pat_name').val();
 	
-	$(".calculation").each(function() 
-	{
-		var data_addid=$(this).attr('dataid');
-	  	var data1=data_addid.split("_")[0];
-		var data2=data_addid.split("_")[1];
-		if(data1 == 'LabTesting')
-		{
-			var hidden_amt=parseFloat($('#net_lab_hidden'+data2).val());
-			$('#net_lab'+data2).val(hidden_amt.toFixed(2));
-		}
-		else if(data1 == 'TestGroup')
-		{
-			var hidden_amt=parseFloat($('#net_test_group_hidden'+data2).val());
-			$('#net_test_group1'+data2).val(hidden_amt);
-		}
-		else if(data1 == 'MasterGroup')
-		{
-			var hidden_amt=parseFloat($('#net_test_master_hidden'+data2).val());
-			$('#input#net_master_group'+data2).val(hidden_amt);
-		}
+		if(get_insurance === "1" || get_insurance === "2" || get_insurance === "3")
+			{
+				$('#total_paid_amount').val("");
+				Alertment('This is Organization Patient');
+				$('#remarks').focus();
+				//return false;
+			}
+		var tot=0;
+			//Paid_cal();
+				$(".calculation").each(function() 
+				{
+					var data_addid=$(this).attr('dataid');
+				  	var data1=data_addid.split("_")[0];
+					var data2=data_addid.split("_")[1];
+					if(data1 == 'LabTesting')
+					{
+						var hidden_amt=parseFloat($('#net_lab_hidden'+data2).val());
+						$('#discount_amount_lab'+data2).val('');
+						$('#discount_percent_lab'+data2).val('');
+						$('#net_lab'+data2).val(hidden_amt.toFixed(2));
+					}
+					else if(data1 == 'TestGroup')
+					{
+						var hidden_amt=parseFloat($('#net_test_group_hidden'+data2).val());
+						$('#discount_percent_test'+data2).val('');
+						$('#discount_amount_test'+data2).val('');
+						$('#net_test_group'+data2).val(hidden_amt);
+					}
+				/*	else if(data1 == 'MasterGroup')
+					{
+						var hidden_amt=parseFloat($('#net_test_master_hidden'+data2).val());
+						$('#discount_amount_lab'+data2).val('');
+						$('#discount_percent_lab'+data2).val('');
+						$('#input#net_master_group'+data2).val(hidden_amt);
+					} */
+					
+					tot=tot+hidden_amt;
+					//alert(tot);
+							
+				});
 				
-	});
-	
+		
+
 	if(grid_length !== 0)
 	{
 		if(paid_amount !== '')
 		{
 			if(overall_net_amount < paid_amount)
 			{
-				$('#total_paid_amount').val(overall_net_amount);
+				$('#total_paid_amount').val(Math.round(overall_net_amount));
 				$('#total_due_amount').val('');   
 				Alertment('Net Amount Not Greater Than Paid Amount');
 			}
 			else
 			{
 			   var calculation=	overall_net_amount - paid_amount;
-			   $('#total_net_amount').val(overall_net_amount.toFixed(2));
-			   $('#total_due_amount').val(calculation.toFixed(2));   
+			   $('#total_net_amount').val(Math.round(overall_net_amount.toFixed(2)));
+			   $('#total_due_amount').val(Math.round(calculation.toFixed(2)));   
 			}
 		}
 		else if(paid_amount === '')
 		{
-			 $('#total_paid_amount').val(overall_net_amount);
+			 $('#total_paid_amount').val(Math.round(overall_net_amount));
 			 $('#total_due_amount').val('');   
 		}
 	}
@@ -1869,6 +1955,9 @@ function PaidAmountCalculation(data,event)
 		$('#total_paid_amount').val('');
 		Alertment('No Test To Be Add');
 	}
+	
+//	DiscountPercent();
+	
 		
 }
 
@@ -1983,13 +2072,25 @@ function cleartxt (argument) {
     	$("#fetch_update_data tr").remove();
     	$("#saved_val").val('');
     	$("#saves_sucess").removeAttr("disabled");
+    	$("#total_paid_amount").removeAttr("readonly");
     	cleartxt();
     	clearhead();
     });
     
   
-	 
+
+$('#mrnumber').bind('keyup', function(e) {
+
+    if ( e.keyCode === 13 ) { // 13 is enter key
+       
+        $('[tabindex="7"]').focus();
+
+    }
+
+});
+
 </script>
+
 
 
  

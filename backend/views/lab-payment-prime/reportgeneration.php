@@ -10,7 +10,7 @@ use backend\models\NewPatient;
 /* @var $searchModel backend\models\LabPaymentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Lab Payments';
+$this->title = 'Test Report';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
 		
 			['attribute' => 'name', 
-            	'label' => 'Name',
+            	'label' => 'Patient Name',
              	],
              [
             'attribute'=>'Age/Gender', 
@@ -145,7 +145,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn',
                'header'=> 'Action',
                 'headerOptions' => ['style' => 'width:150px;color:#337ab7;'],
-               'template'=>'{viewlab}{report}{print}{samplecollect}',
+               'template'=>'{viewlab}{report}{samplecollect}',
                             'buttons'=>[
                              'viewlab' => function ($url, $model, $key) {
                                    return Html::button('<i class="glyphicon glyphicon-eye-open"></i>', ['value' => $url, 'style'=>'margin-right:4px;','class' => 'btn btn-primary btn-xs view view gridbtncustom modalView', 'data-toggle'=>'tooltip', 'title' =>'View' ]);
@@ -172,7 +172,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                   }
                                	
 								 },  // ss code start 
-							'print' => function ($url, $model, $key) 
+							/*'print' => function ($url, $model, $key) 
 								   {
                                         $options = array_merge([
                                             'class' => 'btn btn-danger btn-xs pdf gridbtncustom',
@@ -186,7 +186,7 @@ $this->params['breadcrumbs'][] = $this->title;
 										  if($model->sample_test){
 									    return Html::a('<span class="fa fa-print"></span>', $url, $options);
 									    }
-                                    },
+                                    }, */
                         // ss code end   
                              	       /*'delete' => function ($url, $model, $key) {
                                   $session = Yii::$app->session;

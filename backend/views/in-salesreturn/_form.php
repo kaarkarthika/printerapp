@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model backend\models\InSalesreturn */
 /* @var $form yii\widgets\ActiveForm */
+
 ?>
 
 <div class="in-salesreturn-form">

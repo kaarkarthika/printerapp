@@ -198,7 +198,7 @@ $subvisit->ucil_date = '';
 					<div class="input-group input-group-sm">	
                    <?= $form->field($subvisit, 'consultant_doctor')->textInput(['class' => 'form-control w-cus','onkeyup'=>'EmptyConsultant(this.value);','required'=>true])->label('Consultant') ?>
                     <span class="input-group-btn">
-					   <button type="button" style="top: 13px;" class="inp btn btn-default btn-flat btn    "><i class="ssearch glyphicon glyphicon-search"></i></button>
+					   <button type="button" style="top: 13px;" onclick="ConsultantDoctor();" class="inp btn btn-default btn-flat btn"><i class="ssearch glyphicon glyphicon-search"></i></button>
 				    </span>
 				    </div>
 					
@@ -370,7 +370,35 @@ $subvisit->ucil_date = '';
   </div>
 </div> 
 
-
+<div id="unit_consultant_details" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-lg">
+	
+	<!-- Modal content-->
+	<div class="modal-content">
+	  <div class="modal-header tmp-head">
+	    <button type="button" class="close tmp-close" data-dismiss="modal">&times;</button>
+	    <h4 class="modal-title">Doctor Details</h4>
+	  </div>
+	  <div class="modal-body">
+	  	<div class="" id="doctor_history_report">
+	  
+	  <table id="unit_consultant_table" class="display" style="width:100%">
+	    <thead>
+	        <tr>
+	            <th>Doctor Name</th>
+	            <th>Specialist</th>
+	        </tr>
+	    </thead>
+	  </table>		
+		</div>
+	  </div>
+	  <div class="inp modal-footer">
+	    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+	  </div>
+	</div>
+	
+	  </div>
+</div> 
 
 <script>
 
@@ -384,6 +412,7 @@ $(document).ready(function(){
 	CommonRules();
 	//InsuranceFetch();
 	jtable_pd();
+	doctor_unit_consultant();
 	$("body").on('keypress', '.number', function (e) 
 	{
 		//if the letter is not digit then display error and don't type anything
@@ -1488,4 +1517,292 @@ function showAge(dobYear, dobMonth, dobDay) {
 		if (ageDays>1) document.write("s");
 	}
 }
+
+function ConsultantDoctor()
+{
+	$modal = $('#unit_consultant_details');
+	$modal.modal('show');
+}
+
+$("body").on('click', '.unit_consultant_details', function ()
+{
+	$modal = $('#unit_consultant_details');
+	$modal.modal('show');
+	setTimeout(function(){ 
+	var table_as = $("#unit_consultant_table").DataTable();
+	table_as.ajax.reload( function (json) {table_as.cell( ':eq(0)' ).focus();} );}, 1000);
+});
+
+
+function doctor_unit_consultant(){
+    	
+  var url=('<?php echo Url::base('http'); ?>');
+  var ajax_url=url+'/index.php?r=newpatient/unitconsultant';
+  var table_reg= $('#unit_consultant_table').DataTable({
+        "processing": true,
+        "serverSide": true,
+         "ajax": {
+        	"url": ajax_url,
+        	 "type": "POST"
+        	},
+        	keys: {
+           		keys: [ 13 /* ENTER */, 38 /* UP */, 40 /* DOWN */ ]
+        	},
+        	"columns": [
+            { "data": "doctorname"},
+            { "data": "specialist"},
+        	],
+        initComplete: function() {
+		   this.api().row( {order: 'current' }, 0).select();
+ 
+		}
+    });
+   $('#unit_consultant_table').on('key-focus.dt', function(e, datatable, cell){
+     
+         $('#unit_consultant_table_filter input').focus();
+    });
+  $('#unit_consultant_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
+        
+       
+        var table_as = $("#unit_consultant_table").DataTable();
+        if(key === 13){
+        	
+        	$('#unit_consultant_table thead').on( 'click', 'th', function () {
+				  var columnData = table_as.column( this ).data();
+  				alert(columnData);
+				} );
+    				
+            var data_reg = table_as.row(cell.index().row).data();
+			// var cell = table_reg.cell( this );
+		    // alert(data_reg.join(','));             // FOR DEMONSTRATION ONLY
+            // $("#example-console").html(data.join(', '));
+            // $('#reg_table_filter input').val("");
+          	 $('#unit_consultant_table_filter input').focus();
+        }
+    }); 
+
+$('#unit_consultant_table').off('click.rowClick').on('click.rowClick', 'td', function () {      
+	var data = table_reg.row( this ).id();
+ 	Unitdetailsfetch(data);
+});
+
+$('#unit_consultant_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
+     if(key === 13){
+      // var id = table_reg.row(this).id();
+        var data = table_reg.row(cell.index().row).id();
+   		//Unitdetailsfetch(data);
+ 	}
+});    
+    
+}
+
+function Unitdetailsfetch(data_val)
+{
+	$('#load1').show();
+			$.ajax({
+		  			url:'<?php echo Yii::$app->homeUrl . "?r=newpatient/specialistdatatable&id=";?>'+data_val,
+		  			method:'POST',
+		  			dataType:'json',
+		  			success:function(data)
+		  			{   
+		  			 	$('#load1').hide();
+		  			 	
+		  			
+		  			 	
+		  			 	EmptyConsultant('');
+		  			 	
+		  			 	$('#subvisit-consultant_doctor').val(data[2]['physician_name']);
+		  			 	var consultant_name=$('#subvisit-consultant_doctor').val();
+		  			 	
+		  			 	//UCIL AMOUNT CODE
+		  			 	var insurance_type=$('#newpatient-insurance_type_id').val();
+		  			 	var is_free_visit=$('#subvisit-is_freevisit').val();
+		  			 	var previous_consultant_name=$('#subvisit-consultant_name').val();
+		  			 	
+		  			 	
+		  			 	if(insurance_type !== '')
+		  			 	{
+		  			 		var validatedtype=InsuranceMasterValidation(insurance_type);
+		  			 		if(validatedtype === 'OK')
+		  			 		{
+		  			 			if(insurance_type === 'UCIL')
+				  			 	{
+				  			 		if(is_free_visit === 'YES')
+		  			 				{
+		  			 					if(previous_consultant_name === data[2]['physician_name'])
+		  			 					{
+		  			 						if(data[1]['specialist'] !== '')
+							  			 	{
+							  			 		$('#subvisit-department').val(data[1]['specialist']);
+							  			 	}
+							  			 	
+							  			 	$('#subvisit-total_amount').val(0);
+								  			$('#subvisit-net_amt').val(0);
+								  			$('#subvisit-paid_amt').val(0);
+							  			 	$('#subvisit-due_amt').val('');
+		  			 					}
+					  			 		else
+					  			 		{
+					  			 			if(data[1]['specialist'] !== '')
+							  			 	{
+							  			 		$('#subvisit-department').val(data[1]['specialist']);
+							  			 	}
+							  			 	
+							  			 	$('#subvisit-total_amount').val(data[1]['ucil_amount']);
+							  				$('#subvisit-net_amt').val(data[1]['ucil_amount']);
+							  				$('#subvisit-paid_amt').val(0);
+						  			 		$('#subvisit-due_amt').val(data[1]['ucil_amount']);
+					  			 		}
+						  			 }
+						  			 else if(is_free_visit === 'NO')
+						  			 {
+						  			 	if(data[1]['specialist'] !== '')
+						  			 	{
+						  			 		$('#subvisit-department').val(data[1]['specialist']);
+						  			 	}
+						  			 	
+						  			 	$('#subvisit-total_amount').val(data[1]['ucil_amount']);
+							  			$('#subvisit-net_amt').val(data[1]['ucil_amount']);
+							  			$('#subvisit-paid_amt').val(0);
+						  			 	$('#subvisit-due_amt').val(data[1]['ucil_amount']);
+						  			 }
+					  			 	
+				  			 	}
+				  			 	else if(insurance_type === 'Aarogyasri')
+				  			 	{
+				  			 		if(is_free_visit === 'YES')
+		  			 				{
+		  			 					if(previous_consultant_name === data[2]['physician_name'])
+		  			 					{
+		  			 						if(data[1]['specialist'] !== '')
+							  			 	{
+							  			 		$('#subvisit-department').val(data[1]['specialist']);
+							  			 	}
+							  			 	
+							  			 	$('#subvisit-total_amount').val(0);
+								  			$('#subvisit-net_amt').val(0);
+								  			$('#subvisit-paid_amt').val(0);
+							  			 	$('#subvisit-due_amt').val('');
+		  			 					}
+					  			 		else
+					  			 		{
+					  			 			if(data[1]['specialist'] !== '')
+							  			 	{
+							  			 		$('#subvisit-department').val(data[1]['specialist']);
+							  			 	}
+							  			 	
+							  			 	$('#subvisit-total_amount').val(data[1]['consult_amount']);
+							  				$('#subvisit-net_amt').val(data[1]['consult_amount']);
+							  				$('#subvisit-paid_amt').val(0);
+						  			 		$('#subvisit-due_amt').val(data[1]['consult_amount']);
+					  			 		}
+						  			 }
+						  			 else if(is_free_visit === 'NO')
+						  			 {
+						  			 	if(data[1]['specialist'] !== '')
+						  			 	{
+						  			 		$('#subvisit-department').val(data[1]['specialist']);
+						  			 	}
+						  			 	
+						  			 	$('#subvisit-total_amount').val(data[1]['consult_amount']);
+							  			$('#subvisit-net_amt').val(data[1]['consult_amount']);
+							  			$('#subvisit-paid_amt').val(0);
+						  			 	$('#subvisit-due_amt').val(data[1]['consult_amount']);
+						  			 }
+					  			 	
+				  			 	}
+		  			 			else
+		  			 			{
+		  			 				
+		  			 				
+		  			 				if(is_free_visit === 'YES')
+		  			 				{
+		  			 					if(previous_consultant_name === data[2]['physician_name'])
+		  			 					{
+				  			 				if(data[1]['specialist'] !== '')
+							  			 	{
+							  			 		$('#subvisit-department').val(data[1]['specialist']);
+							  			 	}
+							  			 	
+							  			 	$('#subvisit-total_amount').val(0);
+							  			 	$('#subvisit-net_amt').val(0);
+							  			 	$('#subvisit-paid_amt').val(0);
+						  			 	}
+						  			 	else
+						  			 	{
+						  			 		if(data[1]['specialist'] !== '')
+							  			 	{
+							  			 		$('#subvisit-department').val(data[1]['specialist']);
+							  			 	}
+							  			 	
+							  			 	$('#subvisit-total_amount').val(data[1]['consult_amount']);
+							  			 	$('#subvisit-net_amt').val(data[1]['consult_amount']);
+							  			 	$('#subvisit-paid_amt').val(data[1]['consult_amount']);
+						  			 	}
+						  			}
+						  			else if(is_free_visit === 'NO')
+						  			{
+						  				if(data[1]['specialist'] !== '')
+						  			 	{
+						  			 		$('#subvisit-department').val(data[1]['specialist']);
+						  			 	}
+						  			 	
+						  			 	$('#subvisit-total_amount').val(data[1]['consult_amount']);
+						  			 	$('#subvisit-net_amt').val(data[1]['consult_amount']);
+						  			 	$('#subvisit-paid_amt').val(data[1]['consult_amount']);
+						  			}
+					  			}
+		  			 		}
+		  			 		else
+		  			 		{
+		  			 			$('#newpatient-insurance_type_id').val('');
+		  			 			$('#subvisit-consultant_doctor').val('');
+		  			 			$('#newpatient-insurance_type_id').focus();
+		  			 			alert('Invalid Insurance Type');
+		  			 		}
+		  			 	}
+		  			 	else if(insurance_type === '')
+		  			 	{
+		  			 		if(data[1]['specialist'] !== '')
+			  			 	{
+			  			 		$('#subvisit-department').val(data[1]['specialist']);
+			  			 	}
+			  			 	
+			  			 			if(is_free_visit === 'YES')
+		  			 				{
+		  			 					if(previous_consultant_name === data[2]['physician_name'])
+		  			 					{
+				  			 				
+							  			 	
+							  			 	$('#subvisit-total_amount').val(0);
+							  			 	$('#subvisit-net_amt').val(0);
+							  			 	$('#subvisit-paid_amt').val(0);
+						  			 	}
+						  			 	else
+						  			 	{
+						  			 		
+							  			 	
+							  			 	$('#subvisit-total_amount').val(data[1]['consult_amount']);
+							  			 	$('#subvisit-net_amt').val(data[1]['consult_amount']);
+							  			 	$('#subvisit-paid_amt').val(data[1]['consult_amount']);
+						  			 	}
+						  			}
+						  			else if(is_free_visit === 'NO')
+						  			{
+						  				
+						  			 	
+						  			 	$('#subvisit-total_amount').val(data[1]['consult_amount']);
+						  			 	$('#subvisit-net_amt').val(data[1]['consult_amount']);
+						  			 	$('#subvisit-paid_amt').val(data[1]['consult_amount']);
+						  			}
+		  			 	}
+			        	
+		  			}
+		  	});
+		  	
+		  	$modal = $('#unit_consultant_details');
+			$modal.modal('hide');
+}
+
+
 </script>

@@ -1661,7 +1661,7 @@ else
         ->where(['BETWEEN','purchase_data.invoice_date',$from_date,$todate])
         ->andWhere(['or',
 		['like','purchase_data.bill_no',$s_val],
-		['like','purchase_data.invoice_no',$s_val],
+		['like','purchase_data.created_at',$s_val],
 		['like','vendor.vendorname',$s_val]]
 		)
         ->limit(100000)->all(); 
@@ -1674,7 +1674,7 @@ else
         ->from('purchase_data')
         ->join('LEFT OUTER JOIN', 'vendor',
             'purchase_data.vendor =vendor.vendorid')		
-        ->where(['BETWEEN','purchase_data.invoice_date',$from_date,$todate])
+        ->where(['BETWEEN','purchase_data.created_at',$from_date.' 00:00:00',$todate.' 23:59:59'])
         ->andWhere(['or',
 		['like','purchase_data.bill_no',$s_val],
 		['like','purchase_data.invoice_no',$s_val],
@@ -1688,10 +1688,12 @@ else
     	//echo $query->createCommand()->getRawSql();
 		//die;
 		
-			$response=array();
+			
 			
 			if(!empty($data1))
 			{
+				$response=array();
+				
 				$fetch_array=array();
 				$i=0;
 				$responce['draw']=$draw;
@@ -1705,12 +1707,12 @@ else
 					$i++;
 				}
 			
-				
+				return json_encode($responce);
+				die;	
 				
 			}
 
-			return json_encode($responce);
-			die;
+			
 	}
 
 	public function actionBilldetailsfetch($id)
@@ -1744,19 +1746,19 @@ if(!empty($purchase_data_fetch))
         $tbl.='</select>'; 								  		 					 
         $tbl.='<span class="ipt input-group-btn " value=" ">';
         $tbl.='<button type="button" class="btn inp btn-default"><i class="glyphicon glyphicon-plus"></i></button></span></div></td>';
-        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['except_free_qty'].' id="quantity1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="Quantity(this.value,event,1);" class=" freezed quantity text-right ip-btn-style f-11" name="QUANTITY[]"></td>';
-        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['receivedfreequantity'].' id="free_quantity1" data-id="1" onkeypress="return isNumberKey(event);" onkeyup="FreeQuantity(this.value,event,1);" class=" freezed free_quantity text-right ip-btn-style f-11" name="FREE_QUANTITY[]"></td>';
-        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['purchase_no_of_unit'].' id="pack_size1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed pack_size text-right ip-btn-style f-11" name="PACK_SIZE[]"></td>';
-        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['received_qty'].' id="total_unit1" data-id="1" readonly="" required="" onkeypress="return isNumberKey(event);" class=" freezed total_unit text-right ip-btn-style f-11" name="TOTAL_UNIT[]"></td>';
-        $tbl.='<td style="width:6%"><input type="text" disabled value='.$value['priceperquantity'].' id="rate_per_unit1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="RateCalculation(this.value,event,1);" class=" freezed rate_per_unit text-right ip-btn-style f-11" name="RATE_PER_UNIT[]"></td>';
-        $tbl.='<td style="width:6%"><input type="text" disabled value='.$value['batch_number'].'  id="batch_no1" data-id="1" required="" class=" freezed batch_no ip-btn-style f-11" name="BATCH_NO[]"></td>';
-        $tbl.='<td style="width:6%"><input type="text" disabled value='.date('d-m-Y',strtotime($value['expiredate'])).' id="expired_date1" data-id="1" required="" onkeypress="return isNumberKey(event);" class=" freezed expired_date ip-btn-style f-11" name="EXPIRED_DATE[]"></td>';
-        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['discountpercent'].' id="discount_percent1" data-id="1" onkeypress="return isNumberKey(event);" onkeyup="DiscountCalculation(this.value,event,1);" class=" freezed discount_percent text-right ip-btn-style f-11" name="DISCOUNT_PERCENT[]"></td>';
-        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['discountvalue'].' id="discount_amount1" data-id="1" readonly="" onkeypress="return isNumberKey(event);" class=" freezed discount_amount text-right ip-btn-style f-11" name="DISCOUNT_AMOUNT[]"></td>';
-        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['gstpercent'].' id="gst_percent1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed gst_percent text-right ip-btn-style f-11" name="GST_PERCENT[]"></td>';
-        $tbl.='<td style="width:4%"><input type="text" disabled value='.$value['gstvalue'].' id="gst_amount1" data-id="1" readonly="" onkeypress="return isNumberKey(event);" class=" freezed gst_amount text-right ip-btn-style f-11" name="GST_AMOUNT[]"></td>';
-        $tbl.='<td style="width:6%"><input type="text" disabled value='.$value['mrpperunit'].' id="mrp1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="MRPCalculation(this.value,event,1);" onblur="MRPCalculation(this.value,event,1);" class=" freezed mrp ip-btn-style text-right f-11" name="MRP[]"></td>';
-        $tbl.='<td style="width:6%"><input type="text" disabled value='.$value['purchase_price'].' id="total_amount1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed total_amount text-right ip-btn-style f-11" name="TOTALAMOUNT[]">';
+        $tbl.='<td style="width:4%"><input type="text" disabled value="'.$value['except_free_qty'].'" id="quantity1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="Quantity(this.value,event,1);" class=" freezed quantity text-right ip-btn-style f-11" name="QUANTITY[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value="'.$value['receivedfreequantity'].'" id="free_quantity1" data-id="1" onkeypress="return isNumberKey(event);" onkeyup="FreeQuantity(this.value,event,1);" class=" freezed free_quantity text-right ip-btn-style f-11" name="FREE_QUANTITY[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value="'.$value['purchase_no_of_unit'].'" id="pack_size1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed pack_size text-right ip-btn-style f-11" name="PACK_SIZE[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value="'.$value['received_qty'].'" id="total_unit1" data-id="1" readonly="" required="" onkeypress="return isNumberKey(event);" class=" freezed total_unit text-right ip-btn-style f-11" name="TOTAL_UNIT[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value="'.$value['priceperquantity'].'" id="rate_per_unit1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="RateCalculation(this.value,event,1);" class=" freezed rate_per_unit text-right ip-btn-style f-11" name="RATE_PER_UNIT[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value="'.$value['batch_number'].'"  id="batch_no1" data-id="1" required="" class=" freezed batch_no ip-btn-style f-11" name="BATCH_NO[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value="'.date('d-m-Y',strtotime($value['expiredate'])).'" id="expired_date1" data-id="1" required="" onkeypress="return isNumberKey(event);" class=" freezed expired_date ip-btn-style f-11" name="EXPIRED_DATE[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value="'.$value['discountpercent'].'"  id="discount_percent1" data-id="1" onkeypress="return isNumberKey(event);" onkeyup="DiscountCalculation(this.value,event,1);" class=" freezed discount_percent text-right ip-btn-style f-11" name="DISCOUNT_PERCENT[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value="'.$value['discountvalue'].'"  id="discount_amount1" data-id="1" readonly="" onkeypress="return isNumberKey(event);" class=" freezed discount_amount text-right ip-btn-style f-11" name="DISCOUNT_AMOUNT[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value="'.$value['gstpercent'].'"  id="gst_percent1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed gst_percent text-right ip-btn-style f-11" name="GST_PERCENT[]"></td>';
+        $tbl.='<td style="width:4%"><input type="text" disabled value="'.$value['gstvalue'].'"  id="gst_amount1" data-id="1" readonly="" onkeypress="return isNumberKey(event);" class=" freezed gst_amount text-right ip-btn-style f-11" name="GST_AMOUNT[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value="'.$value['mrpperunit'].'"  id="mrp1" data-id="1" required="" onkeypress="return isNumberKey(event);" onkeyup="MRPCalculation(this.value,event,1);" onblur="MRPCalculation(this.value,event,1);" class=" freezed mrp ip-btn-style text-right f-11" name="MRP[]"></td>';
+        $tbl.='<td style="width:6%"><input type="text" disabled value="'.$value['purchase_price'].'"  id="total_amount1" data-id="1" required="" readonly="" onkeypress="return isNumberKey(event);" class=" freezed total_amount text-right ip-btn-style f-11" name="TOTALAMOUNT[]">';
         $tbl.='<input type="hidden" id="sub_total_amount1" data-id="1" class="sub_total_amount text-right ip-btn-style f-11" name="SUBTOTALAMOUNT[]"></td></tr>';
     	
 	}

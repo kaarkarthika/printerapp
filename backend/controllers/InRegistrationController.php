@@ -150,7 +150,7 @@ class InRegistrationController extends Controller
 		{
 			 
 			$model1=InRegistration::find()->where(['mr_no'=>$_POST['InRegistration']['mr_no']])->andWhere(['is_active'=>1])->asArray()->one();
-			
+			//echo $model1; 
 	    if(empty($model1))
 	    {
 	    	
@@ -309,6 +309,8 @@ class InRegistrationController extends Controller
 			
 			}else{
 				$fetch_view[0]='IPExpiry';
+				$fetch_view[1]=$model1;
+				
 				$myJSON = json_encode($fetch_view);
 				return $myJSON;
 			}
@@ -327,7 +329,9 @@ class InRegistrationController extends Controller
 			$ArrayHelper_patient=ArrayHelper::index($Newpatient,'patientid');
 			$Newpatient_json=json_encode($ArrayHelper_patient);
 			
-		
+			$physicianmaster_fetch=ArrayHelper::index(Physicianmaster::find()->select(['id'=>'id','physician_name'=>'physician_name','specialist'=>'specialist'])->where(['is_active'=>'1'])->asArray()->all(),'id');
+			$json_physicianmaster=json_encode($physicianmaster_fetch,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+			//print_r($json_physicianmaster);die;
 			
 			
 			return $this->render('create', [
@@ -340,6 +344,7 @@ class InRegistrationController extends Controller
             'specialistdoctor' => $specialistdoctor,
             'insurance' => $insurance,
             'room_type' => $room_type,
+            'json_physicianmaster' => $json_physicianmaster,
         ]);
 				
 		}
@@ -996,33 +1001,35 @@ public function actionAjaxipnumberselect($id)
 		}
 
 		
-		$physicianmaster_count=Physicianmaster::find()->select(['id'=>'id','physician_name'=>'physician_name'])->where(['is_active'=>'1'])
+		$physicianmaster_count=Physicianmaster::find()->select(['id'=>'id','physician_name'=>'physician_name','specialist'=>'specialist'])->where(['is_active'=>'1'])
 		->andWhere(['or',['like','physician_name',$s_val]])
 		->limit(100000)->asArray()->all();
 		
-		$physicianmaster=Physicianmaster::find()->select(['id'=>'id','physician_name'=>'physician_name'])->where(['is_active'=>'1'])
+		$physicianmaster=Physicianmaster::find()->select(['id'=>'id','physician_name'=>'physician_name','specialist'=>'specialist'])->where(['is_active'=>'1'])
 		->andWhere(['or',['like','physician_name',$s_val]])
 		->limit($length)->offset($sfd)->asArray()->all();
 		
 		
+
 		
-		
-		$response='';
 			
 		if(!empty($physicianmaster))
 		{
+			$response=array();
 			$fetch_array=array();
 			$responce['draw']=$draw;
 			$responce['recordsTotal']= $length;
 			$responce['recordsFiltered']= count($physicianmaster_count);
 			foreach ($physicianmaster as $key => $value) 
 			{
-				$responce['data'][]=array("DT_RowId"=>$value['id'],"doctorname"=>$value['physician_name']);
+				$responce['data'][]=array("DT_RowId"=>$value['id'].'_'.$value['specialist'],"doctorname"=>$value['physician_name']);
 			}
+			
+			return json_encode($responce);
+			die;
 		}
 
-		return json_encode($responce);
-		die;
+		
 	}
 
 
@@ -1109,6 +1116,25 @@ public function actionAjaxipnumberselect($id)
 		return json_encode($fetch_array);
 	}
 	
+	public function actionSpecialistdatatable($id)
+	{
+		if(!empty($id))
+		{
+			$physicianmaster=Physicianmaster::find()->select(['id'=>'id','physician_name'=>'physician_name','specialist'=>'specialist'])->where(['id'=>$id])->asArray()->one();
+		
+			if(!empty($physicianmaster))
+			{
+				$specialistdoctor=Specialistdoctor::find()->select(['s_id'=>'s_id','specialist'=>'specialist','consult_amount'=>'consult_amount','ucil_amount'=>'ucil_amount'])->where(['s_id'=>$physicianmaster['specialist']])->asArray()->one();
+				
+				$fetch_array=array();
+				$fetch_array[0]=$id;
+				$fetch_array[1]=$specialistdoctor;
+				$fetch_array[2]=$physicianmaster;
+				
+				return json_encode($fetch_array);
+			}
+		}
+	}
 	
 	/*public function actionBednogrid($id)
 	{

@@ -71,7 +71,7 @@ $this->title = 'In Sales';
                
                 'headerOptions' => ['style' => 'width:120px;color:#337ab7;'],
                 'contentOptions' => ['width' => '200px;'],
-               'template'=>'{view}{opreturns}',
+               'template'=>'{view}{opreturns}{invoice}',
                             'buttons'=>[
                               'view' => function ($url, $model, $key) {
                                   $session = Yii::$app->session;
@@ -97,6 +97,22 @@ $this->title = 'In Sales';
                                     $url= Url::to(['in-sales/opreturns', 'id' =>  urlencode(base64_encode($model -> opsaleid))]);
                                     return Html::a('<span class="fa fa-edit" ></span>', $url,$options);   
                                }, 
+                               
+							    'invoice' => function ($url, $model) 
+                              {
+                                    $options = array_merge([
+                                            'class' => 'btn btn-primary btn-xs gridbtncustom',
+                                            'data-toggle'=>'tooltip',
+                                            'title' => Yii::t('yii', 'Invoice'),
+                                            'aria-label' => Yii::t('yii', 'Return Tablet'),
+                                            'data-pjax' => '0',
+                                            'style'=>'margin-right:4px;',
+                                            'target'=>'_blank'
+                                        ]);
+                                    
+                                    $url= Url::to(['in-sales/invoice', 'id' =>  $model -> opsaleid]);
+                                    return Html::a('<span class="fa fa-file-pdf-o" ></span>', $url,$options);   
+                               },
                              
                                 'delete' => function ($url, $model, $key) {
                                     $session = Yii::$app->session;

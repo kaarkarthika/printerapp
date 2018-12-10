@@ -301,6 +301,10 @@ class NewpatientController extends Controller
 		}
 	}
 	
+	
+	
+	
+	
 	public function actionInsurancefetch()
 	{
 		
@@ -2651,12 +2655,14 @@ public function actionAjaxsinglefetch($id)
 				$tbl1.='<p style=" line-height:2px;font-size:14px;">   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(iii) any employement or work .............</p>';
 				$tbl1.='<p style=" line-height:1.7;font-size:14px;"> *(c) is suffering from .................... and shoud give this disability * cured/controlled and should be again examined within a period of ......................... months. He/She* will appear For re-examination with the result of test of ................................* and the opinion of  ................................ specialist from ................. He/She* may be permitted/not* permitted to Carry on his duties during this period.</p>';
 			    $tbl1.='<table><tr><td><img src="images/square-box.png" width="150" height="150"></td><td>
+				<p ></p><p ></p><p ></p><p ></p>
 				<p ><h4 style="font-size:14px;line-height:2px;">Signature of the examining authority</h4></p>
+				<p ></p>
 				<p style="font-size:14px;line-height:2px;">...............................................................</p>
 				<p style="font-size:14px;line-height:2px">Name and designation in Block letters</p></td></tr></table> ';
 				$tbl1.='<p style=" line-height:1.5;font-size:14px;">Date :</p>';
 				$tbl1.='<p style=" line-height:2px;font-size:14px;">*Delete Whatever is not applicable.</p>';
-				$tbl1.='<p style=" line-height:1.5;font-size:14px;">** One copy of the certificate shall be handed over to the person concerned and anothercopy shall be sent to the manager of the mine concerned by registered post, And the third copy shall be  retained by the examining authority.</p>';
+				$tbl1.='<p style=" line-height:1.5;font-size:14px;">** One copy of the certificate shall be handed over to the person concerned and another copy shall be sent to the manager of the mine concerned by registered post, And the third copy shall be  retained by the examining authority.</p>';
 				$pdf->writeHTML($tbl1, true, false, false, false, '');
 				
 				
@@ -2669,7 +2675,7 @@ public function actionAjaxsinglefetch($id)
 				$tbl3.='<p style="font-size:14px;text-align:left;">Annexture to Certificate No ................................. as a result of medical examination on ............................. </p>';
 				$tbl3.='<p style="font-size:14px;text-align:left;">Identification Mark <b  style="font-size:12px;">'.$id1.' '.$id2.'</b></p>';
 				$tbl3.='<p style="font-size:14px;text-align:right;"> </p>';
-				$tbl3.='<p style="font-size:14px;text-align:right;">Left Thump Impression of the Candidate </p>';
+				$tbl3.='<p style="font-size:14px;text-align:right;">Left Thumb Impression of the Candidate </p>';
 				$tbl3.='<p style="font-size:14px;text-align:left;">1.General Development</p>';
 				$tbl3.='<p style="font-size:14px;text-align:left;">2.Height................... Cms.</p>';
 				$tbl3.='<p style="font-size:14px;text-align:left;">3.Weight................... Kg.</p>';
@@ -2734,10 +2740,10 @@ public function actionAjaxsinglefetch($id)
 				
 				$pdf->AddPage();
 				
-				$tbl5='<p style="text-align:center;"><b><h3> Report Off Medical Examination as per the Recommendations of Natk Rial Safety Conferences in Mines <br>(To Be Used in Continuation With Form O)</h3></b></p>';
+				$tbl5='<p style="text-align:center;"><b><h3> Report Off Medical Examination as per the Recommendations of National Rial Safety Conferences in Mines <br>(To Be Used in Continuation With Form O)</h3></b></p>';
 				
 				$tbl5.='<p style="text-align:left;font-size:14px;">Certificate No:</p>';
-				$tbl5.='<p style="text-align:left;font-size:14px;">Name:</p>';
+				$tbl5.='<p style="text-align:left;font-size:14px;">Name:&nbsp;<b>'.$patname.'</b></p>';
 				$tbl5.='<p style="text-align:left;font-size:14px;">Identification Marks: <b style="font-size:12px;">'.$id1.' .'.$id2.'</b></p>';
 				//$tbl5.='<p style="text-align:left;font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>';
 				$tbl5.='<p style="text-align:left;font-size:12px;">1.Cardiological Assessment:</p>';
@@ -2835,5 +2841,163 @@ public function actionAjaxsinglefetch($id)
 				
 				$pdf->Output('report_medical_examination.pdf');
  		}
+ 		
+    public function actionCitymasterdatatable()
+    {
+    	
+    	$sfd=0;
+    	if(isset($_POST['start']) && $_POST['start']!="0"){
+    		$sfd=$_POST['start'];
+    	}
+    	$draw=0;
+		if(isset($_POST['draw']) && $_POST['draw']!=""){
+		  $draw=$_POST['draw'];
+		}
+		$length=10;
+		if(isset($_POST['length']) && $_POST['length']!=""){
+		  $length=$_POST['length'];
+		}
+		$s_val='';
+		if(isset($_POST['search'])){
+		  $s_val=$_POST['search']['value'];
+		}
+    		$city_master=CityMaster::find()->select(['id'=>'id'])
+    		->where(['is_active'=>'1'])
+			->andwhere(['or',
+				['like','city',$s_val],			
+				['like','district',$s_val],
+				['like','state',$s_val]]
+				)
+			->limit(100000)
+			->asArray()->all();
+			
+			$city_master_da=CityMaster::find()->select(['*'])->where(['is_active'=>'1'])
+			->andwhere(['or',
+				['like','city',$s_val],			
+				['like','district',$s_val],
+				['like','state',$s_val]]
+				)
+			->limit($length)
+			->offset($sfd)->asArray()->all();
+			
+			
+			if(!empty($city_master_da))
+			{
+				$response=array();
+				$fetch_array=array();
+				$i=0;
+				$responce['draw']=$draw;
+				$responce['recordsTotal']= $length;
+				$responce['recordsFiltered']= count($city_master);
+				foreach ($city_master_da as $key => $value) 
+				{
+					$responce['data'][]=array("DT_RowId"=>$value['id'],"city"=>$value['city'],"district"=>$value['district'],"state"=>$value['state']);
+					 										
+					$i++;
+				}
+				return json_encode($responce);
+				die;
+			}
+			
+	}
+
+	public function actionUnitconsultant()
+    {
+    	$sfd=0;
+    	if(isset($_POST['start']) && $_POST['start']!="0")
+    	{
+    		$sfd=$_POST['start'];
+    	}
+    	$draw=0;
+		if(isset($_POST['draw']) && $_POST['draw']!="")
+		{
+		  $draw=$_POST['draw'];
+		}
+		$length=10;
+		if(isset($_POST['length']) && $_POST['length']!="")
+		{
+		  $length=$_POST['length'];
+		}
+		$s_val='';
+		if(isset($_POST['search']))
+		{
+		  $s_val=$_POST['search']['value'];
+		}
+
+		
+		$query = new Query;
+		$query	->select([
+        'physicianmaster.id','physicianmaster.physician_name','specialistdoctor.s_id','specialistdoctor.specialist'])  
+        ->from('physicianmaster')
+        ->join('LEFT OUTER JOIN', 'specialistdoctor',
+            'physicianmaster.specialist =specialistdoctor.s_id')		
+        ->where(['physicianmaster.is_active'=>'1'])
+        ->andWhere(['or',
+		['like','physicianmaster.physician_name',$s_val],
+		['like','specialistdoctor.specialist',$s_val]]
+		)
+        ->limit(100000)->all(); 
+		
+		$command = $query->createCommand();
+		$data = $command->queryAll();
+		
+		$query1 = new Query;
+		$query1	->select([
+        'physicianmaster.id','physicianmaster.physician_name','specialistdoctor.s_id','specialistdoctor.specialist'])  
+        ->from('physicianmaster')
+        ->join('LEFT OUTER JOIN', 'specialistdoctor',
+            'physicianmaster.specialist =specialistdoctor.s_id')		
+        ->where(['physicianmaster.is_active'=>'1'])
+        ->andWhere(['or',
+		['like','physicianmaster.physician_name',$s_val],
+		['like','specialistdoctor.specialist',$s_val]]
+		)
+       ->limit($length)->offset($sfd)->all(); 
+		
+		$command1 = $query1->createCommand();
+		$data1 = $command1->queryAll();
+		
+		
+		
+		
+			
+		if(!empty($data1))
+		{
+			$response=array();
+			$fetch_array=array();
+			$responce['draw']=$draw;
+			$responce['recordsTotal']= $length;
+			$responce['recordsFiltered']= count($data);
+			foreach ($data1 as $key => $value) 
+			{
+				$responce['data'][]=array("DT_RowId"=>$value['id'],"doctorname"=>$value['physician_name'],"specialist"=>$value['specialist']);
+			}
+			
+			return json_encode($responce);
+			die;
+		}
+
+		
+	}
+
+	public function actionSpecialistdatatable($id)
+	{
+		if(!empty($id))
+		{
+			$physicianmaster=Physicianmaster::find()->select(['id'=>'id','physician_name'=>'physician_name','specialist'=>'specialist'])->where(['id'=>$id])->asArray()->one();
+		
+			if(!empty($physicianmaster))
+			{
+				$specialistdoctor=Specialistdoctor::find()->select(['s_id'=>'s_id','specialist'=>'specialist','consult_amount'=>'consult_amount','ucil_amount'=>'ucil_amount'])->where(['s_id'=>$physicianmaster['specialist']])->asArray()->one();
+				
+				$fetch_array=array();
+				$fetch_array[0]=$id;
+				$fetch_array[1]=$specialistdoctor;
+				$fetch_array[2]=$physicianmaster;
+				
+				return json_encode($fetch_array);
+			}
+		}
+	}
 	
 }

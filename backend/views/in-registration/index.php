@@ -111,7 +111,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn',
                'header'=> 'Action',
              'headerOptions' => ['style' => 'color:#337ab7;'],
-               'template'=>'{view}{update}{delete}{pdf}',
+               'template'=>'{view}{update}{pdf}',
                             'buttons'=>[
                               'view' => function ($url, $model, $key)
 							   {
@@ -131,6 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'data-toggle'=>'tooltip',
                                             'title' => Yii::t('yii', 'Update'),
                                             'aria-label' => Yii::t('yii', 'Update'),
+                                            'style'=>'margin-right:4px;',
                                             'data-pjax' => '0',
                                         ]);
                                         return Html::a('<span class="fa fa-edit"></span>', $url, $options);
@@ -149,6 +150,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         ]);
                                         
 								 },
+								 
 								  'pdf' => function ($url, $model, $key) 
 								   {
                                         $options = array_merge([

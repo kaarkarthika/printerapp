@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     	 <div class='col-sm-12'> 
             <div class="form-group"> 								  
             		<p style="float: left;margin-right: 10px;">Sample Received Date</p>
-            		 <div class='input-group date' id='datetimepicker1' style="width: 200px;">
+            		 <div class='input-group date' id=' ' style="width: 200px;">
                     	<input type='text' required="required" class=" datepicker form-control date_sample" id="date_sample" name="date_sample" />
                     <!-- <input type='text' required="required" class=" form-control date_sample" id='datetimepicker4' name="date_sample" /> -->
                 </div>
@@ -103,9 +103,11 @@ $("#save").click(function(e) {
   
 
 });
-$('.datepicker').datepicker({
-    format: 'yyyy-mm-dd ',
-	autoclose: true,
-});
+$(function () {
+	 $('.datepicker').datetimepicker({
+       format: 'DD-MM-YYYY HH:mm:ss',
+	   daysOfWeekDisabled: [ ]  
+     });
+   });
 
 	</script>

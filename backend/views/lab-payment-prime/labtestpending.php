@@ -10,7 +10,7 @@ use backend\models\NewPatient;
 /* @var $searchModel backend\models\LabPaymentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Lab Payments';
+$this->title = 'Test Report';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
             	'label' => 'MR Number ',
              	],
          	['attribute' => 'name', 
-            	'label' => 'Name',
+            	'label' => 'Patient Name',
              	],
             [
             'attribute'=>'Age/Gender', 

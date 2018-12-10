@@ -33,9 +33,9 @@ class Salesreturn extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['return_invoicenumber', 'branch_id'], 'required'],
+           // [['return_invoicenumber', 'branch_id'], 'required'],
             [['patient_type',  'is_active', 'updated_by','branch_id'], 'integer'],
-            [['updated_on'], 'safe'],
+            [['updated_on','return_invoicenumber', 'branch_id'], 'safe'],
             [['return_invoicenumber', 'mrnumber', 'updated_ipaddress'], 'string', 'max' => 50],
         ];
     }

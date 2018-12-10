@@ -627,7 +627,12 @@ public function actionCreate() {
 	
 	public function actionMedicinefetch($product_id)
 	{
-			$Stock_code=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['productid'=> $product_id]) -> all();
+		
+		//Session of Branch Id
+				$session = Yii::$app->session;
+				$branch_id=$session['branch_id'];
+		
+			$Stock_code=Stockmaster::find() -> where(['is_active' => 1])-> andWhere(['productid'=> $product_id])->andWhere(['branch_id'=>$branch_id]) -> all();
 				
 			if(!empty($Stock_code))
 			{	
@@ -636,9 +641,7 @@ public function actionCreate() {
 					$stock_p_id[]=$key['stockid'];
 				}
 				
-				//Session of Branch Id
-				$session = Yii::$app->session;
-				$branch_id=$session['branch_id'];
+				
 				
 				$overallstock=Stockresponse::find()->where(['IN','stockid',$stock_p_id])->andWhere(['!=', 'total_no_of_quantity', 0])->andWhere(['branch_id'=>$branch_id])->orderBy(['expiredate'=>SORT_ASC])->asArray()->all();
 				//$overallstock=Stockresponse::find()->where(['IN','stockid',$stock_p_id])->andWhere(['!=', 'total_no_of_quantity', 0])->orderBy(['expiredate'=>SORT_ASC])->asArray()->all();
@@ -2077,7 +2080,7 @@ public function actionCreate() {
 		}
 	}
 	
-	public function actionHistmrnumberpdf($id)
+	/*public function actionHistmrnumberpdf($id)
     {
     	$saledatainc=Sales::find()->where(['mrnumber'=> $id])->orderBy(['invoicedate'=>SORT_ASC])->asArray()->all();
 		
@@ -2257,7 +2260,7 @@ public function actionCreate() {
 		}
 		
 		return $result_string;
-	}
+	}*/
 	
 	
 	public function actionViewtablet($id,$mrnumber)
@@ -2379,7 +2382,7 @@ public function actionCreate() {
 										  <input type="hidden" name="product_name[]" value="'.$Product->productname."/".$Composition['composition_name'].'">
 										  <input type="hidden" name="quantity[]" value="'.$value['productqty'].'">
 										  <input type="hidden" name="primeid[]" value="'.$value['stockresponseid'].'">
-										  <input type="text" name="price[]" class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
+										  <input type="text" name="price[]" readonly class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
 									  </td>';
 					$result_string1.='<td><ul class="donate-now">
 											<input type="hidden" name="discount_method[]" id="disc_method'.$value['stockresponseid'].'">
@@ -2650,11 +2653,16 @@ public function actionCreate() {
 				$previous_discount_percentage=$saledata_updated->overalldiscountpercent;
 				$previous_discount_value=$saledata_updated->overalldiscountamount;
 				
+				
+				
+				
 				$saledata_updated->overalltotal=$previous_net_amount-$_POST['total_net_amount'];
 				$saledata_updated->tot_quantity=$previous_quantity-$_POST['total_quantity'];
 				$saledata_updated->totalgstvalue=$previous_gst_value-$_POST['total_gst'];
 				$saledata_updated->totalcgstvalue=$previous_cgst_value-array_sum($_POST['cgst_value']);
 				$saledata_updated->totalsgstvalue=$previous_sgst_value-array_sum($_POST['sgst_value']);
+				
+				
 				
 				if(!empty($previous_discount_percentage))
 				{
@@ -2665,7 +2673,7 @@ public function actionCreate() {
 				
 				if($_POST['INSURANCE'] == 1 || $_POST['INSURANCE'] == 2 || $_POST['INSURANCE'] == 3)
 				{
-					//Paid Amount
+					//Due Amount
 					$previous_due_amount=$saledata_updated->due_amt;
 					$saledata_updated->due_amt=$previous_due_amount - $_POST['total_paid_amount'];
 				}
@@ -2708,10 +2716,17 @@ public function actionCreate() {
 							$saledetails_updated->total_price_perqty=$previous_saledetail_total_price_perqty-$_POST['total_amt_cal'][$key];
 							if(!empty($previous_saledetail_discountvalue))
 							{
-								//$saledetails_updated->discountvalue=$previous_saledetail_discountvalue-$_POST['discount_value'][$key];
 								$saledetails_updated->discountvalueperquantity=$previous_saledetail_discountvalueperquantity-$_POST['discountext_value'][$key];
-								
 							}
+							
+							
+							//new code 9-12-2018 
+							$multiply_mrp_qty=$saledetails_updated->multiply_mrp_qty;
+							$updated_mrp_amount=$saledetails_updated->new_mrp_perunit*$_POST['quantity'][$key];
+							$saledetails_updated->multiply_mrp_qty=$multiply_mrp_qty - $updated_mrp_amount;
+							
+							
+							
 							if($saledetails_updated->save())
 							{
 								
@@ -2724,6 +2739,12 @@ public function actionCreate() {
 								Stockresponse::updateAll(['total_no_of_quantity' => $add_overall_total_qty,'updated_on' => date('Y-m-d H:i:s'),'updated_ipaddress'=> $_SERVER['REMOTE_ADDR'],'updated_by'=>$session['user_id']], ['stockresponseid' => $_POST['stock_respose_id'][$key]]);
 							}
 						}
+
+
+						$saledetails_mrp_updated=Saledetail::find()->select(['multiply_mrp_qty'=>'SUM(multiply_mrp_qty)'])->where(['opsaleid'=>Yii::$app -> request -> post('SALE_ID')])->one();
+						
+						Sales::updateAll(['original_mrp_amount' => $saledetails_mrp_updated['multiply_mrp_qty']], ['opsaleid' => Yii::$app -> request -> post('SALE_ID')]);
+
 
 						$auto_get=AutoidTable::find()->where(['auto'=>9])->asArray()->one();
 						$autoget=$auto_get['start_num'];
@@ -2823,6 +2844,10 @@ public function actionCreate() {
 								if($returndetails->save())
 								{
 									
+								}
+								else 
+								{
+									print_r($returndetails->getErrors());die;
 								}
 							}
 
@@ -3017,7 +3042,7 @@ public function actionCreate() {
 	
 	
 	
-	public function actionReturntabletpdf($id)
+	/*public function actionReturntabletpdf($id)
     {
     	$ENC_id=base64_decode(urldecode($id));
     	
@@ -3439,7 +3464,216 @@ public function actionCreate() {
 								die;
 							
 		}
-	}
+	}*/
+	
+	
+public function actionPatientsaleshistory($id)
+{
+		
+$sales=Sales::find()->select(['opsaleid'=>'opsaleid','name'=>'name','mrnumber'=>'mrnumber','billnumber'=>'billnumber'])->where(['mrnumber'=>$id])->orderBy(['created_at'=>SORT_ASC])->asArray()->all();
+
+$sales_map=ArrayHelper::map($sales,'opsaleid','opsaleid');
+$sales_index=ArrayHelper::index($sales,'opsaleid');
+
+
+$sale_detail=Saledetail::find()->select(['opsale_detailid'=>'opsale_detailid','opsaleid'=>'opsaleid','productid'=>'productid',
+'productqty'=>'productqty','batchnumber'=>'batchnumber','expiredate'=>'expiredate','new_mrp_perunit'=>'new_mrp_perunit','total_price_perqty'=>'total_price_perqty'
+])->where(['IN','opsaleid',$sales_map])->andWhere(['>=','productqty', 1])->asArray()->all();
+$sale_detail_index=ArrayHelper::index($sale_detail,'opsale_detailid');
+
+
+
+$sales_fetch_map=ArrayHelper::map($sale_detail,'opsale_detailid','opsaleid');
+$sales_fetch=Sales::find()->select(['opsaleid'=>'opsaleid','name'=>'name','mrnumber'=>'mrnumber','billnumber'=>'billnumber','created_at'=>'created_at'])
+->where(['IN','opsaleid',$sales_fetch_map])->asArray()->all();
+$sale_fetch_index=ArrayHelper::index($sales_fetch,'opsaleid');
+
+$sales_fetch_sum=Sales::find()->select(['overalltotal'=>'SUM(overalltotal)'])
+->where(['IN','opsaleid',$sales_fetch_map])->asArray()->one();
+
+
+$product_map=ArrayHelper::map($sale_detail,'opsale_detailid','productid');
+$product=Product::find()->select(['productid'=>'productid','productname'=>'productname'])->where(['IN','productid',$product_map])->asArray()->all();
+$product_index=ArrayHelper::index($product,'productid');
+
+
+
+
+require ('../../vendor/tcpdf/tcpdf.php');
+$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Nicola Asuni');
+$pdf->SetTitle('Invoice');
+$pdf->SetSubject('TCPDF Tutorial');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+$pdf->SetPrintHeader(false);
+$pdf->SetPrintFooter(false);
+$pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+$pdf->setFontSubsetting(true);
+$pdf->SetFont('helvetica', '', 8, '', true);
+
+
+
+
+$pdf->AddPage();
+
+
+
+
+if(!empty($sales))
+{
+	$newpatient=Newpatient::find()->select(['mr_no'=>'mr_no','patientname'=>'patientname','insurance_type_id'=>'insurance_type_id','pat_type'=>'pat_type','pat_mobileno'=>'pat_mobileno'])->where(['mr_no'=>$id])->asArray()->one();
+	
+	$patienttypemaster=ArrayHelper::map(PatientType::find()->asArray()->all(),'type_id','patient_type');
+	$insurancemaster=ArrayHelper::map(Insurance::find()->asArray()->all(),'insurance_typeid','insurance_type');
+	
+	
+	
+	
+	$title="(A UNIT OF CARMEL HEALTHCARE PVT LTD)";
+	$headertable='<table cellspacing="0" cellpadding="1" >';
+	$headertable.='<tr ><td style="text-align:center;font-size:18px;" colspan="12" ><b>DINESH MEDICAL CENTRE</b></td></tr>';
+	$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><b>'.$title.'</b></td></tr>';
+	$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><p><b>D.NO:3-7-215-1, FIRST FLOOR BAKARAPURAM, PULIVENDULA - 516390 - KADAPA DIST,PH:08568 287557</b></p></td></tr>';
+	$headertable.='<tr><td colspan="3"><b>DL NO-20F: AP/11/03/2017-137691</b></td><td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>21 : AP/11/03/2017-137690</b></td>
+	<td colspan="3"><b>&nbsp;&nbsp;&nbsp; 20: AP/11/03/2017-137689</b></td><td colspan="3"><b>GSTIN : 37AADCC7476L1Z3</b></td></tr>';
+	
+	
+	$headertable.='</table>';
+	$headertable.='<p style="border-top:1px solid #000" ></p>
+	<p style="text-align:center;font-size:12px;" ><b><u>PATIENT PURCHASE AND RETURN DETAILS</u></b></p><p></p>';
+	
+	$pdf->writeHTML($headertable, true, false, false, false, '');
+
+	$patientdetails='<table style="text-align:center;font-size:10.5px;" border="1" cellspacing="0" cellpadding="0">';
+	$patientdetails.='<tbody><tr><td style="font-size:12px;width:10%;"><b>MR NO</b></td><td style="font-size:12px;width:20%;"><b>PAT NAME</b></td><td style="font-size:12px;width:30%;"><b>TYPE</b></td><td style="font-size:12px;"><b>ORG NAME</b></td><td style="font-size:12px;"><b>PH.NO</b></td></tr>';
+	$patientdetails.='<tr><td style="font-size:12px;">'.$id.'</td><td style="font-size:12px;">'.strtoupper($newpatient['patientname']).'</td><td style="font-size:12px;">'.strtoupper($patienttypemaster[$newpatient['pat_type']]).'</td><td style="font-size:12px;">'.strtoupper($insurancemaster[$newpatient['insurance_type_id']]).'</td><td style="font-size:12px;">'.$newpatient['pat_mobileno'].'</td></tr>';				
+	$patientdetails.='</tbody></table>';
+	
+	$pdf->writeHTML($patientdetails, true, false, false, false, '');
+	
+	
+
+	
+	
+	if(!empty($sale_detail))
+	{
+		$purchasedetails='';
+		
+		$purchasedetails.='<p style="border-top:1px solid #000" ></p><table cellspacing="-10" cellpadding="-15"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;"><b>Item Name</b></td><td style="text-align:left;font-size:12px;width:10%;"><b>Qty</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Batch No</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Exp Date</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Rate</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Total</b></td></tr></tbody></table><p style="border-top:1px solid #000" ></p>';
+		$i=1;
+		
+		
+		$sales_current=current($sale_fetch_index);
+		
+		$purchasedetails.='<p style="text-align:left;font-size:12px;color: blue;"><b>ISSUES</b></p>';
+		$purchasedetails.='<p style="text-align:left;font-size:12px;"><span><b>BILL NO: '.$sales_current['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sales_current['created_at'])).'</b></span></p>';
+		foreach ($sale_detail as $key => $value) 
+		{
+
+			$current_id=$value['opsaleid'];
+			if($sales_current['opsaleid'] == $current_id)
+			{
+				
+				$purchasedetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['new_mrp_perunit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['total_price_perqty'].'</td></tr></tbody></table>';
+			}
+			else if($sales_current['opsaleid'] != $current_id)
+			{
+				$sales_current['opsaleid']=$current_id;
+				$purchasedetails.='<p style="text-align:left;font-size:12px;" ><span><b>BILL NO: '.$sale_fetch_index[$current_id]['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sale_fetch_index[$current_id]['created_at'])).'</b></span></p>';
+				$purchasedetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['new_mrp_perunit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['total_price_perqty'].'</td></tr></tbody></table>';
+			}
+			
+			$i++;
+		}
+	
+				$purchasedetails.='<p style="border-top:1px solid #000" ></p>';
+				$purchasedetails.='<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Sub Total : </b></td><td style="text-align:right;font-size:12px;"><b>'.number_format($sales_fetch_sum['overalltotal'],2).'</b></td></tr></tbody></table>';
+				$purchasedetails.='<p style="border-top:1px solid #000" ></p>';
+			
+			
+			
+			$pdf->writeHTML($purchasedetails, true, false, false, false, '');
+			
+		
+
+				
+	}	
+	
+	$salesreturn=Salesreturn::find()
+->select(['return_id'=>'return_id','saleid'=>'saleid','return_invoicenumber'=>'return_invoicenumber','total'=>'total','return_amount'=>'return_amount','created_at'=>'created_at'])
+->where(['IN','saleid',$sales_map])->asArray()->all();
+$salesreturn_map=ArrayHelper::map($salesreturn,'return_id','return_id');
+$salesreturn_index=ArrayHelper::index($salesreturn,'return_id');
+		
+
+$returndetail=Returndetail::find()
+->select(['return_detailid'=>'return_detailid','return_id'=>'return_id','sale_detailid'=>'sale_detailid'
+,'productid'=>'productid','productqty'=>'productqty','batchnumber'=>'batchnumber','expiredate'=>'expiredate'
+,'mrp_per_unit'=>'mrp_per_unit','mrp'=>'mrp'])
+->where(['IN','return_id',$salesreturn_map])->asArray()->all();
+
+
+
+
+$product_return_map=ArrayHelper::map($returndetail,'return_detailid','productid');
+$product_return=Product::find()->select(['productid'=>'productid','productname'=>'productname'])->where(['IN','productid',$product_return_map])->asArray()->all();
+$product_return_index=ArrayHelper::index($product_return,'productid');
+		
+
+$salesreturn_fetch_sum=Salesreturn::find()->select(['total'=>'SUM(total)'])
+->where(['IN','saleid',$sales_map])->asArray()->one();		
+	//echo '<pre>';print_r($salesreturn_fetch_sum);die;
+		
+if(!empty($returndetail))
+{
+$returndetails='';
+
+//$returndetails.='<p style="border-top:1px solid #000" ></p><table cellspacing="-10" cellpadding="-15"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;"><b>Item Name</b></td><td style="text-align:left;font-size:12px;width:10%;"><b>Qty</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Batch No</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Exp Date</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Rate</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Total</b></td></tr></tbody></table><p style="border-top:1px solid #000" ></p>';
+$i=1;
+
+
+$salesreturn_first=current($salesreturn_index);
+//echo '<pre>';
+//print_r($salesreturn_first);die;
+$returndetails.='<p style="text-align:left;font-size:12px;color: blue;"><b>RETURN</b></p>';
+$returndetails.='<p style="text-align:left;font-size:12px;"><span><b>BILL NO: '.$salesreturn_first['return_invoicenumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($salesreturn_first['created_at'])).'</b></span></p>';
+foreach ($returndetail as $key => $value) 
+		{
+
+			$current_id=$value['return_id'];
+			if($salesreturn_first['return_id'] == $current_id)
+			{
+				
+				$returndetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_return_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp_per_unit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp'].'</td></tr></tbody></table>';
+			}
+			else if($salesreturn_first['return_id'] != $current_id)
+			{
+				$salesreturn_first['return_id']=$current_id;
+				$returndetails.='<p style="text-align:left;font-size:12px;" ><span><b>BILL NO: '.$salesreturn_index[$current_id]['return_invoicenumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($salesreturn_index[$current_id]['created_at'])).'</b></span></p>';
+				$returndetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_return_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp_per_unit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp'].'</td></tr></tbody></table>';
+			}
+			
+			$i++;
+		}
+	
+				$returndetails.='<p style="border-top:1px solid #000" ></p>';
+				$returndetails.='<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Sub Total : </b></td><td style="text-align:right;font-size:12px;"><b>'.number_format($salesreturn_fetch_sum['total'],2).'</b></td></tr></tbody></table>';
+				$returndetails.='<p style="border-top:1px solid #000" ></p>';
+			
+			
+			
+			$pdf->writeHTML($returndetails, true, false, false, false, '');
+}
+	
+}
+
+
+$pdf->writeHTML($tbl1, true, false, false, false, '');
+ob_end_clean();
+$pdf->Output('PatientPurchaseDetails.pdf');
+}
 	
 	
 	
@@ -5187,6 +5421,9 @@ $pdf->SetFont('helvetica', '', 8, '', true);
 $pdf->AddPage();
 
 $saledata=Sales::find()->where(['opsaleid'=>$id])->one();
+
+if($saledata->tot_quantity >= 1)
+{
 $saledetaildata=Saledetail::find()->where(['opsaleid'=>$id])->all();
 
 
@@ -5223,7 +5460,7 @@ $gender=$saledata->gender;
 $drid=$saledata->physicianname;
 
 $drdata=Physicianmaster::find()->where(['id'=>$drid])->one();
-if($gender=="M"){$gen="Male";}else if($gender=="F"){$gen="Female";}else{$gen="Transgender";}
+
 
 $session = Yii::$app->session;
 $companybranchid=$session['branch_id'];
@@ -5313,6 +5550,8 @@ $totalgstrate=0;
 $totalgstvalue=0;
 foreach($saledetaildata as $k)
 {
+if($k->productqty >= 1)
+{	
 $gstvalueperqty=$k->gstvalueperquantity;
 $discountvalueperqty=$k->productqty*$k->discountvalueperquantity;
 $mrpperunit=$gstvalueperqty+$k->priceperqty;
@@ -5385,7 +5624,7 @@ $totalgst+=$gstvalue;
 $totalcgstrate+=$k->cgst_percent;
 $totalsgstrate+=$k->sgst_percent;
 }
-
+}
 if($saledata->tot_quantity == 0)
 {
 	$total_price=0;
@@ -5428,9 +5667,10 @@ $tbl1.='<tr>
 	$words='<table><tr><td colspan="8" align="left"><b>Amount in Words : </b> Rupees '.ucwords($this->actionReadnumber(round($saledata->total))).' only </td><td colspan="8" align="right"><b>USER NAME</b>: '.$branch['ba_name'].' </td></tr></table>';
 	$words.='<br><br><div style="text-align:center;"><b>Goods once sold will not be returned without bill.</b></div>';
 	$pdf->writeHTML($words, true, false, false, false, '');
+}	
 	$pdf->Output('example_001.pdf');
- }   
     
+ }  
     
     
     
@@ -6203,7 +6443,7 @@ $result_string1.='<td style="width:8%;">
   <input type="hidden" name="product_name[]" value="'.$product_index[$value['productid']]['productname']."/".$composition_index[$value['compositionid']]['composition_name'].'">
   <input type="hidden" name="quantity[]" value="'.$value['productqty'].'">
   <input type="hidden" name="primeid[]" value="'.$value['stockresponseid'].'">
-  <input type="text" name="price[]" class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
+  <input type="text" name="price[]" readonly class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
   </td>';
 $result_string1.='<td><div class="input-group"> <input type="text"  readonly="readonly" name="discount_value[]" data_disc_value='.$value['stockresponseid'].' id="enabledisc'.$value['stockresponseid'].'" value="'.$value['discountvalue'].'" class="enabledisc disctxt w-55" readonly></div>
 
@@ -6317,7 +6557,7 @@ $result_string1.='<td style="width:8%;">
   <input type="hidden" name="product_name[]" value="'.$Product->productname."/".$Composition['composition_name'].'">
   <input type="hidden" name="quantity[]" value="'.$value['productqty'].'">
   <input type="hidden" name="primeid[]" value="'.$value['stockresponseid'].'">
-  <input type="text" name="price[]" class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
+  <input type="text" name="price[]" readonly class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
   </td>';
 						  
 
@@ -6422,7 +6662,7 @@ return json_encode($ot);
 										  <input type="hidden" name="product_name[]" value="'.$Product->productname."/".$Composition['composition_name'].'">
 										  <input type="hidden" name="quantity[]" value="'.$value['productqty'].'">
 										  <input type="hidden" name="primeid[]" value="'.$value['stockresponseid'].'">
-										  <input type="text" name="price[]" class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
+										  <input type="text" name="price[]" readonly class="price_mrp text-right form-control" data_price_mrp="'.$value['stockresponseid'].'" value='.$value['priceperqty'].' id="price'.$value['stockresponseid'].'">	
 									  </td>';
 					$result_string1.='<td><ul class="donate-now">
 											<input type="hidden" name="discount_method[]" id="disc_method'.$value['stockresponseid'].'">

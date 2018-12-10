@@ -195,7 +195,7 @@ input#ipnumber {
 		        </strong></strong></div><strong><strong>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		        <div class="radio radio-info radio-inline">
-		           <input type="radio" id="tempPatient" class="tempPatient" value="temppatient" name="patient">
+		           <input type="radio" id="tempPatient" class="tempPatient" disabled value="temppatient" name="patient">
 		           <label for="inlineRadio1" id="tempPatient1">Temporary-Sales</label><strong><strong>
 		        </strong></strong></div><strong><strong>		    
             </strong></strong></strong></strong></div>
@@ -310,7 +310,7 @@ input#ipnumber {
 	
 	<div class="form-group col-xs-12 col-sm-6 col-lg-2 f-no-pd">
 	
-	 <label for=" " class="col-xs-4 f-no-pd">Insurance</label>
+	 <label for=" " class="col-xs-4 f-no-pd">Type</label>
       <div class="col-xs-8 f-no-pd">
 		<input type="text" class="form-control fetch_patient_clear" id='ippatient_insurance' >         		
       </div> 
@@ -424,7 +424,9 @@ input#ipnumber {
                       </div>
 					  <div class="col-sm-1 altp-label"><label id="shortcut"><i><strong class="f-10">[Alt+p]</strong></i></label></div> 
 					  <div class="  col-sm-1" style="position:relative;top:15px;">
-				        <button type="button" id="temp_med_fetch" data-toggle="tooltip" title="Temporary Sale" class="btn btn-success btn-xs" tooltip='Temp Sale'><i class="fa fa-shopping-cart" ></i></button> <i><strong class="f-10">[Alt+t]</strong></i> 
+				        <!--button type="button" id="temp_med_fetch" disabled data-toggle="tooltip" title="Temporary Sale" class="btn btn-success btn-xs" tooltip='Temp Sale'><i class="fa fa-shopping-cart" ></i></button> <i><strong class="f-10">[Alt+t]</strong></i--> 
+					  	<button type="button" id="pack_med_fetch" onclick='PackageFetch();' data-toggle="tooltip" title="Package Sales" class="btn btn-primary btn-xs" tooltip='Package Sale'><i class="fa fa-shopping-cart" ></i></button> <i></i> 
+					  	
 					  </div>
 				  </div> 
                 </div> 
@@ -872,10 +874,154 @@ input#ipnumber {
    </div>
 </div>
 
+
+ <div id="package_model" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header  tmp-head">
+            <button type="button" class="close tmp-close" data-dismiss="modal">&times;</button> 
+            <h4 class="modal-title" id='medcine_name'>Package Details</h4>
+         </div>
+         <br>
+          
+         
+          <div class="scroll-modal">	
+         <div class="modal-body" style="width: 1110px;">
+         
+         	
+            <div class=" " id="package_model_tbl">
+            	<!--new table start-->
+            	
+                <!--new table end-->
+			  </div>
+			  
+			
+         
+         </div></div>
+    
+         
+      </div>
+   </div>
+</div>
     
 <script type="text/javascript">window.onload = date_time('date_time');</script>
 <script type="text/javascript" src="js/shortcut.js" ></script>
 <script type="text/javascript">
+
+function PackageFetch()
+{
+	var ipnumber=$('#ipnumber').val();
+	var pat_name=$('#ippatientname').val();
+	
+	if(ipnumber !== '' && pat_name !== '')
+	{
+		$.ajax({
+						
+	        type: "POST",
+	       	url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/packagemedicinefetch";?>",
+	        success: function (result) 
+	        { 
+	           var obj = $.parseJSON(result);
+	           
+	           $('#package_model_tbl').html(obj[0]);
+	           
+	            $modal = $('#package_model');
+	   	 		$modal.modal('show');	
+	        }
+		});
+	}
+	else
+	{
+		$('#ipnumber').focus();
+		Alertment('Enter Patient Details Required');
+		return false;
+	}
+}
+
+function PackageAdd(data)
+{
+if(data !== '')
+{
+
+$.ajax({
+				
+type: "POST",
+url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/packagemedicineselect&id=";?>"+data,
+success: function (result) 
+{ 
+   var obj = $.parseJSON(result);
+    $('#load1').show();
+   $('#fetch_update_data tr').remove();
+   $('#medicines').attr('disabled','disabled');
+   $('.clear_bill').val('');
+   var insurance=$('#ippatient_insurance').val();
+ 
+   setTimeout(function () {  
+   		   
+   		   if(obj[9] !== null)
+   		   {
+   		   		var zero_stock=obj[9];
+   		   		
+   		   		for (x in zero_stock) 
+				{
+					 alert('No Stock Available in '+zero_stock[x]['product_name']);       
+				}
+   		   }
+   		   
+   		   if(obj[10] !== null)
+   		   {
+   		   		var less_stock=obj[10];
+   		   		
+   		   		for (x in less_stock) 
+				{
+					 alert('Less Qty in '+less_stock[x]['product_name']+' add another bill in these stock');       
+				}
+   		   }  
+   		   
+   		   
+   		                  
+           $("#fetch_update_data").append(obj[0]);
+           $('#no_of_items').val(obj[1]);
+		   $('#total_quantity').val(obj[2]);
+		   $('#total_sub_total').val(obj[3]);
+		   $('#total_gst_amount').val(obj[4]);
+		   $('#total_amount_mrp').val(obj[5]);
+		   $('#total_net_amount').val(obj[6]);
+		   $('#round_off_value').val(obj[8]);
+		   $('#cash_value').val(obj[7]);
+		  
+		  if(insurance !== '')
+		  {
+		  	$('#paid_amt').val(0);
+		  	$('#due_amt').val(obj[7]);
+		  }
+		  else if(insurance === '')
+		  {
+		  	 $('#paid_amt').val(obj[7]);
+		  	$('#due_amt').val(0);
+		  } 
+		   
+           
+           var net_amount_in_words=convertNumberToWords(Math.round(obj[7]));
+           $('#amt_in_words').val(net_amount_in_words);
+           
+           $('#load1').hide();
+           },5000);
+        
+   
+   
+   
+   
+   
+   
+   
+   $modal = $('#package_model');
+   $modal.modal('hide');	
+}
+});
+}
+}
 
 $(document).ready(function(){
 	
@@ -1118,7 +1264,7 @@ $(function () {
 	   				
 	   				$.ajax({
 		            type: "POST",
-		            url: "<?php echo Yii::$app->homeUrl . "?r=sales/getunitquantity&id=";?>"+encodeURIComponent(product_qty),
+		            url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/getunitquantity&id=";?>"+encodeURIComponent(product_qty),
 		            success: function (result) 
 		            { 
 		            	var result = $.parseJSON(result);
@@ -1317,7 +1463,7 @@ $('#ipnumber').focus();
 );
 
 
-shortcut.add("Alt+2",
+/*shortcut.add("Alt+2",
 function() {
 	
 		$(".get_slno").val('');
@@ -1345,7 +1491,7 @@ $('#fetch_update_data tr').remove();
 },
 { 'type':'keydown', 'propagate':true, 'target':document}
 ); 
- 
+ */
 
 shortcut.add("Alt+f2",
 function() {
@@ -1421,6 +1567,8 @@ function() {
 
  shortcut.add("Alt+t",
    function (){
+   			alert('Temp Sales is Diabled');
+   			return false;
     	    $('#billtxtbox').focus();
 			$.ajax({
 						
@@ -4872,7 +5020,11 @@ function SaveBilling()
 						else
 						{
 					 		$("#saved_val").val(data2);
+					 		$('#total_discountvaluetype').attr('disabled','disabled');
+						    $('.delrow').attr('disabled','disabled');
+							$('.paid_amt').attr('readonly','readonly');
 							$(".save_billing").prop('disabled', true);
+						    
 						    var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/invoice&id='+data2;
 				 			window.open(url,'_blank');
 							//window.location.reload(true);
@@ -5069,7 +5221,7 @@ function convertNumberToWords(amount)
    function jtable_pd(){
     	
     	var url=('<?php echo Url::base('http'); ?>');
-	var ajax_url=url+'/index.php?r=in-registration/injqgrid';
+	var ajax_url=url+'/index.php?r=in-sales/injqgrid';
   var table_reg= $('#reg_table').DataTable( {
         "processing": true,
         "serverSide": true,
@@ -5116,10 +5268,11 @@ function convertNumberToWords(amount)
           	 $('#reg_table_filter input').focus();
         }
     }); 
-    
+$('#reg_table').off('click');    
 $('#reg_table').on( 'click', 'tr', function () {
     var data = table_reg.row(this).id(); 
  	PatientDetailsFetch(data);
+ 	
  	
 });
 
@@ -5127,6 +5280,7 @@ $('#reg_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
      if(key === 13){  
       // var id = table_reg.row(this).id();
         var data = table_reg.row(cell.index().row).id(); 
+        
    		PatientDetailsFetch(data);
  	}
 });    
@@ -5146,30 +5300,88 @@ function formatDate(date)
  }
  
 function PatientDetailsFetch(data)
-{   $("#tbUser tbody tr").remove(); cleartxt();
+{   
+	if(data !== '')
+	{
 	$.ajax({
-        type: "POST",
-        url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/inipfetchmrnumber&id=";?>"+data,
+		type: "POST",
+        url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/fetchmrnumberdatatable&mrnumber=";?>"+data,
         success: function (result) 
-        { 
-        	var obj = $.parseJSON(result);
+        {  
+        	$('#load1').hide();
+        	$("#fetch_update_data tr").remove(); 
         	
-        	var insurancename="<option value="+obj[1]+">"+obj[1]+"</option>";
-            var gender="<option value="+obj[0]['sex']+">"+obj[0]['sex']+"</option>";
+        	$('.fetch_patient_clear').val('');
+        	$('.clear_bill').val('');
         	
-        	$('#ipnumber').val(obj[0]['ip_no']);
-        	$('#mrnumberno').val(obj[0]['mr_no']);
-        	$('#pat_name').val(obj[0]['patient_name']);
-        	$('#pat_dob').val(formatDate(obj[0]['dob']));
-        	$('#gender').html(gender);
-        	$('#pat_insurance').html(insurancename);
-        	$('#pat_mob').val(obj[0]['mobile_no']);
-        	$('#address_patient').val(obj[0]['address']);
+        	//cleartxt();
         	
-        	$modal = $('#ippatient_details');
-        	$modal.modal('hide');
+        	if(result === 'invalid')
+        	{
+        		$('#ipnumber').val('');
+        		Alertment('Data Not Found');
+        	}
+        	else if(result === 'discharge')
+        	{
+        		$('#ipnumber').val('');
+        		Alertment('This Patient Has Discharged');
+        	}
+        	else
+        	{
+        		var obj = $.parseJSON(result);
+            	
+            	$('#ippatientname').val(obj[0]['patient_name'].toUpperCase());
+            	$('#ippatient_gender').val(obj[0]['sex'].toUpperCase());
+            	$('#ippatient_relative').val(obj[0]['relation_suffix'].toUpperCase()+' '+obj[0]['relative_name'].toUpperCase());
+            	if(obj[0]['consultant_dr'] !== null && obj[0]['dr_unit'] !== null)
+            	{
+            		$('#ipdoctor_consultant').val(obj[3][obj[0]['consultant_dr']].toUpperCase());
+            		$('#ippatient_unit').val(obj[3][obj[0]['dr_unit']].toUpperCase());
+            	}
+            	
+            	
+            	$('#ippatient_dob').val(formatDate(obj[0]['dob']));
+            	$('#ippatient_address').val(obj[0]['address'].toUpperCase()+','+obj[0]['city'].toUpperCase());
+            	//$('#ippatient_phone').val(obj[1]['mobile_no']);
+            	
+            	if(obj[0]['type'] !== null)
+            	{
+            		$('#ippatient_pattype').val(obj[2][obj[0]['type']].toUpperCase());
+            	}
+            	
+            	if(obj[0]['ins_type'] !== null)
+            	{
+            		$('#ippatient_insurance').val(obj[1][obj[0]['ins_type']].toUpperCase());
+            	}
+            	
+            	
+            	$('#ippatient_mobile').val(obj[0]['mobile_no']);
+            	
+            	if(obj[6] !== null)
+            	{
+            		var mobile_no=obj[6].split('/');
+            		
+            		$('#year_based').val(mobile_no[0]);
+            		$('#month_based').val(mobile_no[1]);
+            		$('#day_based').val(mobile_no[2]);
+            		
+            		
+            	}
+            	//Room Details Fetched Pending
+	            $('#ippatient_paytype').val(obj[7]['1'].toUpperCase());
+	            $('#ippatient_floor').val(obj[7]['2'].toUpperCase());
+	            $('#ippatient_roomno').val(obj[7]['3'].toUpperCase());
+	            $('#ippatient_roomtype').val(obj[7]['4'].toUpperCase());
+	            
+	            $('#ipnumber').val(obj[0]['ip_no']);
+	            
+	            $('#medicines').focus();	
+	            $modal = $('#ippatient_details');
+				$modal.modal('hide');  
+            }
         }
-	});
+	     });
+	}
 }
 
 
@@ -6568,5 +6780,8 @@ function PaidCalc(data)
 				{
 					window.location.reload(true);
 				}
+				
+				
+
 </script>
 

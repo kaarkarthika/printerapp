@@ -313,7 +313,7 @@ div#example_wrapper {
 				      <div class="col-sm-6">
 						<label class="control-label">Consultant</label><br>  
 						<div class="input-group input-group-sm">	   
-							<?= $form->field($model, 'consultant_dr')->dropDownList($physicianmaster, ['class' => 'clearfield  form-control w-cus','prompt'=>'-DoctorName-'  ,'style'=>' ','tabindex'=>360,'required'=>true])->label(' ') ?>
+							<?= $form->field($model, 'consultant_dr')->dropDownList($physicianmaster, ['onchange'=>'Doctor_details(this.value);','class' => 'clearfield  form-control w-cus','prompt'=>'-DoctorName-'  ,'style'=>' ','tabindex'=>360,'required'=>true])->label(' ') ?>
 							<span class="input-group-btn">
 							  <button type="button" onclick='Doctor_fetch();' class="btn btn-default btn-flat btn doctor_details"><i class="ssearch glyphicon glyphicon-search"></i></button>
 							</span>
@@ -322,7 +322,7 @@ div#example_wrapper {
 					  <div class="col-sm-6">
 						<label class="control-label">Dr Unit</label><br>  
 						<div class="input-group input-group-sm">	   
-							<?= $form->field($model, 'dr_unit')->dropDownList($physicianmaster,['required'=> true,'prompt'=>'-DoctorName-'])->label('') ?>
+							<?= $form->field($model, 'dr_unit')->dropDownList($physicianmaster,['onchange'=>'Doctor_details_one(this.value);','required'=> true,'prompt'=>'-DoctorName-'])->label('') ?>
 							<span class="input-group-btn">
 							  <button type="button" onclick='Doctor_unit_fetch();' class="btn btn-default btn-flat btn  unit_consultant_details"><i class="ssearch glyphicon glyphicon-search"></i></button>
 							</span>
@@ -423,7 +423,7 @@ div#example_wrapper {
 		</div>
       </div>
       <div class=" inp modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
     </div>
 
@@ -458,7 +458,7 @@ div#example_wrapper {
 		</div>
       </div>
       <div class="inp modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
     </div>
 
@@ -488,7 +488,7 @@ div#example_wrapper {
 		</div>
       </div>
       <div class="inp modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
     </div>
 
@@ -519,7 +519,7 @@ div#example_wrapper {
 		</div>
       </div>
       <div class="inp modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
     </div>
 
@@ -549,6 +549,13 @@ div#example_wrapper {
 
 
 <script>
+
+<?php if(!empty($json_physicianmaster)) {?>
+var json_physician= $.parseJSON('<?php echo $json_physicianmaster; ?>');
+<?php }else { ?>
+var json_physician=[];
+<?php } ?>
+
 function Patient_bed() 
 {
 	$modal = $('#patient_hist-modal');
@@ -559,6 +566,7 @@ function Doctor_fetch()
 {
 	$modal = $('#doctor_details');
 	$modal.modal('show');
+	
 }
 
 
@@ -571,7 +579,7 @@ function Doctor_unit_fetch()
 function clearForm() 
 {
     	window.location.reload(true);  
- 	}
+ }
 function Refresh() 
 {	
 		window.location.reload();
@@ -678,7 +686,7 @@ function SaveIPForm()
 	            data: $("#w0").serialize(),
 	            success: function (result) 
 	            { 
-	            	//alert(result);
+	            	
 	            	var obj = $.parseJSON(result);
 	            	if(obj[0] == 'Save')
 		        	{
@@ -1267,6 +1275,9 @@ $('#unit_consultant_table').on('key.dt', function(e, datatable, key, cell, origi
 }
 
 
+
+
+
 $('#reg_table').on('key.dt', function(e, datatable, key, cell, originalEvent)
 {
 	if(key === 13)
@@ -1328,7 +1339,14 @@ function Unitdetailsfetch(data)
 
 function Doctordetailsfetch(data)
 {
-	$('#inregistration-consultant_dr').val(data);
+	var data_split=data.split('_');
+	
+	$('#inregistration-consultant_dr').val(data_split[0]);
+	$('#inregistration-dr_unit').val(data_split[0]);
+	
+	$('#inregistration-speciality').val(data_split[1]);
+	
+	
 	$modal = $('#doctor_details');
 	$modal.modal('hide');
 }
@@ -1439,6 +1457,34 @@ function Patienttypemodule()
 	}
 }
 
+function Doctor_details(data)
+{
+	
+	if(data === '')
+	{
+		$('#inregistration-dr_unit').val('');
+		$('#inregistration-speciality').val('');
+	}
+	else if(data !== '')
+	{
+		$('#inregistration-dr_unit').val(data);
+		$('#inregistration-speciality').val(json_physician[data]['specialist']);
+	}
+	
+}
 
+function Doctor_details_one(data)
+{
+	if(data === '')
+	{
+		$('#inregistration-dr_unit').val('');
+		$('#inregistration-speciality').val('');
+	}
+	else if(data !== '')
+	{
+		//$('#inregistration-dr_unit').val(data);
+		$('#inregistration-speciality').val(json_physician[data]['specialist']);
+	}
+}
     </script>
  

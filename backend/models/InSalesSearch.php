@@ -42,7 +42,7 @@ class InSalesSearch extends InSales
      */
     public function search($params)
     {
-        $query = InSales::find();
+        $query = InSales::find()->orderBy(['opsaleid'=>SORT_DESC]);
 
         // add conditions that should always apply here
 

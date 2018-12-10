@@ -13,7 +13,7 @@ use yii\helpers\Url;
 /* @var $searchModel backend\models\LabPaymentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Lab Payments';
+$this->title = 'Out Source Test';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

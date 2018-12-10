@@ -412,7 +412,7 @@ legend.scheduler-border {
                               <th rowspan="2" style='width:8%;' class="text-center">Exp Date</th>
                               <th rowspan="2" style='width:5%;' class="text-center">Return<br>Qty</th>
                               <th rowspan="2" style='width:7.2%;' class="text-center">Unit<br>Form</th>
-                              <th rowspan="2" style='width:7.7%;' class="text-center">Price</th>
+                              <th rowspan="2" style='width:7.7%;' class="text-center">MRP</th>
                               <!--th rowspan="2" width="5%" class="text-center">Discount Type</th-->
                               <th colspan="2" style='width:15.4%;' class="text-center th-discount"  >Discount</th>
                               <!--th colspan="2" class="text-center">IGST</th-->
@@ -845,6 +845,17 @@ var price_per_quantity=parseFloat(obj[tablet_id]['mrpperunit']*ret_qty).toFixed(
 var gst_sale_percent=parseFloat(obj[tablet_id]['gstrate']);
 var total_amount=parseFloat(amount.toFixed(2));
 
+
+if(obj[tablet_id]['new_mrp_perunit'] !== null)
+{
+var mrp_per_qty=obj[tablet_id]['new_mrp_perunit'];
+}
+else
+{
+var mrp_per_qty=0;	
+}
+
+
 //DISCOUNT VALUE
 var discount_flat='';
 var discount_percent='';
@@ -906,8 +917,8 @@ var markup = "<tr  class='save_data_table' data-id="+tablet_id+" id='table_del"+
 +"<input type='hidden' name='quantity[]' value='"+required_id+"'>"
 +"<input type='hidden' name='primeid[]' value='"+tablet_id+"'>"
 +"<input type='hidden' name='stock_respose_id[]' value='"+stock_respose_id+"'>"
-+"<input type='text' name='price[]' class='disctxt price_mrp text-right w-53' data_price_mrp="+tablet_id+" value="+price_per_quantity+" id="+'price'+tablet_id+"></td>"
-
++"<input type='hidden' readonly name='price[]' class='disctxt price_mrp text-right w-53' data_price_mrp="+tablet_id+" value="+price_per_quantity+" id="+'price'+tablet_id+">"
++"<input type='text' readonly name='mrp_individual_price[]' class='disctxt mrp_individual_price text-right w-53' data_price_mrp="+tablet_id+" value="+mrp_per_qty+" id="+'mrp_individual_price'+tablet_id+"></td>"
 +"<td class='td-dis-val'><div class='input-group'> <input type='text' value='"+discount_percent+"' name='discount_value[]' data_disc_value='"+tablet_id+"' id='enabledisc"+tablet_id+"'  class='enabledisc disctxt w-53' readonly></div></td>"
 +"<td class='td-dis-amt'><div class='input-group'> <input type='text' value='"+discount_flat+"' name='discountext_value[]' id='disc_amount"+tablet_id+"' class='add_discount text-right disctxt w-53' readonly>"
 +"</div></td>"

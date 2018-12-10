@@ -11,14 +11,32 @@ $this->title = 'In Salesreturns';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="in-salesreturn-index">
+<div class="container">
+   <div class="row">
+<div class="col-sm-12">
+ <div class="btn-group pull-right m-t-15">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+</div>
+<h4 class="page-title"> <?= Html::encode($this->title) ?></h4>
+								<ol class="breadcrumb">
+									 <li><a href="<?php echo Yii::$app->request->BaseUrl;?>">Home</a></li>
+									 <li><a href="#"><?php echo $this->title;?></a></li>
+									
+								</ol>
+							</div>
+						</div>
+<div class="row">
+<div class="col-sm-12">
+<div class="panel panel-border panel-custom">
+<div class="panel-heading">
+
+</div>
+<div class="panel-body">
+
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create In Salesreturn', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+ 
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -56,8 +74,20 @@ $this->params['breadcrumbs'][] = $this->title;
             //'updated_on',
             //'updated_ipaddress',
 
-            ['class' => 'yii\grid\ActionColumn'],
+               ['class' => 'yii\grid\ActionColumn',
+              
+               'template'=>'{print}',
+                            'buttons'=>[
+               				 'print' => function ($url, $model, $key) 
+               				 {
+                               return Html::a('<span class="btn btn-purple btn-xs btn-flat waves-effect waves-light" style="margin-right:4px;">Invoice', ['in-sales/returntabletbill','id'=>$model->return_id], ["target"=>"_blank", "data-pjax"=>"0", 'data-toggle'=>'tooltip', 'title' =>'Return Bill Invoice' ]);
+                             },
+                          ] ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>
+</div>
+</div>
+</div>
+</div>
 </div>

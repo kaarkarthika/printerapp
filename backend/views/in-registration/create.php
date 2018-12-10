@@ -50,6 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'specialistdoctor' => $specialistdoctor,
         'insurance' => $insurance,
         'room_type' => $room_type,
+        'json_physicianmaster' => $json_physicianmaster,
     ]) ?>
 
 </div>

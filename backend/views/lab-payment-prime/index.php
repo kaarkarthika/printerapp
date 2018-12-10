@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
             	'label' => 'MR Number ',
              	],
            	['attribute' => 'name', 
-            	'label' => 'Name',
+            	'label' => 'Patient Name',
              	],
 			['attribute' => 'ph_number', 
             	'label' => 'Phone Number ',

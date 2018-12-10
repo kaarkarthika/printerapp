@@ -194,7 +194,7 @@ class ProductController extends Controller
 			
 	        if ($model->load(Yii::$app->request->post()))
 			{
-		 			
+		 			//print_r($_POST);die;
 		 		$productname=trim(ucwords(Yii::$app->request->post('Product')['productname']));
 				$model->updated_ipaddress=$_SERVER['REMOTE_ADDR'];
 				$model->updatedon=date("Y-m-d H:i:s");
@@ -203,7 +203,7 @@ class ProductController extends Controller
 				
 				$model->product_typeid=$_POST['Product']['product_typeid'];
 				$model->hsn_code=$_POST['Product']['hsn_code'];
-				$model->gst=$_POST['Product']['gst'];
+				$model->gst=$taxgrouping_index[$_POST['Product']['hsn_code']]['tax'];
 				$model->composition_id=$_POST['Product']['composition_id'];
 				
 				//Unit ID Inserted

@@ -1289,7 +1289,7 @@ $(document).ready(function(e){
 
 
  
- <script>
+<script>
 
 $(function () {
 	    
@@ -3280,31 +3280,19 @@ $(document).ready(function(){
      });	*/
      
      
-    $("body").on('click', '#history_detils', function (e)
-    {
-    	var mr_number=$('#mrnumber').val();
-    	if(mr_number != '')
-    	{
-    		$.ajax({
-    				
-				      type: "POST",
-				      url: "<?php echo Yii::$app->homeUrl . "?r=sales/histmrnumberpdf&id=";?>"+mr_number,
-				      success: function (result) 
-				      {
-				      	
-				      	 $('#sale_history_report').html(result);
-				      	 $modal = $('#mr_hist-modal');
-						 $modal.modal('show'); 
-				      	
-				      }
-				  });
-    	}
-    	else if(mr_number == '')
-    	{
-    		//alert('Enter MR Number');
-    		Alertment('Enter MR Number');
-    	}
-    });	
+$("body").on('click', '#history_detils', function (e)
+{
+var mr_number=$('#mrnumber').val();
+if(mr_number !== '')
+{
+	var url='<?php echo Yii::$app->homeUrl ?>?r=sales/patientsaleshistory&id='+mr_number;
+ 	window.open(url,'_blank');
+}
+else if(mr_number === '')
+{
+	Alertment('Enter MR Number');
+}
+});	
    
 });
  </script>
@@ -4584,6 +4572,7 @@ function PaidAmountCalculation(data,event)
 		 
 		 //new vvvv
 		  $('#paid_value').val(discash_amount);
+		  
 		  	
 	      var cash_amount=$('#cash_value').val();
 		  var amt_in_words=convertNumberToWords(cash_amount);
@@ -5311,7 +5300,7 @@ $('.datepicker').datepicker({format: 'dd-mm-yyyy'}).on('change', function(e) {
 	
 	
 	default_date();
-
+	var datatable_one_cal=1;
   });
 
 
@@ -5732,6 +5721,9 @@ function clearhead(){
 	bill_history(from_date,to_date);
 	$modal = $('#bill_history_model');
 	$modal.modal('show');
+	
+
+	
 });
  
 function bill_history(from_date,to_date)
@@ -5805,24 +5797,39 @@ if(from_date !== '' && to_date !== '')
 	        }
 	    }); 
 	    
-		$('#bill_history').on( 'click', 'tr', function () {
+	     	//var table_reg=$('#bill_history').DataTable();
+/*$('#bill_history').on( 'click', 'tr', function () {
 		    var data = table_reg.row( this ).id();
+		 	//alert(data);
+		 	datatable_one_cal=1;
+		 	BillHistory(data);
+		 
+		});*/
+		
+		
+		$('#bill_history').off( 'click.rowClick' ).on('click.rowClick', 'td', function () {
+		var data = table_reg.row( this ).id();
+		 	//alert(data);
 		 	
 		 	BillHistory(data);
+		 
 		});
+		
 	
-		$('#bill_history').on('key.dt', function(e, datatable, key, cell, originalEvent){
-		     if(key === 13)
-		     {
-		        var data = table_reg.row(cell.index().row).id();
-		        
-		        BillHistory(data);
-		     }
-		});  
-		$('#bill_history').DataTable().ajax.reload();
+$('#bill_history').on('key.dt', function(e, datatable, key, cell, originalEvent){
+     if(key === 13)
+     {
+        var data = table_reg.row(cell.index().row).id();
+       
+        BillHistory(data);
+       
+     }
+}); 
+		
+		/*$('#bill_history').DataTable().ajax.reload();
 		setTimeout(function(){ 
 	//var table_as = $("#bill_history").DataTable();
-	table_reg.ajax.reload( function (json) {table_reg.cell( ':eq(0)' ).focus();} );}, 200);
+	table_reg.ajax.reload( function (json) {table_reg.cell( ':eq(0)' ).focus();} );}, 200);*/
 	
 	
 	
@@ -5835,8 +5842,8 @@ function BillHistory(data_val)
 	
 if(data_val !== '')
 {	
-	 
-	//alert(data_val);
+	
+	
 	$.ajax({
 	type: "POST",
   	url:'<?php echo Yii::$app->homeUrl . "?r=sales/billhistoryfetch&id=";?>'+data_val,
@@ -5897,6 +5904,7 @@ if(data_val !== '')
     	 
     	 $('#medicines').attr('disabled','disabled');
     	 $('.save_billing').attr('disabled','disabled');
+    	
     }
 	});
 }

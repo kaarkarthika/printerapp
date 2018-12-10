@@ -1449,7 +1449,7 @@ function BillDetailsFetch(data)
 
 function validDate(value)
 {
-	//value.trim();
+	
 	if(value === '')
 	{
 		var current_date = new Date();

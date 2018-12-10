@@ -43,9 +43,9 @@ class Returndetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['return_id', 'returndate', 'productid', 'stock_code',  'productqty', 'price', 'priceperqty'], 'required'],
+          //  [['return_id', 'returndate', 'productid', 'stock_code',  'productqty', 'price', 'priceperqty'], 'required'],
             [['return_id', 'productid', 'compositionid', 'unitid', 'productqty', 'is_active', 'updated_by'], 'integer'],
-            [['returndate', 'updated_on'], 'safe'],
+            [['returndate', 'updated_on','return_id', 'returndate', 'productid', 'stock_code',  'productqty', 'price', 'priceperqty'], 'safe'],
             [['price', 'priceperqty'], 'number'],
             [['stock_code', 'updated_ipaddress'], 'string', 'max' => 50],
         ];
