@@ -303,8 +303,8 @@ if(!empty($lab_payment))
 										$cdate =$printcount['printdate'];
 										$printDate = date("d-m-Y h:i A", strtotime($cdate));	
 									}
-									$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Testlab_"]);
-									$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Testlab_';
+									$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Testlab_".$value['lab_common_id']]);
+									$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Testlab_'.$value['lab_common_id'];
 									
 									if($printcount['status']=="P"){
 												$result_string.='<tr style="background: #b6fbc2;">

@@ -136,8 +136,8 @@ class LabPaymentPrimeController extends Controller
 			$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_testgroup'=>$split_group[1]])->asArray()->all();
 		}
 		if($split_group[0]=="Testlab"){
-			// $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$split_group[1]])->asArray()->all();
-			$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
+			 $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$split_group[1]])->asArray()->all();
+			//$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
 			
 		}
 			
@@ -1542,7 +1542,7 @@ public function actionAjaxsinglefetchdetails($id)
 							
 							 	$tbl1.='<tr><td style="width:15%;text-align:left;">'. $i++.'</td>
 								<td style="width:70%;text-align:left;"><b>'.$testgroup_name['testgroupname'].'</b></td>
-								<td style="width:15%;text-align:right;">'. $value['price'] .'</td>
+								<td style="width:15%;text-align:right;">'. number_format($value['price'],2, '.', '')  .'</td>
 							</tr>';
 							
 						 } 
@@ -1555,14 +1555,14 @@ public function actionAjaxsinglefetchdetails($id)
 							 
 							 	$tbl1.='<tr><td style="width:15%;text-align:left;">'. $i++.'</td>
 								<td style="width:70%;text-align:left;"><b>'.$testgroup_name['testgroupname'].'</b></td>
-								<td style="width:15%;text-align:right; ">'. $testgroup_name['price'] .'</td>
+								<td style="width:15%;text-align:right; ">'. number_format($testgroup_name['price'],2, '.', '') .'</td>
 							</tr>'; 
 					}
 					if($split_group[0]=="LabTesting"){
  							$lab_testing1=LabTesting::find()->where(['autoid'=>$val['lab_common_id']])->asArray()->one();
 							 	$tbl1.='<tr><td style="width:15%;text-align:left;">'. $i++.'</td>
 								<td style="width:70%;text-align:left;"><b>'.$lab_testing1['test_name'].'</b></td>
-								<td style="width:15%;text-align:right;">'. $lab_testing1['price'] .'</td>
+								<td style="width:15%;text-align:right;">'. number_format($lab_testing1['price'],2, '.', '')  .'</td>
 							</tr>'; 
 					}
 							
@@ -1572,22 +1572,22 @@ public function actionAjaxsinglefetchdetails($id)
 			$tbl1.='<tr>
 					<td style="width:70%;border-top:1px solid #000;text-align:left;"></td>
 					<td style="width:15%;border-top:1px solid #000;text-align:left;font-weight:bold;">TOTAL</td>
-					<td style="width:15%;border-top:1px solid #000;text-align:right;">  '.$labprime_list['overall_net_amt'] .'</td>
+					<td style="width:15%;border-top:1px solid #000;text-align:right;">  '. number_format($labprime_list['overall_net_amt'],2, '.', '').'</td>
 					</tr>';
 			if($dis!="0"){
 				$tbl1.='<tr><td style="width:70%;text-align:left;"></td>
 					<td style="width:15%;text-align:left;font-weight:bold;">CONCESSION</td>
-					<td style="width:15%;text-align:right;">  '. $dis .'</td></tr>';
+					<td style="width:15%;text-align:right;">  '.number_format($dis,2, '.', '').'</td></tr>';
 			}		
 			$tbl1.='<tr>
 					<td style="width:70%;text-align:left;"></td>
 					<td style="width:15%;text-align:left;font-weight:bold;">PAID</td>
-					<td style="width:15%;text-align:right;">  '.$labprime_list['overall_paid_amt'] .'</td>
+					<td style="width:15%;text-align:right;">  '.number_format($labprime_list['overall_paid_amt'],2, '.', '').'</td>
 					</tr>
 					<tr>
 					<td style="width:70%;text-align:left;"></td>
 					<td style="width:15%;text-align:left;font-weight:bold;">DUE AMOUNT</td>
-					<td style="width:15%;text-align:right;"> '.$labprime_list['overall_due_amt'] .' </td>
+					<td style="width:15%;text-align:right;"> '. number_format($labprime_list['overall_due_amt'],2, '.', '').' </td>
 					</tr>';
 				//}
 
@@ -2093,14 +2093,14 @@ public function actionAjaxsinglefetchdetails($id)
 		}
 		else if($split_group[0]=="Testlab"){
 			
-			$printcount=LabReport::find()->select(['printcount'])->where(['lab_payment_id'=>$id])->andWhere(['lab_testing'=>$mgrp])->asArray()->one();
+			$printcount=LabReport::find()->select(['printcount'])->where(['lab_payment_id'=>$id])->andWhere(['testname_id'=>$mgrp])->asArray()->one();
 			if($printcount['printcount']==""){
 				$count_print=1;
 			}else{
 				$count_print=1+$printcount['printcount'];
 			}
 			// $status_count1=Yii::$app->db->createCommand()->update('lab_report', ['printdate'=>$cur_data,'printcount'=>$count_print],'lab_payment_id='.$id.' AND lab_testing='.$mgrp.'')->execute();
-			$status_count1=Yii::$app->db->createCommand()->update('lab_report', ['printdate'=>$cur_data,'printcount'=>$count_print],'lab_payment_id='.$id.'')->execute();
+			$status_count1=Yii::$app->db->createCommand()->update('lab_report', ['printdate'=>$cur_data,'printcount'=>$count_print],'lab_payment_id='.$id.' AND testname_id='.$mgrp.'')->execute();
 		}
 			
 		
@@ -2412,8 +2412,8 @@ public function actionAjaxsinglefetchdetails($id)
 				}
 			else if($split_group[0]=="Testlab"){
 				
-				//$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$mgrp])->asArray()->all();
-				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
+				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$mgrp])->asArray()->all();
+				//$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
 				
 				
 				foreach ($lab_payment as $key => $value)  
@@ -2437,9 +2437,10 @@ public function actionAjaxsinglefetchdetails($id)
 												->asArray()->one();
 											} 
 								$lab_report=LabReport::find()->asArray()->one();
+								
 							if(!empty($value['autoid'])){ 
-									 //$lab_report_val=LabReport::find()->where(['testname_id'=>$value['lab_testing']])->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
-									 $lab_report_val=LabReport::find()->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
+									 $lab_report_val=LabReport::find()->where(['testname_id'=>$value['lab_common_id']])->andWhere(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
+									 //$lab_report_val=LabReport::find()->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
 								} 
 									$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
 									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
@@ -2486,7 +2487,7 @@ public function actionAjaxsinglefetchdetails($id)
 									}
 								}
 							}
-						//}
+						
 						
 		   		$pdf->writeHTML($tbl_res, true, false, false, false, '');
 				

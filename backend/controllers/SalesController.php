@@ -3467,6 +3467,220 @@ public function actionCreate() {
 	}*/
 	
 	
+public function actionPatientsaleshistory1($id)
+{
+		
+// $sales=Sales::find()->select(['opsaleid'=>'opsaleid','name'=>'name','mrnumber'=>'mrnumber','billnumber'=>'billnumber'])->where(['mrnumber'=>$id])->orderBy(['created_at'=>SORT_ASC])->asArray()->all();
+
+// $sales_map=ArrayHelper::map($sales,'opsaleid','opsaleid');
+// $sales_index=ArrayHelper::index($sales,'opsaleid');
+
+
+// $sale_detail=Saledetail::find()->select(['opsale_detailid'=>'opsale_detailid','opsaleid'=>'opsaleid','productid'=>'productid',
+// 'productqty'=>'productqty','batchnumber'=>'batchnumber','expiredate'=>'expiredate','new_mrp_perunit'=>'new_mrp_perunit','total_price_perqty'=>'total_price_perqty'
+// ])->where(['IN','opsaleid',$sales_map])->andWhere(['>=','productqty', 1])->asArray()->all();
+// $sale_detail_index=ArrayHelper::index($sale_detail,'opsale_detailid');
+
+
+
+// $sales_fetch_map=ArrayHelper::map($sale_detail,'opsale_detailid','opsaleid');
+// $sales_fetch=Sales::find()->select(['opsaleid'=>'opsaleid','name'=>'name','mrnumber'=>'mrnumber','billnumber'=>'billnumber','created_at'=>'created_at'])
+// ->where(['IN','opsaleid',$sales_fetch_map])->asArray()->all();
+// $sale_fetch_index=ArrayHelper::index($sales_fetch,'opsaleid');
+
+// $sales_fetch_sum=Sales::find()->select(['overalltotal'=>'SUM(overalltotal)'])
+// ->where(['IN','opsaleid',$sales_fetch_map])->asArray()->one();
+
+
+// $product_map=ArrayHelper::map($sale_detail,'opsale_detailid','productid');
+// $product=Product::find()->select(['productid'=>'productid','productname'=>'productname'])->where(['IN','productid',$product_map])->asArray()->all();
+// $product_index=ArrayHelper::index($product,'productid');
+
+
+
+
+// require ('../../vendor/tcpdf/tcpdf.php');
+// $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+// $pdf->SetCreator(PDF_CREATOR);
+// $pdf->SetAuthor('Nicola Asuni');
+// $pdf->SetTitle('Invoice');
+// $pdf->SetSubject('TCPDF Tutorial');
+// $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+// $pdf->SetPrintHeader(false);
+// $pdf->SetPrintFooter(false);
+// $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+// $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+// $pdf->setFontSubsetting(true);
+// $pdf->SetFont('helvetica', '', 8, '', true);
+
+
+
+
+// $pdf->AddPage();
+
+
+
+
+// if(!empty($sales))
+// {
+	// $newpatient=Newpatient::find()->select(['mr_no'=>'mr_no','patientname'=>'patientname','insurance_type_id'=>'insurance_type_id','pat_type'=>'pat_type','pat_mobileno'=>'pat_mobileno'])->where(['mr_no'=>$id])->asArray()->one();
+	
+	// $patienttypemaster=ArrayHelper::map(PatientType::find()->asArray()->all(),'type_id','patient_type');
+	// $insurancemaster=ArrayHelper::map(Insurance::find()->asArray()->all(),'insurance_typeid','insurance_type');
+	
+	
+	
+	
+	// $title="(A UNIT OF CARMEL HEALTHCARE PVT LTD)";
+	// $headertable='<table cellspacing="0" cellpadding="1" >';
+	// $headertable.='<tr ><td style="text-align:center;font-size:18px;" colspan="12" ><b>DINESH MEDICAL CENTRE</b></td></tr>';
+	// $headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><b>'.$title.'</b></td></tr>';
+	// $headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><p><b>D.NO:3-7-215-1, FIRST FLOOR BAKARAPURAM, PULIVENDULA - 516390 - KADAPA DIST,PH:08568 287557</b></p></td></tr>';
+	// $headertable.='<tr><td colspan="3"><b>DL NO-20F: AP/11/03/2017-137691</b></td><td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>21 : AP/11/03/2017-137690</b></td>
+	// <td colspan="3"><b>&nbsp;&nbsp;&nbsp; 20: AP/11/03/2017-137689</b></td><td colspan="3"><b>GSTIN : 37AADCC7476L1Z3</b></td></tr>';
+	
+	
+	// $headertable.='</table>';
+	// $headertable.='<p style="border-top:1px solid #000" ></p>
+	// <p style="text-align:center;font-size:12px;" ><b><u>PATIENT PURCHASE AND RETURN DETAILS</u></b></p><p></p>';
+	
+	// $pdf->writeHTML($headertable, true, false, false, false, '');
+
+	// $patientdetails='<table style="text-align:center;font-size:10.5px;" border="1" cellspacing="0" cellpadding="0">';
+	// $patientdetails.='<tbody><tr><td style="font-size:12px;width:10%;"><b>MR NO</b></td><td style="font-size:12px;width:20%;"><b>PAT NAME</b></td><td style="font-size:12px;width:30%;"><b>TYPE</b></td><td style="font-size:12px;"><b>ORG NAME</b></td><td style="font-size:12px;"><b>PH.NO</b></td></tr>';
+	// $patientdetails.='<tr><td style="font-size:12px;">'.$id.'</td><td style="font-size:12px;">'.strtoupper($newpatient['patientname']).'</td><td style="font-size:12px;">'.strtoupper($patienttypemaster[$newpatient['pat_type']]).'</td><td style="font-size:12px;">'.strtoupper($insurancemaster[$newpatient['insurance_type_id']]).'</td><td style="font-size:12px;">'.$newpatient['pat_mobileno'].'</td></tr>';				
+	// $patientdetails.='</tbody></table>';
+	
+	// $pdf->writeHTML($patientdetails, true, false, false, false, '');
+	
+	
+
+	
+	
+	// if(!empty($sale_detail))
+	// {
+		// $purchasedetails='';
+		
+		// $purchasedetails.='<p style="border-top:1px solid #000" ></p><table cellspacing="-10" cellpadding="-15"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;"><b>Item Name</b></td><td style="text-align:left;font-size:12px;width:10%;"><b>Qty</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Batch No</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Exp Date</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Rate</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Total</b></td></tr></tbody></table><p style="border-top:1px solid #000" ></p>';
+		// $i=1;
+		
+		
+		// $sales_current=current($sale_fetch_index);
+		
+		// $purchasedetails.='<p style="text-align:left;font-size:12px;color: blue;"><b>ISSUES</b></p>';
+		// $purchasedetails.='<p style="text-align:left;font-size:12px;"><span><b>BILL NO: '.$sales_current['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sales_current['created_at'])).'</b></span></p>';
+		// foreach ($sale_detail as $key => $value) 
+		// {
+
+			// $current_id=$value['opsaleid'];
+			// if($sales_current['opsaleid'] == $current_id)
+			// {
+				
+				// $purchasedetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['new_mrp_perunit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['total_price_perqty'].'</td></tr></tbody></table>';
+			// }
+			// else if($sales_current['opsaleid'] != $current_id)
+			// {
+				// $sales_current['opsaleid']=$current_id;
+				// $purchasedetails.='<p style="text-align:left;font-size:12px;" ><span><b>BILL NO: '.$sale_fetch_index[$current_id]['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sale_fetch_index[$current_id]['created_at'])).'</b></span></p>';
+				// $purchasedetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['new_mrp_perunit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['total_price_perqty'].'</td></tr></tbody></table>';
+			// }
+			
+			// $i++;
+		// }
+	
+				// $purchasedetails.='<p style="border-top:1px solid #000" ></p>';
+				// $purchasedetails.='<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Sub Total : </b></td><td style="text-align:right;font-size:12px;"><b>'.number_format($sales_fetch_sum['overalltotal'],2).'</b></td></tr></tbody></table>';
+				// $purchasedetails.='<p style="border-top:1px solid #000" ></p>';
+			
+			
+			
+			// $pdf->writeHTML($purchasedetails, true, false, false, false, '');
+			
+		
+
+				
+	// }	
+	
+	// $salesreturn=Salesreturn::find()
+// ->select(['return_id'=>'return_id','saleid'=>'saleid','return_invoicenumber'=>'return_invoicenumber','total'=>'total','return_amount'=>'return_amount','created_at'=>'created_at'])
+// ->where(['IN','saleid',$sales_map])->asArray()->all();
+// $salesreturn_map=ArrayHelper::map($salesreturn,'return_id','return_id');
+// $salesreturn_index=ArrayHelper::index($salesreturn,'return_id');
+		
+
+// $returndetail=Returndetail::find()
+// ->select(['return_detailid'=>'return_detailid','return_id'=>'return_id','sale_detailid'=>'sale_detailid'
+// ,'productid'=>'productid','productqty'=>'productqty','batchnumber'=>'batchnumber','expiredate'=>'expiredate'
+// ,'mrp_per_unit'=>'mrp_per_unit','mrp'=>'mrp'])
+// ->where(['IN','return_id',$salesreturn_map])->asArray()->all();
+
+
+
+
+// $product_return_map=ArrayHelper::map($returndetail,'return_detailid','productid');
+// $product_return=Product::find()->select(['productid'=>'productid','productname'=>'productname'])->where(['IN','productid',$product_return_map])->asArray()->all();
+// $product_return_index=ArrayHelper::index($product_return,'productid');
+		
+
+// $salesreturn_fetch_sum=Salesreturn::find()->select(['total'=>'SUM(total)'])
+// ->where(['IN','saleid',$sales_map])->asArray()->one();		
+	// //echo '<pre>';print_r($salesreturn_fetch_sum);die;
+		
+// if(!empty($returndetail))
+// {
+// $returndetails='';
+
+// //$returndetails.='<p style="border-top:1px solid #000" ></p><table cellspacing="-10" cellpadding="-15"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;"><b>Item Name</b></td><td style="text-align:left;font-size:12px;width:10%;"><b>Qty</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Batch No</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Exp Date</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Rate</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Total</b></td></tr></tbody></table><p style="border-top:1px solid #000" ></p>';
+// $i=1;
+
+
+// $salesreturn_first=current($salesreturn_index);
+// //echo '<pre>';
+// //print_r($salesreturn_first);die;
+// $returndetails.='<p style="text-align:left;font-size:12px;color: blue;"><b>RETURN</b></p>';
+// $returndetails.='<p style="text-align:left;font-size:12px;"><span><b>BILL NO: '.$salesreturn_first['return_invoicenumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($salesreturn_first['created_at'])).'</b></span></p>';
+// foreach ($returndetail as $key => $value) 
+		// {
+
+			// $current_id=$value['return_id'];
+			// if($salesreturn_first['return_id'] == $current_id)
+			// {
+				
+				// $returndetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_return_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp_per_unit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp'].'</td></tr></tbody></table>';
+			// }
+			// else if($salesreturn_first['return_id'] != $current_id)
+			// {
+				// $salesreturn_first['return_id']=$current_id;
+				// $returndetails.='<p style="text-align:left;font-size:12px;" ><span><b>BILL NO: '.$salesreturn_index[$current_id]['return_invoicenumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($salesreturn_index[$current_id]['created_at'])).'</b></span></p>';
+				// $returndetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_return_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp_per_unit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp'].'</td></tr></tbody></table>';
+			// }
+			
+			// $i++;
+		// }
+	
+				// $returndetails.='<p style="border-top:1px solid #000" ></p>';
+				// $returndetails.='<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Sub Total : </b></td><td style="text-align:right;font-size:12px;"><b>'.number_format($salesreturn_fetch_sum['total'],2).'</b></td></tr></tbody></table>';
+				// $returndetails.='<p style="border-top:1px solid #000" ></p>';
+			
+			
+			
+			// $pdf->writeHTML($returndetails, true, false, false, false, '');
+// }
+	
+// }
+
+
+// $pdf->writeHTML($tbl1, true, false, false, false, '');
+// ob_end_clean();
+// $pdf->Output('PatientPurchaseDetails.pdf');
+
+
+
+
+
+
+}
+
 public function actionPatientsaleshistory($id)
 {
 		
@@ -3533,7 +3747,7 @@ if(!empty($sales))
 	
 	$title="(A UNIT OF CARMEL HEALTHCARE PVT LTD)";
 	$headertable='<table cellspacing="0" cellpadding="1" >';
-	$headertable.='<tr ><td style="text-align:center;font-size:18px;" colspan="12" ><b>DINESH MEDICAL CENTRE</b></td></tr>';
+	$headertable.='<tr><td style="text-align:center;font-size:18px;" colspan="12" ><b>DINESH MEDICAL CENTRE</b></td></tr>';
 	$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><b>'.$title.'</b></td></tr>';
 	$headertable.='<tr ><td style="text-align:center;font-size:11px;" colspan="12" ><p><b>D.NO:3-7-215-1, FIRST FLOOR BAKARAPURAM, PULIVENDULA - 516390 - KADAPA DIST,PH:08568 287557</b></p></td></tr>';
 	$headertable.='<tr><td colspan="3"><b>DL NO-20F: AP/11/03/2017-137691</b></td><td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>21 : AP/11/03/2017-137690</b></td>
@@ -3548,7 +3762,7 @@ if(!empty($sales))
 
 	$patientdetails='<table style="text-align:center;font-size:10.5px;" border="1" cellspacing="0" cellpadding="0">';
 	$patientdetails.='<tbody><tr><td style="font-size:12px;width:10%;"><b>MR NO</b></td><td style="font-size:12px;width:20%;"><b>PAT NAME</b></td><td style="font-size:12px;width:30%;"><b>TYPE</b></td><td style="font-size:12px;"><b>ORG NAME</b></td><td style="font-size:12px;"><b>PH.NO</b></td></tr>';
-	$patientdetails.='<tr><td style="font-size:12px;">'.$id.'</td><td style="font-size:12px;">'.strtoupper($newpatient['patientname']).'</td><td style="font-size:12px;">'.strtoupper($patienttypemaster[$newpatient['pat_type']]).'</td><td style="font-size:12px;">'.strtoupper($insurancemaster[$newpatient['insurance_type_id']]).'</td><td style="font-size:12px;">'.$newpatient['pat_mobileno'].'</td></tr>';				
+	// $patientdetails.='<tr><td style="font-size:12px;">'.$id.'</td><td style="font-size:12px;">'.strtoupper($newpatient['patientname']).'</td><td style="font-size:12px;">'.strtoupper($patienttypemaster[$newpatient['pat_type']]).'</td><td style="font-size:12px;">'.strtoupper($insurancemaster[$newpatient['insurance_type_id']]).'</td><td style="font-size:12px;">'.$newpatient['pat_mobileno'].'</td></tr>';				
 	$patientdetails.='</tbody></table>';
 	
 	$pdf->writeHTML($patientdetails, true, false, false, false, '');
@@ -3561,14 +3775,28 @@ if(!empty($sales))
 	{
 		$purchasedetails='';
 		
-		$purchasedetails.='<p style="border-top:1px solid #000" ></p><table cellspacing="-10" cellpadding="-15"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;"><b>Item Name</b></td><td style="text-align:left;font-size:12px;width:10%;"><b>Qty</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Batch No</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Exp Date</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Rate</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Total</b></td></tr></tbody></table><p style="border-top:1px solid #000" ></p>';
+		$purchasedetails.='
+		 <p style="border-top:1px solid #000" ></p>
+		 <table cellspacing="-15" cellpadding="-15" >
+		    <tbody>
+			   <tr>
+			      <td style="font-size:12px; width:36%;text-align:left;"><b>Item Name</b></td>
+				  <td style="font-size:12px; width:12%;text-align:left;"><b>Qty</b></td>
+				  <td style="font-size:12px;width:14%;text-align:left; "><b>Batch No</b></td>
+				  <td style="font-size:12px;text-align:left; "><b>Exp Date</b></td>
+				  <td style="font-size:12px;text-align:left; "><b>Rate</b></td>
+				  <td style="font-size:12px;text-align:left;"><b>Total</b></td>
+			   </tr>
+			</tbody>
+		 </table>
+		 <p style="border-top:1px solid #000" ></p>';
 		$i=1;
 		
 		
 		$sales_current=current($sale_fetch_index);
 		
-		$purchasedetails.='<p style="text-align:left;font-size:12px;color: blue;"><b>ISSUES</b></p>';
-		$purchasedetails.='<p style="text-align:left;font-size:12px;"><span><b>BILL NO: '.$sales_current['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sales_current['created_at'])).'</b></span></p>';
+		/* $purchasedetails.='<p style="text-align:left;font-size:12px;color: blue;"><b>ISSUES</b></p>'; */
+		$purchasedetails.='<p style="text-align:left;font-size:12px;"><span><b style="text-align:left;font-size:12px;color: blue;">ISSUES</b><br><b>BILL NO: '.$sales_current['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sales_current['created_at'])).'</b></span></p>';
 		foreach ($sale_detail as $key => $value) 
 		{
 
@@ -3576,13 +3804,37 @@ if(!empty($sales))
 			if($sales_current['opsaleid'] == $current_id)
 			{
 				
-				$purchasedetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['new_mrp_perunit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['total_price_perqty'].'</td></tr></tbody></table>';
+				$purchasedetails.='
+				<table  cellspacing="0" cellpadding="0">
+				 <tbody>
+				  <tr>
+				    <td style="font-size:12px;width:36%;text-align:left;">'.$product_index[$value['productid']]['productname'].'</td>
+					<td style="font-size:12px;width:12%;text-align:left; ">'.$value['productqty'].'</td>
+					<td style="font-size:12px;width:14%;text-align:left; ">'.$value['batchnumber'].'</td>
+					<td style="font-size:12px;text-align:left; ">'.date('d-m-Y',strtotime($value['expiredate'])).'</td>
+					<td style="font-size:12px;text-align:left; ">'.$value['new_mrp_perunit'].'</td>
+					<td style="font-size:12px;text-align:left; ">'.$value['total_price_perqty'].'</td>
+				  </tr>
+				 </tbody>
+				</table>';
 			}
 			else if($sales_current['opsaleid'] != $current_id)
 			{
 				$sales_current['opsaleid']=$current_id;
-				$purchasedetails.='<p style="text-align:left;font-size:12px;" ><span><b>BILL NO: '.$sale_fetch_index[$current_id]['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sale_fetch_index[$current_id]['created_at'])).'</b></span></p>';
-				$purchasedetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['new_mrp_perunit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['total_price_perqty'].'</td></tr></tbody></table>';
+				$purchasedetails.='<p style=" font-size:12px;" ><span><b>BILL NO: '.$sale_fetch_index[$current_id]['billnumber'].'</b> <b>Date: '.date('d-m-Y',strtotime($sale_fetch_index[$current_id]['created_at'])).'</b></span></p>';
+				$purchasedetails.='
+				<table  cellspacing="0" cellpadding="0">
+				  <tbody>
+				   <tr>
+				    <td style="font-size:12px;width:36%;text-align:left; ">'.$product_index[$value['productid']]['productname'].'</td>
+					<td style="font-size:12px;width:12%;text-align:left; ">'.$value['productqty'].'</td>
+					<td style="font-size:12px;width:14%;text-align:left; ">'.$value['batchnumber'].'</td>
+					<td style="font-size:12px;text-align:left; ">'.date('d-m-Y',strtotime($value['expiredate'])).'</td>
+					<td style="font-size:12px;text-align:left; ">'.$value['new_mrp_perunit'].'</td>
+					<td style="font-size:12px;text-align:left; ">'.$value['total_price_perqty'].'</td>
+				   </tr>
+				  </tbody>
+				</table>';
 			}
 			
 			$i++;
@@ -3670,7 +3922,7 @@ foreach ($returndetail as $key => $value)
 }
 
 
-$pdf->writeHTML($tbl1, true, false, false, false, '');
+//$pdf->writeHTML($tbl1, true, false, false, false, '');
 ob_end_clean();
 $pdf->Output('PatientPurchaseDetails.pdf');
 }

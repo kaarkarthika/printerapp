@@ -341,7 +341,7 @@ tbody#fetch_update_data input {
                                        <input   type="radio" name="discount" class="enable-textbox-flat" value="flat" disabled autocomplete="off">$
                                      </label>         
                                   </div>
-		                          <?= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total   ansrefrsh number text-right','id'=>'total_discountamount'])->label(false) ?>
+		                          <?= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total   ansrefrsh number text-right','id'=>'total_discountamount','readonly' => true])->label(false) ?>
                                  </div> 
 							   </td>
 						</tr>
@@ -1497,6 +1497,8 @@ function formatDate1(date)
 	  				$("#fetch_update_data tr").remove();
     				$("#saved_val").val('');
     				cleartxt();
+    				$("#labpaymentprime-authority").removeAttr("required");
+    				$("#remarks").removeAttr("required");
 	  				
 	  			}
 	  	});
@@ -1643,23 +1645,26 @@ function DefaultAmount()
 			
 			if(!isNaN(hiden_amt))
 			{
-				net_hidden_amount.push(Math.round(hiden_amt.toFixed(2)));
+				net_hidden_amount.push(hiden_amt);
 			}
 			
 		}
 		else if(data1 == 'TestGroup')
 		{
 			var hiden_amt=parseFloat($('#net_test_group_hidden'+data2).val());
-			
+		
 			if(!isNaN(hiden_amt))
 			{
-				net_hidden_amount.push(Math.round(hiden_amt.toFixed(2)));
+				net_hidden_amount.push(hiden_amt);
 			}
+				
 		}
 		
+		
 	});
+	
 	var amt=net_hidden_amount.reduce((a, b) => a + b, 0);
-	//alert(net_hidden_amount);
+	
 	return amt;
 }
 
@@ -1759,9 +1764,9 @@ function OverallDiscountPercentage(percentage)
 	var overall_discount_amount=discount_amount.reduce((a, b) => a + b, 0);
 	
 	
-	$('#total_net_amount').val(overall_amount.toFixed(2));
-	$('#total_paid_amount').val(overall_amount.toFixed(2));
-	$('#total_discountamount').val(overall_discount_amount.toFixed(2));
+	$('#total_net_amount').val(Math.round(overall_amount.toFixed(2)));
+	$('#total_paid_amount').val(Math.round(overall_amount.toFixed(2)));
+	$('#total_discountamount').val(Math.round(overall_discount_amount.toFixed(2)));
 	
 }
 
@@ -1874,9 +1879,15 @@ $(window).bind('keydown', function(event) {
 
 function PaidAmountCalculation(data,event) 
 {
-	//OverallDiscountPercentage(0);
+	
+	var netamount=$("#total_net_amount").val();
+	
 	var paid_amount=data.value;
-	var overall_net_amount=DefaultAmount();
+	if(paid_amount==netamount){
+		
+	}else{
+		var overall_net_amount=DefaultAmount();
+	//alert(overall_net_amount);
 	var grid_length=$("#fetch_update_data tr").length;
 	$('#total_discountvaluetype').val('');
 	$dis=$('#total_discountamount').val('');
@@ -1886,13 +1897,13 @@ function PaidAmountCalculation(data,event)
 	
 		if(get_insurance === "1" || get_insurance === "2" || get_insurance === "3")
 			{
-				$('#total_paid_amount').val("");
+				$('#total_paid_amount').val("0");
 				Alertment('This is Organization Patient');
 				$('#remarks').focus();
-				//return false;
+				
 			}
 		var tot=0;
-			//Paid_cal();
+			
 				$(".calculation").each(function() 
 				{
 					var data_addid=$(this).attr('dataid');
@@ -1952,11 +1963,10 @@ function PaidAmountCalculation(data,event)
 	}
 	else
 	{
-		$('#total_paid_amount').val('');
+		$('#total_paid_amount').val('0');
 		Alertment('No Test To Be Add');
 	}
-	
-//	DiscountPercent();
+}
 	
 		
 }
