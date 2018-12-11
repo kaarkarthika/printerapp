@@ -14,7 +14,7 @@ use yii\helpers\Url;
       <?php $form = ActiveForm::begin(['id'=>'main-testgroup-form']); ?>
 
      <?= $form->field($model, 'testgroupname')->textInput(['maxlength' => true,'required' => true])->label('Group Name') ?>
-     <?= $form->field($model, 'price')->textInput(['required' => true])->label('Price') ?> 
+     <?= $form->field($model, 'price')->textInput(['required' => true,'onkeypress'=>'javascript:return isNumber(event)'])->label('Price') ?> 
      <?= $form->field($model, 'shortcode')->textInput(['required' => true])?>
      <?= $form->field($model, 'hsncode')->dropdownlist($tax_grouping,['prompt'=>'Select HSN Code',  'options'=>['159'=>['Selected'=>true]],'data-live-search'=>'true',
     		 'data-style'=>"btn-default btn-custom1",'required' => true])->label('HSN Code') ?> 

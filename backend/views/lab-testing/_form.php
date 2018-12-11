@@ -15,6 +15,11 @@ use yii\helpers\Url;
  /*   float: right;*/
     margin-right: 7px;
 }
+body.fixed-left.widescreen div#wrapper > .footer{
+	position: relative !important; 
+    right: 0px;
+    left: 0 !important;
+}
 </style>
 <div class="section-cat">
 	<div class="category-pannel row">
@@ -27,7 +32,7 @@ use yii\helpers\Url;
 	<?php if($model->isNewRecord){  ?>
 		 <?php 
      
-     echo $form->field($catmodel, 'category_name')->dropDownList($catgorylist,['prompt'=>'--Select Category--','data-live-search'=>'true','class'=>'form-control selectpicker tabind','data-style'=>'btn-default btn-custom', 'onchange'=>'
+     echo $form->field($catmodel, 'category_name')->dropDownList($catgorylist,['prompt'=>'--Select Category--','required'=>true,'data-live-search'=>'true','class'=>'form-control selectpicker tabind','data-style'=>'btn-default btn-custom', 'onchange'=>'
                                                     $.get( "'.Url::toRoute('getsubcategory').'", { id: $(this).val() } )
                                                         .done(function( data ) {
                                                         	
@@ -41,7 +46,7 @@ use yii\helpers\Url;
 			 	
 			 	 <?php 
      
-     echo $form->field($model, 'cat_id')->dropDownList($catgorylist,['prompt'=>'--Select Category--','data-live-search'=>'true','class'=>'form-control selectpicker tabind','data-style'=>'btn-default btn-custom', 'onchange'=>'
+     echo $form->field($model, 'cat_id')->dropDownList($catgorylist,['prompt'=>'--Select Category--','required'=>true,'data-live-search'=>'true','class'=>'form-control selectpicker tabind','data-style'=>'btn-default btn-custom', 'onchange'=>'
                                                     $.get( "'.Url::toRoute('getsubcategory').'", { id: $(this).val() } )
                                                         .done(function( data ) {
                                                         	
@@ -59,10 +64,10 @@ use yii\helpers\Url;
 			
 			<?php if($model->isNewRecord){  ?>
 				<?= $form->field($unitmodel, 'unit_name')->dropdownlist($unitlist,['prompt'=>'Select unit','class'=>'selectpicker', 'data-live-search'=>'true',
-    		 		'data-style'=>"btn-default btn-custom1",'required' => true])->label('Select Unit') ?>
+    		 		'data-style'=>"btn-default btn-custom1"])->label('Select Unit') ?>
    			<?php }else{ ?>
    				<?= $form->field($model, 'unit_id')->dropdownlist($unitlist,['prompt'=>'Select unit','class'=>'selectpicker', 'data-live-search'=>'true',
-    		 		'data-style'=>"btn-default btn-custom1",'required' => true])->label('Select Unit') ?>
+    		 		'data-style'=>"btn-default btn-custom1"])->label('Select Unit') ?>
    			<?php }?>
    				
     </div>
@@ -116,57 +121,7 @@ use yii\helpers\Url;
 		    
     </div>
    </div> 
-  <!-- <div class="row posneg">
-   	<div class="col-sm-2">
-				<Label>Type of Result</label>
-		</div>
-		<div class="row refernce-content">
- 		<div class="col-sm-12">
- 	<table id="list1" class="list_val1" align="Center" border="1">
-					<tr>
-					  	<td>Name</td>
-					  	<td>Action</td>
-				</tr>
-				<tr>
-					<td><input type='text' id="free_text" class="free_text" name="free_text" />
-					<div class="alert_msg" style="color:red"></div></td>
-					<td><input type='button' class="btn btn-success" value = ' +' id = 'addfreedata'></td>
-				</tr>
-				</table>
-					
-					  <table id="list" class="list_vals" align="Center">
-					  	<tr>
-					  		<td>Name</td>
-					  		<td>Action</td>
-					  	</tr>
-   		 <?php  $i=1; //echo"<pre>"; print("test"); print_r($mulmodel); die;
-	      if(!empty($mulmodel)){ 
-    	  foreach ($mulmodel as $key => $value) {
-	 		 ?>
-	 		<tr>
-	 			<td><?php echo $value ->mulname ?><input type="hidden" id="hid_free_text<?php echo $i;?>" name="hid_free_text[]" value="<?php echo $value ->mulname ?>">	</td>
-	 			<td><span class="remove_li" data-toggle="tooltip" title="Remove">X</span>	</td>	
-	 		</tr>	 
-		<?php  $i++; }
-    	}else{ 
-    		?>
-    		<tr class="noresult">
-	 			<td colspan='8' class="noresult" > No Records	</td>
-	 		</tr>
-     <?php	}
-    	?>
-    </table> 
-		 </div>
-	 </div>
-   	
-   	<div class="col-sm-3">
- 			<!--<?php   $result=array('pos' => 'Positive', 'neg' =>'Negative');
-			 echo $form->field($model, 'result_type_val')->dropDownList($result,['prompt'=>'-- Select --','class'=>'result_type selectpicker', 'data-live-search'=>'true',
-    		 'data-style'=>"btn-default btn-custom1",'required' => true] )->label('Type of Result') ?> 
-    		 
-    		  
-   		</div>
-   	</div> -->
+  
    	<div class=" row mul_choice">
  		<div class="col-sm-2">
 				<Label>Multiple Choice</label>
@@ -195,7 +150,7 @@ use yii\helpers\Url;
 					  		<td>Name</td><td>Normal Value</td>
 					  		<td>Action</td>
 					  	</tr>
-    <?php  $i=1; //echo"<pre>"; print("test"); print_r($mulmodel); die;
+    <?php  $i=1;
 	      if(!empty($mulmodel)){ 
     	  foreach ($mulmodel as $key => $value) {
 	 		 ?>
@@ -265,7 +220,7 @@ use yii\helpers\Url;
 						  <option value="both">Both</option>
 						</select>
 					</td>
-				 	<td class="ref_age_check"><input type='text' id="age" class="age" name="age"  />
+				 	<td class="ref_age_check"><input type='text' id="age" class="age" name="age" onkeypress="javascript:return isNumber(event)"  />
 				 		<select name="agefrom_cal" id="agefrom_cal" class="refval bootstrap-select btn-group dropdown-toggle filter-option" >
 						  <option value="">-- Select --</option>	
 						  <option value="Day">Days</option>
@@ -273,7 +228,7 @@ use yii\helpers\Url;
 						  <option value="Year">Year</option>
 						</select>
 				 	</td>
-				 	<td class="ref_age_check"><input type='text' id="range" class="range" name="range"  />
+				 	<td class="ref_age_check"><input type='text' id="range" class="range" name="range" onkeypress="javascript:return isNumber(event)"  />
 				 		<select name="ageto_cal" id="ageto_cal" class="refval bootstrap-select btn-group dropdown-toggle filter-option" >
 						  <option value="">-- Select --</option>	
 						  <option value="Day">Days</option>
@@ -281,8 +236,8 @@ use yii\helpers\Url;
 						  <option value="Year">Year</option>
 						</select>
 				 	</td>
-					<td><input type='text' id="range_from" class="range_from" name="range_from"  />	</td>
-					<td><input type='text' id="range_to" class="range_to" name="range_to"  /></td>
+					<td><input type='text' id="range_from" class="range_from" name="range_from" onkeypress="javascript:return isNumber(event)" />	</td>
+					<td><input type='text' id="range_to" class="range_to" name="range_to" onkeypress="javascript:return isNumber(event)"  /></td>
 					<td>	<input type='button' class="btn btn-success" value = ' +' id = 'adddata'></td>
 				</tr>
                         </thead>
@@ -346,7 +301,8 @@ use yii\helpers\Url;
  	<div class="col-sm-6"></div>
  	<div class="col-sm-6 savebtn">
    	<input type="hidden" name="saved_val" id='saved_val'>
-   	<a href="/2018/dmcpharmacy/backend/web/index.php?r=lab-testing/index" class="btn btn-primary b-width btn btn-bk b-width pull-right" >Grid </a>
+   	<a href="<?php echo Yii::$app->homeUrl .'?r=lab-testing/index'?>" class="btn btn-primary b-width btn btn-bk b-width pull-right" >Grid </a>
+   	 
  <button type="reset" class="btn inp btn-default b-width clearform pull-right" onclick="ClearForm();">Clear</button>
     	<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-fw fa-save"></i>Save' : '<i class="fa fa-fw fa-edit "></i>Update', ['class' => $model->isNewRecord ? 'btn btn-success pull-right savecategory' : 'btn btn-primary pull-right updatecategory']) ?>
     	<!-- <button type="button" class="btn  btn-sm btn-success save_billing" id="saves_sucess" onclick="savesdata();">Save</button> -->

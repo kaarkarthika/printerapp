@@ -395,53 +395,11 @@ tbody#fetch_update_data input {
 			          </div>
 			          </div>
 				   </div>
-				  
-					 
-				     <div class="row">
-					
-						<div class="col-sm-4">
-							 <?//= $form->field($main, 'overall_sub_total')->textInput(['readonly' => true,'class'=>'form-control total_sub_total ansrefrsh','id'=>'total_sub_total'])->label('Price') ?>
-						</div>
-					  </div>
-					  <div class="row">
-					     <div class="col-sm-6">
-						      <?//= $form->field($main, 'overall_gst_amt')->textInput(['readonly' => true,'class'=>'form-control total_items ansrefrsh','id'=>'total_gst_amount'])->label('GST') ?>
-						 </div>
-						 
-						 <div class="col-sm-6">
-							<?//= $form->field($main, 'overall_sub_total')->textInput(['readonly' => true,'class'=>'form-control total_sub_total ansrefrsh','id'=>'total_sub_total'])->label('Bill Total') ?>
-						 </div>
-					  
-					  </div>
-					 
-				       <?//= $form->field($main, 'overall_dis_percent')->textInput(['class'=>'form-control total_sub_total ansrefrsh number','id'=>'total_discountvaluetype','onkeyup'=>'DiscountPercent(this,event);'])->label('Less Discount(%)') ?>
-				       <?//= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total ansrefrsh number','id'=>'total_discountamount','onkeyup'=>'DiscountAmount(this,event);'])->label('Less Disc Amount') ?>
-					   
-					   <div class="row">
-					     <div class="col-sm-4">
-							<?//= $form->field($main, 'overall_net_amt')->textInput(['readonly' => true,'class'=>'form-control total-netamt ansrefrsh ','id'=>'total_net_amount','required' => true])->label('Net Amount') ?>
-						 </div>
-					     <div class="col-sm-4">
-							<?//= $form->field($main, 'overall_paid_amt')->textInput(['required' => true,'class'=>'form-control total-netamt ansrefrsh number','onkeyup'=>'PaidAmountCalculation(this,event);','id'=>'total_paid_amount'])->label('Paid Amount') ?>
-						 </div>
-						 <div class="col-sm-4">
-							<?//= $form->field($main, 'overall_due_amt')->textInput(['readonly' => true,'class'=>'form-control total-netamt ansrefrsh ','id'=>'total_due_amount'])->label('Due Amount') ?>
-					     </div>
-					    </div>
-					
-				    	  </div>
 				  </div>
 				  </div>
-               
-			   </div>
+				  </div>
+               </div>
 			 
-			   
-	
-	
-	
-	
-	<!--Inner modal -->
-
 <div id="patient_hist-modal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
 
@@ -566,31 +524,7 @@ tbody#fetch_update_data input {
 </div> 
  <div id="load1" style='display:none;text-align: center;position: relative;'><img  style="width:15%;margin:auto;    position: absolute; left: 34%;top: 55px;z-index: 9999;"  src="<?= Url::to('@web/loader1.gif') ?>" /></div>
 
-					<div class="form-group">
-						<?//= $form->field($main, 'overall_dis_percent')->textInput(['class'=>'form-control total_sub_total ansrefrsh number','id'=>'total_discountvaluetype','onkeyup'=>'DiscountPercent(this,event);'])->label('Less Discount(%)') ?>
-					</div>
-					<div class="form-group">
-							<?//= $form->field($main, 'overall_dis_amt')->textInput(['class'=>'form-control total_sub_total ansrefrsh number','id'=>'total_discountamount','onkeyup'=>'DiscountAmount(this,event);'])->label('Less Disc Amount') ?>				
-					</div>
-			<div class="col-sm-3 " style="border-right: 1px solid #dee6e4;">
-				<div class="inner-des">
-					<?//= $form->field($main, 'overall_net_amt')->textInput(['readonly' => true,'class'=>'form-control total-netamt ansrefrsh ','id'=>'total_net_amount','required' => true])->label('Net Amount') ?>
-					<?//= $form->field($main, 'overall_paid_amt')->textInput(['required' => true,'class'=>'form-control total-netamt ansrefrsh number','onkeyup'=>'PaidAmountCalculation(this,event);','id'=>'total_paid_amount'])->label('Paid Amount') ?>
-					<?//= $form->field($main, 'overall_due_amt')->textInput(['readonly' => true,'class'=>'form-control total-netamt ansrefrsh ','id'=>'total_due_amount'])->label('Due Amount') ?>
 					
-					<div class="form-group">
-					
-							<?//= $form->field($main, 'overall_gst_amt')->textInput(['readonly' => true,'class'=>'form-control total_items ansrefrsh','id'=>'total_gst_amount'])->label('GST') ?>
-					</div>
-					
-					</div>
-			</div>
-			
-    
-
-
-
-
 <?php ActiveForm::end(); ?>
 <script type="text/javascript">
  function jtable_pd(){
@@ -619,9 +553,6 @@ tbody#fetch_update_data input {
 		}
     });
    $('#reg_table').on('key-focus.dt', function(e, datatable, cell){
-        // Select highlighted row
-      //  table_reg.row(cell.index().row).select();
-      //  $('#reg_table_filter input').val("");
          $('#reg_table_filter input').focus();
     });
   $('#reg_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
@@ -636,10 +567,6 @@ tbody#fetch_update_data input {
 				} );
     				
             var data_reg = table_as.row(cell.index().row).data();
-			// var cell = table_reg.cell( this );
-		    // alert(data_reg.join(','));             // FOR DEMONSTRATION ONLY
-            // $("#example-console").html(data.join(', '));
-            // $('#reg_table_filter input').val("");
           	 $('#reg_table_filter input').focus();
         }
     }); 

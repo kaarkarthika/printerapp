@@ -125,7 +125,7 @@ class LabPaymentPrimeController extends Controller
 		$sub_visit=SubVisit::find()->where(['mr_number'=>$model->mr_number])->orderBy(['sub_id'=>SORT_DESC])->asArray()->one();
 		$physicianmaster=Physicianmaster::find()->where(['id'=>$sub_visit['consultant_doctor']])->asArray()->one();
 		$insurance=Insurance::find()->where(['insurance_typeid'=>$sub_visit['insurance_type']])->asArray()->one();
-		//$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
+		$lab_payment_prime=LabPaymentPrime::find()->where(['lab_id'=>$id])->asArray()->one();
 		
 		$split_group=explode('_', $mgrp);
 		
@@ -167,8 +167,6 @@ class LabPaymentPrimeController extends Controller
 		} 
 		if($_POST)
 		{
-			echo"<pre>";
-			  print_r($_POST); die;
 			    
 		 if("save_lab"==$_POST['status']){
 		  		
@@ -240,6 +238,7 @@ class LabPaymentPrimeController extends Controller
             'lab_payment' => $lab_payment,
             'lab_testgroup'=>$lab_testgroup,
             'lab_test'=>$mgrp,
+            'lab_payment_prime'=>$lab_payment_prime,
             ]);
 		}
     	
@@ -256,7 +255,7 @@ class LabPaymentPrimeController extends Controller
 		$physicianmaster=Physicianmaster::find()->where(['id'=>$sub_visit['consultant_doctor']])->asArray()->one();
 		$insurance=Insurance::find()->where(['insurance_typeid'=>$sub_visit['insurance_type']])->asArray()->one();
 		 $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->groupBy(['lab_common_id','lab_test_name'])->orderBy(['autoid' => SORT_ASC])->asArray()->all();
-		// $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
+		 $lab_payment_prime=LabPaymentPrime::find()->where(['lab_id'=>$id])->asArray()->one();
 		
 		$age=$this->Getage($newpatient['dob']);
 		
@@ -282,6 +281,7 @@ class LabPaymentPrimeController extends Controller
 		
 		if($_POST)
 		{
+		//	echo"<pre>";  print_r($_POST); die;
 		  if("save_lab"==$_POST['status']){
 		  		
 		  //	 $command = Yii::$app->db->createCommand("UPDATE lab_payment_prime SET status='report' WHERE lab_id=".$id);
@@ -299,7 +299,13 @@ class LabPaymentPrimeController extends Controller
 		
 				$status_count=Yii::$app->db->createCommand()->batchInsert('lab_report', ['status','testname', 'lab_testing','testname_id','lab_payment_id','lab_test_group','mastergroupid','mr_number','result','unit_name','reference_name','textarea','grouping_status','created_at','user_id','updated_ipaddress'],$data)->execute();
 				Yii::$app->getSession()->setFlash('success', 'Saved Successfully.');  
-				return $this->redirect(['lab-index-grid']);
+				
+				//$print_url=Yii::$app->homeUrl.'?r=lab-payment-prime/printdata&id='.$model->lab_id.'&mg=7';		
+				//$this->redirect($print_url, ['target' => '_blank']);
+				
+				//return $this->redirect(['lab-index-grid']);
+				return TRUE;
+				
 			
 			}else if("update_lab"==$_POST['status']){
 				  	
@@ -342,7 +348,7 @@ class LabPaymentPrimeController extends Controller
 
 		} 
 		else
-		{ 
+		{
 			return $this->render('payment_page', [
             'model' => $model,
             'newpatient' => $newpatient,
@@ -352,6 +358,7 @@ class LabPaymentPrimeController extends Controller
             'age' => $age,
             'lab_payment' => $lab_payment,
             'lab_testgroup'=>$lab_testgroup,
+            'lab_payment_prime'=>$lab_payment_prime,
         	]);
 		}
 	}
@@ -865,31 +872,13 @@ public function actionReportview($id)
 		$lab_payment_array= ArrayHelper::index($lab_payment,'lab_id');
 		
 		$model =LabPayment::find()->where(['lab_prime_id'=>$id])->asArray()->all();
-		//$model=ArrayHelper::index(LabPayment::find()->where(['lab_prime_id'=>$id])->asArray()->all(), 'autoid');
-		/* echo"<pre>";
-		foreach($model as $key => $value)
-			   	 {
-			   	 	if($value['lab_test_name'] == 'MasterGroup')
-					{
-					  $testname=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->asArray()->one();
-					  print_r($testname['test_name']);
-					}								
-					else if ($value['lab_test_name'] == 'LabTesting') 
-					{
-					   print_r($value['lab_common_id']."\n");
-					}
-					else if ($value['lab_test_name'] == 'TestGroup') 
-					{
-					   print_r($value['lab_testing']."\n");	
-					}
-				 }
-			die;	*/
+		
 		$lab_toArray= ArrayHelper::toArray($model);
 		$lab_index_array= ArrayHelper::index($lab_toArray,'autoid');
 		
-		$labtesting=ArrayHelper::index(LabTesting::find()->asArray()->all(), 'autoid');
-		$testgroup=ArrayHelper::index(Testgroup::find()->asArray()->all(),'autoid');
-		$mastergroup=ArrayHelper::index(MainTestgroup::find()->asArray()->all(),'autoid');
+		$labtesting=ArrayHelper::index(LabTesting::find()->where(['isactive'=>1])->asArray()->all(), 'autoid');
+		$testgroup=ArrayHelper::index(Testgroup::find()->where(['isactive'=>1])->asArray()->all(),'autoid');
+		$mastergroup=ArrayHelper::index(MainTestgroup::find()->where(['isactive'=>1])->asArray()->all(),'autoid');
 		
 		$session = Yii::$app->session;
 		
@@ -900,9 +889,9 @@ public function actionReportview($id)
 		
 		if ($main->load(Yii::$app->request->post())) 
 		{
-			//echo '<pre>';
-			//($_POST);die;
-			//Table Fetch
+			echo '<pre>';
+			($_POST);die;
+			
 			
 			if($main['overall_dis_percent'] != '' || $main['overall_dis_percent'] != 0)
 			 {
@@ -958,7 +947,7 @@ public function actionReportview($id)
 			}else{
 				$update_paid_amount=$main['overall_paid_amt'];
 			}
-			//print_r($update_paid_amount);die; 
+			 
 			
 			$lab_payment_prime_cancel->payment_prime_id = $id;
 			$lab_payment_prime_cancel->mr_number = $main->mr_number;
@@ -1038,17 +1027,6 @@ public function actionReportview($id)
 						'cgst_percentage','sgst_percentage','gst_amount','cgst_amount','sgst_amount','total_amount',
 						'discount_percent','discount_amount','net_amount','user_id','created_at','ip_address'],$data)->execute();
 						
-					/*$opmoneyreceipts=OpMoneyreceipt::updateAll([
-						'amount' => $previous_overall_net_amount - $can_net_amount,
-						'request_date' => date('Y-m-d H:i:s'),
-						'total_amt' => $update_paid_amount,
-						'org_disc_amt' =>$previous_overall_dis_amt- $can_overall_dis_amt,
-						'amount_words' => $this->AmtinWords(),
-						'updated_at' => date('Y-m-d H:i:s'),   
-						'user_id' => $session['user_id'],   
-						'updated_ipaddress' => $_SERVER['REMOTE_ADDR'],
-					['common_id' => $id,'mr_type'=>'R']);	*/
-					
 					$opmoneyreceipts=OpMoneyreceipt::updateAll([
 						'amount' => $main['overall_net_amt']- $_POST['LabPaymentPrimeCancel']['can_overall_net_amt'],
 						'request_date' => date('Y-m-d H:i:s'),
@@ -1373,7 +1351,41 @@ public function actionReportview($id)
 		$age = $difference->y;
 		return $age;
 	}
-	
+	public function Getdob($userDob)
+	{
+		
+		$dob = new \DateTime($userDob);
+		$now = new \DateTime();
+		$difference = $now->diff($dob);
+		$year = $difference->y;
+		$month = $difference->m;
+		$data = $difference->d;$age="";
+		if($year!=0){
+			if($year==1){
+				$age.=$year." Year ";
+			}else{
+				$age.=$year." Year(s) ";	
+			}
+			
+		}
+		if($month!=0){
+			if($month==1){
+				$age.=$month." Month ";
+			}else{
+				$age.=$month." Month(s) ";	
+			}
+				
+		}
+		if($data!=0){
+			if($data==1){
+				$age.=$data." Day ";	
+			}else{
+				$age.=$data." Day(s)";
+			}
+				
+		}
+		return $age;
+	}
 	
 	public function actionAjaxfetch()
     {
@@ -1487,7 +1499,7 @@ public function actionAjaxsinglefetchdetails($id)
 				$newDate = date("d-m-Y H:i:s", strtotime($originalDate));
 				
 				if($insurance['insurance_type']==""){
-					$ins="-";
+					$ins=" NIL ";
 				}else{
 					$ins=$insurance['insurance_type'];
 				}
@@ -1505,13 +1517,13 @@ public function actionAjaxsinglefetchdetails($id)
 				$tbl1.='<p style="text-align:center;font-size:13px;font-weight:bold;line-height:2px;"><u> INVESTIGATION REQUISITION - CUM -RECEIPT </u></p>';
 				
 				$tbl1.='<table cellpadding="4" style="border:1px solid #000;padding:5px 10px;font-size:12px;margin-top:250px;" ALIGN="left" border=1 >
-				<tr> <td style="width:15%;"> MR NUMBER </td><td style="width:35%;">: '.$labprime_list['mr_number'].'</td>
-					<td style="width:15%;"> Bill Date & Time</td> <td style="width:35%;">: '.$newDate.' </td> </tr>
-				<tr><td style="width:15%;"> Patient Name </td><td style="width:35%;">: '.$labprime_list['name'].'</td>
-					<td style="width:15%;"> Requisition No</td> <td style="width:35%;">:  '.$labprime_list['bill_number'].' </td> </tr>
-				<tr><td style="width:15%;"> Age  </td><td style="width:35%;">: '.$this->Getage(date('Y-m-d',strtotime($labprime_list['dob']))).' Year(s) </td>
-					<td style="width:15%;"> Org Name</td> <td style="width:35%;">: '.$ins.' </td> </tr>
-				<tr><td style="width:15%;"> Contact Number </td><td style="width:35%;">: '.$labprime_list['ph_number'].' </td>
+				<tr><td style="width:17%;"><B> MR NUMBER </B></td><td style="width:33%;">:<B> '.$labprime_list['mr_number'].'</B></td>
+					<td style="width:17%;"><B> Bill Date & Time </B></td> <td style="width:33%;">: '.$newDate.' </td> </tr>
+				<tr><td style="width:17%;"><B> Patient Name </B></td><td style="width:33%;">:<B> '.strtoupper($labprime_list['name']).'</B></td>
+					<td style="width:17%;"><B> Requisition No</B></td> <td style="width:33%;">:  '.$labprime_list['bill_number'].' </td> </tr>
+				<tr><td style="width:17%;"><B> Age  </B></td><td style="width:33%;">: '.$this->Getdob(date('Y-m-d',strtotime($labprime_list['dob']))).' </td>
+					<td style="width:17%;"><B> Org Name</B></td> <td style="width:33%;">: '.$ins.' </td> </tr>
+				<tr><td style="width:17%;"><B> Contact Number </B></td><td style="width:33%;">: '.$labprime_list['ph_number'].' </td>
 					<td style="width:15%;"> </td> <td style="width:35%;"> </td> </tr>
 				</table>';
 				
@@ -1572,27 +1584,27 @@ public function actionAjaxsinglefetchdetails($id)
 			$tbl1.='<tr>
 					<td style="width:70%;border-top:1px solid #000;text-align:left;"></td>
 					<td style="width:15%;border-top:1px solid #000;text-align:left;font-weight:bold;">TOTAL</td>
-					<td style="width:15%;border-top:1px solid #000;text-align:right;">  '. number_format($labprime_list['overall_net_amt'],2, '.', '').'</td>
+					<td style="width:15%;border-top:1px solid #000;text-align:right;"><B> '. number_format($labprime_list['overall_net_amt'],2, '.', '').'</B></td>
 					</tr>';
 			if($dis!="0"){
 				$tbl1.='<tr><td style="width:70%;text-align:left;"></td>
 					<td style="width:15%;text-align:left;font-weight:bold;">CONCESSION</td>
-					<td style="width:15%;text-align:right;">  '.number_format($dis,2, '.', '').'</td></tr>';
+					<td style="width:15%;text-align:right;"><B>  '.number_format($dis,2, '.', '').'</B></td></tr>';
 			}		
 			$tbl1.='<tr>
 					<td style="width:70%;text-align:left;"></td>
 					<td style="width:15%;text-align:left;font-weight:bold;">PAID</td>
-					<td style="width:15%;text-align:right;">  '.number_format($labprime_list['overall_paid_amt'],2, '.', '').'</td>
+					<td style="width:15%;text-align:right;"><B>  '.number_format($labprime_list['overall_paid_amt'],2, '.', '').'</B></td>
 					</tr>
 					<tr>
 					<td style="width:70%;text-align:left;"></td>
 					<td style="width:15%;text-align:left;font-weight:bold;">DUE AMOUNT</td>
-					<td style="width:15%;text-align:right;"> '. number_format($labprime_list['overall_due_amt'],2, '.', '').' </td>
+					<td style="width:15%;text-align:right;"><B> '. number_format($labprime_list['overall_due_amt'],2, '.', '').' </B></td>
 					</tr>';
 				//}
 
 				$tbl1.='</tbody></table>';
-				$tbl1.='<p></p><p></p><table><tr><td style="text-align:left;text-transform: uppercase;font-weight:bold;"> USER '. $branch_det['ba_name'].'</td><td style="text-align:right;text-transform: uppercase;font-weight:bold;">'.$branch_det['authUserRole'].' </td></tr></table>';
+				$tbl1.='<p></p><p></p><table><tr><td style="text-align:left;text-transform: uppercase;font-weight:bold;"> USER '.strtoupper( $branch_det['ba_name']).'</td><td style="text-align:right;text-transform: uppercase;font-weight:bold;">'.strtoupper($branch_det['authUserRole']).' </td></tr></table>';
 				$pdf->writeHTML($tbl1, true, false, false, false, '');
 				$pdf->Output('treatment_overall.pdf');	      
 	
@@ -2068,7 +2080,6 @@ public function actionAjaxsinglefetchdetails($id)
 		$mgrp=$split_group[1];
 		
 		
-		
 		if("Master"==$split_group[0]){
 			
 			$printcount=LabReport::find()->select(['printcount'])->where(['lab_payment_id'=>$id])->andWhere(['mastergroupid'=>$mgrp])->asArray()->one();
@@ -2161,25 +2172,27 @@ public function actionAjaxsinglefetchdetails($id)
 				$newDate = date("d-m-Y H:i A", strtotime($lab_payment_prime_val[0]['sample_date']));
 				
 				$tbl1='';
-				$tbl1.='<p></p><p></p><p></p><p></p><p></p><p></p><p></p><table style="border:none;padding:2px 10px;font-size:12px;margin-top:250px;" ALIGN="left" ><tr><td style="width:15%;">Registration </td>';
-				$tbl1.='<td style="width:35%;"> : </td>';
-				$tbl1.='<td style="width:23%;">Registered On </td>';
+				$tbl1.='<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>
+					<table style="border:none;padding:2px 10px;font-size:12px;margin-top:250px;" ALIGN="left" ><tr>
+					<td style="width:17%;"><B>Requistions No </B></td>';
+				$tbl1.='<td style="width:33%;"><B> : '.$lab_payment_prime_val[0]['bill_number'].'</B> </td>';
+				$tbl1.='<td style="width:23%;"><B>Registered On </B></td>';
 				$tbl1.='<td style="width:35%;"> : '.date('d-m-Y h:i A').'</td>';
 				$tbl1.='</tr>';
-				$tbl1.='<tr><td>Patient Name </td>';
-				$tbl1.='<td> : '.$name_titel.' '.$newpatient['patientname'].'</td>';
-				$tbl1.='<td>Sample collect Dt & Tm</td>';
+				$tbl1.='<tr><td><B>Patient Name </B></td>';
+				$tbl1.='<td><B> : '.strtoupper($name_titel.' '.$newpatient['patientname']).'</B></td>';
+				$tbl1.='<td><B>Sample collect Dt & Tm</B></td>';
 				$tbl1.='<td> : '.$newDate.'</td>';
 				$tbl1.='</tr>';
-				$tbl1.='<tr><td>Age/Gender</td>';
-				$tbl1.='<td> : '.$this->Getage(date('Y-m-d',strtotime($newpatient['dob']))).' Year(s) / '.$newpatient['pat_sex'].'</td>';
-				$tbl1.='<td>Reported On </td>';
+				$tbl1.='<tr><td><B>Age/Gender</B></td>';
+				$tbl1.='<td> : '.$this->Getdob(date('Y-m-d',strtotime($newpatient['dob']))).' / '.$newpatient['pat_sex'].'</td>';
+				$tbl1.='<td><B>Reported On </B></td>';
 				$tbl1.='<td> : '.date('d-m-Y h:i A').' </td>';
 				$tbl1.='</tr>';
-				$tbl1.='<tr><td>Consultant Dr. </td>';
-				$tbl1.='<td> : '.$physicianmaster['physician_name'].'</td>';
-				$tbl1.='<td>MR Number </td>';
-				$tbl1.='<td> : '.$newpatient['mr_no'].'</td>';
+				$tbl1.='<tr><td><B>Consultant Dr. </B></td>';
+				$tbl1.='<td><B> : '.strtoupper($physicianmaster['physician_name']).'</B></td>';
+				$tbl1.='<td><B>MR Number </B></td>';
+				$tbl1.='<td><B> : '.$newpatient['mr_no'].'</B></td>';
 				$tbl1.='</tr></table>';
 				$pdf->writeHTML($tbl1, true, false, false, false, '');
 				$tbl_res='';
@@ -2240,7 +2253,7 @@ public function actionAjaxsinglefetchdetails($id)
 				 
 				 if(!empty($lab_grouptest)){
 						$tbl_res.='<table class="table table-bordered algincss" style="margin-bottom: -2px;background: #eaeaea;">
-						<tr><td style="padding: 3px 10px;"><b>'.$testgroup_name["testgroupname"].'</b></td></tr></table>';
+						<tr><td style="padding: 3px 10px;font-size:12px;"><b>'.$testgroup_name["testgroupname"].'</b></td></tr></table>';
 				 }
 				foreach ($lab_grouptest as $keytest => $testval) {
 						
@@ -2278,7 +2291,7 @@ public function actionAjaxsinglefetchdetails($id)
 								
 							if($lab_testing['result_type']=="numeric"){
 							  	 // if(!empty($lab_reference_val)){
-								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
+								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;margin-bottom: -2px;font-size:12px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
 										<td style="">'.$lab_report_val[$keytest]['result'].'</td>
@@ -2293,7 +2306,7 @@ public function actionAjaxsinglefetchdetails($id)
 						// 	}
 								}else{
 									
-									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
+									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;margin-bottom: -2px;font-size:12px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
 		    						<td style="">'.$lab_report_val[$keytest]['result'].'</td>
@@ -2332,7 +2345,7 @@ public function actionAjaxsinglefetchdetails($id)
 				 
 				 if(!empty($lab_grouptest)){
 						$tbl_res.='<table class="table table-bordered algincss" style="margin-bottom: -2px;background: #eaeaea;">
-						<tr><td style="padding: 3px 10px;"><b>'.$testgroup_name["testgroupname"].'</b></td></tr></table>';
+						<tr><td style="padding: 3px 10px;font-size:12px;"><b>'.$testgroup_name["testgroupname"].'</b></td></tr></table>';
 				 }
 
 					foreach ($lab_grouptest as $keytest => $testval) {
@@ -2370,7 +2383,7 @@ public function actionAjaxsinglefetchdetails($id)
 								
 							if($lab_testing['result_type']=="numeric"){
 							  	 // if(!empty($lab_reference_val)){
-								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
+								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;margin-bottom: -2px;font-size:12px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
 										<td style="">'.$lab_report_val[$keytest]['result'].'</td>
@@ -2385,7 +2398,7 @@ public function actionAjaxsinglefetchdetails($id)
 							 	//}
 								}else{
 									
-									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
+									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;font-size:12px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
 		    						<td style="">'.$lab_report_val[$keytest]['result'].'</td>
@@ -2412,10 +2425,10 @@ public function actionAjaxsinglefetchdetails($id)
 				}
 			else if($split_group[0]=="Testlab"){
 				
-				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$mgrp])->asArray()->all();
+				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$mgrp])->andWhere(['lab_test_name'=>"LabTesting"])->asArray()->all();
 				//$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->all();
 				
-				
+				 					
 				foreach ($lab_payment as $key => $value)  
 				{
 					$lab_testing=LabTesting::find()->where(['autoid'=>$value['lab_common_id']])->andWhere(['isactive'=>1])->asArray()->one();
@@ -2447,10 +2460,12 @@ public function actionAjaxsinglefetchdetails($id)
 									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
 									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
 							
-							  
+							
+									
 							if($lab_testing['result_type']=="numeric"){
 							  	 // if(!empty($lab_reference_val)){
-								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
+							  	 	
+								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;font-size:12px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
 										<td style="">'.$lab_report_val[$key]['result'].'</td>
@@ -2465,10 +2480,15 @@ public function actionAjaxsinglefetchdetails($id)
 							 //	}
 								}else{
 									
-									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:20px;margin-bottom: -2px;" ALIGN="CENTER">';
+									
+									if(key_exists($key, $lab_report_val) && key_exists('result', $lab_report_val[$key])){
+										$reportval=$lab_report_val[$key]['result'];
+									}
+									
+									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;font-size:12px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
 		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-		    						<td style="">'.$lab_report_val[$key]['result'].'</td>
+		    						<td style="">'.$reportval.'</td>
 		    						<td style="">'.$lab_unit['unit_name'].'</td>';
 									if('numeric'==$lab_testing['result_type']){
 										$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
@@ -2493,9 +2513,9 @@ public function actionAjaxsinglefetchdetails($id)
 				
 				$tbl12="";
 				$tbl12.='<br><p style="font-size:14px;line-height:10px;"><b> Comments :</b> </p>';
-				$tbl12.='<p >'.$lab_report_val[0]['textarea'].'</p>';
+				$tbl12.='<p style="font-size:12px;">'.$lab_report_val[0]['textarea'].'</p>';
 				$tbl12.='<p style="font-size:12px;line-height:00px;">  </p>';
-				$tbl12.='<p style="font-size:12px;text-align:center;line-height:20px;"> *** End of the Report *** </p>';
+				$tbl12.='<p style="font-size:12px;text-align:center;line-height:2px;"> *** End of the Report *** </p>';
 					$tbl12.='</body></html>';
 				$pdf->writeHTML($tbl12, true, false, false, false, '');
 				$labincharge='Lab Incharge';

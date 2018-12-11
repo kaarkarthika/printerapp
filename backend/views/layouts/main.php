@@ -681,12 +681,19 @@ $.ajax({
 <script type="text/javascript">window.onload = date_time('date_time');</script>
 <script>
    function isNumber(evt) {
-      evt = (evt) ? evt : window.event;
-      var charCode = (evt.which) ? evt.which : evt.keyCode;
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-          return false;
-      }
-      return true;
+      
+            if (event.shiftKey == true) {
+                event.preventDefault();
+            }
+
+            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+
+            } else {
+                event.preventDefault();
+            }
+            
+            if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                event.preventDefault();
    }
 </script>
 <script>

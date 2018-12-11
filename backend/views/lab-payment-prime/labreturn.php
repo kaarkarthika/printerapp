@@ -117,15 +117,10 @@ table.ccancel-cal select {
 }
 
 </style>
-<?php $form = ActiveForm::begin(); ?>
-<!-- <div class="row">
-<div class="col-sm-12">
-<div class="panel panel-border panel-custom">
-<div class="panel-heading">
+<?php $form = ActiveForm::begin(); 
 
-</div>
-<div class="panel-body" style="min-height:100px;">
-<div class="inpatientblock  desc" style="position: relative;top: 9px;">  -->
+
+?>
 
 <div class="container">
   <div class="row cancel-form-de">
@@ -158,12 +153,7 @@ table.ccancel-cal select {
 		</div>
 	  </div>
 	</div>
-	<!-- <div class="">
-  		<fieldset class="scheduler-border cancel-border">
-			<legend class="scheduler-border form-head ">CANCELLATION TYPE</legend>
-	 			
-   				</fieldset>
-  	</div> -->
+	
 	
 	<div class="row">
 	   <div class="panel panel-border panel-custom">
@@ -212,20 +202,6 @@ table.ccancel-cal select {
     </div>
   	
 	
-
-	<!--<div class="row">
-	<div class="col-md-4">
-  	  <fieldset class="scheduler-border cancel-border">
-		<legend class="scheduler-border form-head ">PATIENT DETAILS</legend>					
-	  </fieldset>
-  			</div> 
-  		<div class="col-md-4">
-  			<div class="col-sm-12 cancel-border">	 					
-   			</div>
-  		</div>		
-  	</div>	 -->
-  
-  	
   
   <div class="row">
   <div class="panel panel-border panel-custom">
@@ -238,24 +214,27 @@ table.ccancel-cal select {
 		  <select name="requistionslist" class="form-control" id="requistionslist" onchange="RequistionsChosen(this.value,event);">
 			<option value=''>Select Lab List</option>
 			<?php 
+				
+						
 			   if(!empty($model)) 
 			   {
+			   	
 			   	 foreach($model as $key => $value)
 			   	 {
 			   	 	
 			   	 	if($value['lab_test_name'] == 'MasterGroup')
 					{
-						$testname=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->asArray()->one();
-					   echo '<option value='.$value['autoid'].'>'.$testname['test_name'].'</option>';
+						$testname=Testgroup::find()->where(['autoid'=>$value['lab_testgroup']])->asArray()->one();
+					   echo '<option value='.$value['autoid'].'>'.$testname['testgroupname'].'</option>';
 					}								
 					else if ($value['lab_test_name'] == 'LabTesting') 
 					{
-					  $testname=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->asArray()->one();
-					   echo '<option value='.$value['autoid'].'>'.$testname['test_name'].'</option>';
+					  $testname=Testgroup::find()->where(['autoid'=>$value['lab_testgroup']])->asArray()->one();
+					   echo '<option value='.$value['autoid'].'>'.$testname['testgroupname'].'</option>';
 					}
 					else if ($value['lab_test_name'] == 'TestGroup') 
 					{
-						$testname=LabTesting::find()->where(['autoid'=>$value['lab_testing']])->asArray()->one();
+						$testname=LabTesting::find()->where(['autoid'=>$value['lab_common_id']])->asArray()->one();
 					    echo '<option value='.$value['autoid'].'>'.$testname['test_name'].'</option>';
 					}
 				 }
@@ -596,13 +575,8 @@ table.ccancel-cal select {
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
-
   </div>
 </div>	
-
-
-
- 
 </div>
 </div>
 
@@ -612,14 +586,15 @@ table.ccancel-cal select {
  
  $('#requistionslist').focus();
  
- var labtesting=$.parseJSON('<?php echo json_encode($labtesting);?>');
+ //var labtesting=$.parseJSON('<?php echo json_encode($labtesting);?>');
  var testgroup=$.parseJSON('<?php echo json_encode($testgroup);?>');
  var mastergroup=$.parseJSON('<?php echo json_encode($mastergroup);?>');
  var lab_payemnt=$.parseJSON('<?php echo json_encode($lab_index_array);?>');
- var lab_payment_prime=$.parseJSON('<?php echo json_encode($lab_payment_array);?>');
+ //var lab_payment_prime=$.parseJSON('<?php echo json_encode($lab_payment_array);?>');
 
  function RequistionsChosen(data,event)
  {
+ 	
   if(data !== '')
    {
 	var lab_test_name=lab_payemnt[data]['lab_test_name'];     

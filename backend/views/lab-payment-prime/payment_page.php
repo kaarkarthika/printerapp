@@ -21,6 +21,7 @@ use backend\models\BranchAdmin;
 /* @var $form yii\widgets\ActiveForm */
 $this->title = 'Test Report';
  Html::encode($this->title) ;
+
 ?>
 
 <style>
@@ -112,6 +113,7 @@ div#group_lab_fetch span,.testing-list span {
     <thead>
       <tr>
         <th>MR Number</th>
+        <th>Requistions No</th>
         <th>Patient Name</th>
         <th>Age</th>
         <th>Gender</th>
@@ -123,6 +125,7 @@ div#group_lab_fetch span,.testing-list span {
     <tbody>
       <tr>
         <td><?php echo $newpatient['mr_no'];?></td>
+        <td><?php echo $lab_payment_prime['bill_number'];?></td>
         <td><?php echo $newpatient['patientname'];?></td>
         <td><?php echo $age;?></td>
         <td><?php echo $newpatient['pat_sex'];?></td>

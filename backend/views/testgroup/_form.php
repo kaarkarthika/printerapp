@@ -16,7 +16,7 @@ use yii\helpers\Url;
     <?php $form = ActiveForm::begin(['id'=>'testgroup-form']); ?>
 
     <?= $form->field($model, 'testgroupname')->textInput(['maxlength' => true,'required' => true])->label('Group Name') ?>
-    <?= $form->field($model, 'price')->textInput(['required' => true,'required' => true])->label('Price') ?> 
+    <?= $form->field($model, 'price')->textInput(['required' => true,'required' => true,'onkeypress'=>'javascript:return isNumber(event)'])->label('Price') ?> 
     <?= $form->field($model, 'shortcode')->textInput(['maxlength' => true,'required' => true]) ?>
     	  
     
@@ -98,6 +98,13 @@ $("#testgroup-testgroupname").change(function() {
 	        }
 	    });
  	 });
+ 	 function isNumber(evt) {
+        var iKeyCode = (evt.which) ? evt.which : evt.keyCode
+        if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+            return false;
+
+        return true;
+    }
  	
  	$("#testgroup-shortcode").change(function() {
  		var testgname=$("#testgroup-shortcode").val();

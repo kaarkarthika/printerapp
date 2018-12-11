@@ -65,9 +65,17 @@ $this->params['breadcrumbs'][] = $this->title;
 				
 			<span id="loadtex" style="display: none; ">Test  Name Already Exists</span>
      		</div>
-     		<div class="col-sm-3" style="position: relative;top: 25px;">
+     		<div class="col-sm-8" style="position: relative;top: 25px;">
+     			<!-- <div class="col-sm-3" style="    position: relative;top: -22px;">
+     				<label class="control-label" for="testgroupsearch-testgroupname">Test Title</label>
+     				<input type="text" name="title_test" value="" id="title_test" class="title_test"/ >
+     			</div> -->
+     			<div class="col-sm-5">
      				<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-fw fa-save"></i>Save Test' : '<i class="fa fa-fw fa-edit "></i>Update', ['class' => $model->isNewRecord ? 'btn btn-success save_test' : 'btn btn-primary updatecategory']) ?>
+     				<a href="<?php echo Yii::$app->homeUrl .'?r=testgroup/testgroupmaster' ?>" style="width: 150px;float: right;" class="btn btn-primary b-width btn btn-bk b-width">Back To Grid </a>
      			
+     			</div>
+     				
      		</div>
      	</div>
 		<?php ActiveForm::end(); ?>

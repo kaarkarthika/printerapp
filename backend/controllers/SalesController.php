@@ -3777,12 +3777,12 @@ if(!empty($sales))
 		
 		$purchasedetails.='
 		 <p style="border-top:1px solid #000" ></p>
-		 <table cellspacing="-15" cellpadding="-15" >
+		 <table cellspacing="-5" cellpadding="-15" >
 		    <tbody>
 			   <tr>
-			      <td style="font-size:12px; width:36%;text-align:left;"><b>Item Name</b></td>
+			      <td style="font-size:12px; width:37%;text-align:left;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Name</b></td>
 				  <td style="font-size:12px; width:12%;text-align:left;"><b>Qty</b></td>
-				  <td style="font-size:12px;width:14%;text-align:left; "><b>Batch No</b></td>
+				  <td style="font-size:12px;width:14.5%;text-align:left; "><b>Batch No</b></td>
 				  <td style="font-size:12px;text-align:left; "><b>Exp Date</b></td>
 				  <td style="font-size:12px;text-align:left; "><b>Rate</b></td>
 				  <td style="font-size:12px;text-align:left;"><b>Total</b></td>
@@ -3841,7 +3841,7 @@ if(!empty($sales))
 		}
 	
 				$purchasedetails.='<p style="border-top:1px solid #000" ></p>';
-				$purchasedetails.='<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Sub Total : </b></td><td style="text-align:right;font-size:12px;"><b>'.number_format($sales_fetch_sum['overalltotal'],2).'</b></td></tr></tbody></table>';
+				$purchasedetails.='<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Sub Total : </b></td><td style="text-align:right;font-size:12px;width:19%;"><b>'.number_format($sales_fetch_sum['overalltotal'],2).'</b></td></tr></tbody></table>';
 				$purchasedetails.='<p style="border-top:1px solid #000" ></p>';
 			
 			

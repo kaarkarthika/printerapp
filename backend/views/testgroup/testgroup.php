@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		<div class="panel panel-border panel-custom">
 			<div class="panel-heading">
 					</div>
-	<div class="panel-body" style="    height: 500px;">  
+	<div class="panel-body"  >  
 <div class="testgroup-index">
 <div class="row"> 	
 	<?php Pjax::begin(); ?>

@@ -76,7 +76,8 @@ $this->params['breadcrumbs'][] = $this->title;
      			    	<input type="hidden" name="saved_val" id='saved_val'>
      			 <!-- <?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-fw fa-save"></i>Save' : '<i class="fa fa-fw fa-edit "></i>Update', ['class' => $model->isNewRecord ? 'btn btn-success savecategory' : 'btn btn-primary updatecategory']) ?> -->   
      			 <button type="button" class="btn  btn-sm btn-success save_billing" id="saves_sucess" onclick="savesdata();">Save</button>
-     			 <a href="/2018/dmcpharmacy/backend/web/index.php?r=testgroup/index" class="btn btn-primary b-width btn btn-bk b-width">Back To Grid </a>
+     			 <a href="<?php echo Yii::$app->homeUrl .'?r=testgroup/testgroupmaster' ?>" class="btn btn-primary b-width btn btn-bk b-width">Back To Grid </a>
+     			  
     			<button type="reset" class="btn btn-warning b-width clearform" onclick="ClearForm();">Clear</button>
      			 
      		</div>
@@ -95,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <table class="table table-striped table-bordered cls-norecors"  align="center">
     <tbody>
-    	<tr><td>No Records</td></thead>
+    	<tr colspan="3"><td>No Records</td></thead>
     </tbody>
     </table>
     </div>  
