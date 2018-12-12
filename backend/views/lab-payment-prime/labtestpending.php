@@ -59,8 +59,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	            'groupEvenCssClass'=>'kv-grouped-row', // configure even group cell css class
             ],
             ['class' => 'yii\grid\SerialColumn'],
-            ['attribute' => 'mr_number', 
-            	'label' => 'Registration Number ',
+            ['attribute' => 'bill_number', 
+            	'label' => 'Requistions No ',
              	],
              ['attribute' => 'mr_number', 
             	'label' => 'MR Number ',

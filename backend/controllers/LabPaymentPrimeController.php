@@ -254,7 +254,10 @@ class LabPaymentPrimeController extends Controller
 		$sub_visit=SubVisit::find()->where(['mr_number'=>$model->mr_number])->orderBy(['sub_id'=>SORT_DESC])->asArray()->one();
 		$physicianmaster=Physicianmaster::find()->where(['id'=>$sub_visit['consultant_doctor']])->asArray()->one();
 		$insurance=Insurance::find()->where(['insurance_typeid'=>$sub_visit['insurance_type']])->asArray()->one();
-		 $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->groupBy(['lab_common_id','lab_test_name'])->orderBy(['autoid' => SORT_ASC])->asArray()->all();
+		 //$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->groupBy(['lab_common_id','lab_test_name'])->orderBy(['autoid' => SORT_ASC])->asArray()->all();
+		 $lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->orderBy(['autoid' => SORT_ASC])->asArray()->all();
+		 
+		 
 		 $lab_payment_prime=LabPaymentPrime::find()->where(['lab_id'=>$id])->asArray()->one();
 		
 		$age=$this->Getage($newpatient['dob']);
@@ -281,11 +284,8 @@ class LabPaymentPrimeController extends Controller
 		
 		if($_POST)
 		{
-		//	echo"<pre>";  print_r($_POST); die;
+			//echo"<pre>"; print_r($_POST); die;
 		  if("save_lab"==$_POST['status']){
-		  		
-		  //	 $command = Yii::$app->db->createCommand("UPDATE lab_payment_prime SET status='report' WHERE lab_id=".$id);
-		  // 	$command->execute();
 			
 				$data=array();
 				$date_id=date('Y-m-d H:i:s');
@@ -735,8 +735,10 @@ public function actionReportview($id)
 			$autoget=$auto_get['start_num'];
 			$inc_value=$autoget+1;
 			$rtno = str_pad($autoget, 6, "0", STR_PAD_LEFT);
+			 
+			 // echo"<pre>"; print_r($patientdata['patientname']); print_r(Yii::$app->request->post('LabPaymentPrime')['name']); die;
 			   
-			if($patientdata['patientname'] == Yii::$app->request->post('LabPaymentPrime')['name'])
+			if($patientdata['patientname'] === Yii::$app->request->post('LabPaymentPrime')['name'])
 			{
 				$cgst_percent=Yii::$app->request->post('LabPayment')['cgst_percentage'];
 				$sgst_percent=Yii::$app->request->post('LabPayment')['sgst_percentage'];
@@ -1535,18 +1537,13 @@ public function actionAjaxsinglefetchdetails($id)
 				if(!empty($lab_payment)){  $i=1; 
 				$status_mg=0; $repeat_test=""; $status_grouptest=0;
 				
-				//echo"<pre>"; print_r($lab_payment); 
+				 
 				
 				foreach ($lab_payment as $key => $val)  
 				{
 					 $split_group=explode('_', $val['lab_test_name']);
 					 if($split_group[0]=="MasterGroup"){
 					 	$mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$val['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
-						/* $tbl1.='<tr style="background-color:#f2f2f2;" ><td style="width:15%;text-align:left;"><B>'. $mastergroupname[$val['lab_common_id']].'</B></td>
-								<td style="width:70%;text-align:left;"></td>
-								<td style="width:15%;text-align:right;"></td>
-							</tr>'; */
-						 //$testgroup_list=LabAddgroup::find()->where(['mastergroupid'=>$val['lab_common_id']])->asArray()->all();
 						 $testgroup_list=LabAddgroup::find()->where(['mastergroupid'=>$val['lab_common_id']])->andWhere(['testgroupid'=>$val['lab_testgroup']])->asArray()->all();
 						 foreach ($testgroup_list as $key => $value) {
 						
@@ -1562,8 +1559,7 @@ public function actionAjaxsinglefetchdetails($id)
 				
 					if($split_group[0]=="TestGroup"){
 					 		 
-							 $testgroup_name=Testgroup::find()->where(['autoid'=>$val['lab_testgroup']])->asArray()->one();
-							// $lab_testing1=LabTesting::find()->where(['autoid'=>$val['lab_testing']])->asArray()->one();
+							 $testgroup_name=Testgroup::find()->where(['autoid'=>$val['lab_common_id']])->asArray()->one();
 							 
 							 	$tbl1.='<tr><td style="width:15%;text-align:left;">'. $i++.'</td>
 								<td style="width:70%;text-align:left;"><b>'.$testgroup_name['testgroupname'].'</b></td>
@@ -2060,7 +2056,7 @@ public function actionAjaxsinglefetchdetails($id)
 				$pdf->Output('labtest_print.pdf');
     		}
 
-	public function actionPrintdata($id,$mg)
+	public function actionPrintdata($id,$mg,$mgval)
     {
     	$model = $this->findModel($id);
 		$labmodel= new LabPaymentPrime();
@@ -2075,7 +2071,7 @@ public function actionAjaxsinglefetchdetails($id)
 		$age=$this->Getage($newpatient['dob']);
 		
 		$count_print="";
-		$cur_data=date("Y-m-d H:i:s A");
+		$cur_data=date("Y-m-d h:i:s A");
 		$split_group=explode('_', $mg);
 		$mgrp=$split_group[1];
 		
@@ -2088,7 +2084,7 @@ public function actionAjaxsinglefetchdetails($id)
 			}else{
 				$count_print=1+$printcount['printcount'];
 			}
-			$status_count1=Yii::$app->db->createCommand()->update('lab_report', ['printdate'=>$cur_data,'printcount'=>$count_print],'lab_payment_id='.$id.' AND mastergroupid='.$mgrp.'')->execute();
+			$status_count1=Yii::$app->db->createCommand()->update('lab_report', ['printdate'=>$cur_data,'printcount'=>$count_print],'lab_payment_id='.$id.' AND lab_testgroup='.$mgrp.'')->execute();
 		}
 		
 		else if($split_group[0]=="Group"){
@@ -2169,7 +2165,7 @@ public function actionAjaxsinglefetchdetails($id)
 						$name_titel="Miss";
 					}
 				}
-				$newDate = date("d-m-Y H:i A", strtotime($lab_payment_prime_val[0]['sample_date']));
+				$newDate = date("d-m-Y h:i A", strtotime($lab_payment_prime_val[0]['sample_date']));
 				
 				$tbl1='';
 				$tbl1.='<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>
@@ -2211,15 +2207,26 @@ public function actionAjaxsinglefetchdetails($id)
 			$month_val=$interval->m;
 			$year_val=$interval->y;
 			
-			$tbl_res.='<table class="table table-bordered algincss" style="border-top:1px solid #000;margin-top: 15px;font-size:12px;line-height:40px;" ALIGN="CENTER">
-					<thead><tr><th style=""><b>Parameter</b></th><th style=""><b>Result Value</b></th><th style=""><b>Units</b></th><th style=""><b>Normal Values</b></th></tr></thead></table>';
-		
-		   	$mgtest=0;
+			$mgtest=0;
 			$mgstatus=0;			
 			$mul="";
 			$split_group=explode('_', $mg);
 			$mgrp=$split_group[1];
 			
+			$tbl_res.='<p style="border-top:1px solid #000;"></p>';
+				$mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$mgval])->asArray()->all(), 'autoid', 'testgroupname');
+						if(!empty($mastergroupname)){
+							if($mgstatus==0){
+							$tbl_res.='<table class="table table-bordered algincss" ALIGN="Center" style="margin-bottom: -2px;background: #ffd9d9;">
+						 	<tr><td style="padding: 3px 10px; font-size:15px; text-align: center;"><b>'.strtoupper($mastergroupname[$mgval]).'</b></td></tr></table>';
+							$mgstatus++;
+							}
+						}
+			
+			$tbl_res.='<table class="table table-bordered algincss" style="margin-top: 15px;font-size:12px;line-height:40px;" ALIGN="CENTER">
+					<thead><tr><th style=""><b>Parameter</b></th><th style=""><b>Result Value</b></th><th style=""><b>Units</b></th><th style=""><b>Normal Values</b></th></tr></thead></table>';
+		
+		   	
 		 	 
 		   //foreach ($lab_cat as $valuecat) {
 		   	
@@ -2227,115 +2234,29 @@ public function actionAjaxsinglefetchdetails($id)
 		   
 			
 			if("Master"==$split_group[0]){
-				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$mgrp])->asArray()->all();
-				foreach ($lab_payment as $key => $value)  
-				{
-					 $split_group=explode('_', $value['lab_test_name']);
+				
+				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$mgrp])->asArray()->one();
+				//foreach ($lab_payment as $key => $value)  
+				//{
+					 
+					 
+					 $split_group=explode('_', $lab_payment['lab_test_name']);
 				 if($split_group[0]=="MasterGroup"){
 						$mastergroupname=ArrayHelper::map(MainTestgroup::find()->where(['autoid'=>$mgrp])->asArray()->all(), 'autoid', 'testgroupname');
 						if(!empty($mastergroupname)){
 							if($mgstatus==0){
 							$tbl_res.='<table class="table table-bordered algincss" ALIGN="Center" style="margin-bottom: -2px;background: #ffd9d9;">
-						 	<tr><td style="padding: 3px 10px; font-size:12px; text-align: center;"><b>'.$mastergroupname[$value['lab_common_id']].'</b></td></tr></table>';
+						 	<tr><td style="padding: 3px 10px; font-size:12px; text-align: center;"><b>'.$mastergroupname[$lab_payment['lab_common_id']].'</b></td></tr></table>';
 							$mgstatus++;
 							}
 						}
 						
-					$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
+					//$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
 				    $testgroup_list=LabAddgroup::find()->where(['mastergroupid'=>$mgrp])->andWhere(['testgroupid'=>$value['lab_testgroup']])->asArray()->all();
 
+				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_testgroup'=>$mgrp])->asArray()->all();
 				
-				foreach ($testgroup_list as $grpkey => $testgrpval)   
-				{
-					
-				 $testgroup_name=Testgroup::find()->where(['autoid'=>$testgrpval['testgroupid']])->asArray()->one();
-				 $lab_grouptest=LabTestgroup::find()->where(['testgroupid'=>$testgrpval['testgroupid']])->asArray()->all();
-				 
-				 if(!empty($lab_grouptest)){
-						$tbl_res.='<table class="table table-bordered algincss" style="margin-bottom: -2px;background: #eaeaea;">
-						<tr><td style="padding: 3px 10px;font-size:12px;"><b>'.$testgroup_name["testgroupname"].'</b></td></tr></table>';
-				 }
-				foreach ($lab_grouptest as $keytest => $testval) {
 						
-						$lab_testing=LabTesting::find()->where(['autoid'=>$testval['test_nameid']])->andWhere(['isactive'=>1])->asArray()->one();
-						
-						if(!empty($lab_testing)){
-						
-								$lab_unit=LabUnit::find()->where(['auto_id'=>$lab_testing['unit_id']])->asArray()->one();
-								$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$lab_testing['autoid']])->asArray()->one();
-											if('Male'==$newpatient['pat_sex'])
-											{
-												$lab_reference_val=LabReferenceVal::find()->where(['IN','test_id',$lab_testing['autoid']])
-												->andWhere(['or',['gender'=>"male"],['gender'=>"both"]])
-												->andWhere(['and',['<=','days_from',$day_val],['>=','days_to',$day_val]])
-												->asArray()->one();
-											}
-											if('Female'==$newpatient['pat_sex']){
-											    $lab_reference_val=LabReferenceVal::find()->where(['IN','test_id',$lab_testing['autoid']])
-												->andWhere(['and',['<=','days_from',$day_val],['>=','days_to',$day_val]])
-												->andWhere(['or',['gender'=>"female"],['gender'=>"both"]])
-												->asArray()->one();
-											} 
-								$lab_report=LabReport::find()->asArray()->one();
-							if(!empty($value['autoid'])){ 
-									 //$lab_report_val=LabReport::find()->where(['testname_id'=>$value['lab_testing']])->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
-									 $lab_report_val=LabReport::find()->where(['lab_payment_id'=>$value['lab_prime_id']])->andWhere(['mastergroupid'=>$mgrp])
-								 ->andWhere(['lab_test_group'=>$value['lab_testgroup']])->asArray()->all();
-								} 
-									$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
-									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
-									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
-									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
-							
-								  
-								
-							if($lab_testing['result_type']=="numeric"){
-							  	 // if(!empty($lab_reference_val)){
-								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;margin-bottom: -2px;font-size:12px;" ALIGN="CENTER">';
-		    						$tbl_res.='<tbody><tr>
-										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-										<td style="">'.$lab_report_val[$keytest]['result'].'</td>
-										<td style="">'.$lab_unit['unit_name'].'</td>';
-									
-									if('numeric'==$lab_testing['result_type']){
-										$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
-									}else{
-										$tbl_res.='<td style="text-align:left">-</td>';
-									}
-									$tbl_res.='</tr></tbody></table>';
-						// 	}
-								}else{
-									
-									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;margin-bottom: -2px;font-size:12px;" ALIGN="CENTER">';
-		    						$tbl_res.='<tbody><tr>
-		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-		    						<td style="">'.$lab_report_val[$keytest]['result'].'</td>
-		    						<td style="">'.$lab_unit['unit_name'].'</td>';
-									if('numeric'==$lab_testing['result_type']){
-										$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
-									}else if('multichoice'==$lab_testing['result_type']){
-										foreach ($normal_multext as $key => $value) {
-											$mul.=",".$value;
-										}
-											$string = trim($mul,",");
-											$tbl_res.='<td style="text-align:left">'.$string.'</td>';
-											$mul="";
-									}else{
-										$tbl_res.='<td style="text-align:left">-<input type="hidden" name="REFERENCENAME[]" ></td>';
-									}
-										$tbl_res.='</tr></tbody></table>';
-									  }
-									}  
-									
-							$mgtest++;
-					}
-				}
-				}
-				}
-			}
-			else if($split_group[0]=="Group"){
-				
-				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_common_id'=>$mgrp])->asArray()->all();		
 				
 				foreach ($lab_payment as $key => $value)  
 				{	
@@ -2422,6 +2343,116 @@ public function actionAjaxsinglefetchdetails($id)
 							$mgtest++;
 					}
 				  }  
+				
+				}
+				//}
+			}
+			else if($split_group[0]=="Group"){
+				
+				
+					
+				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_testgroup'=>$mgrp])->asArray()->all();
+				
+				
+				foreach ($lab_payment as $key => $value)  
+				{	
+				  	   
+				 $testgroup_name=Testgroup::find()->where(['autoid'=>$value['lab_testgroup']])->asArray()->one();
+				 $lab_grouptest=LabTestgroup::find()->where(['testgroupid'=>$value['lab_testgroup']])->asArray()->all();
+				 
+				 if(!empty($lab_grouptest)){
+						$tbl_res.='<table class="table table-bordered algincss" style="margin-bottom: -2px;background: #eaeaea;">
+						<tr><td style="padding: 3px 10px;font-size:12px;"><b>'.$testgroup_name["testgroupname"].'</b></td></tr></table>';
+				 }
+
+					foreach ($lab_grouptest as $keytest => $testval) {
+						
+						$lab_testing=LabTesting::find()->where(['autoid'=>$testval['test_nameid']])->andWhere(['isactive'=>1])->asArray()->one();
+						
+						if(!empty($lab_testing)){
+						
+								$lab_unit=LabUnit::find()->where(['auto_id'=>$lab_testing['unit_id']])->asArray()->one();
+								$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$lab_testing['autoid']])->asArray()->one();
+											if('Male'==$newpatient['pat_sex'])
+											{
+												$lab_reference_val=LabReferenceVal::find()->where(['IN','test_id',$lab_testing['autoid']])
+												->andWhere(['or',['gender'=>"male"],['gender'=>"both"]])
+												->andWhere(['and',['<=','days_from',$day_val],['>=','days_to',$day_val]])
+												->asArray()->one();
+											}
+											if('Female'==$newpatient['pat_sex']){
+											    $lab_reference_val=LabReferenceVal::find()->where(['IN','test_id',$lab_testing['autoid']])
+												->andWhere(['and',['<=','days_from',$day_val],['>=','days_to',$day_val]])
+												->andWhere(['or',['gender'=>"female"],['gender'=>"both"]])
+												->asArray()->one();
+											} 
+								$lab_report=LabReport::find()->asArray()->one();
+							if(!empty($value['autoid'])){ 
+									 //$lab_report_val=LabReport::find()->where(['testname_id'=>$value['lab_testing']])->where(['lab_payment_id'=>$value['lab_prime_id']])->asArray()->all();
+									 $lab_report_val=LabReport::find()
+									 ->where(['lab_payment_id'=>$value['lab_prime_id']])
+									 ->andWhere(['lab_test_group'=>$mgrp])->asArray()->all();
+								} 
+									$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
+									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
+									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
+									$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
+								
+							if($lab_testing['result_type']=="numeric"){
+							  	 // if(!empty($lab_reference_val)){
+								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;margin-bottom: -2px;font-size:12px;" ALIGN="CENTER">';
+		    						$tbl_res.='<tbody><tr>
+										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>';
+										if($lab_reference_val['ref_from'] > $lab_report_val[$keytest]['result'] || $lab_reference_val['ref_to'] < $lab_report_val[$keytest]['result']){
+											
+											$tbl_res.='<td style=""><B>'.$lab_report_val[$keytest]['result'].'</B></td>
+													<td style="">'.$lab_unit['unit_name'].'</td>';
+										}else{
+											$tbl_res.='<td style="">'.$lab_report_val[$keytest]['result'].'</td>
+													<td style="">'.$lab_unit['unit_name'].'</td>';
+										}
+										
+									if('numeric'==$lab_testing['result_type']){
+										//$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
+										$tbl_res.='<td style="text-align:center"> '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';
+									}else{
+										$tbl_res.='<td style="text-align:center">-</td>';
+									}
+									$tbl_res.='</tr></tbody></table>';
+							 	//}
+								}else{
+									
+									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;font-size:12px;margin-bottom: -2px;" ALIGN="CENTER">';
+		    						$tbl_res.='<tbody><tr>
+		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>';
+									
+		    						if($lab_reference_val['ref_from'] > $lab_report_val[$keytest]['result'] || $lab_reference_val['ref_to'] < $lab_report_val[$keytest]['result']){
+		    							$tbl_res.='<td style=""><B>'.$lab_report_val[$keytest]['result'].'</B></td>
+		    								<td style="">'.$lab_unit['unit_name'].'</td>';
+									}else{
+										$tbl_res.='<td style="">'.$lab_report_val[$keytest]['result'].'</td>
+		    								<td style="">'.$lab_unit['unit_name'].'</td>';
+									}
+		    						
+									if('numeric'==$lab_testing['result_type']){
+										$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
+										$tbl_res.='<td style="text-align:center">'.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';
+									}else if('multichoice'==$lab_testing['result_type']){
+										foreach ($normal_multext as $key => $value) {
+											$mul.=",".$value;
+										}
+											$string = trim($mul,",");
+											$tbl_res.='<td style="text-align:center">'.$string.'</td>';
+											$mul="";
+									}else{
+										$tbl_res.='<td style="text-align:center">-<input type="hidden" name="REFERENCENAME[]" ></td>';
+									}
+										$tbl_res.='</tr></tbody></table>';
+									  }
+									}  
+							$mgtest++;
+					}
+				  }  
 				}
 			else if($split_group[0]=="Testlab"){
 				
@@ -2465,16 +2496,26 @@ public function actionAjaxsinglefetchdetails($id)
 							if($lab_testing['result_type']=="numeric"){
 							  	 // if(!empty($lab_reference_val)){
 							  	 	
-								 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;font-size:12px;margin-bottom: -2px;" ALIGN="CENTER">';
+							  	 	
+							  	 	$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;font-size:12px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
-										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-										<td style="">'.$lab_report_val[$key]['result'].'</td>
-										<td style="">'.$lab_unit['unit_name'].'</td>';
-									
+										<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>';
+										
+							  	 	if($lab_reference_val['ref_from'] > $lab_report_val[$key]['result'] || $lab_reference_val['ref_to'] < $lab_report_val[$key]['result']){
+							  	 		
+									$tbl_res.='	<td style=""><b>'.$lab_report_val[$key]['result'].'</b></td>
+										<td style="">'.$lab_unit['unit_name'].'</td>';  	 		
+							  	 	}else{
+							  	 		$tbl_res.='	<td style="">'.$lab_report_val[$key]['result'].'</td>
+										<td style="">'.$lab_unit['unit_name'].'</td>';  	 		
+							  	 	}
+							
+								 	
 									if('numeric'==$lab_testing['result_type']){
-										$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
+										//$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
+										$tbl_res.='<td style="text-align:center"> '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';
 									}else{
-										$tbl_res.='<td style="text-align:left">-</td>';
+										$tbl_res.='<td style="text-align:center">-</td>';
 									}
 									$tbl_res.='</tr></tbody></table>';
 							 //	}
@@ -2487,20 +2528,28 @@ public function actionAjaxsinglefetchdetails($id)
 									
 									$tbl_res.='<table class="table table-bordered algincss group" style="line-height:22px;font-size:12px;margin-bottom: -2px;" ALIGN="CENTER">';
 		    						$tbl_res.='<tbody><tr>
-		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>
-		    						<td style="">'.$reportval.'</td>
-		    						<td style="">'.$lab_unit['unit_name'].'</td>';
+		    						<td style="position:relative;text-align:left">'.$lab_testing['test_name'].'</td>';
+									if($lab_reference_val['ref_from'] > $lab_report_val[$key]['result'] || $lab_reference_val['ref_to'] < $lab_report_val[$key]['result']){
+										$tbl_res.='<td style=""><b>'.$reportval.'</b></td>
+		    									<td style="">'.$lab_unit['unit_name'].'</td>';
+									}
+									else{
+										$tbl_res.='<td style="">'.$reportval.'</td>
+		    									<td style="">'.$lab_unit['unit_name'].'</td>';
+									} 
+		    						
 									if('numeric'==$lab_testing['result_type']){
-										$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
+										//$tbl_res.='<td style="text-align:left">'.$lab_reference_val['reference_name'].' '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';
+										$tbl_res.='<td style="text-align:center"> '.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'</td>';	
 									}else if('multichoice'==$lab_testing['result_type']){
 										foreach ($normal_multext as $key => $value) {
 											$mul.=",".$value;
 										}
 											$string = trim($mul,",");
-											$tbl_res.='<td style="text-align:left">'.$string.'</td>';
+											$tbl_res.='<td style="text-align:center">'.$string.'</td>';
 											$mul="";
 									}else{
-										$tbl_res.='<td style="text-align:left">-<input type="hidden" name="REFERENCENAME[]" ></td>';
+										$tbl_res.='<td style="text-align:center">-<input type="hidden" name="REFERENCENAME[]" ></td>';
 									}
 										$tbl_res.='</tr></tbody></table>';
 									  }
@@ -2511,9 +2560,11 @@ public function actionAjaxsinglefetchdetails($id)
 						
 		   		$pdf->writeHTML($tbl_res, true, false, false, false, '');
 				
+				
+				
 				$tbl12="";
 				$tbl12.='<br><p style="font-size:14px;line-height:10px;"><b> Comments :</b> </p>';
-				$tbl12.='<p style="font-size:12px;">'.$lab_report_val[0]['textarea'].'</p>';
+				//$tbl12.='<p style="font-size:12px;">'.$lab_report_val[0]['textarea'].'</p>';
 				$tbl12.='<p style="font-size:12px;line-height:00px;">  </p>';
 				$tbl12.='<p style="font-size:12px;text-align:center;line-height:2px;"> *** End of the Report *** </p>';
 					$tbl12.='</body></html>';

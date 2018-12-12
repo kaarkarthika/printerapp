@@ -83,7 +83,11 @@ div#group_lab_fetch span,.testing-list span {
 <div class="panel-heading">
 
 </div>
-<div class="panel-body"  >
+<div class="panel-body" >
+<div class="" style="padding-bottom: 10px;">	
+	<a href="<?php echo Yii::$app->homeUrl .'?r=lab-payment-prime/report&id='.$model->lab_id ?>" style="width: 120px;float: right;margin-right:15px;margin-bottom:15px; " class="btn btn-default b-width btn btn-bk b-width">Back  </a>
+	<a href="<?php echo Yii::$app->homeUrl .'?r=lab-payment-prime/lab-index-grid' ?>" style="width: 120px;float: right; margin-right:15px;  background: #70d26a !important;border: 1px solid #70d26a !important;" class="btn btn-primary b-width btn btn-bk b-width"> Grid </a>
+</div>	
     <?php $form = ActiveForm::begin(); 
     
     ?>
@@ -238,12 +242,11 @@ if(!empty($lab_payment))
 							$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
 							$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
 							$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
-							
-							
+												
 							if($lab_testing['result_type']=="numeric"){
 						  				
 							//	 if(!empty($lab_reference_val)){
-								 			
+								
 										$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
 		    						$result_string.='<tbody>';
 									$result_string.='<tr>';
@@ -262,7 +265,7 @@ if(!empty($lab_payment))
 									
 									if($lab_testing['result_type']=="numeric"){  
 											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span>
-											<input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" onkeypress="javascript:return isNumber(event)" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$keytest]['result'].' ></td>';	
+											<input type="text"onkeypress="javascript:return isNumber(event)"  data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" onkeypress="javascript:return isNumber(event)" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$keytest]['result'].' ></td>';	
 										}elseif($lab_testing['result_type']=="multichoice"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span>
 											<select class="form-control result-val" data-id="'.$ia.'" id="result-val'.$ia.'" name="RESULT[]" required>';
@@ -284,7 +287,7 @@ if(!empty($lab_payment))
 												$result_string.='</select></td>';
 										}elseif($lab_testing['result_type']=="posneg"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span>
-									<input type="text" class="form-control result-val" onkeypress="javascript:return isNumber(event)" data-from="" data-to="" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$keytest]['result'].' ></td>';
+									<input type="text" class="form-control result-val" data-from="" data-to="" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$keytest]['result'].' ></td>';
 										}
 								$result_string.='<td style="width:8.6%;">'.$lab_unit['unit_name'].'<input type="hidden" name="UNITNAME[]" value='.$lab_unit['unit_name'].'></td>';
 									if('numeric'==$lab_testing['result_type']){
@@ -350,7 +353,7 @@ if(!empty($lab_payment))
 												
 										}elseif($lab_testing['result_type']=="posneg"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span>
-											<input type="text" onkeypress="javascript:return isNumber(event)" class="form-control result-val" data-from="" data-to="" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$keytest]['result'].' ></td>';
+											<input type="text" class="form-control result-val" data-from="" data-to="" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$keytest]['result'].' ></td>';
 										}
 										
 
@@ -382,10 +385,11 @@ if(!empty($lab_payment))
 			}
 
 			else if($split_group[0]=="Group"){
+				
 			
 				foreach ($lab_payment as $key => $value)  
 				{	
-					   
+					   					  
 				 $testgroup_name=Testgroup::find()->where(['autoid'=>$value['lab_testgroup']])->asArray()->one();
 				 $lab_grouptest=LabTestgroup::find()->where(['testgroupid'=>$value['lab_testgroup']])->asArray()->all();
 				 
@@ -394,7 +398,7 @@ if(!empty($lab_payment))
 				 }
 
 					foreach ($lab_grouptest as $keytest => $testval) {
-					   
+						
 							$lab_reference_val=LabReferenceVal::find()->where(['test_id'=>$testval['test_nameid']])->asArray()->one();
 							
 								if('Male'==$newpatient['pat_sex'])
@@ -473,7 +477,7 @@ if(!empty($lab_payment))
 												$result_string.='</select></td>';
 										}elseif($lab_testing['result_type']=="posneg"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span>
-											<input type="text" onkeypress="javascript:return isNumber(event)" class="form-control result-val" data-from="" data-to="" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
+											<input type="text" class="form-control result-val" data-from="" data-to="" data-id="'.$ia.'" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
 										}
 								$result_string.='<td style="width:8.6%;">'.$lab_unit['unit_name'].'<input type="hidden" name="UNITNAME[]" value='.$lab_unit['unit_name'].'></td>';
 									if('numeric'==$lab_testing['result_type']){
@@ -494,7 +498,7 @@ if(!empty($lab_payment))
 											$i++;
 											$ia++;	
 										//}								 
-								}else{
+								}else{ 
 									//echo "<pre>"; print_r($lab_report_val[$mgtest]);
 								
 								  	$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
@@ -513,7 +517,7 @@ if(!empty($lab_payment))
 											</td>';
 										
 										
-										if($lab_testing['result_type']=="numeric"){  
+										if($lab_testing['result_type']=="numeric"){ 
 											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' " id="col_'.$ia.'"></span>
 											<input type="text" onkeypress="javascript:return isNumber(event)" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 										}elseif($lab_testing['result_type']=="multichoice"){
@@ -537,10 +541,9 @@ if(!empty($lab_payment))
 												$result_string.='</select></td>';
 										}elseif($lab_testing['result_type']=="posneg"){
 											$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span>
-											<input type="text" onkeypress="javascript:return isNumber(event)" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" data-from="" data-to="" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
+											<input type="text" class="form-control result-val" id="result-val'.$ia.'" data-id="'.$ia.'" name="RESULT[]" data-from="" data-to="" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
 										}
 										
-
 										$result_string.='<td style="width:8.6%;">'.$lab_unit['unit_name'].'<input type="hidden" name="UNITNAME[]" value='.$lab_unit['unit_name'].'></td>';
 										if('numeric'==$lab_testing['result_type']){
 											$result_string.='<td style="width:10.5%;">'.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'<input type="hidden" name="REFERENCENAME[]" value='.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'></td>';
@@ -625,7 +628,8 @@ if(!empty($lab_payment))
 											</td>';
 											
 										if($lab_testing['result_type']=="numeric"){  
-											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' "id="col_'.$ia.'"></span><input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
+											$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' "id="col_'.$ia.'"></span>
+												<input type="text" data-id="'.$ia.'" onkeypress="javascript:return isNumber(event)" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 										}elseif($lab_testing['result_type']=="multichoice"){
 												$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span><select class="form-control result-val" data-id="'.$ia.'" id="result-val'.$ia.'" name="RESULT[]" required>';
 												  	$result_string.='<option value="">- Select -</option>';
@@ -645,13 +649,13 @@ if(!empty($lab_payment))
 												$result_string.='</select></td>';
 											}elseif($lab_testing['result_type']=="posneg"){
 												$result_string.='<td style="width:12%;"><span "id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span>
-												<input type="text" class="form-control result-val" id="result-val'.$ia.'" data-from="" data-to="" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';
+												<input type="text" data-id="'.$ia.'" class="form-control result-val" id="result-val'.$ia.'" data-from="" data-to="" name="RESULT[]" required value='.$lab_report_val[$key1]['result'].' ></td>';
 											}
 											
 											$result_string.='<td style="width:8.6%;">'.$lab_unit['unit_name'].'<input type="hidden" name="UNITNAME[]" value='.$lab_unit['unit_name'].'></td>';
 											
 												if('numeric'==$lab_testing['result_type']){
-													$result_string.='<td style="width:10.5%;">'.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'<input type="hidden" name="REFERENCENAME[]" value='.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'></td>';	
+													$result_string.='<td style="width:10.5%;">'.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'<input type="hidden" onkeypress="javascript:return isNumber(event)" name="REFERENCENAME[]" value='.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'></td>';	
 												}else if('multichoice'==$lab_testing['result_type']){
 														foreach ($normal_multext as $key => $value) {
 															$mul.=",".$value;
@@ -686,7 +690,7 @@ if(!empty($lab_payment))
 											</td>';
 											if($lab_testing['result_type']=="numeric"){  
 												$result_string.='<td style="width:12%;"><span class="btn alertmsg alertmsgcolor'.$ia.' "id="col_'.$ia.'"></span>
-												<input type="text" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
+												<input type="text" onkeypress="javascript:return isNumber(event)" data-id="'.$ia.'" data-from="'.$lab_reference_val['ref_from'].'" data-to="'.$lab_reference_val['ref_to'].'" class="form-control result-val" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';	
 											}elseif($lab_testing['result_type']=="multichoice"){
 												$result_string.='<td style="width:12%;"><span id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span>
 												<select class="form-control result-val" data-id="'.$ia.'" id="result-val'.$ia.'" name="RESULT[]" required>';
@@ -707,13 +711,13 @@ if(!empty($lab_payment))
 												$result_string.='</select></td>';
 											}elseif($lab_testing['result_type']=="posneg"){
 												$result_string.='<td style="width:12%;"><span "id="col_'.$ia.'" class="btn alertmsg alertmsgcolor'.$ia.' "></span>
-												<input type="text" class="form-control result-val" data-from="" data-to="" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
+												<input type="text" data-id="'.$ia.'" class="form-control result-val" data-from="" data-to="" id="result-val'.$ia.'" name="RESULT[]" required value='.$lab_report_val[$mgtest]['result'].' ></td>';
 											}
 											
 											$result_string.='<td style="width:8.6%;">'.$lab_unit['unit_name'].'<input type="hidden" name="UNITNAME[]" value='.$lab_unit['unit_name'].'></td>';
 											
 												if('numeric'==$lab_testing['result_type']){
-													$result_string.='<td style="width:10.5%;">'.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'<input type="hidden" name="REFERENCENAME[]" value='.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'></td>';	
+													$result_string.='<td style="width:10.5%;">'.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'<input type="hidden" onkeypress="javascript:return isNumber(event)" name="REFERENCENAME[]" value='.$lab_reference_val['ref_from'].'-'.$lab_reference_val['ref_to'].'></td>';	
 												}else if('multichoice'==$lab_testing['result_type']){
 														foreach ($normal_multext as $key => $value) {
 															$mul.=",".$value;
@@ -763,7 +767,7 @@ if(!empty($lab_payment))
 		}
 		 echo $result_string1;
 			 if($lab_report_val[0]['status']=='P'){ ?>
-			 	<a href="<?php echo Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='. $model->lab_id.'&mg='.$lab_test ?>" class="btn btn-danger print-btn" target="_blank" Title="Print"> <span class="fa fa-print"></span> Print </a>
+			 	<a href="<?php echo Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='. $model->lab_id.'&mg='.$lab_test."&mgval=''"; ?>" class="btn btn-danger print-btn" target="_blank" Title="Print"> <span class="fa fa-print"></span> Print </a>
 		<?php	 } ?>
 			
 			</div>
@@ -807,9 +811,6 @@ function Savelabtest()
  	var labid=$("#labtest").val();
  	var labvalue=$("#labvalue").val();
  	
- 	var remarks=$("#remarks").val();
- 	//alert(labid);
- 	if(remarks!=""){
  		if (confirm('Are You want Sure to Save ?')) {
 			$.ajax({	
 			     type: "POST",
@@ -817,21 +818,19 @@ function Savelabtest()
  				 data: $("#w0").serialize(),
 			     success: function (result) 
 			     {
-			     	
+			     	//alert(result);	
 			     		$("#saved_val").val(result[2]);
 	            		$('#load1').hide();
 			     		$('#saves_sucess').attr('disabled','disabled');
-			     		var url='<?php echo Yii::$app->homeUrl ?>?r=lab-payment-prime/printdata&id='+labid+'&mg='+labvalue;
+			     		var url='<?php echo Yii::$app->homeUrl ?>?r=lab-payment-prime/printdata&id='+labid+'&mg='+labvalue+'&mgval=""';
 		 				window.open(url,'_blank');
 		 				var reurl='<?php echo Yii::$app->homeUrl ?>?r=lab-payment-prime/report&id='+labid;
     						window.location.href = reurl;
     			 }
 		 });
+  	}
   }
-  }else{
-  	Alertment('Remarks Required..');
-  }
- }
+ 
  
  
  
@@ -843,7 +842,7 @@ $(".result-val").change(function(){
 		var rval=$(this).val();
 		var resultval=$(this).data('id');
 		
-		if(rfrom!="" && rto!=""){
+		/*if(rfrom!="" && rto!=""){
 		 if(rval>=rfrom && rval<=rto ){
 		 	set_val="1";
 		 }else{
@@ -851,8 +850,36 @@ $(".result-val").change(function(){
 		 } 
 		}else{
 			set_val="3";
-		}
+		}*/
+		 if(rfrom!="" && rto!=""){
+		 if(rval < rfrom || rval > rto ){
+		 	
+		 	set_val="2";
+		 }else if(rfrom==''){
+		 	
+		 	set_val="3";
+		 }
+		 else{
+		 	set_val="1";
+		 }
+	}else{
+		if(rfrom > rval || rto < rval ){
+		 	
+		 	set_val="2";
+		 }
+		 else if(rfrom < rval || rto > rval ){
+		 	
+		 	set_val="1";
+		 }
+		 
+		 else
+		 {
+		 	set_val="3";
+		 }
+		 	
+	 }
 		
+	
 		if(set_val=='1'){
 	   		 $("#col_"+resultval).css('background-color','green');
 	    }else if(set_val=='2'){
@@ -890,29 +917,47 @@ $(".result-val").change(function(){
  	var sub=$('input.btn.btn-success').val();
  	if(sub=="Update"){
 
-for (var i = 0,j=1; i < 20; i++,j++) {
+for (var i = 0,j=1; i < 100; i++,j++) {
 	var	ttyue="";
 	var resultval=$(".result-val").data('id')+i;
   ttyue=$("#result-val"+resultval).attr('type');
   var set_val="";
   
+    
 if(ttyue=='text'){
-  var rfrom=$("#result-val"+j).data('from');
-  var rto=$("#result-val"+j).data('to');
-  var rval=$("#result-val"+j).val();
+  var rfrom=parseFloat($("#result-val"+j).data('from'));
+  var rto=parseFloat($("#result-val"+j).data('to'));
+  var rval=parseFloat($("#result-val"+j).val());
   var set_val="";
  	 if(rfrom!="" && rto!=""){
-		 if(rval>=rfrom && rval<=rto ){
-		 	set_val="1";
-		 }else if(rfrom=="undefined"){
+		 if(rval < rfrom || rval > rto ){
+		 	
+		 	set_val="2";
+		 }else if(rfrom==''){
+		 	
 		 	set_val="3";
 		 }
 		 else{
-		 	set_val="2";
+		 	set_val="1";
 		 }
 	}else{
+		if(rfrom > rval || rto < rval ){
+		 	
+		 	set_val="2";
+		 }
+		 else if(rfrom < rval || rto > rval ){
+		 	
+		 	set_val="1";
+		 }
+		 
+		 else
+		 {
 		 	set_val="3";
+		 }
+		 	
 	 }
+	 
+	 //alert(resultval+"   "+set_val+"    "+rfrom+"   "+rto+"  "+rval);
 	   
 		if(set_val=='1'){
 	   		 $("#col_"+resultval).css('background-color','green');

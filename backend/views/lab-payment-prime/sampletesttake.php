@@ -67,11 +67,11 @@ $this->params['breadcrumbs'][] = $this->title;
         
     
 
-$("#save").click(function(e) {
+$("#save").click(function() {
 
   var outsourcetest;      
   var sampletest =$("#date_sample").val(); 
-  var remarks =$("#remarks").val();
+  //var remarks =$("#remarks").val();
   
   if($('input[type="checkbox"]').prop("checked") == true){
      		outsourcetest="1";      	
@@ -81,10 +81,10 @@ $("#save").click(function(e) {
    }
    
   if(sampletest!=""){
-  	if(remarks!=""){
+  	
 	  	$.ajax({
 	    	type:'POST',
-	    	data: {sample: sampletest, remark:remarks,outsourcetest:outsourcetest},
+	    	data: {sample: sampletest,outsourcetest:outsourcetest},
 	    	url: '<?php echo Yii::$app->homeUrl . "?r=lab-payment-prime/testsave&id=".$model->lab_id;  ?>', 
 	    	success:function(data) {
 	    		if(data==1){
@@ -95,11 +95,7 @@ $("#save").click(function(e) {
 	   setTimeout(function(){
 	    window.location.reload(1);
 	  }, 1000);
-  	}else{
-  		Alertment('Remarks Required');
-  		document.getElementById("remarks").focus();
-  		
-  	}
+  	
   }else{
   		Alertment('Sample Collection Date Required');
   		document.getElementById("date_sample").focus();

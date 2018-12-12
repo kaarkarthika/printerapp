@@ -21,7 +21,7 @@ class LabPaymentPrimeSearch extends LabPaymentPrime
         return [
         	
             [['lab_id', 'overall_item'], 'integer'],
-            [['payment_status', 'mr_number', 'name', 'ph_number', 'physican_name', 'insurance', 'dob', 'created_at', 'updated_at', 'user_id', 'updated_ipaddress','status','sample_test'], 'safe'],
+            [['payment_status', 'mr_number', 'name', 'ph_number','bill_number','physican_name', 'insurance', 'dob', 'created_at', 'updated_at', 'user_id', 'updated_ipaddress','status','sample_test'], 'safe'],
             [['overall_gst_per', 'overall_cgst_per', 'overall_sgst_per', 'overall_gst_amt', 'overall_cgst_amt', 'overall_sgst_amt', 'overall_dis_type', 'overall_dis_percent', 'overall_dis_amt', 'overall_sub_total', 'overall_net_amt'], 'number'],
         ];
     }
@@ -64,6 +64,7 @@ class LabPaymentPrimeSearch extends LabPaymentPrime
         $query->andFilterWhere([
             'lab_id' => $this->lab_id,
             'dob' => $this->dob,
+            'bill_number' => $this->bill_number,
             'overall_item' => $this->overall_item,
             'overall_gst_per' => $this->overall_gst_per,
             'overall_cgst_per' => $this->overall_cgst_per,
@@ -83,6 +84,7 @@ class LabPaymentPrimeSearch extends LabPaymentPrime
         $query->andFilterWhere(['like', 'payment_status', $this->payment_status])
             ->andFilterWhere(['like', 'mr_number', $this->mr_number])
             ->andFilterWhere(['like', 'name', $this->name])
+			->andFilterWhere(['like', 'bill_number', $this->bill_number])
             ->andFilterWhere(['like', 'ph_number', $this->ph_number])
             ->andFilterWhere(['like', 'physican_name', $this->physican_name])
             ->andFilterWhere(['like', 'insurance', $this->insurance])
@@ -116,6 +118,7 @@ class LabPaymentPrimeSearch extends LabPaymentPrime
             'lab_id' => $this->lab_id,
             'dob' => $this->dob,
             'overall_item' => $this->overall_item,
+             'bill_number' => $this->bill_number,
             'overall_gst_per' => $this->overall_gst_per,
             'overall_cgst_per' => $this->overall_cgst_per,
             'overall_sgst_per' => $this->overall_sgst_per,
@@ -133,6 +136,7 @@ class LabPaymentPrimeSearch extends LabPaymentPrime
 
         $query->andFilterWhere(['like', 'payment_status', $this->payment_status])
             ->andFilterWhere(['like', 'mr_number', $this->mr_number])
+			->andFilterWhere(['like', 'bill_number', $this->bill_number])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'ph_number', $this->ph_number])
             ->andFilterWhere(['like', 'physican_name', $this->physican_name])

@@ -24,12 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <input type='text' required="required" class=" datepicker form-control date_sample" id="date_sample" name="date_sample" />
                     <!-- <input type='text' required="required" class=" form-control date_sample" id='datetimepicker4' name="date_sample" /> -->
                 </div>
-                <!-- <div class='input-group date' id='datetimepicker1' style="width: 200px;">
-                    <input type='text' class="form-control date_sample" id="date_sample" name="date_sample" value="" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div> -->
+                
             </div>
             <div class="form-group"> 	<p>Remarks</p>
                 <textarea name="remarks" id="remarks" row="5" class="remarks form-control"><?php echo $lab_payment_prime_val['remarks_report']; ?></textarea>
@@ -67,17 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </style>
 <script>
 
-   // $(function () {
-   	  // var dateNow = new Date();
-     // $('#datetimepicker1').datetimepicker({
-     	// locale: 'es',
-     	// format: "D-M-Y H:m",
-     	// defaultDate:new Date()
-     	// //defaultDate:moment(dateNow).hours(0).minutes(0).seconds(0).milliseconds(0)
-     // });
-  // });
-        
- 
+  
             $(function () {
                 $('#datetimepicker4').datetimepicker();
             });
@@ -85,14 +70,14 @@ $this->params['breadcrumbs'][] = $this->title;
    $("#savea").click(function(e) {
   
   var sampletest =$("#date_sample").val(); 
-  var remarks =$("#remarks").val();
+  
   var file=$("#file_upload").val();
    
  if(sampletest!=""){
- 	if(remarks!=""){
+ 
 		$.ajax({
 		    	type:'POST',
-		    	data: {sample: sampletest, remark:remarks, file: file},
+		    	data: {sample: sampletest,  file: file},
 		    	processData: false,
 		    	contentType: false,
 		    	  enctype: 'multipart/form-data',
@@ -100,10 +85,6 @@ $this->params['breadcrumbs'][] = $this->title;
 		    	success:function(data) {
 		    }
 		  });
- 	}else{
- 		Alertment('Remark Required');
-  		document.getElementById("remarks").focus();
- 	}
  }else{
  		Alertment('Sample Collection Date Required');
   		document.getElementById("date_sample").focus();

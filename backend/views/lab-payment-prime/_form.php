@@ -1917,16 +1917,16 @@ function SaveLabBill()
  		$('.Authority').removeAttr('required','required');
  	}
  	
- 	if(due_amount !== '' && due_amount !== '0')
- 	{
- 		$('.remarks').attr('required','required');
- 		$('.Authority').attr('required','required');
- 	}
- 	else if(due_amount === '' && due_amount === '0')
- 	{
- 		$('.remarks').removeAttr('required','required');
- 		$('.Authority').removeAttr('required','required');
- 	}
+ 	// if(due_amount !== '' && due_amount !== '0')
+ 	// {
+ 		// $('.remarks').attr('required','required');
+ 		// $('.Authority').attr('required','required');
+ 	// }
+ 	// else if(due_amount === '' && due_amount === '0')
+ 	// {
+ 		// $('.remarks').removeAttr('required','required');
+ 		// $('.Authority').removeAttr('required','required');
+ 	// }
  	
  	var valid=$("#w0").valid();  
 	if(valid == true)
@@ -1939,6 +1939,7 @@ function SaveLabBill()
 	            data: $("#w0").serialize(),
 	            success: function (result) 
 	            { 
+	            	//alert(result);
 	            	obj=$.parseJSON(result);
 	            	$('#load1').hide();
 	            	//alert(obj[0]);

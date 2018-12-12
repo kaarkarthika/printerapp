@@ -53,7 +53,7 @@ class LabPaymentPrime extends \yii\db\ActiveRecord
         
         	[['name'], 'required'],
             [['payment_status'], 'string'],
-            [['dob', 'created_at', 'updated_at', 'user_id', 'updated_ipaddress','status','sample_test'], 'safe'],
+            [['dob', 'created_at', 'updated_at', 'user_id', 'updated_ipaddress','status','sample_test','bill_number'], 'safe'],
             [['overall_item'], 'integer'],
             [['overall_gst_per', 'overall_cgst_per', 'overall_sgst_per', 'overall_gst_amt', 'overall_cgst_amt', 'overall_sgst_amt', 'overall_dis_type', 'overall_dis_percent', 'overall_dis_amt', 'overall_sub_total', 'overall_net_amt'], 'number'],
             [['mr_number', 'name', 'ph_number', 'physican_name', 'insurance'], 'string', 'max' => 50],

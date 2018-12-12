@@ -82,6 +82,7 @@ div#group_lab_fetch span,.testing-list span {
 
 </div>
 <div class="panel-body"  >
+	<a href="<?php echo Yii::$app->homeUrl .'?r=lab-payment-prime/lab-index-grid' ?>" style="width: 150px;float: right;" class="btn btn-primary b-width btn btn-bk b-width">Back To Grid </a>
     <?php $form = ActiveForm::begin(); ?>
 	
 <?php 
@@ -102,6 +103,7 @@ div#group_lab_fetch span,.testing-list span {
 ?>
 	
 <div class="inpatientblock  desc" style="position: relative;top: 9px;"> 
+	
 	
 	 <!-- <?=Html::Button('Group Pack', ['class' => 'btn btn-danger waves-effect waves-light '.$hide.'','id'=>'group_pack','data_id'=>$model->lab_id,'set_id'=>$set_id_val]); ?>
 	<br/>
@@ -193,8 +195,13 @@ if(!empty($lab_payment))
 
 					 if($split_group[0]=="MasterGroup"){
 						$mastergroupname=MainTestgroup::find()->where(['autoid'=>$value['lab_common_id']])->groupBy(['autoid'])->asArray()->one();
-						$printcount=LabReport::find()->select(['id','printcount','printdate','user_id','status'])->where(['lab_payment_id'=>$value['lab_prime_id']])->andWhere(['mastergroupid'=>$value['lab_common_id']])->asArray()->one();
-						
+						$printcount=LabReport::find()
+							->select(['id','printcount','printdate','user_id','status'])
+							->where(['lab_payment_id'=>$value['lab_prime_id']])
+							->andWhere(['mastergroupid'=>$value['lab_common_id']])
+							->andWhere(['lab_test_group'=>$value['lab_testgroup']])
+							->asArray()->one();
+							
 						$branch_det=BranchAdmin::find()->where(['ba_autoid'=>$printcount['user_id']])->asArray()->one();
 						$cdate =$printcount['printdate'];
 						$printDate = date("d-m-Y h:i A", strtotime($cdate));
@@ -206,17 +213,19 @@ if(!empty($lab_payment))
 							$printDate = date("d-m-Y h:i A", strtotime($cdate));	
 						}
 						
+					 $testgroupname=Testgroup::find()->select(['shortcode','testgroupname','autoid'])->where(['autoid'=>$value['lab_testgroup']])->andWhere(['isactive'=>1])->asArray()->one();
+				 
 					 
-					
-					if(!empty($mastergroupname)){
-						$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Master_".$value['lab_common_id']]);
-						$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Master_'.$value['lab_common_id'];
+					if(!empty($testgroupname)){
+						$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Group_".$testgroupname['autoid'],"mgval"=>$value['lab_common_id']]);
+						$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Group_'.$testgroupname['autoid']."&mgval=".$value['lab_common_id'];
+						
 						if($printcount['status']=="P"){
 							$result_string.='
 							<tr style="background: #b6fbc2;">
 							<td >'.$i.'</td>
-							<td><a href="'.$url_code.'" target="_blank">'. $mastergroupname['shortcode'].'</a></td>
-							<td ><a href="'.$url_code.'" target="_blank">'.$mastergroupname['testgroupname'].'</a></td>
+							<td><a href="'.$url_code.'" target="_blank">'. $testgroupname['shortcode'].'</a></td>
+							<td ><a href="'.$url_code.'" target="_blank">'.$testgroupname['testgroupname'].'</a></td>
 							<td >'.$printDate.'</td>
 							<td >'.$printcount['printcount'].'</td>
 							<td >'.$branch_det['authUserRole'].' </td>
@@ -227,12 +236,12 @@ if(!empty($lab_payment))
 							</tr>';
 							
 						}else{
-							$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Master_".$value['lab_common_id']]);
+							$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Group_".$testgroupname['autoid']]);
 							$result_string.='
 							<tr>
 							<td >'.$i.'</td>
-							<td><a href="'.$url_code.'" target="_blank">'. $mastergroupname['shortcode'].'</a></td>
-							<td ><a href="'.$url_code.'" target="_blank">'.$mastergroupname['testgroupname'].'</a></td>
+							<td><a href="'.$url_code.'" target="_blank">'. $testgroupname['shortcode'].'</a></td>
+							<td ><a href="'.$url_code.'" target="_blank">'.$testgroupname['testgroupname'].'</a></td>
 							<td >'.$printDate.'</td>
 							<td >'.$printcount['printcount'].'</td>
 							<td >'.$branch_det['authUserRole'].' </td>
@@ -247,9 +256,19 @@ if(!empty($lab_payment))
    /** TESTGROUP  $mgtest **/
 					 	
 				if($split_group[0]=="TestGroup"){
+					
+					
+					
+					
 					 $testgroupname=ArrayHelper::map(Testgroup::find()->where(['autoid'=>$value['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
 					 if(!empty($testgroupname)){
-						$printcount=LabReport::find()->select(['id','printcount','printdate','user_id','status'])->where(['lab_payment_id'=>$value['lab_prime_id']])->andWhere(['lab_test_group'=>$value['lab_testgroup']])->asArray()->one();
+						$printcount=LabReport::find()
+							->select(['id','printcount','printdate','user_id','status'])
+							->where(['lab_payment_id'=>$value['lab_prime_id']])
+							->andWhere(['lab_test_group'=>$value['lab_testgroup']])
+							->asArray()->one();
+						
+							 
 						$branch_det=BranchAdmin::find()->where(['ba_autoid'=>$printcount['user_id']])->asArray()->one();
 						if($printcount['printdate']==""){
 							$printDate="-";
@@ -260,11 +279,11 @@ if(!empty($lab_payment))
 						
 						
 						$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Group_".$value['lab_common_id']]);
-						$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Group_'.$value['lab_common_id'];
+						$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Group_'.$value['lab_common_id']."&mgval=''";
 						
 						
 						
-				if($printcount['status']=="P"){
+					if($printcount['status']=="P"){
 						$result_string.='
 							<tr style="background: #b6fbc2;">
 							<td >'.$i.'</td>
@@ -299,6 +318,7 @@ if(!empty($lab_payment))
 								if(!empty($lab_testing1))
 								{
 									$printcount=LabReport::find()->select(['id','printcount','printdate','user_id','status'])->where(['lab_payment_id'=>$value['lab_prime_id']])->andWhere(['testname_id'=>$value['lab_common_id']])->asArray()->one();
+									
 									$branch_det=BranchAdmin::find()->where(['ba_autoid'=>$printcount['user_id']])->asArray()->one();
 									if($printcount['printdate']==""){
 										$printDate="-";
@@ -307,7 +327,7 @@ if(!empty($lab_payment))
 										$printDate = date("d-m-Y h:i A", strtotime($cdate));	
 									}
 									$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Testlab_".$value['lab_common_id']]);
-									$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Testlab_'.$value['lab_common_id'];
+									$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Testlab_'.$value['lab_common_id']."&mgval=''";
 									
 									if($printcount['status']=="P"){
 												$result_string.='<tr style="background: #b6fbc2;">

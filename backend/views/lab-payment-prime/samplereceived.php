@@ -22,12 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     	<input type='text' required="required" class=" datepicker form-control date_sample" id="date_sample" name="date_sample" />
                     <!-- <input type='text' required="required" class=" form-control date_sample" id='datetimepicker4' name="date_sample" /> -->
                 </div>
-                <!-- <div class='input-group date' id='datetimepicker1' style="width: 200px;">
-                	<input type='text' class="datepicker form-control date_sample" id="date_sample" name="date_sample" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div> -->
+                
             </div>
             <div class="form-group"> 	<p>Remarks</p>
                 <textarea name="remarks" id="remarks" row="5" class="remarks form-control"></textarea>
@@ -79,12 +74,12 @@ $this->params['breadcrumbs'][] = $this->title;
 $("#save").click(function(e) {
   
   var sampletest =$("#date_sample").val(); 
-  var remarks =$("#remarks").val();
+  
   if(sampletest!=""){
-  	if(remarks!=""){
+  	
   		$.ajax({
     	type:'POST',
-    	data: {sample: sampletest, remark:remarks},
+    	data: {sample: sampletest},
     	url: '<?php echo Yii::$app->homeUrl . "?r=lab-payment-prime/samplereceived&id=".$model->lab_id;  ?>', 
     	success:function(data) {
     		$(".alertmsg").css("display", "block");
@@ -93,9 +88,7 @@ $("#save").click(function(e) {
 	  	}, 1000);
     }
   });
-	}else{
-  			Alertment('Remarks Required');
-  	}
+	
   }else{
   		Alertment('Sample Received Date Required');
   }
