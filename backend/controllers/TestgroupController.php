@@ -262,8 +262,8 @@ class TestgroupController extends Controller
 				
 				$id=$_POST['TestgroupSearch']['testgroupname'];
 				//LabTestgroup::deleteAll(['testgroupid'=>$id]);
-				$data=array();
-				$date_id=date('Y-m-d H:i:s');
+					$data=array();
+					$date_id=date('Y-m-d H:i:s');
 				
 				foreach ($res as $key => $value) 
 				{
@@ -465,7 +465,7 @@ public function actionSelecttest($id){
 				} 
 		}
 	$res_str['drop']=$select_opt;
-//echo"<pre>";  print_r($group_list_tbl); die; 
+
 $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val' style=' margin-top: 20px;margin-bottom: 0; '>";
     			$res_str['tbl'].="<thead>";
       			$res_str['tbl'].="<tr>";
@@ -479,30 +479,27 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
 	  		$i++;	
 		
 		
-		$st=0;
+		/* foreach ($group_list_tbl1 as $key => $grplist) {
+			 	$grouplistcheck[$grplist['price']]=$grplist['price'];			 
+			 } */
+		 
+		
+		  
      foreach ($group_list_tbl as $key => $value) {
      	
        	if(array_key_exists($value['test_nameid'],$test_list_tbl_val)) {
        		$testgroupid=$test_list_tbl_val[$value['test_nameid']]['test_name'];
-			// print_r($value['test_nameid']);
-			// print_r($group_list_tbl);
+			
 	   	}else{
 	   		$testgroupid="-";
 	   	}
 		
-		/*if($value['price']!=""){
-			  
-			  if($group_list_tbl1[$key]['price']==$value['price']) {
-			  	if($st==0){
-					$res_str['tbl'].='<tr><td colspan="3">'.$value['price'].'</td></tr>';
-					$st=1;
-				}else{
-					$st=0;
-				}
-			  }
-			  			
+		
+		if($value['price']!=""){
+			
+			// $res_str['tbl'].='<tr><td colspan="3">'.$value['price'].'</td></tr>';
 		}
-		*/
+		
 		
       	$res_str['tbl'].='
       	<tr><td style="text-align: center;">'. $i++ .'</td>
@@ -510,9 +507,10 @@ $res_str['tbl'].="<table class='table table-striped table-bordered' id='list_val
       	<td style="text-align:center"><span class="remove_li rem_item" data-id="'.$value['autoid'].'" data-toggle="tooltip" title="Remove">X</span>	
        	</td>';
     	  $res_str['tbl'].='</tr>';
-      } // die;
+      	} // die;
+		
 		}else{
-      	$res_str['tbl'].="<tr><td style='text-align: center;' colspan='3'> No Records</td></tr>";
+      		$res_str['tbl'].="<tr><td style='text-align: center;' colspan='3'> No Records</td></tr>";
        }
        
 	$res_str['tbl'].="<tbody></table>";

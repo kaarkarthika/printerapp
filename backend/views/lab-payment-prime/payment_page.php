@@ -25,6 +25,17 @@ $this->title = 'Test Report';
 ?>
 
 <style>
+.table-bordered a span.fa.fa-edit {
+    color: #fff;
+    background-color: #ffbd4a !important;
+    font-weight: 300 !important;
+}
+.table-bordered a span.fa.fa-print{
+    color: #fff;
+    background-color: red !important;
+    font-weight: 300 !important;
+}
+
 div#group_lab_fetch .alertmsg {
     width: 19%; background-color:#a0a0a0;
     height: 25px; top:0 !important;
@@ -258,14 +269,12 @@ if(!empty($lab_payment))
 				if($split_group[0]=="TestGroup"){
 					
 					
-					
-					
 					 $testgroupname=ArrayHelper::map(Testgroup::find()->where(['autoid'=>$value['lab_common_id']])->asArray()->all(), 'autoid', 'testgroupname');
 					 if(!empty($testgroupname)){
 						$printcount=LabReport::find()
 							->select(['id','printcount','printdate','user_id','status'])
 							->where(['lab_payment_id'=>$value['lab_prime_id']])
-							->andWhere(['lab_test_group'=>$value['lab_testgroup']])
+							->andWhere(['lab_test_group'=>$value['lab_common_id']])
 							->asArray()->one();
 						
 							 
@@ -278,10 +287,8 @@ if(!empty($lab_payment))
 						}
 						
 						
-						$url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Group_".$value['lab_common_id']]);
-						$print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Group_'.$value['lab_common_id']."&mgval=''";
-						
-						
+				   $url_code=Url::toRoute(["lab-payment-prime/reportdata", "id" =>$value['lab_prime_id'],"mgrp"=>"Group_".$value['lab_common_id']]);
+				   $print_url=Yii::$app->homeUrl .'?r=lab-payment-prime/printdata&id='.$value['lab_prime_id'].'&mg=Group_'.$value['lab_common_id']."&mgval=''";
 						
 					if($printcount['status']=="P"){
 						$result_string.='

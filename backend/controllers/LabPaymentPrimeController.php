@@ -2349,11 +2349,7 @@ public function actionAjaxsinglefetchdetails($id)
 			}
 			else if($split_group[0]=="Group"){
 				
-				
-					
 				$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$model->lab_id])->andwhere(['lab_testgroup'=>$mgrp])->asArray()->all();
-				
-				
 				foreach ($lab_payment as $key => $value)  
 				{	
 				  	   
@@ -2366,6 +2362,10 @@ public function actionAjaxsinglefetchdetails($id)
 				 }
 
 					foreach ($lab_grouptest as $keytest => $testval) {
+						
+						if($lab_grouptest[$keytest]['price']!=""){
+							 //	$tbl_res.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;font-size:12px;"><tr colspan="3"><td style="background: #ebeff2;"><b>'.$lab_grouptest[$keytest]['price'].'</b></td></tr></table>';
+							}
 						
 						$lab_testing=LabTesting::find()->where(['autoid'=>$testval['test_nameid']])->andWhere(['isactive'=>1])->asArray()->one();
 						

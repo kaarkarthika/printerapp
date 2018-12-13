@@ -24,6 +24,7 @@ use backend\models\LabPayment;
 ?>
 
 <style>
+
 div#group_lab_fetch .alertmsg {
     width: 19%; background-color:#a0a0a0;
     height: 25px; top:0 !important;
@@ -434,6 +435,9 @@ if(!empty($lab_payment))
 							$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
 							$normal_multext=ArrayHelper::map($lab_mul_val, 'mulname', 'mulname');
 							
+							if($lab_grouptest[$keytest]['price']!=""){
+								// $result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;"><tr colspan="3"><td style="background: #ebeff2;">'.$lab_grouptest[$keytest]['price'].'</td></tr></table>';
+							}
 							
 							if($lab_testing['result_type']=="numeric"){
 						  				
@@ -499,7 +503,7 @@ if(!empty($lab_payment))
 											$ia++;	
 										//}								 
 								}else{ 
-									//echo "<pre>"; print_r($lab_report_val[$mgtest]);
+									
 								
 								  	$result_string.='<table class="table table-bordered algincss group" style="margin-bottom: -2px;">';
 		    						$result_string.='<tbody>';
@@ -603,9 +607,10 @@ if(!empty($lab_payment))
 																			
 								$lab_report=LabReport::find()->asArray()->one();
 								if(!empty($value['autoid'])){ 
-									 $lab_report_val=LabReport::find()->where(['lab_payment_id'=>$value['lab_prime_id']])->andWhere(['testname_id'=>$value['lab_common_id']])->asArray()->all();
-								} 
-
+									 $lab_report_val=LabReport::find()
+									 	->where(['lab_payment_id'=>$value['lab_prime_id']])
+									 	->andWhere(['testname_id'=>$value['lab_common_id']])->asArray()->all();
+	   							  } 
 									$mul_choice=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->select(["autoid","mulname","normal_value"])->asArray()->all();
 									$savetext=ArrayHelper::map($mul_choice, 'autoid', 'mulname');
 									$lab_mul_val=LabMulChoice::find()->where(['test_id'=>$lab_testing['autoid']])->andWhere(['normal_value'=>'1'])->select(['autoid','mulname'])->asArray()->all();
@@ -623,7 +628,7 @@ if(!empty($lab_payment))
 												<input type="hidden" name="TESTNAMEID[]" value='.$value['lab_common_id'].'>
 												<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
 												<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$mgtest]['id'].'>
-												<input type="hidden" name="LabTestgroup[]" value='.$value['lab_testgroup'].'>
+												
 												<input type="hidden" name="MRNUMBER[]" value='.$value['mr_number'].'> 
 											</td>';
 											
@@ -682,7 +687,7 @@ if(!empty($lab_payment))
 											$result_string.='<td style="width:18%;position:relative">'.$lab_testing['test_name'].'
 												<input type="hidden" name="TESTNAME[]" value='.$lab_testing['test_name'].' >
 												<input type="hidden" name="LabTesting[]" value="">
-												<input type="hidden" name="LabTestgroup[]" value='.$value['lab_testgroup'].'>
+												
 												<input type="hidden" name="TESTNAMEID[]" value='.$value['lab_common_id'].'>
 												<input type="hidden" name="LABPAYMENTPRIME[]" value='.$value['lab_prime_id'].'>
 												<input type="hidden" name="LABPAYMENTID[]" value='.$lab_report_val[$mgtest]['id'].'>
@@ -851,6 +856,7 @@ $(".result-val").change(function(){
 		}else{
 			set_val="3";
 		}*/
+		
 		 if(rfrom!="" && rto!=""){
 		 if(rval < rfrom || rval > rto ){
 		 	
