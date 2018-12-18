@@ -175,7 +175,8 @@ input#ipnumber {
 </script>
 <?php $form = ActiveForm::begin(['id' => 'saved_data_value_ajax',
              'options' => [
-                'class' => ''
+                'class' => '',
+                'autocomplete'=>'off'
              ] ]); ?> 
 
  
@@ -226,7 +227,7 @@ input#ipnumber {
                      <label> Name </label>	
                      <input class="form-control fetch_patient_clear"   name="IPPATIENTNAME"   id="ippatientname" type="text" >                   
                      <div class="ipt input-group-btn">
-                        <span class="ipt btn btn-info rt-5" title="Details"><i class="glyphicon glyphicon-user"></i></span>
+                        <span class="ipt btn btn-info rt-5" id='history_detils' title="Details"><i class="glyphicon glyphicon-user"></i></span>
                      </div>
                   </div>
  
@@ -908,6 +909,13 @@ input#ipnumber {
 <script type="text/javascript">window.onload = date_time('date_time');</script>
 <script type="text/javascript" src="js/shortcut.js" ></script>
 <script type="text/javascript">
+
+<?php if(!empty($unit_json_encode)){?>
+  var unit_json_encode=$.parseJSON('<?php echo  $unit_json_encode; ?>');
+<?php }else{ ?>
+  var unit_json_encode=[];
+<?php }?>
+
 
 function PackageFetch()
 {
@@ -2922,19 +2930,10 @@ $(document).ready(function(){
     	var mr_number=$('#ipnumber').val();
     	if(mr_number != '')
     	{
-    		$.ajax({
-    				
-				      type: "POST",
-				      url: "<?php echo Yii::$app->homeUrl . "?r=in-sales/histmrnumberpdf&id=";?>"+mr_number,
-				      success: function (result) 
-				      {
-				      	
-				      	 $('#sale_history_report').html(result);
-				      	 $modal = $('#mr_hist-modal');
-						 $modal.modal('show'); 
-				      	
-				      }
-				  });
+    		
+    		var url='<?php echo Yii::$app->homeUrl ?>?r=in-sales/histmrnumberpdf&id='+mr_number;
+ 			window.open(url,'_blank');
+    		
     	}
     	else if(mr_number == '')
     	{
@@ -3062,6 +3061,10 @@ $(document).ready(function(){
 		$('.no_of_unit').val('');
 		if(keycode == '13')
       	{
+      		
+      		$('#loadpopup1').show();
+			setTimeout(function () { 
+      		
     		if(fetch_batch_qty <= stk)
     		{
     			var prime_id_conv=$('#prime_id_conv').val();
@@ -3080,6 +3083,7 @@ $(document).ready(function(){
 				  		$('#required_id'+strtoarray[0]).val(fetch_batch_qty);
 				  		var data_unit=parseInt($('#data_unit'+strtoarray[i]).val());
 				  		var uui=strtoarray[0];
+				  		
 				  		Getunitquantity(data_unit,uui);	
 				  		break;
 				  	}
@@ -3115,7 +3119,8 @@ $(document).ready(function(){
 							var iop=fetch_batch_qty-io;
 							
 							$('#required_id'+strtoarray[i]).val(iop);
-				  			break;
+							Getunitquantity(data_unit,uui);	
+							break;
 				  		}
     							
 				  	}
@@ -3130,12 +3135,14 @@ $(document).ready(function(){
     			Alertment('Enter More than Availability Stock');
     		}
     		
+    				$('#loadpopup1').hide();
+    		  },800);
     	}
     } 
  
     
     
-   	function Getunitquantity(data_unit,uui)
+   	function Getunitquantityold(data_unit,uui)
     {
 		$.ajax({
             type: "POST",
@@ -3153,6 +3160,63 @@ $(document).ready(function(){
             	$('#total_unit'+uui).val(tot);
             }
 		});				
+    }
+    
+    
+    function Getunitquantity(data_unit,uui)
+    {
+    	
+
+      if(unit_json_encode[data_unit] !== null)
+      {
+          if(unit_json_encode[data_unit]['is_tablet'] !== null)
+          {
+             if(unit_json_encode[data_unit]['is_tablet'] === 1)
+             {
+               
+                    var value_unit=1;
+                     
+                    var value_type=unit_json_encode[data_unit]['unitvalue'];
+                    $('#data_no_of_unit'+uui).val(value_unit);
+                    $('#data-unit-name'+uui).val(value_type);
+                    var unit_mul=parseInt($('#data_no_of_unit'+uui).val());
+                    var required_id=parseInt($('#required_id'+uui).val());
+                    var tot=required_id*unit_mul;
+                    $('#total_unit'+uui).val(tot);  
+                 	
+                 	
+                
+                 
+             } 
+            else
+            {
+                      var value_unit=unit_json_encode[data_unit]['no_of_unit'];
+                       
+                      var value_type=unit_json_encode[data_unit]['unitvalue'];
+                      $('#data_no_of_unit'+uui).val(value_unit);
+                      $('#data-unit-name'+uui).val(value_type);
+                      var unit_mul=parseInt($('#data_no_of_unit'+uui).val());
+                      var required_id=parseInt($('#required_id'+uui).val());
+                      var tot=required_id*unit_mul;
+                      $('#total_unit'+uui).val(tot); 
+            }
+
+
+          }
+          else if(unit_json_encode[data_unit]['is_tablet'] === null)
+          {
+                    var value_unit=unit_json_encode[data_unit]['no_of_unit'];
+                    
+                    var value_type=unit_json_encode[data_unit]['unitvalue'];
+                    $('#data_no_of_unit'+uui).val(value_unit);
+                    $('#data-unit-name'+uui).val(value_type);
+                    var unit_mul=parseInt($('#data_no_of_unit'+uui).val());
+                    var required_id=parseInt($('#required_id'+uui).val());
+                    var tot=required_id*unit_mul;
+                    //alert(required_id1);
+                    $('#total_unit'+uui).val(tot); 
+          }
+      }				
     }
   
   //Discount Procedure
@@ -6781,6 +6845,8 @@ function PaidCalc(data)
 					window.location.reload(true);
 				}
 				
+				
+
 				
 
 </script>

@@ -2922,7 +2922,7 @@ span.btn-default i.glyphicon {
 	border-radius: 0!important;
 }
 
-#load1 {
+#load1,#loadpopup1 {
 	width: 100%;
 	height: 100%;
 	top: 0;

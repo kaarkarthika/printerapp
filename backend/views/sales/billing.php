@@ -171,7 +171,7 @@ ul.donate-now.per_flat_val label{
    */
    
 </script>
-<?php $form = ActiveForm::begin(['id' => 'saved_data_value_ajax']); ?> 
+<?php $form = ActiveForm::begin(['id' => 'saved_data_value_ajax','options'=> ['autocomplete'=>'off']]); ?> 
 <div class="container">
    <div class="row">
       <div class="col-sm-12">
@@ -639,195 +639,7 @@ ul.donate-now.per_flat_val label{
 			    <input type='hidden' name='get_temp_no' class='get_temp_no'>
 			    <input type='hidden' name='return_status' class='return_tablet' id='return_tablet'>
 			   <div class=" ">
-                <!--   <div class="panel panel-border panel-custom total-area"  >
-                     <div class="panel-body" style="padding: 0 5px !important;">
-                        <div class="row">
-						
-						
-                           <div class="t-10  col-sm-9">
-                              <div class="row">
-							     
-								 <div class="form-group col-sm-2">
-									<!-- <div class="input-group  ">
-										<label class="input-group-addon"  > Items: </label>
-										<input type="text" class="form-control total_items ansrefrsh" name='total_items' readonly id="no_of_items">
-										<input type="hidden" class="form-control total_items ansrefrsh" name='total_items_hidden'  id="no_of_items_hidden">
-									</div> 
-								 </div>
-							  
-							    <div class="form-group col-sm-1" style="position: relative;left: -16px;">
-									<!-- <div class="input-group  ">
-										<label class="input-group-addon" style="padding: 0 6px;" > Qty: </label>
-										<input type="text" style="width: 50px;" class="form-control total_quantity ansrefrsh" name='total_quantity' readonly id="total_quantity">
-										<input type="hidden" style="width: 50px;" class="form-control total_quantity ansrefrsh" name='total_quantity_hidden'  id="total_quantity_hidden">
-									</div> 
-								 </div>
-                                
-								  <div class="form-group col-sm-2">
-									<!--<div class="input-group  ">
-										<label class="input-group-addon"  >  GST: </label>
-										<input type="text" style="width: 75px;"  class="form-control total_vat ansrefrsh" name='total_gst' readonly id="total_gst_amount">
-										<input type="hidden" style="width: 75px;"  class="form-control total_vat ansrefrsh" name='total_gst_hidden'  id="total_gst_amount_hidden">
-									</div>   
-								 </div>
-								 
-                              <!-- 
-							  
-							   <div class="form-group col-sm-2 " style="padding: 0;left: -3px;">
-									<div class="input-group  ">
-										
-										<label class="input-group-addon" style="    padding: 8px 10px;" >Dis Type: </label>
-										 <input type="text" class="form-control  over_all_discount_percent number" name='overall_discount_percent'   id="over_all_discount_percent"> 
-									<ul class="donate-now per_flat_val">
-										<li>
-											<input type="radio" name="overall_discount_type" style="margin-left: 5px;" id="overall_discount_type_radio" value="F" class="btn btn-success overall_disount">
-											<label for="flat_discount"  style="" class=" text-center testrad">F</label>
-										</li>
-										<li>
-											<input type="radio" id="overall_percent_type" class="btn btn-success overall_disount" value="P" name="overall_discount_type">
-											<label for="percent_discount" style="" class="text-center testrad">%</label>	
-										</li>
-									</ul>
-									</div>
-								 </div>
-								 
-								 <div class="form-group col-sm-3" style="padding: 0;">
-									<div class="input-group  ">
-										<!-- <label class="input-group-addon"  >Flat: </label>
-										<input type="text" class="form-control total_disc_original ansrefrsh number" name='total_disc_original'   id="total_discountvalue"> 
-										<label class="input-group-addon"  >%: </label>
-										<input type="text" class="form-control total_disc_original ansrefrsh number"  name='overall_discount_percent'   id="total_discountvaluetype">
-										<input type="hidden" class="form-control total_disc_original ansrefrsh number"  name='overall_discount_percent_hidden'   id="total_discountvaluetype_hidden">
-										
-										<label class="input-group-addon"  >Flat: </label>
-										<input type="text" class="form-control total_disc_original ansrefrsh number"  name='total_disc_original'   id="total_discountamount">
-										<input type="hidden" class="form-control total_disc_original ansrefrsh number"  name='total_disc_original_hidden'   id="total_discountamount_hidden">
-									</div>
-								 </div>
-								 
-								 	 
-							  
-							  
-							  
-								 <div class="form-group col-sm-2">
-									<!--<div class="input-group  ">
-										<label class="input-group-addon"  >Sub.Tot</label>
-										<input type="text" style="width: 90px;"   class="form-control total_sub_total ansrefrsh" name='total_sub_total' readonly id="total_sub_total">
-										<input type="hidden" style="width: 90px;"   class="form-control total_sub_total ansrefrsh" name='total_sub_total_hidden' id="total_sub_total_hidden">
-									</div>  
-								 </div>
-							  
-                                </div>
-                           </div>
-                           <div class="t-10  col-sm-3" style="    right: -24px;">
-						   
-                          	<div class="row"> 
-							  <!-- <div class=" col-sm-1"></div> -->
-						 <!-- <div class="form-group col-sm-7">
-									<div class="input-group  ">
-										<label class="input-group-addon bg-primary" style="color:#fff;" >Net Amt : </label>
-										<input type="text" class="form-control total-netamt ansrefrsh bg-primary" name='total_net_amount' style="color: #fff;font-size: 14pt;" readonly id="total_net_amount">
-										<input type="hidden" class="form-control total-netamt ansrefrsh bg-primary" name='total_net_amount_hidden' style="color: #fff;font-size: 14pt;"  id="total_net_amount_hidden">
-									</div>
-								 </div>  
-							  <div class="form-group col-sm-2" style="z-index: 9999;">
-                                 
-                                 <button type="button" value='save_bill' name='saved_bill' style="z-index: 9999;" class="btn btn-success btn-sm fwidth ss_v save_billing" onclick='SaveBilling();' data-toggle="tooltip" title="Save and Submit"><i class="fa fa-save"></i></button>
-                                 <i><strong><small>[Ctrl+S]</small><strong></i>
-                              </div>
-                              <div class="form-group col-sm-2" style="z-index: 9999;">
-                               
-                                 <button type='reset' style="z-index: 9999;" class="btn btn-warning btn-sm fwidth ss_v remove_all" data-toggle="tooltip" title="Cancel"><i class="fa fa-close"></i> </button>
-                                 <i><strong><small>[Alt+z]</small><strong></i>
-                              </div>
-                         </div><!-- Row end  
-                         </div>
-                        </div>
-                        <div class="row " style="position: relative;">
-                           	<div class="col-sm-6 dis_remark">
-                           		<!--<div class="row">
-                           		 <div class="form-group col-sm-3 " style="padding: 0;left: 15px;">
-									<div class="input-group  ">
-										
-										<label class="input-group-addon" style="    padding: 8px 10px;" >Dis Type: </label>
-										<!-- <input type="text" class="form-control  over_all_discount_percent number" name='overall_discount_percent'   id="over_all_discount_percent">  
-									<ul class="donate-now per_flat_val">
-										<li>
-											<input type="radio" name="overall_discount_type" style="margin-left: 5px;" id="overall_discount_type_radio" value="F" class="btn btn-success overall_disount">
-											<label for="flat_discount"  style="" class=" text-center testrad">F</label>
-										</li>
-										<li>
-											<input type="radio" id="overall_percent_type" class="btn btn-success overall_disount" value="P" name="overall_discount_type">
-											<label for="percent_discount" style="" class="text-center testrad">%</label>	
-										</li>
-									</ul>
-									</div>
-								 </div> 
-								 
-								 
-								 <div class="form-group col-sm-6" style="padding: 0;">
-									<div class="input-group  ">
-										<label class="input-group-addon"  >%: </label>
-										<input type="text" class="form-control total_disc_original ansrefrsh number"  name='overall_discount_percent' onkeyup="OverallPercentageDiscount();"  id="total_discountvaluetype">
-										<input type="hidden" class="form-control total_disc_original ansrefrsh number"  name='overall_discount_percent_hidden'   id="total_discountvaluetype_hidden">
-										
-										<label class="input-group-addon"  >Flat: </label>
-										<input type="text" class="form-control total_disc_original ansrefrsh number"  name='total_disc_original'   id="total_discountamount">
-										<input type="hidden" class="form-control total_disc_original ansrefrsh number"  name='total_disc_original_hidden'   id="total_discountamount_hidden">
-									</div>
-								 </div>
-								 </div> -->
-								<!-- <div class="row">
-								 	  <div class="form-group col-sm-11">
-										    <label for="exampleFormControlTextarea1">Remarks</label>
-										      <textarea style="min-height: 50px;width: 250px;" class="form-control rounded-0 remarks" id="remarks" name="remarks" rows="2"></textarea>
-										</div>
-								 	</div>  
-                           	</div>
-                           <!-- 	<div class="col-sm-6 date_show">
-                           		<span>Datewise Sales History Details</span>
-                              		<div class="col-sm-5">
-                              			<div class="input-group " >
-                              				<label>From</label>
-										    <input type="text" class="form-control from_date" id="from_date" name="from_date">
-										    
-										</div>
-                              		</div>
-                              		<div class="col-sm-5">
-                              		<div class="input-group " >
-                              				<label>To</label>
-										    <input type="text" class="form-control to_date" id="to_date" name="to_date">
-										  
-										</div>
-                              		</div>
-                              		<div class="col-sm-2">
-                              			<label style="visibility:hidden">From</label><!-- ss 
-                              			<button type='button' class="btn btn-warning btn-sm fwidth sale_his " id="sale_his" data-toggle="tooltip" title="Show">Show</button>
-                              		</div>
-                              	</div>	 
-                              	</div>
-                        
-                        
-                        
-                        
-                        
-                        <br>
-                        <div class='row'>
-                        	<div class='col-sm-1 pull-right print_rules'>
-                        		
-                        	</div>
-                        	
-                        </div>
-						
-						
-						
-						
-						
-                     </div>
-					 
-                  </div>
-				  
-               </div> -->
+              
 			   
 			    <div class="col-sm-12">  
 				<div class="panel panel-border panel-custom  "  >
@@ -1241,6 +1053,14 @@ ul.donate-now.per_flat_val label{
 <script type="text/javascript" src="js/shortcut.js" ></script>
 <script type="text/javascript">
 
+<?php if(!empty($unit_json_encode)){?>
+  var unit_json_encode=$.parseJSON('<?php echo  $unit_json_encode; ?>');
+<?php }else{ ?>
+  var unit_json_encode=[];
+<?php }?>
+
+
+
 $(document).ready(function(){
 	
 $('.inpatient-details').click(function(){
@@ -1294,37 +1114,37 @@ $(document).ready(function(e){
 $(function () {
 	    
         $("input[name='patient']").click(function () {
-               if ($("#outPatient").is(":checked")) 
-               {
-               	
-               		$(".get_slno").val('');
-    				$(".get_temp_no").val('');
-					
+         if ($("#outPatient").is(":checked")) 
+         {
+         	
+         		$(".get_slno").val('');
+      			$(".get_temp_no").val('');
+      		
                	 	
-				    $('.inrefrsh').val('');
-				    $('.ansrefrsh').val('');
-					$('#temp_med_fetch').prop('disabled', true);
-					 $("#tbUser tbody tr").remove(); 
-                   $(".outpatientblock").show();
-   				$('[tabindex="1"]').focus();
-   				$(".inpatientblock").hide();  
-   				
-   				ClearBillField();
-   				
-   				 var out_patient=$('#outPatient').val();
-  				 if(out_patient != '')
-  				 {
-			  		 $.ajax({
-						 type: "POST",
-						 url: "<?php echo Yii::$app->homeUrl . "?r=sales/fetchbillnumber&id=";?>"+out_patient,
-						success: function (result) 
-						{
-							 $('#fetch_bill').html(result);    	    
-						}
-					});
-  				}
-   				 				
-               }
+      	    $('.inrefrsh').val('');
+      	    $('.ansrefrsh').val('');
+      		  $('#temp_med_fetch').prop('disabled', true);
+      		  $("#tbUser tbody tr").remove(); 
+            $(".outpatientblock").show();
+      			$('[tabindex="1"]').focus();
+      			$(".inpatientblock").hide();  
+      			
+      			ClearBillField();
+      			
+          		 var out_patient=$('#outPatient').val();
+          		 if(out_patient != '')
+          		 {
+            		 $.ajax({
+                			type: "POST",
+                			url: "<?php echo Yii::$app->homeUrl . "?r=sales/fetchbillnumber&id=";?>"+out_patient,
+                			success: function (result) 
+                			{
+                				 $('#fetch_bill').html(result);    	    
+                			}
+              	 });
+          		}
+			 				
+         }
 			   else if ($("#inPatient").is(":checked")) 
                {
               
@@ -1408,6 +1228,8 @@ $(function () {
 		    
 			if(e.keyCode == 13)
 			{
+       
+  
 				
 				var product_id=$('#name').val();
 				//var encodeproduct_id=encodeURIComponent(product_id);
@@ -1418,6 +1240,8 @@ $(function () {
 			            url: "<?php echo Yii::$app->homeUrl . "?r=sales/medicinefetch&product_id=";?>"+product_id,
 			            success: function (result) 
 			            { 
+
+
 			            	var obj = $.parseJSON(result);
 			            	 
 			            	 if(obj == 'NULL' || obj == '' || obj == 'null' || obj == null)
@@ -1458,11 +1282,16 @@ $(function () {
 			   	  					$('#total_unit'+data_table).val(temp_tablet_type);
 			   	  					$('#data-unit-name'+data_table).val(med_type);
 								});
-   								 	 
+   								 
 			            	 }
+
+
+                    
 			            }
 			        });
 				}
+
+ 
 			}
 			else if(e.keyCode == 27)
 			{
@@ -3301,13 +3130,15 @@ else if(mr_number === '')
  
 
  
-  
+  var batch_qty=true;
   
   
   //Fetch Qty
   function BatchQty(event)
   {
-  		var fetch_batch_qty=parseInt($('#fetch_batch_qty').val());
+	 
+	  
+  	var fetch_batch_qty=parseInt($('#fetch_batch_qty').val());
 		var stk=parseInt($('#stk').val());
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		$('.required_qty').val('');
@@ -3316,8 +3147,13 @@ else if(mr_number === '')
 		
 		if(keycode == '13')
       	{
-    		if(fetch_batch_qty <= stk)
+			$('#loadpopup1').show();
+			setTimeout(function () {                 
+				                
+								
+			if(fetch_batch_qty <= stk)
     		{
+    			
     			var prime_id_conv=$('#prime_id_conv').val();
     			
     			var strtoarray = prime_id_conv.split(',');
@@ -3344,6 +3180,7 @@ else if(mr_number === '')
 				  		
 				  		var data_unit=parseInt($('#data_unit'+strtoarray[i]).val());
 				  		var uui=strtoarray[i];
+				  		
 				  		Getunitquantity(data_unit,uui);	
 				  		
 				  		if(ty >= fetch_batch_qty)
@@ -3369,13 +3206,17 @@ else if(mr_number === '')
 							var iop=fetch_batch_qty-io;
 							
 							$('#required_id'+strtoarray[i]).val(iop);
+							Getunitquantity(data_unit,uui);	
 				  			break;
 				  		}
     							
 				  	}
 				  	
 				}
+				
+				batch_qty=true;
 				$('#add_to_grid').focus();
+				
 				//Add_to_grid1();
 			}
     		else
@@ -3383,33 +3224,70 @@ else if(mr_number === '')
     			//alert('Enter More than Availability Stock');
     			Alertment('Enter More than Availability Stock');
     		}
+								
+								
+					$('#loadpopup1').hide();			 
+								 
+								 
+								 
+								 
+		   },200);
+    		
     		
     	}
-    
+		
     } 
  
     
     
    	function Getunitquantity(data_unit,uui)
     {
-    	$('#load1').show();
-		$.ajax({
-            type: "POST",
-            url: "<?php echo Yii::$app->homeUrl . "?r=sales/getunitquantity&id=";?>"+encodeURIComponent(data_unit),
-            success: function (result) 
-            { 
-            	var result = $.parseJSON(result);
-            	var value_unit=result[0];
-            	var value_type=result[1];
-            	$('#data_no_of_unit'+uui).val(value_unit);
-            	$('#data-unit-name'+uui).val(value_type);
-            	var unit_mul=parseInt($('#data_no_of_unit'+uui).val());
-            	var required_id=parseInt($('#required_id'+uui).val());
-            	var tot=required_id*unit_mul;
-            	$('#total_unit'+uui).val(tot);
-            	$('#load1').hide();
+    	
+
+      if(unit_json_encode[data_unit] !== null)
+      {
+          if(unit_json_encode[data_unit]['is_tablet'] !== null)
+          {
+             if(unit_json_encode[data_unit]['is_tablet'] === 1)
+             {
+                 
+                    var value_unit=1;
+                    var value_type=unit_json_encode[data_unit]['unitvalue'];
+                    $('#data_no_of_unit'+uui).val(value_unit);
+                    $('#data-unit-name'+uui).val(value_type);
+                    var unit_mul=parseInt($('#data_no_of_unit'+uui).val());
+                    var required_id=parseInt($('#required_id'+uui).val());
+                    var tot=required_id*unit_mul;
+                    $('#total_unit'+uui).val(tot);  
+                 
+                 
+             } 
+            else
+            {
+                      var value_unit=unit_json_encode[data_unit]['no_of_unit'];
+                      var value_type=unit_json_encode[data_unit]['unitvalue'];
+                      $('#data_no_of_unit'+uui).val(value_unit);
+                      $('#data-unit-name'+uui).val(value_type);
+                      var unit_mul=parseInt($('#data_no_of_unit'+uui).val());
+                      var required_id=parseInt($('#required_id'+uui).val());
+                      var tot=required_id*unit_mul;
+                      $('#total_unit'+uui).val(tot); 
             }
-		});				
+
+
+          }
+          else if(unit_json_encode[data_unit]['is_tablet'] === null)
+          {
+                    var value_unit=unit_json_encode[data_unit]['no_of_unit'];
+                    var value_type=unit_json_encode[data_unit]['unitvalue'];
+                    $('#data_no_of_unit'+uui).val(value_unit);
+                    $('#data-unit-name'+uui).val(value_type);
+                    var unit_mul=parseInt($('#data_no_of_unit'+uui).val());
+                    var required_id=parseInt($('#required_id'+uui).val());
+                    var tot=required_id*unit_mul;
+                    $('#total_unit'+uui).val(tot); 
+          }
+      }				
     }
   
   
@@ -4996,81 +4874,83 @@ $.ajax({
 	
 	else if ($("#inPatient").is(":checked")) 
 	{
-		$mrnumber=$('#mrnumber').val();
-	$pat_name=$('#pat_name').val();
-	$pat_mob=$('#pat_mob').val();
-	$pat_doctor=$('#pat_doctor').val();
-	$pat_insurance=$('#pat_insurance').val();
-	//$pat_dob=$('#pat_dob').val();
-	if($mrnumber == '')
-	{
-		$('#mrnumber').focus();
-		$('.in_pat_validated').delay('fast').fadeIn();
-		$('.in_pat_validated').delay(4000).fadeOut();
-	    
-	    return false;
-	}
-	else
-	{
-		
-		
-  if (confirm('Are You Sure to print Invoice ?')) {
-  	$("#saved_val").val(1);
-  	
-  	if(onetimesave === 1)
-   {
-	$('#load1').show();
-	$.ajax({
-	type: "POST",
-	url: "<?php echo Yii::$app->homeUrl . "?r=sales/saveddata";?>",
-	data: $("#saved_data_value_ajax").serialize(),
-	success: function (result) 
-	{ 
-		$('#medicines').focus();
-		var data1=result.split("=")[0];
-		var data2=result.split("=")[1];
-		var data3=result.split("=")[2];
-		
-	//alert(data2);
-	if(data1=="Y")
-	{
-		if(data2=='OPTEMPSAVED')
-		{	
-			alert('Data Saved Succesfully');
-			//window.location.reload(true);
-			 $(".save_billing").prop('disabled', true);
-			 $('.delrow').attr('disabled','disabled');
-       		 $("#saved_val").val(data3);
-			 $('#total_discountvaluetype').attr('disabled','disabled');
-			 onetimesave=2;
-			 var url='<?php echo Yii::$app->homeUrl ?>?r=sales/invoice&id='+data3;
-		 	 window.open(url,'_blank');
-		}
-		else
-		{
-			 $(".save_billing").prop('disabled', true);
-			 $('.delrow').attr('disabled','disabled');
-       		 $("#saved_val").val(data2);
-			 $('#total_discountvaluetype').attr('disabled','disabled');
-			 onetimesave=2;
-			 var url='<?php echo Yii::$app->homeUrl ?>?r=sales/invoice&id='+data2;
-		 	 window.open(url,'_blank');
-			 // window.location.reload(true);
-		}
-						
-	  }
-	  
-	  $('#load1').hide();
-	  	
-	  }
-	    	});
-  }
-  else 
-  {
-  	alert('Already Saved')
-  }
-   }
-		}
+    	$mrnumber=$('#mrnumber').val();
+    	$pat_name=$('#pat_name').val();
+    	$pat_mob=$('#pat_mob').val();
+    	$pat_doctor=$('#pat_doctor').val();
+    	$pat_insurance=$('#pat_insurance').val();
+    	
+    	if($mrnumber == '')
+    	{
+    		$('#mrnumber').focus();
+    		$('.in_pat_validated').delay('fast').fadeIn();
+    		$('.in_pat_validated').delay(4000).fadeOut();
+    	    
+    	    return false;
+    	}
+    	else
+    	{
+    		
+    		
+            if (confirm('Are You Sure to Save?')) {
+            	$("#saved_val").val(1);
+            	
+            	if(onetimesave === 1)
+             {
+          	$('#load1').show();
+          	$.ajax({
+          	type: "POST",
+          	url: "<?php echo Yii::$app->homeUrl . "?r=sales/saveddata";?>",
+          	data: $("#saved_data_value_ajax").serialize(),
+          	success: function (result) 
+          	{ 
+          		$('#medicines').focus();
+          		var data1=result.split("=")[0];
+          		var data2=result.split("=")[1];
+          		var data3=result.split("=")[2];
+          		
+          	//alert(data2);
+          	if(data1=="Y")
+          	{
+          		if(data2=='OPTEMPSAVED')
+          		{	
+          			alert('Data Saved Succesfully');
+          			//window.location.reload(true);
+          			 $(".save_billing").prop('disabled', true);
+          			 $('.delrow').attr('disabled','disabled');
+                 		 $("#saved_val").val(data3);
+          			 $('#total_discountvaluetype').attr('disabled','disabled');
+          			 onetimesave=2;
+          			 var url='<?php echo Yii::$app->homeUrl ?>?r=sales/invoice&id='+data3;
+          		 	 window.open(url,'_blank');
+          		}
+          		else
+          		{
+          			 $(".save_billing").prop('disabled', true);
+          			 $('.delrow').attr('disabled','disabled');
+                 		 $("#saved_val").val(data2);
+          			 $('#total_discountvaluetype').attr('disabled','disabled');
+          			 onetimesave=2;
+                 if (confirm('Records Saved Succesfully. Do You Want to Print?')) 
+                 {
+                			 var url='<?php echo Yii::$app->homeUrl ?>?r=sales/invoice&id='+data2;
+                		 	 window.open(url,'_blank');
+          			 }
+          		}
+          						
+          	  }
+          	  
+          	  $('#load1').hide();
+          	  	
+          	  }
+          	    	});
+            }
+            else 
+            {
+            	alert('Already Saved')
+            }
+             }
+    		}
 	}
 	else if ($("#tempPatient").is(":checked")) 	
 	{

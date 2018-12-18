@@ -335,12 +335,19 @@ public function actionCreate() {
 		
 		$authority_master=AuthorityMaster::find()->where(['isactive'=>1])->all();
 		
+		$unit=ArrayHelper::index(Unit::find()->select(['unitid'=>'unitid','unitname'=>'unitname',
+			'unitvalue'=>'unitvalue','no_of_unit'=>'no_of_unit','is_tablet'=>'is_tablet'])->asArray()->all(),'unitid');
+		$unit_json_encode=json_encode($unit, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+		//echo '<pre>';
+		//print_r($unit_json_encode);die;
+
 		return $this->render('billing', [
         		'productname'=>$productname,
         		'model'=>$product,
         		'billformat' => $billformat,
         		'patient' => $patient,
         		'authority_master' => $authority_master,
+        		'unit_json_encode' => $unit_json_encode,
         ]); 
 	
 	} 
@@ -678,6 +685,9 @@ public function actionCreate() {
 						
 						
 						$result_string.='<div class="table-responsive"><table class="table table-bordered table-striped">';
+						
+						$result_string.='<div id="loadpopup1" style="display:none;text-align: center;"><img  class="load-image imagee"  src="'.Url::to("@web/loader1.gif").'" /></div>';
+						
 						$result_string.='<thead><tr>';
 						$result_string.='<th  width="10%" class="text-center">#</th>';
 						$result_string.='<th  class="text-center">Batch</th>';
@@ -692,6 +702,8 @@ public function actionCreate() {
 						$result_string.='<th  class="text-center">Total Units</th>';
 						$result_string.='</tr></thead>';
 						$result_string.='<tbody>';		
+						
+						
 						
 						$tot_avail_qty;
 						$prime_id=array();	
@@ -744,7 +756,6 @@ public function actionCreate() {
 									$newprice=100*$mrp/(100+$percentage);
 									$calculation = number_format($newprice,2, '.', '');
 								}
-								
 								
 								
 								
@@ -3742,8 +3753,23 @@ if(!empty($sales))
 	$patienttypemaster=ArrayHelper::map(PatientType::find()->asArray()->all(),'type_id','patient_type');
 	$insurancemaster=ArrayHelper::map(Insurance::find()->asArray()->all(),'insurance_typeid','insurance_type');
 	
-	
-	
+	if($newpatient['insurance_type_id'] != '')
+	{
+		$insurance_name=$insurancemaster[$newpatient['insurance_type_id']];
+	}
+	else 
+	{
+		$insurance_name='';	
+	}
+
+	if($newpatient['pat_type'] != '')
+	{
+		$pat_type=$patienttypemaster[$newpatient['pat_type']];
+	}
+	else 
+	{
+		$pat_type='';
+	}
 	
 	$title="(A UNIT OF CARMEL HEALTHCARE PVT LTD)";
 	$headertable='<table cellspacing="0" cellpadding="1" >';
@@ -3759,10 +3785,10 @@ if(!empty($sales))
 	<p style="text-align:center;font-size:12px;" ><b><u>PATIENT PURCHASE AND RETURN DETAILS</u></b></p><p></p>';
 	
 	$pdf->writeHTML($headertable, true, false, false, false, '');
-
+	
 	$patientdetails='<table style="text-align:center;font-size:10.5px;" border="1" cellspacing="0" cellpadding="0">';
 	$patientdetails.='<tbody><tr><td style="font-size:12px;width:10%;"><b>MR NO</b></td><td style="font-size:12px;width:20%;"><b>PAT NAME</b></td><td style="font-size:12px;width:30%;"><b>TYPE</b></td><td style="font-size:12px;"><b>ORG NAME</b></td><td style="font-size:12px;"><b>PH.NO</b></td></tr>';
-	// $patientdetails.='<tr><td style="font-size:12px;">'.$id.'</td><td style="font-size:12px;">'.strtoupper($newpatient['patientname']).'</td><td style="font-size:12px;">'.strtoupper($patienttypemaster[$newpatient['pat_type']]).'</td><td style="font-size:12px;">'.strtoupper($insurancemaster[$newpatient['insurance_type_id']]).'</td><td style="font-size:12px;">'.$newpatient['pat_mobileno'].'</td></tr>';				
+    $patientdetails.='<tr><td style="font-size:12px;">'.$id.'</td><td style="font-size:12px;">'.strtoupper($newpatient['patientname']).'</td><td style="font-size:12px;">'.strtoupper($pat_type).'</td><td style="font-size:12px;">'.strtoupper($insurance_name).'</td><td style="font-size:12px;">'.$newpatient['pat_mobileno'].'</td></tr>';				
 	$patientdetails.='</tbody></table>';
 	
 	$pdf->writeHTML($patientdetails, true, false, false, false, '');
@@ -3773,9 +3799,9 @@ if(!empty($sales))
 	
 	if(!empty($sale_detail))
 	{
-		$purchasedetails='';
+		//$purchasedetails='';
 		
-		$purchasedetails.='
+		$purchasedetails='
 		 <p style="border-top:1px solid #000" ></p>
 		 <table cellspacing="-5" cellpadding="-15" >
 		    <tbody>
@@ -3793,18 +3819,60 @@ if(!empty($sales))
 		$i=1;
 		
 		
+		$pdf->writeHTML($purchasedetails, true, false, false, false, '');
+		
 		$sales_current=current($sale_fetch_index);
 		
 		/* $purchasedetails.='<p style="text-align:left;font-size:12px;color: blue;"><b>ISSUES</b></p>'; */
-		$purchasedetails.='<p style="text-align:left;font-size:12px;"><span><b style="text-align:left;font-size:12px;color: blue;">ISSUES</b><br><b>BILL NO: '.$sales_current['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sales_current['created_at'])).'</b></span></p>';
+		$purchasedetails1='<p style="text-align:left;font-size:12px;"><span><b style="text-align:left;font-size:12px;color: blue;">ISSUES</b><br><b>BILL NO: '.$sales_current['billnumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($sales_current['created_at'])).'</b></span></p>';
+		
+		$pdf->writeHTML($purchasedetails1, true, false, false, false, '');
+			$num_pages = $pdf->getNumPages();
 		foreach ($sale_detail as $key => $value) 
 		{
-
+		
+			
+			
 			$current_id=$value['opsaleid'];
 			if($sales_current['opsaleid'] == $current_id)
 			{
 				
-				$purchasedetails.='
+				if($num_pages == 1)
+				{
+					$num_pages=1;
+				}
+				$cur_page=$pdf->getNumPages(); 
+				if($cur_page==1){
+					$pdf->SetMargins(10, 15, PDF_MARGIN_RIGHT);
+				}
+				if($num_pages < $pdf->getNumPages())
+				{
+					 $num_pages=$pdf->getNumPages();
+			
+					$purchasedetails_repeat='
+					
+					 <table cellspacing="-5" cellpadding="-15" >
+					    <tbody>
+						   <tr>
+						      <td style="font-size:12px; width:37%;text-align:left;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Name</b></td>
+							  <td style="font-size:12px; width:12%;text-align:left;"><b>Qty</b></td>
+							  <td style="font-size:12px;width:14.5%;text-align:left; "><b>Batch No</b></td>
+							  <td style="font-size:12px;text-align:left; "><b>Exp Date</b></td>
+							  <td style="font-size:12px;text-align:left; "><b>Rate</b></td>
+							  <td style="font-size:12px;text-align:left;"><b>Total</b></td>
+						   </tr>
+						</tbody>
+					 </table>
+					';
+					
+					  $cur_posx= $pdf->GetX();
+					  $cur_posy= $pdf->GetY(); 
+					  $pdf->writeHTMLCell(0, 0, '10', '10', $purchasedetails_repeat, 1, 1, 1, true, 'J', true);
+					  $pdf->SetX($cur_posx);
+					  $pdf->SetY($cur_posy); 
+				}
+				
+				$purchasedetails2='
 				<table  cellspacing="0" cellpadding="0">
 				 <tbody>
 				  <tr>
@@ -3817,12 +3885,59 @@ if(!empty($sales))
 				  </tr>
 				 </tbody>
 				</table>';
+				
+				$pdf->writeHTML($purchasedetails2, true, false, false, false, '');
+				
+				
+			
+			
+				
+				
+				
 			}
 			else if($sales_current['opsaleid'] != $current_id)
 			{
+				
+				if($num_pages == 1)
+				{
+					$num_pages=1;
+				}
+				$cur_page=$pdf->getNumPages(); 
+				if($cur_page==1){
+					$pdf->SetMargins(10, 15, PDF_MARGIN_RIGHT);
+				}
+				if($num_pages < $pdf->getNumPages())
+				{
+					 $num_pages=$pdf->getNumPages();
+			
+					$purchasedetails_repeat='				
+					 <table cellspacing="-5" cellpadding="-10" >
+					    <tbody>
+						   <tr>
+						      <td style="font-size:12px; width:37%;text-align:left;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Name</b></td>
+							  <td style="font-size:12px; width:12%;text-align:left;"><b>Qty</b></td>
+							  <td style="font-size:12px;width:14.5%;text-align:left; "><b>Batch No</b></td>
+							  <td style="font-size:12px;text-align:left; "><b>Exp Date</b></td>
+							  <td style="font-size:12px;text-align:left; "><b>Rate</b></td>
+							  <td style="font-size:12px;text-align:left;"><b>Total</b></td>
+						   </tr>
+						   <tr><td></td></tr>
+						</tbody>
+					 </table>
+					 ';
+					  $cur_posx= $pdf->GetX();
+					  $cur_posy= $pdf->GetY(); 
+					
+					  $pdf->writeHTMLCell(0, 0, '10', '10', $purchasedetails_repeat, 1, 1, 1, true, 'J', true);
+					  $pdf->SetX($cur_posx);
+					  $pdf->SetY($cur_posy);
+				}	
+				
+				
+				
 				$sales_current['opsaleid']=$current_id;
-				$purchasedetails.='<p style=" font-size:12px;" ><span><b>BILL NO: '.$sale_fetch_index[$current_id]['billnumber'].'</b> <b>Date: '.date('d-m-Y',strtotime($sale_fetch_index[$current_id]['created_at'])).'</b></span></p>';
-				$purchasedetails.='
+				//$purchasedetails3='';
+				$purchasedetails3='<p style=" font-size:12px;" ><span><b>BILL NO: '.$sale_fetch_index[$current_id]['billnumber'].'</b> <b>Date: '.date('d-m-Y',strtotime($sale_fetch_index[$current_id]['created_at'])).'</b></span></p>
 				<table  cellspacing="0" cellpadding="0">
 				  <tbody>
 				   <tr>
@@ -3835,18 +3950,24 @@ if(!empty($sales))
 				   </tr>
 				  </tbody>
 				</table>';
+				$pdf->writeHTML($purchasedetails3, true, false, false, false, '');
+			
+				
+
 			}
 			
 			$i++;
 		}
 	
-				$purchasedetails.='<p style="border-top:1px solid #000" ></p>';
-				$purchasedetails.='<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Sub Total : </b></td><td style="text-align:right;font-size:12px;width:19%;"><b>'.number_format($sales_fetch_sum['overalltotal'],2).'</b></td></tr></tbody></table>';
-				$purchasedetails.='<p style="border-top:1px solid #000" ></p>';
+				$purchasedetails4='<p style="border-top:1px solid #000" ></p>
+				<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Total : </b></td><td style="text-align:right;font-size:12px;width:19%;"><b>'.number_format($sales_fetch_sum['overalltotal'],2).'</b></td></tr></tbody></table>
+				<p style="border-top:1px solid #000" ></p>
+				';
+				
 			
+				$pdf->writeHTML($purchasedetails4, true, false, false, false, '');
 			
-			
-			$pdf->writeHTML($purchasedetails, true, false, false, false, '');
+		
 			
 		
 
@@ -3882,15 +4003,21 @@ if(!empty($returndetail))
 {
 $returndetails='';
 
-//$returndetails.='<p style="border-top:1px solid #000" ></p><table cellspacing="-10" cellpadding="-15"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;"><b>Item Name</b></td><td style="text-align:left;font-size:12px;width:10%;"><b>Qty</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Batch No</b></td><td style="text-align:left;font-size:12px;width:15%;"><b>Exp Date</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Rate</b></td><td style="text-align:center;font-size:12px;width:10%;"><b>Total</b></td></tr></tbody></table><p style="border-top:1px solid #000" ></p>';
+
 $i=1;
 
 
 $salesreturn_first=current($salesreturn_index);
-//echo '<pre>';
-//print_r($salesreturn_first);die;
-$returndetails.='<p style="text-align:left;font-size:12px;color: blue;"><b>RETURN</b></p>';
-$returndetails.='<p style="text-align:left;font-size:12px;"><span><b>BILL NO: '.$salesreturn_first['return_invoicenumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($salesreturn_first['created_at'])).'</b></span></p>';
+
+
+$returndetails_front='<p style="text-align:left;font-size:12px;color: blue;"><b>RETURN</b></p>
+<p style="text-align:left;font-size:12px;"><span><b>BILL NO: '.$salesreturn_first['return_invoicenumber'].'</b></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($salesreturn_first['created_at'])).'</b></span></p>';
+
+
+	$pdf->writeHTML($returndetails_front, true, false, false, false, '');
+
+
 foreach ($returndetail as $key => $value) 
 		{
 
@@ -3898,22 +4025,124 @@ foreach ($returndetail as $key => $value)
 			if($salesreturn_first['return_id'] == $current_id)
 			{
 				
-				$returndetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_return_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp_per_unit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp'].'</td></tr></tbody></table>';
+				if($num_pages == 1)
+				{
+					$num_pages=1;
+				}
+				$cur_page=$pdf->getNumPages(); 
+				if($cur_page==1){
+					$pdf->SetMargins(10, 15, PDF_MARGIN_RIGHT);
+				}
+				if($num_pages < $pdf->getNumPages())
+				{
+					 $num_pages=$pdf->getNumPages();
+			
+					$purchasedetails_repeat_return='				
+					 <table cellspacing="-5" cellpadding="-10" >
+					    <tbody>
+						   <tr>
+						      <td style="font-size:12px; width:37%;text-align:left;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Name</b></td>
+							  <td style="font-size:12px; width:12%;text-align:left;"><b>Qty</b></td>
+							  <td style="font-size:12px;width:14.5%;text-align:left; "><b>Batch No</b></td>
+							  <td style="font-size:12px;text-align:left; "><b>Exp Date</b></td>
+							  <td style="font-size:12px;text-align:left; "><b>Rate</b></td>
+							  <td style="font-size:12px;text-align:left;"><b>Total</b></td>
+						   </tr>
+						   <tr><td></td></tr>
+						</tbody>
+					 </table>
+					 ';
+					  $cur_posx= $pdf->GetX();
+					  $cur_posy= $pdf->GetY(); 
+					
+					  $pdf->writeHTMLCell(0, 0, '10', '10', $purchasedetails_repeat_return, 1, 1, 1, true, 'J', true);
+					  $pdf->SetX($cur_posx);
+					  $pdf->SetY($cur_posy);
+				}	
+				
+				
+				
+				
+				$returndetails_return='<table  cellspacing="0" cellpadding="0">
+						<tbody>
+							<tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_return_index[$value['productid']]['productname'].'</td>
+							<td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td>
+							<td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td>
+							<td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td>
+							<td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp_per_unit'].'</td>
+							<td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp'].'</td></tr></tbody></table>';
+				
+				
+				$pdf->writeHTML($returndetails_return, true, false, false, false, '');
+
+			
 			}
 			else if($salesreturn_first['return_id'] != $current_id)
 			{
 				$salesreturn_first['return_id']=$current_id;
-				$returndetails.='<p style="text-align:left;font-size:12px;" ><span><b>BILL NO: '.$salesreturn_index[$current_id]['return_invoicenumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($salesreturn_index[$current_id]['created_at'])).'</b></span></p>';
-				$returndetails.='<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_return_index[$value['productid']]['productname'].'</td><td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td><td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp_per_unit'].'</td><td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp'].'</td></tr></tbody></table>';
+				
+				
+				if($num_pages == 1)
+				{
+					$num_pages=1;
+				}
+				$cur_page=$pdf->getNumPages(); 
+				if($cur_page==1){
+					$pdf->SetMargins(10, 15, PDF_MARGIN_RIGHT);
+				}
+				if($num_pages < $pdf->getNumPages())
+				{
+					 $num_pages=$pdf->getNumPages();
+			
+					$purchasedetails_repeat_return='				
+					 <table cellspacing="-5" cellpadding="-10" >
+					    <tbody>
+						   <tr>
+						      <td style="font-size:12px; width:37%;text-align:left;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Name</b></td>
+							  <td style="font-size:12px; width:12%;text-align:left;"><b>Qty</b></td>
+							  <td style="font-size:12px;width:14.5%;text-align:left; "><b>Batch No</b></td>
+							  <td style="font-size:12px;text-align:left; "><b>Exp Date</b></td>
+							  <td style="font-size:12px;text-align:left; "><b>Rate</b></td>
+							  <td style="font-size:12px;text-align:left;"><b>Total</b></td>
+						   </tr>
+						   <tr><td></td></tr>
+						</tbody>
+					 </table>
+					 ';
+					  $cur_posx= $pdf->GetX();
+					  $cur_posy= $pdf->GetY(); 
+					
+					  $pdf->writeHTMLCell(0, 0, '10', '10', $purchasedetails_repeat_return, 1, 1, 1, true, 'J', true);
+					  $pdf->SetX($cur_posx);
+					  $pdf->SetY($cur_posy);
+				}	
+				
+				
+				
+				$returndetails_return_1='<p style="text-align:left;font-size:12px;" >
+				<span><b>BILL NO: '.$salesreturn_index[$current_id]['return_invoicenumber'].'</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><b>Date: '.date('d-m-Y',strtotime($salesreturn_index[$current_id]['created_at'])).'</b></span></p>
+				<table  cellspacing="0" cellpadding="0"><tbody><tr><td style="text-align:left;font-size:12px;width:40%;">'.$product_return_index[$value['productid']]['productname'].'</td>
+				<td style="text-align:center;font-size:12px;width:10%;">'.$value['productqty'].'</td>
+				<td style="text-align:left;font-size:12px;width:15%;">'.$value['batchnumber'].'</td>
+				<td style="text-align:left;font-size:12px;width:15%;">'.date('d-m-Y',strtotime($value['expiredate'])).'</td>
+				<td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp_per_unit'].'</td>
+				<td style="text-align:right;font-size:12px;width:10%;">'.$value['mrp'].'</td></tr></tbody></table>';
+				
+					$pdf->writeHTML($returndetails_return_1, true, false, false, false, '');
 			}
 			
 			$i++;
 		}
 	
-				$returndetails.='<p style="border-top:1px solid #000" ></p>';
-				$returndetails.='<table  cellspacing="-10" cellpadding="2"><tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Sub Total : </b></td><td style="text-align:right;font-size:12px;"><b>'.number_format($salesreturn_fetch_sum['total'],2).'</b></td></tr></tbody></table>';
-				$returndetails.='<p style="border-top:1px solid #000" ></p>';
+				$returndetails_return_2='<p style="border-top:1px solid #000" ></p>
+				<table  cellspacing="-10" cellpadding="2">
+				<tbody><tr><td colspan="4" style="text-align:right;font-size:12px;"><b>Total : </b></td>
+				<td style="text-align:right;font-size:12px;"><b>'.number_format($salesreturn_fetch_sum['total'],2).'</b></td></tr>
+				</tbody></table><p style="border-top:1px solid #000" ></p>';
+				
 			
+			
+				$pdf->writeHTML($returndetails_return_2, true, false, false, false, '');
 			
 			
 			$pdf->writeHTML($returndetails, true, false, false, false, '');
@@ -3922,7 +4151,6 @@ foreach ($returndetail as $key => $value)
 }
 
 
-//$pdf->writeHTML($tbl1, true, false, false, false, '');
 ob_end_clean();
 $pdf->Output('PatientPurchaseDetails.pdf');
 }
@@ -5812,7 +6040,9 @@ $mrp=$mrpperunit*$k->productqty;
 
 if(isset($k->productid))
 {
+
 	$prd_hsn_index=$product_index[$k->productid]['hsn_code'];
+	//print_r($k->productid);die;
 	$hsncode=$Taxgrouping_index[$prd_hsn_index]['hsncode'];
 }
 //$unitid[]=$k->unitid;

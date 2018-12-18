@@ -528,6 +528,106 @@ height: 25px !important;
    </fieldset>
    <?php ActiveForm::end(); ?>
     </div>
+    
+    
+    
+    <div class='col-md-12'>
+     <?php $form = ActiveForm::begin(['action'=>['patienthistorydetails'],'options' =>['target'=>'_blank']]); ?>
+	 <fieldset class="scheduler-border col-sm-12">
+	<legend class="scheduler-border form-head ">Patient History Record</legend>
+   
+    
+     
+    	<div class='col-md-3'>
+        <div class=" ">
+        	<label>From</label>
+            <div class='input-group date' id='datetimepicker30'>
+            	
+                <input type='text' class="form-control cus-fld"  name="fromDate_patienthistorydetails"   required>
+                <span class="input-group-addon cus-fld">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-3'>
+        <div class=" ">
+        	<label>To</label>
+            <div class='input-group date' id='datetimepicker31' >
+                <input type='text' class="form-control cus-fld" name="toDate_patienthistorydetails" required>
+                <span class="input-group-addon cus-fld">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-3'>
+        <div class=" ">
+        	<label>MR Number</label>
+          
+                <input type='text' class="form-control cus-fld" name="patient_mrno" required>
+            
+        </div>
+    </div>
+    <div class='col-md-2'>
+    <?= Html::submitButton('', ['class' => 'btn btn-success btn-sm fa fa-print','style'=>'position:relative;top:20px','name'=>"patienthistorydetails","value"=>9,"data-toggle"=>"tooltip","title"=>"GST Sales Report"]) ?>
+    </div>
+    
+    
+   </fieldset>
+   <?php ActiveForm::end(); ?>
+    </div>
+    
+    
+    <div class='col-md-12'>
+     <?php $form = ActiveForm::begin(['action'=>['patienthistorydetailsip'],'options' =>['target'=>'_blank']]); ?>
+	 <fieldset class="scheduler-border col-sm-12">
+	<legend class="scheduler-border form-head ">In-Patient History Record</legend>
+   
+    
+     
+    	<div class='col-md-3'>
+        <div class=" ">
+        	<label>From</label>
+            <div class='input-group date' id='datetimepicker32'>
+            	
+                <input type='text' class="form-control cus-fld"  name="fromDate_patienthistorydetailsip"   required>
+                <span class="input-group-addon cus-fld">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-3'>
+        <div class=" ">
+        	<label>To</label>
+            <div class='input-group date' id='datetimepicker33' >
+                <input type='text' class="form-control cus-fld" name="toDate_patienthistorydetailsip" required>
+                <span class="input-group-addon cus-fld">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-3'>
+        <div class=" ">
+        	<label>IP Number</label>
+          
+                <input type='text' class="form-control cus-fld" name="patient_mrnoip" required>
+            
+        </div>
+    </div>
+    <div class='col-md-2'>
+    <?= Html::submitButton('', ['class' => 'btn btn-success btn-sm fa fa-print','style'=>'position:relative;top:20px','name'=>"patienthistorydetailsip","value"=>10,"data-toggle"=>"tooltip","title"=>"GST Sales Report"]) ?>
+    </div>
+    
+    
+   </fieldset>
+   <?php ActiveForm::end(); ?>
+    </div>
+    
+    
+    
     </div>
     
     
@@ -692,6 +792,35 @@ height: 25px !important;
             $('#datetimepicker28').data("DateTimePicker").maxDate(e.date);
         });
 		
+		   $('#datetimepicker30').datetimepicker({
+  			format: 'DD-MM-YYYY'
+		});
+       $('#datetimepicker31').datetimepicker({
+       		 useCurrent: false,
+			 format: 'DD-MM-YYYY'
+		});
+		
+		 $("#datetimepicker30").on("dp.change", function (e) {
+            $('#datetimepicker31').data("DateTimePicker").minDate(e.date);
+        });
+        $("#datetimepicker31").on("dp.change", function (e) {
+            $('#datetimepicker30').data("DateTimePicker").maxDate(e.date);
+        });
+		
+		  $('#datetimepicker32').datetimepicker({
+  			format: 'DD-MM-YYYY'
+		});
+       $('#datetimepicker33').datetimepicker({
+       		 useCurrent: false,
+			 format: 'DD-MM-YYYY'
+		});
+		
+		 $("#datetimepicker32").on("dp.change", function (e) {
+            $('#datetimepicker33').data("DateTimePicker").minDate(e.date);
+        });
+        $("#datetimepicker33").on("dp.change", function (e) {
+            $('#datetimepicker32').data("DateTimePicker").maxDate(e.date);
+        });
 		
 		
          

@@ -202,7 +202,7 @@ ul.typeahead.dropdown-menu {
 	z-index: 1000;
 	display: none;
 	float: left;
-	min-width: 160px;
+	/* min-width: 160px; */
 	padding: 5px 0;
 	margin: 2px 0 0;
 	list-style: none;
@@ -215,7 +215,8 @@ ul.typeahead.dropdown-menu {
 	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	background-clip: padding-box;
-	width: 804px;
+	/* width: 804px; */
+	width: auto;
 }
 
 ul.typeahead.dropdown-menu.pull-right {

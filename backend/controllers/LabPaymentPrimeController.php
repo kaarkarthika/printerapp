@@ -1474,6 +1474,9 @@ public function actionAjaxsinglefetchdetails($id)
 		//$lab_payment=LabPayment::find()->where(['lab_prime_id'=>$id])->asArray()->groupBy(['lab_common_id','lab_test_name'])->all();
 		$labprime_list=LabPaymentPrime::find()->where(['lab_id'=>$id])->asArray()->one();
 		$branch_det=BranchAdmin::find()->where(['ba_autoid'=>$labprime_list['user_id']])->asArray()->one();
+		$newpatient=Newpatient::find()->where(['mr_no'=>$labprime_list['mr_number']])->asArray()->one();
+		
+			//echo"<pre>"; print_r($newpatient); 
 		$insurance=Insurance::find()->where(['insurance_typeid'=>$labprime_list['insurance']])->asArray()->one();
 		$status_mg=0;
 		if($labprime_list['overall_dis_amt']==""){
@@ -1515,18 +1518,22 @@ public function actionAjaxsinglefetchdetails($id)
 				$tbl1.='<p style="text-align:center;line-height:2px;font-size:12px;">D.No.3-7-215/1,First Floor,Bakarapuram,Pulivendula-516390,Kadapa Dist,A.P</p>';
 				// $tbl1.='<p style="text-align:center;line-height:2px;font-size:12px;">DL NO-20F:AP/11/03/2017-137691,21:Ap/11/03/2017-137690,20:AP/11/03/2017-137689</p>';
 				// $tbl1.='<p style="text-align:center;line-height:2px;font-size:12px;">TIN.NO :37141115904</p>';
+				
+			
+				
 				$tbl1.='<p style="border-top:1px solid #000;"></p>';
 				$tbl1.='<p style="text-align:center;font-size:13px;font-weight:bold;line-height:2px;"><u> INVESTIGATION REQUISITION - CUM -RECEIPT </u></p>';
 				
 				$tbl1.='<table cellpadding="4" style="border:1px solid #000;padding:5px 10px;font-size:12px;margin-top:250px;" ALIGN="left" border=1 >
 				<tr><td style="width:17%;"><B> MR NUMBER </B></td><td style="width:33%;">:<B> '.$labprime_list['mr_number'].'</B></td>
-					<td style="width:17%;"><B> Bill Date & Time </B></td> <td style="width:33%;">: '.$newDate.' </td> </tr>
-				<tr><td style="width:17%;"><B> Patient Name </B></td><td style="width:33%;">:<B> '.strtoupper($labprime_list['name']).'</B></td>
 					<td style="width:17%;"><B> Requisition No</B></td> <td style="width:33%;">:  '.$labprime_list['bill_number'].' </td> </tr>
+					
+				<tr><td style="width:17%;"><B> Patient Name </B></td><td style="width:33%;">:<B> '.strtoupper($labprime_list['name']).'</B></td>
+					<td style="width:17%;"><B> Bill Date & Time </B></td> <td style="width:33%;">: '.$newDate.' </td> </tr>
 				<tr><td style="width:17%;"><B> Age  </B></td><td style="width:33%;">: '.$this->Getdob(date('Y-m-d',strtotime($labprime_list['dob']))).' </td>
-					<td style="width:17%;"><B> Org Name</B></td> <td style="width:33%;">: '.$ins.' </td> </tr>
+					<td style="width:17%;"><B> Gender </B></td> <td style="width:33%;">: '.$newpatient['pat_sex'].'</td> </tr>
 				<tr><td style="width:17%;"><B> Contact Number </B></td><td style="width:33%;">: '.$labprime_list['ph_number'].' </td>
-					<td style="width:15%;"> </td> <td style="width:35%;"> </td> </tr>
+					<td style="width:17%;"><B> Org Name</B></td> <td style="width:33%;">: '.$ins.' </td> </tr>
 				</table>';
 				
 				$tbl1.='<table cellpadding="3" style="padding:5px 10px;font-size:12px;margin-top:250px;" ALIGN="Center" border=1 >
