@@ -79,13 +79,17 @@ class SiteController extends Controller
         $model = new LoginForm();
         $adminlog = new AdminLog();
 
-        $model1 = new ServiceCentreAdmin();
-        $model2 = new BranchAdmin();
-
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        //$model1 = new ServiceCentreAdmin();
+       // $model2 = new BranchAdmin();
+         
+        if ($model->load(Yii::$app->request->post()) && $model->login()) 
+        {
             $username = Yii::$app->request->post('LoginForm')['username'];
             $user_data = User::find()->where(['username' => $username])->one();
-            if(count($user_data)>0)
+
+
+
+            if(!empty($user_data))
             {
                 $adminlog->user_id=$user_data['id'];
                 $adminlog->action="Login Successful";
@@ -97,17 +101,6 @@ class SiteController extends Controller
             $_SESSION['user_name'] = $user_data['username'];
             $_SESSION['user_type'] = $user_data['user_type']; 
             return $this->goHome(); //goBack changed as goHome
-        }elseif ($model->load(Yii::$app->request->post()) && $model1->login()) {    
-            $username = Yii::$app->request->post('LoginForm')['username'];
-            $user_data = ServiceCentreAdmin::find()->where(['username' => $username])->one();  
-            return $this->goHome();
-           // return $this->goHome(); //goBack changed as goHome
-        } 
-        elseif ($model->load(Yii::$app->request->post()) && $model2->login()) { 
-            $username = Yii::$app->request->post('LoginForm')['username'];
-            $user_data = BranchAdmin::find()->where(['ba_name' => $username])->one();   
-            return $this->goHome();
-           // return $this->goHome(); //goBack changed as goHome
         } 
         else {
         	
@@ -137,7 +130,7 @@ class SiteController extends Controller
 	}
 	public function actionProfile()
     {
-        $searchModel = new BranchAdminSearch();
+       // $searchModel = new BranchAdminSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('profile', [

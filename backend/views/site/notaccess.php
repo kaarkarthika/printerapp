@@ -8,7 +8,7 @@
 use yii\helpers\Html;
 
 $this->title = $name;
-
+//echo "asd"; die;
 $message="Not allowed to access this page."
 ?>
 <div class="site-error">

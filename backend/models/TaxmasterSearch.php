@@ -8,7 +8,7 @@ use yii\data\ActiveDataProvider;
 use backend\models\Taxmaster;
 
 /**
- * TaxmasterSearch represents the model behind the search form about `backend\models\Taxmaster`.
+ * TaxmasterSearch represents the model behind the search form of `backend\models\Taxmaster`.
  */
 class TaxmasterSearch extends Taxmaster
 {
@@ -18,9 +18,9 @@ class TaxmasterSearch extends Taxmaster
     public function rules()
     {
         return [
-            [['taxid', 'taxvalue','additionaltax', 'is_active'], 'integer'],
-              [['financialyear','taxgroup'], 'string'],
-            [['updated_by', 'updated_on', 'updated_ipaddress'], 'safe'],
+            [['taxid'], 'integer'],
+            [['taxvalue', 'additionaltax'], 'number'],
+            [['taxgroup', 'financialyear', 'is_active', 'updated_by', 'updated_on', 'updated_ipaddress'], 'safe'],
         ];
     }
 
@@ -62,15 +62,14 @@ class TaxmasterSearch extends Taxmaster
         $query->andFilterWhere([
             'taxid' => $this->taxid,
             'taxvalue' => $this->taxvalue,
-            'financialyear' => $this->financialyear,
             'additionaltax' => $this->additionaltax,
-            'taxgroup'=>$this->taxgroup,
-            
-            'is_active' => $this->is_active,
             'updated_on' => $this->updated_on,
         ]);
 
-        $query->andFilterWhere(['like', 'updated_by', $this->updated_by])
+        $query->andFilterWhere(['like', 'taxgroup', $this->taxgroup])
+            ->andFilterWhere(['like', 'financialyear', $this->financialyear])
+            ->andFilterWhere(['like', 'is_active', $this->is_active])
+            ->andFilterWhere(['like', 'updated_by', $this->updated_by])
             ->andFilterWhere(['like', 'updated_ipaddress', $this->updated_ipaddress]);
 
         return $dataProvider;

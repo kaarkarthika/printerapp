@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=dmcpharmacy_local',
+            'dsn' => 'mysql:host=localhost;dbname=sunitha_printers',
             'username' => 'root',
-           'password' => 'dmcpass!@#',
+           'password' => '',
 		    
             'charset' => 'utf8',
             'on afterOpen' => function($event) {

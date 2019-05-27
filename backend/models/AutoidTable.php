@@ -5,22 +5,21 @@ namespace backend\models;
 use Yii;
 
 /**
- * This is the model class for table "autoid_table".
+ * This is the model class for table "{{%auto_idtable}}".
  *
- * @property string $auto
- * @property string $func
- * @property string $start_num
+ * @property int $id
+ * @property string $name
+ * @property string $number_field
  * @property string $updated_at
- * @property string $ipaddress
  */
-class AutoidTable extends \yii\db\ActiveRecord
+class AutoIdtable extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'autoid_table';
+        return '{{%auto_idtable}}';
     }
 
     /**
@@ -29,10 +28,8 @@ class AutoidTable extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['start_num'], 'integer'],
             [['updated_at'], 'safe'],
-            [['func'], 'string', 'max' => 200],
-            [['ipaddress'], 'string', 'max' => 255],
+            [['name', 'number_field'], 'string', 'max' => 255],
         ];
     }
 
@@ -42,11 +39,10 @@ class AutoidTable extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'auto' => 'Auto',
-            'func' => 'Func',
-            'start_num' => 'Start Num',
+            'id' => 'ID',
+            'name' => 'Name',
+            'number_field' => 'Number Field',
             'updated_at' => 'Updated At',
-            'ipaddress' => 'Ipaddress',
         ];
     }
 }

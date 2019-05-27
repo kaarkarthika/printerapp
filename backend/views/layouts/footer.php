@@ -38,19 +38,8 @@ use backend\models\AdminThemeVersion;
 <!--Common Modal End -->
 
 <!--Common Modal Starts For Custom Operation -->
-<?php 
-    Modal::begin([
-                    'header' => '<h3 id="operationalheader"> </h3>',
-                    'id' => 'operationalmodal', 
-                    'size' => 'modal-md',
 
-                ]);
-      echo "<div id='modalContenttwo'>
-            <div id='customtwo'><input type='hidden' class='data2'></div>
-        </div>";
-    Modal::end();
 
-?>
 <!--Common Modal End -->
 
 <!--Common Modal Starts For Custom Operation -->

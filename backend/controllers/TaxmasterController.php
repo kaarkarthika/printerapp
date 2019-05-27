@@ -4,14 +4,12 @@ namespace backend\controllers;
 
 use Yii;
 use backend\models\Taxmaster;
-use backend\models\ServiceuserLogin;
-use backend\models\AuthProjectModule;
 use backend\models\TaxmasterSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
- use backend\models\BranchAdmin;
+
 
 /**
  * TaxmasterController implements the CRUD actions for Taxmaster model.
@@ -43,11 +41,9 @@ class TaxmasterController extends Controller
        ],
         ];
     }
-	 
+     
 
- public function beforeAction($action) {
-          return BranchAdmin::checkbeforeaction();
-	}
+
   
 
     public function actionIndex()
@@ -55,6 +51,17 @@ class TaxmasterController extends Controller
         $searchModel = new TaxmasterSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionReindex()
+    {
+        $searchModel = new TaxmasterSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        Yii::$app->session->setFlash('success', 'Record Saved Successfully');
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -83,25 +90,28 @@ class TaxmasterController extends Controller
         $model = new Taxmaster();
 
         if ($model->load(Yii::$app->request->post()))
-		 {
-        	
+         {
+            
              $taxvalue=Yii::$app->request->post('Taxmaster')['taxvalue'];
-			 $taxgroup=trim(ucwords(Yii::$app->request->post('Taxmaster')['taxgroup']));
-			
-		     $active=Yii::$app->request->post('Taxmaster')['is_active'];
-			 $session = Yii::$app->session;
-			$model->taxvalue=$taxvalue;
-			$model->taxgroup=$taxgroup;
-			$model->is_active=$active;
-	        $model->updated_by=$session['user_id'];
-			$model->updated_ipaddress=$_SERVER['REMOTE_ADDR'];
-			$model->updated_on=date("Y-m-d H:i:s");
-			if($model->save()){
-				
-				echo "Y";}else{echo "N";}
+             $taxgroup=trim(ucwords(Yii::$app->request->post('Taxmaster')['taxgroup']));
+            
+             $active=Yii::$app->request->post('Taxmaster')['is_active'];
+             $session = Yii::$app->session;
+            $model->taxvalue=$taxvalue;
+            $model->taxgroup=$taxgroup;
+            $model->is_active=$active;
+            $model->updated_by=$session['headlinestv_id'];
+            $model->updated_ipaddress=$_SERVER['REMOTE_ADDR'];
+            $model->updated_on=date("Y-m-d H:i:s");
+             if($model->save()){
+                  echo 'okay';  
+                 //return $this->redirect(['index']);
+            }else{
+                print_r('Something Error');die;
+            }
         } 
-		  else {
-            return $this->renderAjax('create', [
+          else {
+            return $this->render('create', [
                 'model' => $model,
             ]);
         }
@@ -116,25 +126,31 @@ class TaxmasterController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-		
-		
-		 if ($model->load(Yii::$app->request->post()))
-		 {
-        	
+        
+        
+         if ($model->load(Yii::$app->request->post()))
+         {
+            
              $taxvalue=Yii::$app->request->post('Taxmaster')['taxvalue'];
-			 $taxgroup=trim(ucwords(Yii::$app->request->post('Taxmaster')['taxgroup']));
-		     $active=Yii::$app->request->post('Taxmaster')['is_active'];
-			 $session = Yii::$app->session;
-			$model->taxvalue=$taxvalue;
-			$model->taxgroup=$taxgroup;
-			$model->is_active=$active;
-	        $model->updated_by=$session['user_id'];
-			$model->updated_ipaddress=$_SERVER['REMOTE_ADDR'];
-			$model->updated_on=date("Y-m-d H:i:s");
-			if($model->save()){echo "Y";}else{echo "N";}
+             $taxgroup=trim(ucwords(Yii::$app->request->post('Taxmaster')['taxgroup']));
+             $active=Yii::$app->request->post('Taxmaster')['is_active'];
+             $session = Yii::$app->session;
+            $model->taxvalue=$taxvalue;
+            $model->taxgroup=$taxgroup;
+            $model->is_active=$active;
+            $model->updated_by=$session['headlinestv_id'];
+            $model->updated_ipaddress=$_SERVER['REMOTE_ADDR'];
+            $model->updated_on=date("Y-m-d H:i:s");
+            if($model->save()){
+                
+                 echo 'okay';  
+                // return $this->redirect(['index']);
+            }else{
+                print_r('Something Error');die;
+            }
         } 
  else {
-            return $this->renderAjax('update', [
+            return $this->render('update', [
                 'model' => $model,
             ]);
         }

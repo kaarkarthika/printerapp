@@ -7,11 +7,11 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 
-$this->title = 'DMC PHARMACY - Dashboard';
+$this->title = 'Sunitha Printers';
 
 //Set Default Timezone
 date_default_timezone_set('Asia/Kolkata');
-
+ 
 ?>
 <html>
 

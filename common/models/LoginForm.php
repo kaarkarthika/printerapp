@@ -41,9 +41,13 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
+
         if (!$this->hasErrors()) {
+
             $user = $this->getUser();
+           
             if (!$user || !$user->validatePassword($this->password)) {
+                            
                 $this->addError($attribute, 'Incorrect username or password.');
             }
         }
@@ -57,19 +61,22 @@ class LoginForm extends Model
     public function login()
     {
         $session = Yii::$app->session;
-         unset($session['user_id']);
+        unset($session['user_id']);
         unset($session['user_name']);
         $session->destroy();
 
         $username = $_REQUEST['LoginForm']['username'];
-        if ($this->validate()) {
+
+
+        if ($this->validate()) 
+        {
             $user_data = User::find()->where(['username' => $username])->one();
             
             $session['user_id']  = $user_data->id;
 
             $session['main_id']  = $user_data->id;
             $session['user_name']  = $user_data->username;
-            $session['user_logintype']  = 'SA';
+            $session['user_logintype']  = $user_data->user_type;
               
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         } else {
@@ -85,7 +92,10 @@ class LoginForm extends Model
     protected function getUser()
     {
         if ($this->_user === null) {
+
             $this->_user = User::findByUsername($this->username);
+            //echo '<pre>';
+            //print_r($this->_user);die;
         }
 
         return $this->_user;

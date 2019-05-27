@@ -12,18 +12,31 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="taxmaster-view">
 
-   
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <p>
+        <?= Html::a('Update', ['update', 'id' => $model->taxid], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'id' => $model->taxid], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Are you sure you want to delete this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
+    </p>
+
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-         //   'taxid',
+            'taxid',
             'taxvalue',
-            'is_active',
+            'taxgroup',
             'financialyear',
             'additionaltax',
-         //   'updated_by',
-        //    'updated_on',
-          //  'updated_ipaddress',
+            'is_active',
+            'updated_by',
+            'updated_on',
+            'updated_ipaddress',
         ],
     ]) ?>
 

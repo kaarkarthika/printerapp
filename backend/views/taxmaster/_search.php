@@ -13,17 +13,26 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+        'options' => [
+            'data-pjax' => 1
+        ],
     ]); ?>
 
     <?= $form->field($model, 'taxid') ?>
 
     <?= $form->field($model, 'taxvalue') ?>
 
-    <?= $form->field($model, 'is_active') ?>
+    <?= $form->field($model, 'taxgroup') ?>
 
-    <?= $form->field($model, 'updated_by') ?>
+    <?= $form->field($model, 'financialyear') ?>
 
-    <?= $form->field($model, 'updated_on') ?>
+    <?= $form->field($model, 'additionaltax') ?>
+
+    <?php // echo $form->field($model, 'is_active') ?>
+
+    <?php // echo $form->field($model, 'updated_by') ?>
+
+    <?php // echo $form->field($model, 'updated_on') ?>
 
     <?php // echo $form->field($model, 'updated_ipaddress') ?>
 

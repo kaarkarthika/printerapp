@@ -14,9 +14,13 @@
    use backend\models\BranchAdmin;
    use backend\models\Chat;
    use backend\models\CompanyBranch;
-   use backend\models\Shortcut;
+   use backend\models\User;
    
    DashboardAsset::register($this);
+
+
+    $user_data = User::find()->where(['username' => $session['headlinestv_id']])->one();
+
    
    //session_start();
  ?>
@@ -30,6 +34,10 @@
       <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script> -->
           <script type="text/ecmascript" src="<?php echo Url::base(); ?>/jq_grid/js/jquery.min.js"></script>
           <link rel="stylesheet" type="text/css" media="screen" href="<?php echo Url::base(); ?>/jq_grid/css/datatables.min.css" />
+		  
+		  
+		 <!--  <link rel="stylesheet" type="text/css" media="screen" href="<?php // echo Url::base(); ?>/fonts/ubuntu-font.css" /> -->
+		  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
           
       <?= Html::csrfMetaTags() ?>
       <title><?= Html::encode($this->title) ?></title>
@@ -157,8 +165,8 @@
          .emoji-menu{position:relative;}
          .icon-bell:before,.icon-grid:before{content:"";}	
 .input-group-btn .btn{
-	height:25px!important;
-	padding:3px 8px!important;
+	/* height:25px!important;
+	padding:3px 8px!important; */
 }		
 
 #globalsearch{
@@ -234,8 +242,8 @@ position:relative;
                   <!-- <a href="<?= Yii::$app->homeUrl ?>" class="logo" alt="DMC"><i class="icon-c-logo">DMC</i><span>DMC<i class="md md-album"></i>PHARMACY</span></a>-->
                   <!-- Image Logo here -->
                   <a href="index.html" class="logo">
-                  <i class="icon-c-logo"> <img src="<?= Url::to('@web/ubold/images/logo-original.png') ?>"  width="42" height="42"/> </i>
-                  <span>DMC</span><!--i class="md md-album"></i>PHARMACY<-->
+                  <i class="icon-c-logo"> <img src="<?= Url::to('@web/images/sp.png') ?>"  width="42" height="42"/> </i>
+                  <span>SUNITHA PRINTERS</span><!--i class="md md-album"></i>PHARMACY<-->
                   </a>
                </div>
             </div>
@@ -251,38 +259,9 @@ position:relative;
                      </div>
 					
 					 <div class="fulscrn">
-					 <div class=" select-val col-sm-1" style="width:150px;">
-					 	<?php $ty_ms_w=array("D"=>"Dashboard","P"=>"Pharmacy","R"=>"Reception","L"=>"Laboratory","U"=>"UCIL");  ?>
-					 	<select name="select-admin" id="select-admin" class="select-admin form-control" style="width:150px;">
-					 		<!-- <option value=""></option> -->
-					 		<?php
-					 			 
-					 			foreach ($ty_ms_w as $key => $value) {
-					 			
-									if($_SESSION['menu_rights_session']==$key){
-										echo '<option value="'.$key.'" selected="selected">'.$value.'</option>';
-									}else{
-									echo '<option value="'.$key.'">'.$value.'</option>';
-									}
-								}
-							  ?>
-						</select>
-					 </div>
-					 <!--  <div class="col-sm-1"><input type="text" class="form-control"></div> -->
-					 <div id="globalsearch" class="  form-group  col-sm-2 " >						
-                           
-						   <div class="input-group add-on fwidth" style="top:15px;">
-                           		<input class="  form-control  typehead1" style=" " placeholder=" " name=" "   id="whole_link_move" type="text" tabindex=" ">
-								
-								<div class="input-group-btn  ">
-									<span class="btn btn-default  "  ><i class="ssearch glyphicon glyphicon-search"></i></span>
-								</div>								
-							</div>								 
-                        </div>
-                        
-						<div class="col-sm-2 text-center">
-						 <span class="page-headr" id="title"><?= Html::encode($this->title) ?></span>
-						</div>
+					 
+					 
+          
 						
 						
 						
@@ -290,25 +269,13 @@ position:relative;
 						
 						
 						
-						<div class="col-sm-3"><strong><span class="pull-right" id="date_time"></span></strong></div>
+						
 						
 						</div>
                      <ul class="nav navbar-nav navbar-right pull-right">
                         <li class="hidden-xs">
                            <a href="#"  class="waves-effect waves-light">
-                           <?php $session = Yii::$app->session; 
-                              $role=$session['authUserRole'];
-                              					if($role=="Super")
-                              					{
-                              						
-                              					}
-                              					else
-                              					{
-                              					
-                              						echo  "Branch :".$session['branch_name'] ;
-                              					}      	
-                                                            	
-                                                            	?>
+                          
                            </a>
                         </li>
 						
@@ -324,10 +291,17 @@ position:relative;
                        <!-- <li class="hidden-xs">
                            <a href="#" class="right-bar-toggle waves-effect waves-light"><i class="fa fa-comment-o"></i></a>
                         </li>  -->
+
+                        <?php
+
+                        $user_prime=urlencode(base64_encode($session['headlinestv_id']));
+
+                        
+                        ?>
                         <li class="dropdown top-menu-item-xs">
-                           <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"><img src="dist/img/user2-160x160.jpg" alt="user-img" class="img-circle"> </a>
+                           <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"><img src="images/dummyimages.png" alt="user-img" class="img-circle"> </a>
                            <ul class="dropdown-menu">
-                              <li><a href="<?php echo Yii::$app->homeUrl ?>?r=branch-admin/profile"><i class="ti-user m-r-10 text-custom"></i> Profile</a></li>
+                              <li><a href="<?php echo Yii::$app->homeUrl ?>?r=user/update&id=<?php echo $user_prime; ?>"><i class="ti-user m-r-10 text-custom"></i> Profile</a></li>
                               <!--     <li><a href="javascript:void(0)"><i class="ti-settings m-r-10 text-custom"></i> Settings</a></li>
                                  <li><a href="<?= Url::to(['logscreen']);?>"><i class="ti-lock m-r-10 text-custom"></i> Lock screen</a></li>-->
                               <li class="divider"></li>
@@ -380,13 +354,13 @@ position:relative;
                <ul class="list-group contacts-list">
              <?php $session = Yii::$app->session; 
           // echo $session['user_logintype'];exit;
-             if($session['authUserRole']=='Super'){
-					$branch_data=BranchAdmin::find()->where(['NOT IN','ba_autoid',$session['user_id']])->groupBy(['ba_branchid'])->all();
+             if($session['authUserRole']=='S'){
+					//$branch_data=BranchAdmin::find()->where(['NOT IN','ba_autoid',$session['user_id']])->groupBy(['ba_branchid'])->all();
 				 foreach($branch_data as $b1){
-				 	$branch_name_fetch=CompanyBranch::find()->where(['branch_id'=>$b1->ba_branchid])->one();?>
+				 //	$branch_name_fetch=CompanyBranch::find()->where(['branch_id'=>$b1->ba_branchid])->one();?>
 				 	<div style="padding-left: 6px;"><b><?= $branch_name_fetch->branch_name; ?></b></div>
 				 	<?php
-					 $branch_data_1=BranchAdmin::find()->where(['NOT IN','ba_autoid',$session['user_id']])->andWhere(['ba_branchid'=>$b1->ba_branchid])->all();
+					// $branch_data_1=BranchAdmin::find()->where(['NOT IN','ba_autoid',$session['user_id']])->andWhere(['ba_branchid'=>$b1->ba_branchid])->all();
 					 foreach($branch_data_1 as $b2){
 	              ?> 
 	                  <li class="list-group-item">
@@ -400,11 +374,11 @@ position:relative;
 
            
              }else if(isset($session['branch_id'])){
-             $branch_data=BranchAdmin::find()->where(['NOT IN','ba_autoid',$session['user_id']])->andWhere(['ba_branchid'=>$session['branch_id']])->all();
+           //  $branch_data=BranchAdmin::find()->where(['NOT IN','ba_autoid',$session['user_id']])->andWhere(['ba_branchid'=>$session['branch_id']])->all();
               // echo"<pre>";
               // print_r($session['user_id']);			  print_r($branch_data);
 			  //  die;
-			 foreach($branch_data as $b1){
+			// foreach($branch_data as $b1){
               ?>  	
                   <li class="list-group-item">
                      <div class="chat_body">
@@ -412,14 +386,14 @@ position:relative;
                      </div>
                   </li>
                 <?php
-			  }
+			//  }
 			 }
                  ?>  
                </ul>
             </div>
          </div>
          <footer class="footer text-right">
-            © 2017 DMC PHARMACY . All rights reserved.
+            © 2019 SUNITHA PRINTERS . All rights reserved.
          </footer>
       </div>
 	  
@@ -635,62 +609,15 @@ $.ajax({
 			    	}
 			    });
 			});
-	     
-	     
-       /*  $(document).ready(function () {
-         	
-             $('#datatable').dataTable();
-             $('#datatable-keytable').DataTable({keys: true});
-             $('#datatable-responsive').DataTable();
-             $('#datatable-colvid').DataTable({
-             	
-                 "dom": 'C<"clear">lfrtip',
-                 "colVis": {
-                     "buttonText": "Change columns"
-                 }
-             });
-             $('#datatable-scroller').DataTable({
-             	
-                 ajax: "ubold/plugins/datatables/json/scroller-demo.json",
-                 deferRender: true,
-                 scrollY: 380,
-                 scrollCollapse: true,
-                 scroller: true
-             });
-             var table = $('#datatable-fixed-header').DataTable({fixedHeader: true});
-             var table = $('#datatable-fixed-col').DataTable({
-                 scrollY: "300px",
-                 scrollX: true,
-                 scrollCollapse: true,
-                 paging: false,
-                 fixedColumns: {
-                     leftColumns: 1,
-                     rightColumns: 1
-                 }
-             });
-         });*/
-        // TableManageButtons.init();
-         
-      </script>
+	    </script>
 	
    	 
    </body>
 </html>
 <?php $this->endPage() ?>
 
-<script type="text/javascript">window.onload = date_time('date_time');</script>
-<script>
-   function isNumber(evt) {
-        var iKeyCode = (evt.which) ? evt.which : evt.keyCode
-        if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
-            return false;
 
-        return true;
 
-           
-                
-   }
-</script>
 <script>
      $(document).ready(function(){
         $('.dropdown-toggle').dropdown();
@@ -701,7 +628,8 @@ $.ajax({
 			
 			});
 			
-		
+		//$('.form-control').addClass('input-sm');
+		//$('.btn-default').addClass('btn-sm');
     });
     
 
@@ -711,39 +639,4 @@ $.ajax({
 <script type="text/javascript" src="<?php echo Url::base(); ?>/boot/bootstrap3-typeahead.js"></script>
 <script type="text/javascript" src="<?php echo Url::base(); ?>/boot/bootstrap3-typeahead.min.js"></script>
 
-<?php
-						  	 $shortcut=Shortcut::find()->asArray()->all();	
-								if(!empty($shortcut))
-								{
-									foreach ($shortcut as $key => $value)
-									{
-										$productlist_col_val[] = array('value' => $value['name'],'value1' => $value['link']);
-									}
-									$productlist_col_json = json_encode($productlist_col_val);
-								}
-								else
-								{
-									$productlist_col_json="";
-								}
-							?>
 
-<script>
-	
-	var subjects = <?= $productlist_col_json; ?>;
-    $("#whole_link_move").typeahead({
-        minLength: 1,
-        delay: 100,
-	  	source: subjects,
-  		autoSelect: true,
- 		displayText: function(item)
- 		{
- 	 		return item.value;	
- 		},
-  		afterSelect: function(item) {
-			var base_url="<?php echo Url::base();?>"+"/index.php?r="+item.value1;
-  			window.location.href = base_url;	
-  		}
-	});
-
-
-</script>

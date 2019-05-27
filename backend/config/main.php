@@ -13,7 +13,7 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log','MyGlobalClass'],
     'modules' => [],
     'timeZone' => 'Asia/Kolkata',
     'components' => [
@@ -23,6 +23,9 @@ return [
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
+        ],
+        'MyGlobalClass'=>[        
+            'class'=>'backend\components\MyGlobalClass'
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

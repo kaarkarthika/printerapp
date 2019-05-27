@@ -88,27 +88,33 @@ class BranchAdminController extends Controller
     	
         $model = new BranchAdmin();
 
-      if($model->load(Yii::$app->request->post())) {
+      if($model->load(Yii::$app->request->post())) 
+      {
       	
 			
 			
 		
-            $password=Yii::$app->request->post('BranchAdmin')['password_hash'];
+      $password=Yii::$app->request->post('BranchAdmin')['password_hash'];
 			$username = Yii::$app->request->post('BranchAdmin')['ba_name'];
+
+      $exists=BranchAdmin::find()->where(['ba_name'=>$username])->one();
+
 			$model->password_hash = Yii::$app->security->generatePasswordHash($password);
 			$model->ba_branchid =Yii::$app->request->post('BranchAdmin')['ba_branchid'];
-            $model->ba_createdat=date("Y-m-d h:i:s");
-			$exists=BranchAdmin::find()->where(['ba_name'=>$username])->one();
+      $model->ba_createdat=date("Y-m-d h:i:s");
+			
 			$model->ba_code="";
 			$model->status=0;
 			$model->auth_key=Yii::$app->security->generateRandomString();
-			if(count($exists)>0){
+
+			if(!empty($exists)>0){
 				return   "E";
 			}
 			else if($model->save()){
 				
 				return   "Y";
 			}else{
+       
 				return  "N";
 			}
            
@@ -156,7 +162,7 @@ class BranchAdminController extends Controller
 			$exists=BranchAdmin::find()->where(['ba_name'=>$username])->andwhere(['!=','ba_autoid',$id])->one();
 			
 			
-			if(count($exists)>0){
+			if(!empty($exists)>0){
 				return   "E";
 			}
 			else if($model->save()){

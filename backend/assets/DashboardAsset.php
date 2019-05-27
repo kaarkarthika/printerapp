@@ -21,16 +21,7 @@ class DashboardAsset extends AssetBundle
 	'ubold/css/pages.css',
 	'ubold/css/emoji.css',
 	'ubold/css/responsive.css',
-  /*
-	"ubold/plugins/datatables/jquery.dataTables.min.css",
-	"ubold/plugins/datatables/buttons.bootstrap.min.css",
-	"ubold/plugins/datatables/fixedHeader.bootstrap.min.css",
-	"ubold/plugins/datatables/responsive.bootstrap.min.css",
-	"ubold/plugins/datatables/scroller.bootstrap.min.css",
-	"ubold/plugins/datatables/dataTables.colVis.css",
-	"ubold/plugins/datatables/dataTables.bootstrap.min.css",
-	"ubold/plugins/datatables/fixedColumns.dataTables.min.css",
-  */
+  
 	"ubold/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" ,
 	"ubold/plugins/jsgrid/css/jsgrid.min.css",
     "ubold/plugins/jsgrid/css/jsgrid-theme.min.css" ,
@@ -55,7 +46,7 @@ class DashboardAsset extends AssetBundle
    
       "ubold/js/modernizr.min.js",
 	  
-    // "ubold/js/jquery.min.js",
+     "ubold/js/jquery.min.js",
       "ubold/js/bootstrap.min.js",
       "ubold/js/detect.js",
       "ubold/js/fastclick.js",
@@ -75,24 +66,7 @@ class DashboardAsset extends AssetBundle
       "ubold/js/jquery.core.js",
       "ubold/js/jquery.app.js", 
       "ubold/js/jquery.chat.js", 
-      /*
-     "ubold/plugins/datatables/jquery.dataTables.min.js",
-      "ubold/plugins/datatables/dataTables.bootstrap.js",
-      "ubold/plugins/datatables/dataTables.buttons.min.js",
-      "ubold/plugins/datatables/buttons.bootstrap.min.js",
-      "ubold/plugins/datatables/jszip.min.js",
-      "ubold/plugins/datatables/pdfmake.min.js",
-      "ubold/plugins/datatables/vfs_fonts.js",
-      "ubold/plugins/datatables/buttons.html5.min.js",
-      "ubold/plugins/datatables/buttons.print.min.js",
-      "ubold/plugins/datatables/dataTables.fixedHeader.min.js",
-      "ubold/plugins/datatables/dataTables.keyTable.min.js",
-      "ubold/plugins/datatables/dataTables.responsive.min.js",
-      "ubold/plugins/datatables/responsive.bootstrap.min.js",
-      "ubold/plugins/datatables/dataTables.scroller.min.js",
-      "ubold/plugins/datatables/dataTables.colVis.js",
-      "ubold/plugins/datatables/dataTables.fixedColumns.min.js",
-      "ubold/pages/datatables.init.js", */
+      
       "ubold/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js",
        "ubold/plugins/jsgrid/js/jsgrid.min.js",
       "ubold/pages/jquery.jsgrid.init.js",
@@ -142,25 +116,7 @@ class DashboardAsset extends AssetBundle
      //Alban Added
       "alert/jquery-confirm.min.js",
      
-    /* "ubold/plugins/datatables/jquery.dataTables.min.js",
-      "ubold/plugins/datatables/dataTables.bootstrap.js",
-      "ubold/plugins/datatables/dataTables.buttons.min.js",
-      "ubold/plugins/datatables/buttons.bootstrap.min.js",
-      "ubold/plugins/datatables/jszip.min.js",
-      "ubold/plugins/datatables/pdfmake.min.js",
-      "ubold/plugins/datatables/vfs_fonts.js",
-      "ubold/plugins/datatables/buttons.html5.min.js",
-      "ubold/plugins/datatables/buttons.print.min.js",
-      "ubold/plugins/datatables/dataTables.fixedHeader.min.js",
-      "ubold/plugins/datatables/dataTables.keyTable.min.js",
-      "ubold/plugins/datatables/dataTables.responsive.min.js",
-      "ubold/plugins/datatables/responsive.bootstrap.min.js",
-      "ubold/plugins/datatables/dataTables.scroller.min.js",
-      "ubold/plugins/datatables/dataTables.colVis.js",
-      "ubold/plugins/datatables/dataTables.fixedColumns.min.js",
-      "ubold/pages/datatables.init.js",
-      "ubold/pages/datatables.editable.init.js",*/
-        
+   
         
     ];
 	

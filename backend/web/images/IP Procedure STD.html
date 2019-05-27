@@ -1,0 +1,3202 @@
+<!DOCTYPE html>
+<!-- saved from url=(0088)http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create -->
+<html lang="en-US" class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      
+      
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script> -->
+          <script type="text/ecmascript" src="./IP Procedure STD_files/jquery.min.js.download"></script>
+          <link rel="stylesheet" type="text/css" media="screen" href="./IP Procedure STD_files/datatables.min.css">
+          
+      <meta name="csrf-param" content="_csrf">
+    <meta name="csrf-token" content="HBHtBRAaXvtulTNjFwwskuo8DWn6o0TUlzApoTMxoI0qf6c9PVsGjR_SRC9kTVjr2WlCXKOWHrLufl7GBhzqvQ==">
+      <title>IP Procedure STD</title>
+      <link href="./IP Procedure STD_files/bootstrap.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/jquery.steps.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/bootstrap.min.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/morris.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/core.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/components.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/icons.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/pages.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/emoji.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/responsive.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/bootstrap-datepicker.min.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/jsgrid.min.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/jsgrid-theme.min.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/magnific-popup.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/bootstrap-select.min.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/bootstrap-tagsinput.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/sweet-alert.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/summernote.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/custombox.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/daterangepicker.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/bootstrap-table.min.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/bootstrap-datetimepicker.css" rel="stylesheet">
+<link href="./IP Procedure STD_files/jquery-confirm.min.css" rel="stylesheet">  	 
+      <style>
+         .card-box{padding:0px;}
+         .chat_box{
+         position:fixed;
+         right:20px;
+         bottom:0px;
+         width:250px;
+         }
+         /*
+         .chat_body{
+         background:white;
+         height:400px;
+         padding:5px 0px;
+         }
+         */
+         .chat_head,.msg_head{
+         background:#f39c12;
+         color:white;
+         padding:15px;
+         font-weight:bold;
+         cursor:pointer;
+         border-radius:5px 5px 0px 0px;
+         }
+         #load1 {
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          position: fixed;
+          display: block;
+          opacity: 0.9;
+          background-color: #f9f9f794;
+          z-index: 99;
+          text-align: center;
+          }
+          .load-image{
+            width:10%;
+            margin:auto;
+            position: absolute;
+            left: 45%;
+            top: 220px;
+            z-index: 9999;
+          }
+         .select-val select#select-admin {
+    		position: relative;
+    		top: 15px;
+    		padding: 0px 15px;   cursor: pointer;
+   			/*  width: 150px;     left: 22%; */
+		}
+		.forced.enlarged select#select-admin {
+    		left: 10%;
+		}
+		.select-val {
+    			position: relative;
+			}
+         .msg_box{
+         position:fixed; 
+        /* position:relative;*/
+         bottom:-5px;
+         width:250px;
+         background:white;
+         border-radius:5px 5px 0px 0px;
+		 float:right;
+		 margin-left:10px;
+         }
+         .msg_head{
+         /* background:#3498db;*/
+         background:#5fbeaa;
+         }
+         .msg_body{
+         background:white;
+         height:200px;
+         font-size:12px;
+         padding:15px;
+         overflow:auto;
+         overflow-x: hidden;
+         }
+		 .chat-box{right:242px;z-index:9;display:none;}
+		 
+		 @media(max-width:414px){
+			 
+			 .chat-box{right: 67px!important;z-index: 999;display:none;}
+		 }
+         .msg_input{
+         width:100%;
+         border: 1px solid white;
+         border-top:1px solid #DDDDDD;
+         -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+         -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+         box-sizing: border-box;  
+         }
+         .chat-close{
+         float:right;
+         cursor:pointer;
+         color:#fff;
+         }
+         .minimize{
+         float:right;
+         cursor:pointer;
+         padding-right:5px;
+         }
+         .user{
+         position:relative;
+         padding:10px 30px;
+         }
+         .user:hover{
+         /* background:#f8f8f8; */
+         cursor:pointer;
+         }
+         .user:before{
+         content:'';
+         position:absolute;
+         background:#2ecc71;
+         height:10px;
+         width:10px;
+         left:10px;
+         top:15px;
+         border-radius:6px;
+         }
+         .emoji-menu{position:relative;}
+         .icon-bell:before,.icon-grid:before{content:"";}	
+.input-group-btn .btn{
+	height:25px!important;
+	padding:3px 8px!important;
+}		
+
+#globalsearch{
+    width: 125px;
+position:relative;
+/* left:80px; */
+}
+.globalsearch{
+
+position:relative;
+/* left:240px!important; */
+
+}
+
+.page-headr{
+	    position: relative;
+    top: 15px;
+    left: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bolder;
+    color: #031d33;
+}
+#date_time {
+    color: #5c5c5c;
+    position: relative;
+    top: 15px;
+    font-weight: normal;
+}
+      </style>
+	  <script type="text/javascript">
+    
+   function date_time(id)
+   {
+      date = new Date;
+      year = date.getFullYear();
+      month = date.getMonth();
+      months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December');
+      d = date.getDate();
+      day = date.getDay();
+      days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+      h = date.getHours();
+      if(h<10)
+      {
+              h = "0"+h;
+      }
+      m = date.getMinutes();
+      if(m<10)
+      {
+              m = "0"+m;
+      }
+      s = date.getSeconds();
+      if(s<10)
+      {
+              s = "0"+s;
+      }
+      result = ''+days[day]+', '+months[month]+' '+d+' '+year+' '+h+':'+m+':'+s;
+      document.getElementById(id).innerHTML = result;
+      setTimeout('date_time("'+id+'");','1000');
+      return true;
+   }
+   
+   
+</script>
+   <style type="text/css" id="notify-bootstrap">.notifyjs-bootstrap-base {
+	font-weight: bold;
+	padding: 8px 15px 8px 14px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	background-color: #fcf8e3;
+	border: 1px solid #fbeed5;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	white-space: nowrap;
+	padding-left: 25px;
+	background-repeat: no-repeat;
+	background-position: 3px 7px;
+}
+.notifyjs-bootstrap-error {
+	color: #B94A48;
+	background-color: #F2DEDE;
+	border-color: #EED3D7;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtRJREFUeNqkVc1u00AQHq+dOD+0poIQfkIjalW0SEGqRMuRnHos3DjwAH0ArlyQeANOOSMeAA5VjyBxKBQhgSpVUKKQNGloFdw4cWw2jtfMOna6JOUArDTazXi/b3dm55socPqQhFka++aHBsI8GsopRJERNFlY88FCEk9Yiwf8RhgRyaHFQpPHCDmZG5oX2ui2yilkcTT1AcDsbYC1NMAyOi7zTX2Agx7A9luAl88BauiiQ/cJaZQfIpAlngDcvZZMrl8vFPK5+XktrWlx3/ehZ5r9+t6e+WVnp1pxnNIjgBe4/6dAysQc8dsmHwPcW9C0h3fW1hans1ltwJhy0GxK7XZbUlMp5Ww2eyan6+ft/f2FAqXGK4CvQk5HueFz7D6GOZtIrK+srupdx1GRBBqNBtzc2AiMr7nPplRdKhb1q6q6zjFhrklEFOUutoQ50xcX86ZlqaZpQrfbBdu2R6/G19zX6XSgh6RX5ubyHCM8nqSID6ICrGiZjGYYxojEsiw4PDwMSL5VKsC8Yf4VRYFzMzMaxwjlJSlCyAQ9l0CW44PBADzXhe7xMdi9HtTrdYjFYkDQL0cn4Xdq2/EAE+InCnvADTf2eah4Sx9vExQjkqXT6aAERICMewd/UAp/IeYANM2joxt+q5VI+ieq2i0Wg3l6DNzHwTERPgo1ko7XBXj3vdlsT2F+UuhIhYkp7u7CarkcrFOCtR3H5JiwbAIeImjT/YQKKBtGjRFCU5IUgFRe7fF4cCNVIPMYo3VKqxwjyNAXNepuopyqnld602qVsfRpEkkz+GFL1wPj6ySXBpJtWVa5xlhpcyhBNwpZHmtX8AGgfIExo0ZpzkWVTBGiXCSEaHh62/PoR0p/vHaczxXGnj4bSo+G78lELU80h1uogBwWLf5YlsPmgDEd4M236xjm+8nm4IuE/9u+/PH2JXZfbwz4zw1WbO+SQPpXfwG/BBgAhCNZiSb/pOQAAAAASUVORK5CYII=);
+}
+.notifyjs-bootstrap-success {
+	color: #468847;
+	background-color: #DFF0D8;
+	border-color: #D6E9C6;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAutJREFUeNq0lctPE0Ecx38zu/RFS1EryqtgJFA08YCiMZIAQQ4eRG8eDGdPJiYeTIwHTfwPiAcvXIwXLwoXPaDxkWgQ6islKlJLSQWLUraPLTv7Gme32zoF9KSTfLO7v53vZ3d/M7/fIth+IO6INt2jjoA7bjHCJoAlzCRw59YwHYjBnfMPqAKWQYKjGkfCJqAF0xwZjipQtA3MxeSG87VhOOYegVrUCy7UZM9S6TLIdAamySTclZdYhFhRHloGYg7mgZv1Zzztvgud7V1tbQ2twYA34LJmF4p5dXF1KTufnE+SxeJtuCZNsLDCQU0+RyKTF27Unw101l8e6hns3u0PBalORVVVkcaEKBJDgV3+cGM4tKKmI+ohlIGnygKX00rSBfszz/n2uXv81wd6+rt1orsZCHRdr1Imk2F2Kob3hutSxW8thsd8AXNaln9D7CTfA6O+0UgkMuwVvEFFUbbAcrkcTA8+AtOk8E6KiQiDmMFSDqZItAzEVQviRkdDdaFgPp8HSZKAEAL5Qh7Sq2lIJBJwv2scUqkUnKoZgNhcDKhKg5aH+1IkcouCAdFGAQsuWZYhOjwFHQ96oagWgRoUov1T9kRBEODAwxM2QtEUl+Wp+Ln9VRo6BcMw4ErHRYjH4/B26AlQoQQTRdHWwcd9AH57+UAXddvDD37DmrBBV34WfqiXPl61g+vr6xA9zsGeM9gOdsNXkgpEtTwVvwOklXLKm6+/p5ezwk4B+j6droBs2CsGa/gNs6RIxazl4Tc25mpTgw/apPR1LYlNRFAzgsOxkyXYLIM1V8NMwyAkJSctD1eGVKiq5wWjSPdjmeTkiKvVW4f2YPHWl3GAVq6ymcyCTgovM3FzyRiDe2TaKcEKsLpJvNHjZgPNqEtyi6mZIm4SRFyLMUsONSSdkPeFtY1n0mczoY3BHTLhwPRy9/lzcziCw9ACI+yql0VLzcGAZbYSM5CCSZg1/9oc/nn7+i8N9p/8An4JMADxhH+xHfuiKwAAAABJRU5ErkJggg==);
+}
+.notifyjs-bootstrap-info {
+	color: #3A87AD;
+	background-color: #D9EDF7;
+	border-color: #BCE8F1;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYFAhkSsdes/QAAA8dJREFUOMvVlGtMW2UYx//POaWHXg6lLaW0ypAtw1UCgbniNOLcVOLmAjHZolOYlxmTGXVZdAnRfXQm+7SoU4mXaOaiZsEpC9FkiQs6Z6bdCnNYruM6KNBw6YWewzl9z+sHImEWv+vz7XmT95f/+3/+7wP814v+efDOV3/SoX3lHAA+6ODeUFfMfjOWMADgdk+eEKz0pF7aQdMAcOKLLjrcVMVX3xdWN29/GhYP7SvnP0cWfS8caSkfHZsPE9Fgnt02JNutQ0QYHB2dDz9/pKX8QjjuO9xUxd/66HdxTeCHZ3rojQObGQBcuNjfplkD3b19Y/6MrimSaKgSMmpGU5WevmE/swa6Oy73tQHA0Rdr2Mmv/6A1n9w9suQ7097Z9lM4FlTgTDrzZTu4StXVfpiI48rVcUDM5cmEksrFnHxfpTtU/3BFQzCQF/2bYVoNbH7zmItbSoMj40JSzmMyX5qDvriA7QdrIIpA+3cdsMpu0nXI8cV0MtKXCPZev+gCEM1S2NHPvWfP/hL+7FSr3+0p5RBEyhEN5JCKYr8XnASMT0xBNyzQGQeI8fjsGD39RMPk7se2bd5ZtTyoFYXftF6y37gx7NeUtJJOTFlAHDZLDuILU3j3+H5oOrD3yWbIztugaAzgnBKJuBLpGfQrS8wO4FZgV+c1IxaLgWVU0tMLEETCos4xMzEIv9cJXQcyagIwigDGwJgOAtHAwAhisQUjy0ORGERiELgG4iakkzo4MYAxcM5hAMi1WWG1yYCJIcMUaBkVRLdGeSU2995TLWzcUAzONJ7J6FBVBYIggMzmFbvdBV44Corg8vjhzC+EJEl8U1kJtgYrhCzgc/vvTwXKSib1paRFVRVORDAJAsw5FuTaJEhWM2SHB3mOAlhkNxwuLzeJsGwqWzf5TFNdKgtY5qHp6ZFf67Y/sAVadCaVY5YACDDb3Oi4NIjLnWMw2QthCBIsVhsUTU9tvXsjeq9+X1d75/KEs4LNOfcdf/+HthMnvwxOD0wmHaXr7ZItn2wuH2SnBzbZAbPJwpPx+VQuzcm7dgRCB57a1uBzUDRL4bfnI0RE0eaXd9W89mpjqHZnUI5Hh2l2dkZZUhOqpi2qSmpOmZ64Tuu9qlz/SEXo6MEHa3wOip46F1n7633eekV8ds8Wxjn37Wl63VVa+ej5oeEZ/82ZBETJjpJ1Rbij2D3Z/1trXUvLsblCK0XfOx0SX2kMsn9dX+d+7Kf6h8o4AIykuffjT8L20LU+w4AZd5VvEPY+XpWqLV327HR7DzXuDnD8r+ovkBehJ8i+y8YAAAAASUVORK5CYII=);
+}
+.notifyjs-bootstrap-warn {
+	color: #C09853;
+	background-color: #FCF8E3;
+	border-color: #FBEED5;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAABJlBMVEXr6eb/2oD/wi7/xjr/0mP/ykf/tQD/vBj/3o7/uQ//vyL/twebhgD/4pzX1K3z8e349vK6tHCilCWbiQymn0jGworr6dXQza3HxcKkn1vWvV/5uRfk4dXZ1bD18+/52YebiAmyr5S9mhCzrWq5t6ufjRH54aLs0oS+qD751XqPhAybhwXsujG3sm+Zk0PTwG6Shg+PhhObhwOPgQL4zV2nlyrf27uLfgCPhRHu7OmLgAafkyiWkD3l49ibiAfTs0C+lgCniwD4sgDJxqOilzDWowWFfAH08uebig6qpFHBvH/aw26FfQTQzsvy8OyEfz20r3jAvaKbhgG9q0nc2LbZxXanoUu/u5WSggCtp1anpJKdmFz/zlX/1nGJiYmuq5Dx7+sAAADoPUZSAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfdBgUBGhh4aah5AAAAlklEQVQY02NgoBIIE8EUcwn1FkIXM1Tj5dDUQhPU502Mi7XXQxGz5uVIjGOJUUUW81HnYEyMi2HVcUOICQZzMMYmxrEyMylJwgUt5BljWRLjmJm4pI1hYp5SQLGYxDgmLnZOVxuooClIDKgXKMbN5ggV1ACLJcaBxNgcoiGCBiZwdWxOETBDrTyEFey0jYJ4eHjMGWgEAIpRFRCUt08qAAAAAElFTkSuQmCC);
+}
+</style><style type="text/css" id="notify-metro">.notifyjs-metro-default {
+	color: #fafafa !important;
+	background-color: #ABB7B7;
+	border: 1px solid #ABB7B7;
+}
+.notifyjs-metro-error {
+	color: #fafafa !important;
+	background-color: #f05050;
+	border: 1px solid #ef5350;
+}
+.notifyjs-metro-custom {
+	color: #fafafa !important;
+	background-color: #5fbeaa;
+	border: 1px solid #5fbeaa;
+}
+.notifyjs-metro-success {
+	color: #fafafa !important;
+	background-color: #81c868;
+	border: 1px solid #33b86c;
+}
+.notifyjs-metro-info {
+	color: #fafafa !important;
+	background-color: #34d3eb;
+	border: 1px solid #29b6f6;
+}
+.notifyjs-metro-warning {
+	color: #fafafa !important;
+	background-color: #ffbd4a;
+	border: 1px solid #ffd740;
+}
+.notifyjs-metro-black {
+	color: #fafafa !important;
+	background-color: #4c5667;
+	border: 1px solid #212121;
+}
+.notifyjs-metro-white {
+	background-color: #e6eaed;
+	border: 1px solid #ddd;
+}
+</style><style type="text/css" id="core-notify">.notifyjs-corner {
+	position: fixed;
+	margin: 5px;
+	z-index: 1050;
+}
+
+.notifyjs-corner .notifyjs-wrapper,
+.notifyjs-corner .notifyjs-container {
+	position: relative;
+	display: block;
+	height: inherit;
+	width: inherit;
+	margin: 3px;
+}
+
+.notifyjs-wrapper {
+	z-index: 1;
+	position: absolute;
+	display: inline-block;
+	height: 0;
+	width: 0;
+}
+
+.notifyjs-container {
+	display: none;
+	z-index: 1;
+	position: absolute;
+}
+
+.notifyjs-hidable {
+	cursor: pointer;
+}
+
+[data-notify-text],[data-notify-html] {
+	position: relative;
+}
+
+.notifyjs-arrow {
+	position: absolute;
+	z-index: 2;
+	width: 0;
+	height: 0;
+}</style></head>
+   <body class="fixed-left" cz-shortcut-listen="true">
+   	    
+      <div id="wrapper" class="forced">
+         <div class="topbar">
+            <!-- LOGO -->
+            <div class="topbar-left">
+               <div class="text-center">
+                  <!-- <a href="/2018/dmcpharmacy/backend/web/index.php" class="logo" alt="DMC"><i class="icon-c-logo">DMC</i><span>DMC<i class="md md-album"></i>PHARMACY</span></a>-->
+                  <!-- Image Logo here -->
+                  <a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.html" class="logo">
+                  <i class="icon-c-logo"> <img src="./IP Procedure STD_files/logo-original.png" width="42" height="42"> </i>
+                  <span>DMC</span><!--i class="md md-album"></i>PHARMACY<-->
+                  </a>
+               </div>
+            </div>
+            <!-- Button mobile view to collapse sidebar menu -->
+            <div class="navbar navbar-default" role="navigation">
+               <div class="container">
+                  <div class="row">
+                     <div class="pull-left ">
+                        <button class="button-menu-mobile open-left waves-effect waves-light">
+                        <i class="md md-menu"></i>
+                        </button>
+                        <span class="clearfix"></span>
+                     </div>
+					
+					 <div class="fulscrn">
+					 <div class=" select-val col-sm-1" style="width:142px;">
+					 						 	<select name="select-admin" id="select-admin" class="select-admin form-control" style="width:142px;">
+					 		<!-- <option value=""></option> -->
+					 		<option value="D">Dashboard</option><option value="P">Pharmacy</option><option value="R">Reception</option><option value="L">Laboratory</option><option value="U">UCIL</option>						</select>
+					 </div>
+					 <!--  <div class="col-sm-1"><input type="text" class="form-control"></div> -->
+					 <div id="globalsearch" class="form-group  col-sm-2  globalsearch">						
+                           
+						   <div class="input-group add-on fwidth" style="top:15px;">
+                           		<input class="form-control  typehead1" style=" " placeholder="SHORTPATH" id="whole_link_move" type="text">
+															
+							</div>								 
+                        </div>
+                        
+						<div class="col-sm-2 text-center">
+						 <span class="page-headr" id="title">IP Procedure STD</span>
+						</div>
+						
+						
+						
+						
+						
+						
+						
+						<div class="col-sm-3" style="width: 20%;"><strong><span class="pull-right" id="date_time">Wednesday, March 6 2019 10:24:18</span></strong></div>
+						
+						</div>
+                     <ul class="nav navbar-nav navbar-right pull-right">
+                        <li class="hidden-xs">
+                           <a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" class="waves-effect waves-light">
+                           Branch :Pulivendula                           </a>
+                        </li>
+						
+                       <!-- <li class="hidden-xs">
+                           <a href="#"  class="waves-effect waves-light">
+                                                      Welcome,dmc                           </a>
+                        </li> -->
+                        <li class="hidden-xs">
+                           <a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" id="btn-fullscreen" class="waves-effect waves-light"><i class="icon-size-fullscreen"></i></a>
+                        </li>
+                       <!-- <li class="hidden-xs">
+                           <a href="#" class="right-bar-toggle waves-effect waves-light"><i class="fa fa-comment-o"></i></a>
+                        </li>  -->
+                        <li class="dropdown top-menu-item-xs">
+                           <a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"><img src="./IP Procedure STD_files/user2-160x160.jpg" alt="user-img" class="img-circle"> </a>
+                           <ul class="dropdown-menu">
+                              <li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=branch-admin/profile"><i class="ti-user m-r-10 text-custom"></i> Profile</a></li>
+                              <!--     <li><a href="javascript:void(0)"><i class="ti-settings m-r-10 text-custom"></i> Settings</a></li>
+                                 <li><a href="/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall%2Flogscreen"><i class="ti-lock m-r-10 text-custom"></i> Lock screen</a></li>-->
+                              <li class="divider"></li>
+                              <li>
+                                 <a><form action="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=site%2Flogout" method="post">
+<input type="hidden" name="_csrf" value="HBHtBRAaXvtulTNjFwwskuo8DWn6o0TUlzApoTMxoI0qf6c9PVsGjR_SRC9kTVjr2WlCXKOWHrLufl7GBhzqvQ=="><button type="submit" class="btn btn-primary btn-custom waves-effect waves-light"><i class="fa fa-sign-out"></i> Logout</button></form></a>                              </li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </div>
+                 
+               </div>
+            </div>
+         </div>
+         
+          
+ <div class="left side-menu">
+ <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 538px;"><div class="sidebar-inner slimscrollleft" style="overflow: hidden; width: auto; height: 538px;">
+ 	<div id="sidebar-menu">
+ 		<ul>
+<li class="has_sub "> 
+		              <a class="waves-effect" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li><li class="has_sub "> 
+		              <a class="waves-effect" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=sales/master"><i class="fa fa-share" aria-hidden="true"></i> <span>Masters</span></a></li><li class="has_sub "><a class="waves-effect"><i class="fa fa-fw fa fa-medkit"></i> <span>Diagnostics VF</span><span class="menu-arrow"></span></a><ul class="list-unstyled" style="display: none;"><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=lab-payment-prime/create"><i class="fa fa-fw fa fa-flask"></i>Requistions Std</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=treatment-overall/create"><i class="fa fa-fw fa fa-user-md"></i>Procedures STD</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-lab-payment-prime/create"><i class="fa fa-fw fa fa-flask"></i>Requistions IP Std</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=treatment-overall/procedure-refunds"><i class="fa fa-fw fa fa-tasks"></i>DG Cancel Refunds STD</a></li></ul></li><li class="has_sub "><a class="waves-effect  active subdrop"><i class="fa fa-fw fa fa-modx"></i> <span>IP Patient VF</span><span class="menu-arrow"></span></a><ul class="list-unstyled" style="display: block;"><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/create"><i class="fa fa-fw fa-info"></i>IP Admission STD</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/change-room"><i class="fa fa-fw fa fa-tasks"></i>IP ChangeRoom STD</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/ipprocedurecancel"><i class="fa fa-fw fa fa-tasks"></i>IP Procedure Cancellation STD</a></li><li class="active1 active"><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create" class="active"><i class="fa fa-fw fa fa-tasks"></i>IP Procedure STD</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=newpatient/ucilhelp"><i class="fa fa-fw fa fa-money"></i>UCIL HELP</a></li></ul></li><li class="has_sub "><a class="waves-effect"><i class="fa fa-fw fa fa-home"></i> <span>Out Patient VF</span><span class="menu-arrow"></span></a><ul class="list-unstyled" style="display: none;"><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=newpatient/createshort"><i class="fa fa-fw fa fa-wheelchair"></i>Private OPD Std</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=newpatient/sub-visit-new1"><i class="fa fa-fw fa fa-bed"></i>Sub Visit STD</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=cancel-log-table/index"><i class="fa fa-fw fa fa-hand-point-up"></i>OPD Cancel Refund STD</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=op-moneyreceipt/create"><i class="fa fa-fw fa fa-money"></i>DG Money Receipt</a></li></ul></li><li class="has_sub "><a class="waves-effect"><i class="fa fa-fw fa fa-tasks"></i> <span>In Patient</span><span class="menu-arrow"></span></a><ul class="list-unstyled" style="display: none;"><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/blockipentries"><i class="fa fa-fw fa fa-tasks"></i>Block IP Entries</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/enquiry"><i class="fa fa-fw fa fa-tasks"></i>Enquiry</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=finalbill/create"><i class="fa fa-fw fa fa-tasks"></i>Final Bill</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/ip-admission"><i class="fa fa-fw fa fa-tasks"></i>Ip Admission</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/ip-information"><i class="fa fa-fw fa fa-tasks"></i>IP Information</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=ip-moneyreceipts/create"><i class="fa fa-fw fa fa-tasks"></i>Money Receipt</a></li><li><a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/patient-info"><i class="fa fa-fw fa fa-tasks"></i>Patient Info</a></li></ul></li></ul>
+
+</div>
+</div><div class="slimScrollBar" style="background: rgb(152, 166, 173); width: 5px; position: absolute; top: -49px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 538px; visibility: visible;"></div><div class="slimScrollRail" style="width: 5px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+</div>
+
+  
+                  
+         <div class="content-page">
+            <div class="content"> 
+                              <div class="treatment-overall-create">
+
+
+    <style>
+.produceradded input {
+    text-align: right;
+}
+#intreatmentindividual-treatment_id{
+	    text-align: left;
+}
+#intreatmentoverall-name {
+    color: #1c55ff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.inpatientblock input {
+    text-transform: uppercase;
+}
+
+   .date_show {
+	   	border: 1px solid #eaeaea;
+   		padding: 30px 15px 15px 15px;
+   		margin-top: 30px;
+   		right: 20px;
+   }
+   .dis_remark{
+   		position: relative;
+   		left: 15px;
+   }
+   .date_show>span {
+   		position: absolute;
+   		top: -10px;
+   		background: #f98585;
+   		padding: 4px 10px;
+   		color: #ffff;
+   }
+   .bg-div.table>tbody>tr>td, .bg-div.table>tbody>tr>th{padding:0px 7px!important;}
+   .error{
+   		color: red !important;
+   }
+</style>
+<link href="./IP Procedure STD_files/site-demos.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./IP Procedure STD_files/bootstrap3-typeahead.js.download"></script>
+<script type="text/javascript" src="./IP Procedure STD_files/bootstrap3-typeahead.min.js.download"></script>  
+<link href="./IP Procedure STD_files/billing.css" rel="stylesheet" type="text/css">
+<style>
+   td div.input-group-btn .btn {
+   height: 23px!important;
+   padding: 3px 12px!important;
+   }
+   label.control-label{
+   color:#444;
+   }
+   .btn-group-sm>.btn, .btn-sm {
+   padding: 2px 10px;
+   }
+   .ip-btn-style{border:1px solid  #cccccc; }
+  
+</style>
+<div class="">
+  
+   <form id="w0" action="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create" method="post" novalidate="novalidate">
+<input type="hidden" name="_csrf" value="HBHtBRAaXvtulTNjFwwskuo8DWn6o0TUlzApoTMxoI0qf6c9PVsGjR_SRC9kTVjr2WlCXKOWHrLufl7GBhzqvQ==">   <div class="container">
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="panel panel-border panel-custom ">
+               <div class="panel-heading">
+               </div>
+               <div class="panel-body">
+                  <div class="inpatientblock  desc">
+                     <div class="row">
+                        <div class="col-sm-2">
+                           
+						   					   
+						 <div class="form-group col-sm-9">
+						   <label class="control-label">IP NO</label><br>  
+						   <div class="input-group input-group-sm add-on mr-num">	   
+							     <div class="field-mrnumber has-success"> 
+								  <div class="form-group field-intreatmentoverall-ip_no">
+
+<input type="text" id="intreatmentoverall-ip_no" class="ipnumber ip-btn-style cus-fld number valid" name="InTreatmentOverall[ip_no]" autocomplete="off" required="" onkeyup="IPNUMBER(this,event);" aria-required="true">196</input><ul class="typeahead dropdown-menu" role="listbox" style="top: 25px; left: 0px; display: none;"><li class="active"><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option"><strong>196</strong></a></li></ul>
+
+<div class="help-block"></div>
+</div>								  <div class="form-group field-mrnumber has-success">
+
+<input type="hidden" id="mrnumber" class="mrnumber number form-control mrn inrefrsh" name="InTreatmentOverall[mrnumber]" required="" placeholder="MRN Search" value="134521" aria-invalid="false" aria-required="true">
+
+<div class="help-block"></div>
+</div>                                    <input type="hidden" id="pat_id" name="PATID" value="">
+                                    <input type="hidden" id="mr_number" name="mr_number" value="">
+                                    <input type="hidden" id="subvisit_id" name="SUBVISITID" value="">
+                                    <input type="hidden" id="subvisit_number" name="SUBVISITNUMBER" value="">
+						   	      </div>
+							   <span class="ipt input-group-btn fetch_record" value="click" onmousedown="Patient_details()">
+							      <button type="button" class="btn inp btn-default btn-flat btn patient_fetch_details inpatient-details"><i class="ssearch glyphicon glyphicon-search"></i></button>
+							    </span>
+						   </div>
+						    <span id="mr_validated" style="color: red; display: none;" hidden="">Invalid MR Number</span>
+                              <span class="in_pat_validated" style="color: red; display: none;" hidden="">Enter Patient Record</span>
+                           </div>
+						   
+						   
+						   
+						   
+                           <div class="  col-sm-3">  
+                              <label style="visibility: hidden">ipNUMBER </label>
+                              <button type="button" style="float: left;background: #800080 !important;margin-right: 5px; color:#fff;" class="btn  btn-sm  " id="patient_history_detils1" onclick="Patientdetails_modal1()">  Details  </button>
+                           </div>
+                        </div>
+                        <div class="col-sm-9">
+                           <div class="col-md-2">
+                              <div class="form-group">
+                                 <div class="form-group field-intreatmentoverall-name has-success">
+<label class="control-label" for="intreatmentoverall-name">PAT NAME</label>
+<input type="text" id="intreatmentoverall-name" class="form-control valid" name="InTreatmentOverall[name]" readonly="" required="" aria-invalid="false" aria-required="true">
+
+<div class="help-block"></div>
+</div>                              </div>
+                           </div>
+                           <div class="col-md-2 width-inc">
+                              <div class="form-group">
+                                 <div class="form-group field-intreatmentoverall-dob has-success">
+<label class="control-label" for="intreatmentoverall-dob">DOB</label>
+<input type="text" id="intreatmentoverall-dob" class="form-control " name="InTreatmentOverall[dob]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div> 
+                              </div>
+                           </div>
+                           <div class="col-md-2">
+                              <div class="form-group">
+                                 <div class="form-group field-intreatmentoverall-gender has-success">
+<label class="control-label" for="intreatmentoverall-gender">Gender</label>
+<input type="text" id="intreatmentoverall-gender" class="form-control    " name="InTreatmentOverall[gender]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                              </div>
+                           </div>
+                           <div class="col-md-2 width-inc">
+                              <div class="form-group field-intreatmentoverall-insurancetype has-success">
+<label class="control-label" for="intreatmentoverall-insurancetype">INSURANCE</label>
+<input type="text" id="intreatmentoverall-insurancetype" class="form-control " name="InTreatmentOverall[insurancetype]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                           </div>
+                           <div class="col-md-2">
+                              <div class="form-group">
+                                 <div class="form-group field-newpatient-par_relationname has-success">
+<label class="control-label" for="newpatient-par_relationname">RELATION</label>
+<input type="text" id="newpatient-par_relationname" class="form-control  " name="Newpatient[par_relationname]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                              </div>
+                           </div>
+
+                        </div>
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div id="load1" style="text-align: center; display: none;"><img class="load-image" src="./IP Procedure STD_files/loader1.gif"></div>
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-12" style="padding-top: 3px;">
+            <div class="panel panel-border panel-custom produceradded ">
+               <div class="panel-heading">
+               </div>
+               <div class="panel-body">
+                  <div class="row">
+                     <div class="col-md-3 width-inc">
+                        <div class="form-group">
+                           <div class="form-group field-intreatmentindividual-treatment_id has-success">
+<label class="control-label" for="intreatmentindividual-treatment_id">PROCEDURES</label>
+<input type="text" id="intreatmentindividual-treatment_id" class="form-control cus-fld procedures" name="InTreatmentIndividual[treatment_id]" onkeyup="EmptyESC(this,event); validproname(this,event);" aria-invalid="false">ACCOMMODA-ACC3</input><ul class="typeahead dropdown-menu" role="listbox" style="top: 46px; left: 10px; display: none;"><li class="active"><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option">ACCOMMODA-ACC3</a></li><li><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option">ANESTHESIA --ACC</a></li><li><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option">ASSISTANT-</a></li><li><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option">An<strong>a</strong>esthetist-</a></li><li><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option">C <strong>a</strong>rm-</a></li><li><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option">Cervic<strong>a</strong>l-</a></li><li><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option">Intr<strong>a</strong> Uterine-</a></li><li><a class="dropdown-item" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" role="option">Investig<strong>a</strong>tions-</a></li></ul>
+
+<div class="help-block"></div>
+</div>                           <input type="hidden" id="treatment_id" name="treatment" value="">
+                        </div>
+                     </div>
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <div class="form-group field-intreatmentindividual-rate has-success">
+<label class="control-label" for="intreatmentindividual-rate">RATE</label>
+<input type="text" id="intreatmentindividual-rate" class="form-control cus-fld number valid" name="InTreatmentIndividual[rate]" onkeyup="RateCalCulation(this,event);" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                        </div>
+                     </div>
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <div class="form-group field-intreatmentindividual-qty has-success">
+<label class="control-label" for="intreatmentindividual-qty">QTY</label>
+<input type="text" id="intreatmentindividual-qty" class="form-control cus-fld number valid" name="InTreatmentIndividual[qty]" onkeyup="QtyCalCulation(this,event);" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                        </div>
+                     </div>
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <div class="form-group field-intreatmentindividual-gstpercent has-success">
+<label class="control-label" for="intreatmentindividual-gstpercent">GST(%)</label>
+<input type="text" id="intreatmentindividual-gstpercent" class="form-control cus-fld number valid" name="InTreatmentIndividual[gstpercent]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                        </div>
+                     </div>
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <div class="form-group field-intreatmentindividual-gstvalue has-success">
+<label class="control-label" for="intreatmentindividual-gstvalue">GST(AMT)</label>
+<input type="text" id="intreatmentindividual-gstvalue" class="form-control cus-fld number valid" name="InTreatmentIndividual[gstvalue]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                        </div>
+                     </div>
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <div class="form-group field-intreatmentindividual-mrp has-success">
+<label class="control-label" for="intreatmentindividual-mrp">Total AmT</label>
+<input type="text" id="intreatmentindividual-mrp" class="form-control cus-fld" name="InTreatmentIndividual[mrp]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                        </div>
+                     </div>
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <div class="form-group field-intreatmentindividual-total_price has-success">
+<label class="control-label" for="intreatmentindividual-total_price">NET AMT</label>
+<input type="text" id="intreatmentindividual-total_price" class="form-control cus-fld" name="InTreatmentIndividual[total_price]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div>                        </div>
+                     </div>
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <label style="visibility:hidden;width:100%;">Button</label>
+                           <button type="button" id="add_to_grid" onclick="AddToGrid();" title="Add To Grid" class="add_to_grid btn btn-primary btn-xs"><i class="fa fa-plus"></i> <b>Add</b></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="panel panel-border ">
+               <div class="panel-heading">
+               </div>
+               <div class="panel-body">
+                  <div class=" ">
+                     <div class="col-sm-9" style="padding-right:0;padding-left:0">
+                        <table class="table table-bordered table-striped tbl-scrol" id="tbUser" style="margin-top:20px;">
+                           <thead>
+                              <tr>
+                                 <th rowspan="2" class="text-center hide">#</th>
+                                 <th rowspan="2" class="text-center" style="width:18%;">PROCEDURE NAME</th>
+                                 <th rowspan="2" class="text-center">RATE</th>
+                                 <th rowspan="2" class="text-center">QTY</th>
+                                 <th rowspan="2" class="text-center">TAXABLE AMOUNT</th>
+                                 <th colspan="2" class="text-center">GST(%)</th>
+                                 <th colspan="2" class="text-center">GST(AMT)</th>
+                                 <th colspan="2" class="text-center">Discount</th>
+                                 <th rowspan="2" class="text-center">Total</th>
+                                 <th rowspan="2" class="text-center">Remove</th>
+                              </tr>
+                              <tr>
+                                 <th class="text-center">CGST</th>
+                                 <th class="text-center">SGST</th>
+                                 <th class="text-center">CGST</th>
+                                 <th class="text-center">SGST</th>
+                                 <th class="text-center">DIS(%)</th>
+                                 <th class="text-center">DIS(Amt)</th>
+                              </tr>
+                           </thead>
+                           <tbody id="fetch_update_data">  
+                           <tr class="save_data_table" data-id="1" id="table_del1"><td style="width:18%;"><div class="trunctext wd100">ACCOMMODA-ACC3</div></td><td><input type="hidden" name="treatmentprimeid[]" id="treatmentprimeid1" value="1"><input type="text" style="text-align:right;" id="intreatmentindividual-rate1" readonly="readonly" class="form-control" name="InTreatmentIndividual[rate][]" value="12.5"></td><td><input type="text" style="text-align:right;" id="intreatmentindividual-qty1" readonly="readonly" class="form-control" name="InTreatmentIndividual[qty][]" value="1"></td><td><input type="text" style="text-align:right;" id="treatmentindividual-taxamount1" readonly="readonly" class="form-control" name="TreatmentIndividual[taxamount][]" value="12.5"></td><td><input type="text" style="text-align:right;" id="intreatmentindividual-cgst_percent1" readonly="readonly" class="form-control" name="InTreatmentIndividual[cgst_percent][]" value="0"></td><td><input type="text" style="text-align:right;" id="intreatmentindividual-sgst_percent1" readonly="readonly" class="form-control" name="InTreatmentIndividual[sgst_percent][]" value="0"></td><td><input type="text" style="text-align:right;" id="intreatmentindividual-cgst_value1" readonly="readonly" class="form-control" name="InTreatmentIndividual[cgst_value][]" value="0"></td><td><input type="text" style="text-align:right;" id="intreatmentindividual-sgst_value1" readonly="readonly" class="form-control" name="InTreatmentIndividual[sgst_value][]" value="0"></td><td><input type="text" style="text-align:right;" id="intreatmentindividual-discount_percent1" readonly="readonly" class="form-control" name="InTreatmentIndividual[discount_percent][]" value="0"></td><td><input type="text" style="text-align:right;" id="intreatmentindividual-discountvalue1" readonly="readonly" class="form-control" name="InTreatmentIndividual[discountvalue][]" value="0"></td><td><input type="text" style="text-align:right;" id="intreatmentindividual-total_price1" readonly="readonly" class="form-control" name="InTreatmentIndividual[total_price][]" value="12.50"><input type="hidden" id="intreatmentindividual-total_price_joker1" class="hidden_price form-control" name="InTreatmentIndividual[hidden_total_price][]" value="12.50"></td><td class="text-center"><button type="button" class=" btn btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow" data_delete_row="1" id="delrow1"><i class="fa fa-remove"></i></button></td></tr></tbody>
+                        </table>
+                     </div>
+                     <div class="col-sm-3 bg-div billing-right-panel">
+                        <div class="panel">
+                           <div class="bg-div">
+                              <table class="table disable-label">
+                                 <tbody><tr>
+                                    <th class="col-sm-5">Price</th>
+                                    <td class="col-sm-7"> <div class="form-group field-intreatmentoverall-overall_sub_total has-success">
+<label class="control-label" for="intreatmentoverall-overall_sub_total"> </label>
+<input type="text" id="intreatmentoverall-overall_sub_total" class="form-control cus-fld text-right valid" name="InTreatmentOverall[overall_sub_total]" readonly="" required="" aria-invalid="false" aria-required="true">
+
+<div class="help-block"></div>
+</div> </td>
+                                 </tr>
+                                 <tr>
+                                    <th>GST</th>
+                                    <td><div class="form-group field-intreatmentoverall-totalgstvalue has-success">
+<label class="control-label" for="intreatmentoverall-totalgstvalue"></label>
+<input type="text" id="intreatmentoverall-totalgstvalue" class="form-control cus-fld text-right valid" name="InTreatmentOverall[totalgstvalue]" readonly="" required="" aria-invalid="false" aria-required="true">
+
+<div class="help-block"></div>
+</div></td>
+                                 </tr>
+                                 <tr>
+                                    <th>Bill Total</th>
+                                    <td><input type="text" class="form-control text-right " name="bill total" id="tre_bill_total" readonly="readonly"></td>
+                                 </tr>
+                                 <tr>
+                                    <th>Discount</th>
+                                    <td>
+                                       <div class="input-group">
+                                          <div class="input-group-btn" data-toggle="buttons">
+                                             <label class="inp btn btn-default enable-textbox-percentage" disabled="" style="padding:3px!important;">
+                                             <input type="radio" name="discount" class="enable-textbox-percentage" value="percentage" autocomplete="off">%
+                                             </label>         
+                                          </div>
+                                          <div class="form-group field-intreatmentoverall-overalldiscountpercent">
+<label class="control-label" for="intreatmentoverall-overalldiscountpercent"></label>
+<input type="text" id="intreatmentoverall-overalldiscountpercent" class="form-control w-40  number pr-11 text-right" name="InTreatmentOverall[overalldiscountpercent]" onkeyup="DiscountPercentCalCulation(this,event);" disabled="">
+
+<div class="help-block"></div>
+</div>                                          <div class="input-group-btn" data-toggle="buttons">
+                                             <label class="inp btn btn-default enable-textbox-flat" disabled="" style="padding:3px!important;">
+                                             <input type="radio" name="discount" class="enable-textbox-flat" value="flat" autocomplete="off">$
+                                             </label>         
+                                          </div>
+                                          <div class="form-group field-intreatmentoverall-overalldiscountamount">
+<label class="control-label" for="intreatmentoverall-overalldiscountamount"></label>
+<input type="text" id="intreatmentoverall-overalldiscountamount" class="form-control cus-fld number pr-11 text-right" name="InTreatmentOverall[overalldiscountamount]" onkeyup="DiscountValueCalCulation(this,event);" readonly="readonly" disabled="">
+
+<div class="help-block"></div>
+</div>                                          <input type="hidden" name="total_subvalue" id="total_subvalue" value="12.5"> 
+                                       </div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <th>NET Amount</th>
+                                    <td>  <div class="form-group field-intreatmentoverall-overall_net_amount has-success">
+<label class="control-label" for="intreatmentoverall-overall_net_amount"> </label>
+<input type="text" id="intreatmentoverall-overall_net_amount" class="form-control cus-fld info1 text-right valid" name="InTreatmentOverall[overall_net_amount]" readonly="" required="" aria-invalid="false" aria-required="true">
+
+<div class="help-block"></div>
+</div> </td>
+                                 </tr>
+                                 <tr>
+                                    <th>Paid Amount</th>
+                                    <td><div class="form-group field-intreatmentoverall-overalltotal has-success">
+<label class="control-label" for="intreatmentoverall-overalltotal"> </label>
+<input type="text" id="intreatmentoverall-overalltotal" class="form-control success1 cus-fld number text-right valid" name="InTreatmentOverall[overalltotal]" onkeyup="PaidAmountCalculation(this,event);" required="" readonly="readonly" aria-invalid="false" aria-required="true">
+
+<div class="help-block"></div>
+</div></td>
+                                 </tr>
+                                 <tr>
+                                    <th>Due Amount</th>
+                                    <td><div class="form-group field-intreatmentoverall-overall_due_amount has-success">
+<label class="control-label" for="intreatmentoverall-overall_due_amount"> </label>
+<input type="text" id="intreatmentoverall-overall_due_amount" class="form-control cus-fld danger1 text-right" name="InTreatmentOverall[overall_due_amount]" readonly="" aria-invalid="false">
+
+<div class="help-block"></div>
+</div></td>
+                                 </tr>
+                              </tbody></table>
+                           </div>
+                        </div>
+                        <div class="form-group field-intreatmentoverall-discount_authority">
+<label class="control-label" for="intreatmentoverall-discount_authority">Authority</label>
+<select id="intreatmentoverall-discount_authority" class="form-control cus-fld" name="InTreatmentOverall[discount_authority]" onchange="RemarksDefault(this.value);">
+<option value="">Select</option>
+<option value="1">E.C.SUGUNAMMA</option>
+<option value="2">E.C.DINESH REDDY</option>
+<option value="3">E.C.GANGI REDDY</option>
+</select>
+
+<div class="help-block"></div>
+</div>						<div class="form-group field-intreatmentoverall-remarks">
+<label class="control-label" for="intreatmentoverall-remarks">Remarks</label>
+<textarea id="intreatmentoverall-remarks" class="form-control cus-fld" name="InTreatmentOverall[remarks]"></textarea>
+
+<div class="help-block"></div>
+</div>                        <div class="form-group">
+                           <div class="panel">
+                              <div class="panel panel-border">
+                                 <div class="panel-body" style="padding: 6px 7px 8px 35px!important;">             
+                                    <button type="button" class="btn  btn-xs  btn-success" id="saves_sucess tooltip_show" onclick="SaveProcedures();" title="CTRL+S for Save">Save</button>
+                                    <button type="button" class="btn  btn-xs btn-warning remove_all" onclick="ClearAllField();" title="CTRL+C for Clear">Clear</button>
+                                    <a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-registration/in-index" class="btn btn-xs text-right bk-btn btn-default" title="CTRL+G for Grid">Grid </a>
+                                     <a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php" class="btn btn-xs text-right bk-btn btn-danger" title="CTRL+Q for Quit">Close </a>             
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</form></div>
+</div>
+
+<div id="patient_hist-modal_details" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header tmp-head">
+            <button type="button" class="close tmp-close" data-dismiss="modal">×</button>
+            <h4 class="modal-title">Patient Details</h4>
+         </div>
+         <div class="modal-body">
+            <div class="" id="patient_history_report">
+               <table class="table table-striped table-bordered">
+                  <tbody id="set_patient_data1">
+                  </tbody>
+               </table>
+            </div>
+         </div>
+         <div class="inp modal-footer">
+            <button type="button" class="inp btn btn-default" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>
+<div id="" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header tmp-head">
+            <button type="button" class="close tmp-close" data-dismiss="modal">×</button>
+            <h4 class="modal-title">Patient Identification List</h4>
+         </div>
+         <div class="modal-body">
+            <div class="" id="patient_history_report">
+               <div id="example_wrapper" class="dataTables_wrapper no-footer"><div id="example_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="example"></label></div><div class="dataTables_scroll"><div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;"><div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 100px; padding-right: 0px;"><table class="table table-striped table-bordered nowrap dataTable no-footer" style="width: 100px; margin-left: 0px;" role="grid"><thead>
+                     <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 0px;" aria-sort="ascending" aria-label="MR NUMBER: activate to sort column descending">MR NUMBER</th><th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 0px;" aria-label="Sub-Visit Number: activate to sort column ascending">Sub-Visit Number</th><th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 0px;" aria-label="Patient Name: activate to sort column ascending">Patient Name</th><th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 0px;" aria-label="Mobile Number: activate to sort column ascending">Mobile Number</th><th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 0px;" aria-label="Consultant Doctor: activate to sort column ascending">Consultant Doctor</th><th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 0px;" aria-label="Action: activate to sort column ascending">Action</th></tr>
+                  </thead></table></div></div><div class="dataTables_scrollBody" style="position: relative; overflow: auto; height: 400px; width: 100%;"><table id="example" class="table table-striped table-bordered nowrap dataTable no-footer" style="width: 100%;" role="grid" aria-describedby="example_info"><thead>
+                     <tr role="row" style="height: 0px;"><th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 0px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="MR NUMBER: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">MR NUMBER</div></th><th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 0px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Sub-Visit Number: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Sub-Visit Number</div></th><th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 0px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Patient Name: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Patient Name</div></th><th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 0px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Mobile Number: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Mobile Number</div></th><th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 0px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Consultant Doctor: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Consultant Doctor</div></th><th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 0px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Action: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Action</div></th></tr>
+                  </thead>
+                  
+                  <tbody id="set_patient_data">
+                       
+                  <tr class="odd"><td valign="top" colspan="6" class="dataTables_empty">No data available in table</td></tr></tbody>
+               </table></div></div><div class="dataTables_info" id="example_info" role="status" aria-live="polite">Showing 0 to 0 of 0 entries</div></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>
+<div id="patient_details" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content">
+      <div class="modal-header tmp-head">
+        <button type="button" class="close tmp-close" data-dismiss="modal">×</button>
+        <h4 class="modal-title">Patient Details</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="" id="patient_history_report">
+      
+      <div id="reg_table_wrapper" class="dataTables_wrapper no-footer"><div class="dataTables_length" id="reg_table_length"><label>Show <select name="reg_table_length" aria-controls="reg_table" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label></div><div id="reg_table_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="reg_table"></label></div><div id="reg_table_processing" class="dataTables_processing" style="display: none;">Processing...</div><div style="position: absolute; height: 1px; width: 0px; overflow: hidden;"><input type="text" tabindex="0"></div><table id="reg_table" class="display dataTable no-footer" style="width: 100%; position: relative;" role="grid" aria-describedby="reg_table_info">
+        <thead>
+            <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="reg_table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="IP Number: activate to sort column descending" style="width: 0px;">IP Number</th><th class="sorting" tabindex="0" aria-controls="reg_table" rowspan="1" colspan="1" aria-label="MR Number: activate to sort column ascending" style="width: 0px;">MR Number</th><th class="sorting" tabindex="0" aria-controls="reg_table" rowspan="1" colspan="1" aria-label="Patient name: activate to sort column ascending" style="width: 0px;">Patient name</th><th class="sorting" tabindex="0" aria-controls="reg_table" rowspan="1" colspan="1" aria-label="Relation Name: activate to sort column ascending" style="width: 0px;">Relation Name</th><th class="sorting" tabindex="0" aria-controls="reg_table" rowspan="1" colspan="1" aria-label="Mobile Number: activate to sort column ascending" style="width: 0px;">Mobile Number</th></tr>
+        </thead>
+        
+    <tbody><tr id="4" role="row" class="odd selected"><td class="sorting_1">198</td><td>134665</td><td>harini</td><td>meyyappan</td><td>0000000000</td></tr><tr id="3" role="row" class="even"><td class="sorting_1">197</td><td>134634</td><td>G. SAROJA</td><td>G. MAHESWAR REDDY</td><td>0</td></tr><tr id="2" role="row" class="odd"><td class="sorting_1">196</td><td>134521</td><td>abinaya</td><td>ramki</td><td>9434654546</td></tr><tr id="1" role="row" class="even"><td class="sorting_1">195</td><td>134589</td><td>S. FATHIMA</td><td>S. GHAFOOR</td><td>8462621524</td></tr></tbody></table><div class="dataTables_info" id="reg_table_info" role="status" aria-live="polite">Showing 1 to 4 of 4 entries (filtered from 10 total entries)</div><div class="dataTables_paginate paging_simple_numbers" id="reg_table_paginate"><a class="paginate_button previous disabled" aria-controls="reg_table" data-dt-idx="0" tabindex="0" id="reg_table_previous">Previous</a><span><a class="paginate_button current" aria-controls="reg_table" data-dt-idx="1" tabindex="0">1</a></span><a class="paginate_button next disabled" aria-controls="reg_table" data-dt-idx="2" tabindex="0" id="reg_table_next">Next</a></div></div>		
+		</div>
+      </div>
+      <div class="inp modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div> 
+
+	<script type="text/javascript">
+	
+      /*var availableTags = [{"subnumber":0,"ip_no":{}},{"subnumber":1,"ip_no":{}},{"subnumber":2,"ip_no":{}},{"subnumber":3,"ip_no":{}}];
+   
+   var newpatient = ;
+   var subvisit = ;*/
+   var availableTags = [{"subnumber":0,"ip_no":{}},{"subnumber":1,"ip_no":{}},{"subnumber":2,"ip_no":{}},{"subnumber":3,"ip_no":{}}];
+   
+   var newpatient = [];
+   var subvisit = [];
+   
+   
+      var Insurance = {"1":{"insurance_typeid":"1","insurance_type":"UCIL","is_active":"1","updated_on":"2018-08-01","updated_by":"26","updated_ipaddress":"192.168.1.19"},"2":{"insurance_typeid":"2","insurance_type":"Aarogyasri","is_active":"1","updated_on":"2018-06-13","updated_by":"26","updated_ipaddress":"192.168.1.22"},"3":{"insurance_typeid":"3","insurance_type":"Family Health Plan","is_active":"1","updated_on":"2018-06-13","updated_by":"26","updated_ipaddress":"192.168.1.22"},"4":{"insurance_typeid":"4","insurance_type":"Insurance","is_active":"1","updated_on":"2018-06-14","updated_by":"26","updated_ipaddress":"192.168.1.22"}};
+   var TaxGrouping = {"159":{"auto_id":"170","taxgroupid":"159","hsncode":"999311","groupid":"1","tax":"0","additional_tax":"0","last_effected_date":"2020-04-30","is_active":"1","updated_by":"26","created_at":"2018-10-29 11:58:53","updated_on":"2018-10-29 11:58:53","updated_ipaddress":"192.168.1.62"}};
+   
+   function TotalNetAmountAddition()
+   {
+   var hidden_amt_val=[];
+   $("#fetch_update_data tr").each(function() 
+   {
+    var attr_id=$(this).attr('data-id');
+    //Hidden JOKER 
+    hidden_amt_val.push(parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val()));
+   });
+   var overall_amount=hidden_amt_val.reduce((a, b) => a + b, 0);
+   return overall_amount;
+   }
+   
+   
+   function DiscountValueCalCulation(data,event)
+   {
+    var length_arr=$("#fetch_update_data tr").length;
+    $('#intreatmentoverall-overall_due_amount').val('');
+    if(length_arr > 0)
+    {
+      var overall_amount=TotalNetAmountAddition();
+      
+      if(overall_amount < data.value)
+      {
+        var flat_amount=overall_amount;
+        var percentage_flat=parseFloat((flat_amount*100)/overall_amount);
+        
+        $("#fetch_update_data tr").each(function() 
+        {
+          var attr_id=$(this).attr('data-id');
+          //Hidden JOKER 
+          var hidden_net_amt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+          
+          var cal=Math.round(parseFloat((hidden_net_amt*percentage_flat)/100));
+          
+          var per=Math.round(parseFloat(cal*100/overall_amount));
+          
+          var hiden_amt_disc=hidden_net_amt-cal;
+          
+          $('#intreatmentindividual-discountvalue'+attr_id).val(cal);
+          $('#intreatmentindividual-discount_percent'+attr_id).val(per);
+          $('#intreatmentindividual-total_price'+attr_id).val(hiden_amt_disc);
+        });
+        OverallTotalDisAmtCalculation();
+        Alertment('Discount Amount Not More Than Net Amount!!!');
+      }
+      else if(overall_amount >= data.value)
+      {
+        var flat_amount=data.value;
+        var percentage_flat=parseFloat((flat_amount*100)/overall_amount);
+        
+        $("#fetch_update_data tr").each(function() 
+        {
+          var attr_id=$(this).attr('data-id');
+          //Hidden JOKER 
+          var hidden_net_amt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+          
+          var cal=Math.round(parseFloat((hidden_net_amt*percentage_flat)/100));
+          
+          var per=Math.round(parseFloat(cal*100/overall_amount));
+          
+          var hiden_amt_disc=hidden_net_amt-cal;
+          
+          $('#intreatmentindividual-discountvalue'+attr_id).val(cal);
+          $('#intreatmentindividual-discount_percent'+attr_id).val(per);
+          $('#intreatmentindividual-total_price'+attr_id).val(hiden_amt_disc);
+          
+          
+        });
+        OverallTotalDisAmtCalculation();
+      }
+      else if(data.value === '')
+      {
+        OverallTotalCalculation();
+      }
+    }
+    else
+    {
+      $('#intreatmentoverall-overalldiscountamount').val('');
+      ClearAddGrid();
+      Alertment('Choose PROCEDURES!!!');
+    }
+   }
+   
+   
+   function DiscountPercentCalCulation(data,event)
+   {
+   	 	//alert(data.value);
+   	 	if("undefined"==data.value){
+   	 		var discountvalue=0;
+   	 	}else{
+   	 		var discountvalue=data.value;
+   	 	}
+   		var pat_name=$('#intreatmentoverall-name').val();
+		var ipnumber=$('#intreatmentoverall-ip_no').val();
+		var get_insurance=$('#intreatmentoverall-insurancetype').val();
+		// alert(get_insurance);
+		if(pat_name !== '' && ipnumber !== '')
+		{
+			if(get_insurance !="")
+			{
+				$('#intreatmentoverall-overalldiscountpercent').val('');
+				Alertment('This is Organization Patient not allowed to Discount');
+				return false;
+			}else if(get_insurance==""){
+				 var length_arr=$("#fetch_update_data tr").length;
+    
+		    $('#intreatmentoverall-overall_due_amount').val('');
+		    if(length_arr > 0)
+		    {
+		    	//alert(data.value);
+		      if(discountvalue > 100)
+		      {
+		        var discount_percent=100;
+		        
+		        $('#intreatmentoverall-overalldiscountpercent').val(discount_percent);
+		        
+		        $("#fetch_update_data tr").each(function() 
+		        {
+		          var attr_id=$(this).attr('data-id');
+		          var total_amt_add=parseFloat($('#intreatmentindividual-rate'+attr_id).val());
+		          var total_qty=parseInt($('#intreatmentindividual-qty'+attr_id).val());
+		          var disc_perct=parseFloat($('#intreatmentindividual-discount_percent'+attr_id).val());
+		          var disc_amunt=parseFloat($('#intreatmentindividual-discountvalue'+attr_id).val());
+		          var net_amunt=parseFloat($('#intreatmentindividual-total_price'+attr_id).val());
+		          //Hidden JOKER 
+		          var hidden_amt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+		          
+		          var calculation=parseFloat((hidden_amt*discount_percent)/100).toFixed(2);
+		          
+		          if(calculation > hidden_amt)
+		          {
+		            $('#intreatmentindividual-total_price'+attr_id).val(0);
+		          }
+		          else if(calculation <= hidden_amt)
+		          {
+		            var discountvalue=hidden_amt-calculation;
+		            $('#intreatmentindividual-total_price'+attr_id).val(discountvalue.toFixed(2));
+		          }
+		          
+		          
+		          $('#intreatmentindividual-discount_percent'+attr_id).val(discount_percent);
+		          $('#intreatmentindividual-discountvalue'+attr_id).val(calculation);
+		          
+		        });
+		        OverallTotalDiscPercentCalculation();
+		        
+		        Alertment('Discount Percentage Not More Than 100%!!!');
+		      }
+		      else if(discountvalue <= 100)
+		      {
+		        var discount_percent=discountvalue;
+		        $("#fetch_update_data tr").each(function() 
+		        {
+		          var attr_id=$(this).attr('data-id');
+		          var disc_perct=parseFloat($('#intreatmentindividual-discount_percent'+attr_id).val());
+		          var disc_amunt=parseFloat($('#intreatmentindividual-discountvalue'+attr_id).val());
+		          var net_amunt=parseFloat($('#intreatmentindividual-total_price'+attr_id).val());
+		          //Hidden JOKER 
+		          var hidden_amt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+		          
+		          var calculation=parseFloat((hidden_amt*discount_percent)/100).toFixed(2);
+		          
+		          if(calculation > hidden_amt)
+		          {
+		            $('#intreatmentindividual-total_price'+attr_id).val(0);
+		          }
+		          else if(calculation <= hidden_amt)
+		          {
+		            var discountvalue=hidden_amt-calculation;
+		            $('#intreatmentindividual-total_price'+attr_id).val(discountvalue.toFixed(2));
+		          }
+		          
+		          
+		          $('#intreatmentindividual-discount_percent'+attr_id).val(discount_percent);
+		          $('#intreatmentindividual-discountvalue'+attr_id).val(calculation);
+		          
+		          
+		        });
+		        OverallTotalDiscPercentCalculation();
+		      }
+		      else if(discountvalue === '')
+		      {
+		        OverallTotalDiscPercentCalculation();
+		      }
+		    }
+    else
+    {
+      $('#intreatmentoverall-overalldiscountpercent').val('');
+      ClearAddGrid();
+      Alertment('Choose PROCEDURES!!!');
+    }
+			}else{
+				$('#intreatmentoverall-overalldiscountpercent').val('');
+				var tbl_len=$('#fetch_update_data tr').length;
+				if(tbl_len !== 0)
+				{
+					Alertment('This is Organization Patient not allowed to Discount');
+					
+				}else{
+					$('#intreatmentoverall-overalldiscountpercent').val('');
+					Alertment('No Test Row Added');
+				}
+				
+				return false;
+			}
+		}else{
+			$('#intreatmentoverall-ip_no').focus();
+			$('#intreatmentoverall-overalldiscountpercent').val('');
+			Alertment('Add Patient Name');
+			return false;
+		}		 
+   	
+   	
+   
+   }
+   
+   //add grid with discount
+   
+    function DiscountPercentCalCulationProcedure(data,event)
+   {
+   
+    // alert('test');
+     //alert(data);
+     var length_arr=$("#fetch_update_data tr").length;
+     
+     $('#intreatmentoverall-overall_due_amount').val('');
+     if(length_arr > 0)
+     {
+       if(data> 100)
+       {
+         var discount_percent=100;
+         
+         $('#intreatmentoverall-overalldiscountpercent').val(discount_percent);
+         
+         $("#fetch_update_data tr").each(function() 
+         {
+           var attr_id=$(this).attr('data-id');
+           var total_amt_add=parseFloat($('#intreatmentindividual-rate'+attr_id).val());
+           var total_qty=parseInt($('#intreatmentindividual-qty'+attr_id).val());
+           var disc_perct=parseFloat($('#intreatmentindividual-discount_percent'+attr_id).val());
+           var disc_amunt=parseFloat($('#intreatmentindividual-discountvalue'+attr_id).val());
+           var net_amunt=parseFloat($('#intreatmentindividual-total_price'+attr_id).val());
+           //Hidden JOKER 
+           var hidden_amt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+           
+           var calculation=parseFloat((hidden_amt*discount_percent)/100).toFixed(2);
+           
+           if(calculation > hidden_amt)
+           {
+             $('#intreatmentindividual-total_price'+attr_id).val(0);
+           }
+           else if(calculation <= hidden_amt)
+           {
+             var discountvalue=hidden_amt-calculation;
+             $('#intreatmentindividual-total_price'+attr_id).val(discountvalue.toFixed(2));
+           }
+           
+           
+           $('#intreatmentindividual-discount_percent'+attr_id).val(discount_percent);
+           $('#intreatmentindividual-discountvalue'+attr_id).val(calculation);
+           
+         });
+         OverallTotalDiscPercentCalculation();
+         
+         Alertment('Discount Percentage Not More Than 100%!!!');
+       }
+       else if(data<= 100)
+       {
+         var discount_percent=data;
+         $("#fetch_update_data tr").each(function() 
+         {
+           var attr_id=$(this).attr('data-id');
+           var disc_perct=parseFloat($('#intreatmentindividual-discount_percent'+attr_id).val());
+           var disc_amunt=parseFloat($('#intreatmentindividual-discountvalue'+attr_id).val());
+           var net_amunt=parseFloat($('#intreatmentindividual-total_price'+attr_id).val());
+           //Hidden JOKER 
+           var hidden_amt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+           
+           var calculation=parseFloat((hidden_amt*discount_percent)/100).toFixed(2);
+           
+           if(calculation > hidden_amt)
+           {
+             $('#intreatmentindividual-total_price'+attr_id).val(0);
+           }
+           else if(calculation <= hidden_amt)
+           {
+             var discountvalue=hidden_amt-calculation;
+             $('#intreatmentindividual-total_price'+attr_id).val(discountvalue.toFixed(2));
+           }
+           
+           
+           $('#intreatmentindividual-discount_percent'+attr_id).val(discount_percent);
+           $('#intreatmentindividual-discountvalue'+attr_id).val(calculation);
+           
+           
+         });
+         OverallTotalDiscPercentCalculation();
+       }
+       else if(data=== '')
+       {
+         OverallTotalDiscPercentCalculation();
+       }
+     }
+     else
+     {
+       $('#intreatmentoverall-overalldiscountpercent').val('');
+       ClearAddGrid();
+       Alertment('Choose PROCEDURES!!!');
+     }
+   }
+   
+   //remove function
+   
+   function AddtoGridProcedure(){
+   
+   
+         $("#fetch_update_data tr").each(function() 
+         {
+   
+          
+           var attr_id=$(this).attr('data-id');
+           var disc_perct=parseFloat($('#intreatmentindividual-discount_percent'+attr_id).val());
+           var disc_amunt=parseFloat($('#intreatmentindividual-discountvalue'+attr_id).val());
+           var net_amunt=parseFloat($('#intreatmentindividual-total_price'+attr_id).val());
+           //Hidden JOKER 
+           var hidden_amt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+   
+           //alert(hidden_amt);
+           
+           //var calculation=parseFloat((hidden_amt*discount_percent)/100).toFixed(2);
+             $('#intreatmentindividual-total_price'+attr_id).val(hidden_amt);
+           
+         });
+         OverallTotalDiscPercentCalculation();
+   }
+   
+   function Alertment(message)
+   {
+    $.alert({
+          title: 'Alert!',
+          content: message,
+          type: 'red',
+          theme: 'material',
+          escapeKey: true,
+          backgroundDismiss: true,
+          typeAnimated: true,
+      });
+   }
+   
+   function AddToGrid()
+   {  
+    var treatment=$('#intreatmentindividual-treatment_id').val();
+    var rate=$('#intreatmentindividual-rate').val();
+    var qty=$('#intreatmentindividual-qty').val();
+    var treat_id=$('#treatment_id').val();
+    var gst=$('#intreatmentindividual-gstpercent').val();
+    var gst_amt=$('#intreatmentindividual-gstvalue').val();
+    //var tax_grouping=
+    var total_subvalue=parseFloat($('#total_subvalue').val());
+    var tot_rate=rate*qty;
+    var sub_totval=tot_rate+total_subvalue;
+    $('#total_subvalue').val(tot_rate+total_subvalue);  
+    
+    
+    if(treatment !== '' && rate !== '' && qty !== '' && treat_id !== '' && gst !== '' && gst_amt !== '')
+    {
+      var discountpercent=$('#intreatmentoverall-overalldiscountpercent').val();
+   
+     // alert(discountpercent);
+      //Remove Duplicates Row
+      var length_arr=$("#fetch_update_data tr").length;
+      if(length_arr > 0)
+      {
+        $("#fetch_update_data tr").each(function() 
+        {
+          var attr_id=$(this).attr('data-id');
+          if(attr_id == treat_id)
+          {
+            $('#table_del'+treat_id).remove();
+          }
+        });
+      }   
+      
+      var total_sub=0;
+      
+    
+    /*  alert(parseFloat($('#total_subvalue').val()));
+      alert(total_sub*$('#total_subvalue').val());
+      alert(parseFloat($('#total_subvalue').val()*total_sub));
+      */
+      //GST CALCULATION
+      gst=parseFloat(gst);
+      gst_amt=parseFloat(gst_amt);
+      var common_gst_percent=gst/2;
+      var common_gst_amt=gst_amt/2;
+      
+      var multiply=parseFloat(rate*qty);
+      var over_net=parseFloat(multiply+gst_amt).toFixed(2);
+      
+      $('#intreatmentindividual-mrp').val(over_net);
+      $('#intreatmentindividual-total_price').val(over_net);
+    //$('#total_subvalue').val(parseFloat($('#total_subvalue').val())+total_sub);
+   
+      
+   var markup = "<tr class='save_data_table' data-id="+treat_id+" id='table_del"+treat_id+"'>"
+   +"<td style='width:18%;'><div class='trunctext wd100' >"+treatment+"</div></td>"
+   +"<td><input type='hidden' name='treatmentprimeid[]' id='treatmentprimeid"+treat_id+"' value='"+treat_id+"'>"
+   +"<input type='text'  style='text-align:right;' id='intreatmentindividual-rate"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[rate][]' value='"+rate+"'></td>"
+   +"<td><input type='text' style='text-align:right;' id='intreatmentindividual-qty"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[qty][]' value='"+qty+"'></td>"
+   +"<td><input type='text' style='text-align:right;' id='treatmentindividual-taxamount"+treat_id+"' readonly='readonly' class='form-control' name='TreatmentIndividual[taxamount][]' value='"+multiply+"'></td>"
+   +"<td><input type='text'  style='text-align:right;' id='intreatmentindividual-cgst_percent"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[cgst_percent][]' value='"+common_gst_percent+"'></td>"                                                                
+   +"<td><input type='text'  style='text-align:right;' id='intreatmentindividual-sgst_percent"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[sgst_percent][]' value='"+common_gst_percent+"'></td>"  
+   +"<td><input type='text'  style='text-align:right;' id='intreatmentindividual-cgst_value"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[cgst_value][]' value='"+common_gst_amt+"'></td>"
+   +"<td><input type='text'  style='text-align:right;' id='intreatmentindividual-sgst_value"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[sgst_value][]' value='"+common_gst_amt+"'></td>"
+   +"<td><input type='text'  style='text-align:right;' id='intreatmentindividual-discount_percent"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[discount_percent][]' value='0'></td>"
+   +"<td><input type='text'  style='text-align:right;' id='intreatmentindividual-discountvalue"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[discountvalue][]' value='0'></td>"
+   +"<td><input type='text'  style='text-align:right;' id='intreatmentindividual-total_price"+treat_id+"' readonly='readonly' class='form-control' name='InTreatmentIndividual[total_price][]' value='"+over_net+"'>"
+   +"<input type='hidden' id='intreatmentindividual-total_price_joker"+treat_id+"' class='hidden_price form-control' name='InTreatmentIndividual[hidden_total_price][]' value='"+over_net+"'></td>"
+   +"<td class='text-center'><button type='button' class=' btn btn-xs btn-sm btn-icon btn-danger waves-effect waves-light delrow' data_delete_row="+treat_id+" id='delrow"+treat_id+"'><i class='fa fa-remove'></i></button></td></tr>";
+                                    
+   $("#fetch_update_data").append(markup);    
+   
+   OverallTotalCalculation();
+   
+   if(discountpercent!=''){
+    // alert(discountpercent);
+     DiscountPercentCalCulationProcedure(discountpercent,window.event);
+   
+    }
+   
+   ClearAddGrid();    
+    }
+    else if(treatment === '' || rate === '' || qty === '')
+    {
+      ClearAddGrid();
+      Alertment('Add Procedures,Rate & Qty Fields Are Required');
+    }
+   }
+   
+   
+   function OverallTotalCalculation()
+   { 
+   	
+   var overall_total_amount=0;
+   var overall_total_qty=0;
+   //var overall_disc_percentage=0;
+   //var overall_disc_amount=0;
+  var gst_percent=0;
+var gst_amount=0;
+var taxamount=0;
+var billamountfinal=0;
+var overall_net_amount=0;
+   $("#fetch_update_data tr").each(function() 
+   {
+      var attr_id=$(this).attr('data-id');
+      var total_amt_add=parseFloat($('#intreatmentindividual-rate'+attr_id).val());
+      var total_qty=parseInt($('#intreatmentindividual-qty'+attr_id).val());
+      var disc_perct=parseFloat($('#intreatmentindividual-discount_percent'+attr_id).val());
+      var disc_amunt=parseFloat($('#intreatmentindividual-discountvalue'+attr_id).val());
+      var net_amunt=parseFloat($('#intreatmentindividual-total_price'+attr_id).val());
+      
+      var cgst_per_add=parseFloat($('#intreatmentindividual-cgst_percent'+attr_id).val());
+      var sgst_per_add=parseFloat($('#intreatmentindividual-sgst_percent'+attr_id).val());
+      
+      var cgst_amt_add=parseFloat($('#intreatmentindividual-cgst_value'+attr_id).val());
+      var sgst_amt_add=parseFloat($('#intreatmentindividual-sgst_value'+attr_id).val());
+      
+      
+      if(!isNaN(cgst_per_add) && !isNaN(sgst_per_add))
+      {
+        var add_per=sgst_per_add+cgst_per_add;
+        gst_percent=gst_percent+add_per;
+      }
+      
+      if(!isNaN(cgst_amt_add) && !isNaN(sgst_amt_add))
+      {
+        var add=cgst_amt_add+sgst_amt_add;
+        gst_amount=gst_amount+add;
+      }
+      
+      
+      if(!isNaN(total_amt_add))
+      {
+        overall_total_amount=overall_total_amount+total_amt_add;
+      }
+      
+      if(!isNaN(total_qty))
+      {
+        overall_total_qty=overall_total_qty+total_qty;
+      }
+	taxamount=total_qty*total_amt_add;
+ 	billamountfinal=billamountfinal+taxamount;
+ 	      
+      if(!isNaN(net_amunt))
+      {
+        overall_net_amount=overall_net_amount+net_amunt;
+      }
+      
+   });
+   
+   
+   $('#intreatmentoverall-tot_quantity').val(overall_total_qty);
+
+$('#intreatmentoverall-totalgstvalue').val(gst_amount.toFixed(2));
+var priceamountt=parseFloat($('#intreatmentoverall-overall_sub_total').val());
+var gstamonutt=parseFloat($('#intreatmentoverall-totalgstvalue').val());
+
+var taxamount=(billamountfinal+gst_amount); 
+$('#intreatmentoverall-overall_sub_total').val(billamountfinal.toFixed(2));
+$('#tre_bill_total').val(taxamount.toFixed(2));
+$('#intreatmentoverall-overall_net_amount').val(overall_net_amount.toFixed(2));
+
+
+   //Quantity
+   $('#intreatmentoverall-tot_quantity').val(overall_total_qty);
+   $('#intreatmentoverall-overall_sub_total').val(overall_total_amount);
+   //GST
+   $('#intreatmentoverall-total_gst_percent').val(gst_percent.toFixed(2));
+   $('#intreatmentoverall-totalgstvalue').val(gst_amount.toFixed(2));
+   
+   
+  /* var priceamountt=parseFloat($('#intreatmentoverall-overall_sub_total').val());
+   var gstamonutt=parseFloat($('#intreatmentoverall-totalgstvalue').val());
+   var netamountfinal=(priceamountt+gstamonutt);
+   $('#intreatmentoverall-overall_net_amount').val(netamountfinal.toFixed(2));
+   $('#intreatmentoverall-overalltotal').val(netamountfinal.toFixed(2)); */
+   
+   $('#intreatmentoverall-total_gst_percent').val(gst_percent.toFixed(2));
+   $('#intreatmentoverall-totalgstvalue').val(gst_amount.toFixed(2));
+
+	var insurance=$("#intreatmentoverall-insurancetype").val();
+						//alert(insurance);
+						if(insurance!=""){
+							$('#intreatmentoverall-overalltotal').attr('readonly','readonly');
+							document.getElementById("intreatmentoverall-overalldiscountpercent").disabled = true;
+							document.getElementById("intreatmentoverall-overalldiscountamount").disabled = true;
+							
+							$('#intreatmentoverall-overalltotal').val('0');
+							$('#intreatmentoverall-overall_due_amount').val(overall_net_amount.toFixed(2));
+							
+									
+						}else {
+							$("#intreatmentoverall-overalltotal").attr("readonly", false); 
+							document.getElementById("intreatmentoverall-overalltotal").disabled = false;
+							document.getElementById("intreatmentoverall-overalldiscountpercent").disabled = false;
+							document.getElementById("intreatmentoverall-overalldiscountamount").disabled = false;
+							$('#intreatmentoverall-overalltotal').val(overall_net_amount.toFixed(2));
+							$('#intreatmentoverall-overall_due_amount').val('0');
+						}
+   
+   // $('#intreatmentoverall-overall_due_amount').val('');
+   }
+   
+   function OverallTotalDiscPercentCalculation()
+   {
+   var overall_total_amount=0;
+   var overall_total_qty=0;
+   //var overall_disc_percentage=0;
+   var overall_disc_amount=0;
+   var overall_net_amount=0;
+   $("#fetch_update_data tr").each(function() 
+   {
+      var attr_id=$(this).attr('data-id');
+      var total_amt_add=parseFloat($('#intreatmentindividual-rate'+attr_id).val());
+      var total_qty=parseInt($('#intreatmentindividual-qty'+attr_id).val());
+      var disc_perct=parseFloat($('#intreatmentindividual-discount_percent'+attr_id).val());
+      var disc_amunt=parseFloat($('#intreatmentindividual-discountvalue'+attr_id).val());
+      var net_amunt=parseFloat($('#intreatmentindividual-total_price'+attr_id).val());
+      
+      if(!isNaN(total_amt_add))
+      {
+        overall_total_amount=overall_total_amount+total_amt_add;
+      }
+      
+      if(!isNaN(total_qty))
+      {
+        overall_total_qty=overall_total_qty+total_qty;
+      }
+      
+      /*if(!isNaN(disc_perct))
+      {
+        overall_disc_percentage=overall_disc_percentage+disc_perct;
+      }*/
+      
+      if(!isNaN(disc_amunt))
+      {
+        overall_disc_amount=overall_disc_amount+disc_amunt;
+      }
+      
+      if(!isNaN(net_amunt))
+      {
+        overall_net_amount=overall_net_amount+net_amunt;
+      }
+      
+   });
+   
+   //Quantity
+   $('#intreatmentoverall-tot_quantity').val(overall_total_qty);
+   $('#intreatmentoverall-overall_sub_total').val(overall_total_amount);
+   //$('#intreatmentoverall-overalldiscountpercent').val(overall_disc_percentage);
+   $('#intreatmentoverall-overalldiscountamount').val(overall_disc_amount);
+   $('#intreatmentoverall-overall_net_amount').val(overall_net_amount.toFixed(2));
+   $('#intreatmentoverall-overalltotal').val(overall_net_amount.toFixed(2));
+   $('#intreatmentoverall-overall_due_amount').val('');
+   }
+   
+   
+   function OverallTotalDisAmtCalculation()
+   {
+   var overall_total_amount=0;
+   var overall_total_qty=0;
+   var overall_disc_percentage=0;
+   //var overall_disc_amount=0;
+   var overall_net_amount=0;
+   $("#fetch_update_data tr").each(function() 
+   {
+      var attr_id=$(this).attr('data-id');
+      var total_amt_add=parseFloat($('#intreatmentindividual-rate'+attr_id).val());
+      var total_qty=parseInt($('#intreatmentindividual-qty'+attr_id).val());
+      var disc_perct=parseFloat($('#intreatmentindividual-discount_percent'+attr_id).val());
+      var disc_amunt=parseFloat($('#intreatmentindividual-discountvalue'+attr_id).val());
+      var net_amunt=parseFloat($('#intreatmentindividual-total_price'+attr_id).val());
+      
+      if(!isNaN(total_amt_add))
+      {
+        overall_total_amount=overall_total_amount+total_amt_add;
+      }
+      
+      if(!isNaN(total_qty))
+      {
+        overall_total_qty=overall_total_qty+total_qty;
+      }
+      
+      if(!isNaN(disc_perct))
+      {
+        overall_disc_percentage=overall_disc_percentage+disc_perct;
+      }
+      
+      /*if(!isNaN(disc_amunt))
+      {
+        overall_disc_amount=overall_disc_amount+disc_amunt;
+      }*/
+      
+      if(!isNaN(net_amunt))
+      {
+        overall_net_amount=overall_net_amount+net_amunt;
+      }
+      
+   });
+   
+   //Quantity
+   $('#intreatmentoverall-tot_quantity').val(overall_total_qty);
+   $('#intreatmentoverall-overall_sub_total').val(overall_total_amount);
+   $('#intreatmentoverall-overalldiscountpercent').val(overall_disc_percentage);
+   //$('#intreatmentoverall-overalldiscountamount').val(overall_disc_amount);
+   $('#intreatmentoverall-overall_net_amount').val(overall_net_amount);
+   //$('#intreatmentoverall-overalltotal').val(overall_net_amount);
+  // $('#intreatmentoverall-overall_due_amount').val('');
+   
+	var insurance=$("#intreatmentoverall-insurancetype").val();
+						
+						if(insurance=="1" || insurance=="3" ){
+							$('#intreatmentoverall-overalltotal').attr('readonly','readonly');
+							$('#intreatmentoverall-overalltotal').val('0');
+							$('#intreatmentoverall-overall_due_amount').val(overall_net_amount.toFixed(2));
+							
+						}else {
+						
+							$('#intreatmentoverall-overalltotal').val(overall_net_amount.toFixed(2));
+							$('#intreatmentoverall-overall_due_amount').val('0');
+							
+							
+						}
+						
+   
+   }
+   
+   
+   
+   
+   function PaidAmountCalculation(data,event) 
+   {
+   	
+   	var pat_name=$('#intreatmentoverall-name').val();
+		var ipnumber=$('#intreatmentoverall-ip_no').val();
+		var get_insurance=$('#intreatmentoverall-insurancetype').val();
+		// alert(get_insurance);
+		if(pat_name !== '' && ipnumber !== '')
+		{	
+			if(!get_insurance)
+			{
+					var paid_amount=data.value;
+		    		var overall_net_amount=0;
+		    
+		    $('#intreatmentoverall-overalldiscountpercent').val('');
+		    $('#intreatmentoverall-overalldiscountamount').val('');
+		    
+		  //  var discount =$('#intreatmentoverall-overalldiscountpercent').val();
+		   //DiscountValueCalCulation(0);
+		   
+		    
+			    $("#fetch_update_data tr").each(function() 
+			    {
+			    
+			    	var attr_id=$(this).attr('data-id');
+		        	  //Hidden JOKER 
+		          var hidden_amt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+		          
+		          
+		          $('#intreatmentindividual-total_price'+attr_id).val(hidden_amt);
+		          $('#intreatmentindividual-discount_percent'+attr_id).val(0);
+		          $('#intreatmentindividual-discountvalue'+attr_id).val(0);
+			      var attr_id=$(this).attr('data-id');
+			      var net_amunt=parseFloat($('#intreatmentindividual-total_price_joker'+attr_id).val());
+			      if(!isNaN(net_amunt))
+			      {
+			        overall_net_amount=overall_net_amount+net_amunt;
+			      }
+			    });
+			    
+			    $('#intreatmentoverall-overall_net_amount').val(overall_net_amount.toFixed(2));
+			    if(overall_net_amount >= paid_amount)
+			    {
+			      var amount=overall_net_amount-paid_amount;
+			      $('#intreatmentoverall-overall_due_amount').val(amount.toFixed(2)); 
+			    }
+			    else if(overall_net_amount < paid_amount)
+			    {
+			      $('#intreatmentoverall-overalltotal').val(overall_net_amount);
+			      $('#intreatmentoverall-overall_due_amount').val(0);
+			      Alertment('Paid Amount Not Greater Than Net Amount');
+			    }
+			    
+			    if(data.value === '')
+			    {
+			      $('#intreatmentoverall-overalltotal').val(overall_net_amount);
+			      $('#intreatmentoverall-overall_due_amount').val(0);
+			    }		
+			}else {
+				$('#total_discountvaluetype').val('');
+				Alertment('This is Organization Patient not allowed to Discount');
+				return false;
+			}
+		}else{
+			$('#intreatmentoverall-ip_no').focus();
+			$('#intreatmentoverall-overalldiscountpercent').val('');
+			Alertment('Add Patient Name');
+			return false;
+		}
+	}
+   
+	   $(".ipnumber").typeahead({
+	     
+	     source: function(query,result) {
+	           $.ajax({
+	             url:'/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/ajaxipnumber',
+	             method:'POST',
+	             data:{query:query},
+	             dataType:'json',
+	             success:function(data)
+	             {
+	               result($.map(data, function(item){
+	               return item.ip_no;
+	               }));
+	               
+	             }
+	           })
+	     },
+	     autoSelect: true,
+	     displayText: function(result)
+	     {
+	        return result;
+	     },
+	     afterSelect: function(result) 
+	     {  $('#load1').show();
+	       $.ajax({
+	             url:'/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/ajaxipnumberselectblockipentries&id='+result,
+	             method:'POST',
+	             dataType:'json',
+	             success:function(data)
+	             {
+	               $('#load1').hide();
+	               
+	               //alert(data);
+	               	if(!data[2]){
+	        		var insurance="";
+	        		
+	        		$("#intreatmentoverall-overalltotal").attr("readonly", false); 
+	        	}else{
+	        		var insurance=data[2];
+	        		
+	        		$("#intreatmentoverall-overalltotal").attr('readonly', true);
+	        		$("#intreatmentoverall-overalldiscountamount").attr('readonly', true);
+	        		$("#intreatmentoverall-overalltotal").attr('readonly', true);
+	        	}
+	        	
+	               $("#intreatmentoverall-insurancetype").val(insurance);
+	               $('#blockipentries-panel_type').val(data[0]['panel_type']);
+	               $('#blockipentries-mr_no').val(data[0]['mr_no']);
+	               $('#intreatmentoverall-dob').val(formatDate(data[0]['dob']));
+	               $('#intreatmentoverall-name').val(data[0]['patient_name']);
+	               $('.ipnumber').val(data[0]['ip_no']);
+	               //$('#blockipentries-age').val(Agecalc(data[0]['dob']));
+	               $('#intreatmentoverall-gender').val(data[0]['sex']);
+	               $('#blockipentries-marital_status').val(data[0]['marital_status']);
+	               $('#blockipentries-relation_suffix').val(data[0]['relation_suffix']);
+	               $('#newpatient-par_relationname').val(data[0]['relative_name']);
+	               $('#blockipentries-address').val(data[0]['address']+', '+data[0]['city']+', '+data[0]['state']+', '+data[0]['pincode']);
+	              
+	               $('#blockipentries-pincode').val(data[0]['pincode']);
+	               $('#blockipentries-phone_no').val(data[0]['phone_no']);
+	               $('#mrnumber').val(data[0]['mr_no']);
+	             
+	                 var fromDate = new Date(data[0]['created_date']); 
+	                 var createddate = formatDate(fromDate);
+	                 var createdtime = formatDate2(fromDate);
+	                 $("#intreatmentindividual-treatment_id").focus();
+	                 $("#fetch_update_data tr").remove();
+	             		clearprodu(); cleartxt();
+	             }
+	           })
+	       }
+	   });
+   function Agecalc(date) {
+     var now = new Date();
+     var today = new Date(now.getYear(),now.getMonth(),now.getDate());
+     var yearNow = now.getYear();
+     var monthNow = now.getMonth();
+     var dateNow = now.getDate();
+     var dateString=formatDate1(date); 
+     var dob = new Date(dateString.substring(6,10),dateString.substring(0,2)-1,dateString.substring(3,5));
+     var yearDob = dob.getYear();
+     var monthDob = dob.getMonth();
+     var dateDob = dob.getDate();
+     var age = {};
+     var ageString = "";
+     var yearString = "";
+     var monthString = "";
+     var dayString = "";
+     yearAge = yearNow - yearDob;
+     if (monthNow >= monthDob)
+       var monthAge = monthNow - monthDob;
+     else {
+       yearAge--;
+       var monthAge = 12 + monthNow -monthDob;
+     }
+   
+     if (dateNow >= dateDob)
+       var dateAge = dateNow - dateDob;
+     else {
+       monthAge--;
+       var dateAge = 31 + dateNow - dateDob;
+   
+       if (monthAge < 0) {
+         monthAge = 11;
+         yearAge--;
+       }
+     }
+     age = {years: yearAge,months: monthAge,days: dateAge};
+     if ( age.years > 1 ) yearString = " years";
+     else yearString = " year";
+     if ( age.months> 1 ) monthString = " months";
+     else monthString = " month";
+     if ( age.days > 1 ) dayString = " days";
+     else dayString = " day";
+     if ( (age.years > 0) && (age.months > 0) && (age.days > 0) )
+       ageString = age.years;
+     else if ( (age.years == 0) && (age.months == 0) && (age.days > 0) )
+       ageString = "Only " + age.days + dayString + " old!";
+     else if ( (age.years > 0) && (age.months == 0) && (age.days == 0) )
+       ageString = age.years + yearString + " old. Happy Birthday!!";
+     else if ( (age.years > 0) && (age.months > 0) && (age.days == 0) )
+       ageString = age.years;
+     else if ( (age.years == 0) && (age.months > 0) && (age.days > 0) )
+       ageString = age.months + monthString + " and " + age.days + dayString + " old.";
+     else if ( (age.years > 0) && (age.months == 0) && (age.days > 0) )
+       ageString = age.years;
+     else if ( (age.years == 0) && (age.months > 0) && (age.days == 0) )
+       ageString = age.months + monthString + " old.";
+     else ageString = "Oops! Could not calculate age!";
+     
+     $('#year_dob').val(age.years);
+     $('#month_dob').val(age.months);
+     $('#date_dob').val(age.days);
+     return ageString;
+   }
+   /*
+   $(".mrnumber").typeahead({
+   
+   minLength: 1,
+   delay: 5,
+   source: availableTags,
+   autoSelect: true,
+   displayText: function(item)
+   {
+     return item.mrnumber;
+   },
+   afterSelect: function(item) 
+   {
+    
+    $('#intreatmentoverall-name').val('');
+    $('#newpatient-par_relationname').val('');
+    $('#intreatmentoverall-dob').val('');
+    $('#intreatmentoverall-gender').val('');
+    $('#intreatmentoverall-insurancetype').html('');
+    $('#pat_id').val('');
+    $('#subvisit_id').val('');
+    $('#subvisit_number').val('');
+    
+    var new_pat=newpatient[item.mrnumber];
+    if(new_pat !== '')
+    {
+      var formatdate= formatDate(newpatient[item.mrnumber]['dob']);
+      $('#intreatmentoverall-name').val(newpatient[item.mrnumber]['patientname']);
+      $('#newpatient-par_relationname').val(newpatient[item.mrnumber]['par_relationname']);
+      $('#intreatmentoverall-dob').val(formatdate);
+      $('#intreatmentoverall-gender').html('<option value='+newpatient[item.mrnumber]['pat_sex']+'>'+newpatient[item.mrnumber]['pat_sex']+'</option>');
+      if(subvisit[item.subnumber]['insurance_type'] !== '')
+      {
+        var insurance_id=subvisit[item.subnumber]['insurance_type'];
+        var ins_type=(Insurance[insurance_id]['insurance_type']=== '' ? "" : Insurance[insurance_id]['insurance_type']);
+        $('#intreatmentoverall-insurancetype').html('<option value='+insurance_id+'>'+ins_type+'</option>');
+      }
+      
+      $('#pat_id').val(subvisit[item.subnumber]['pat_id']);
+      $('#subvisit_id').val(subvisit[item.subnumber]['sub_id']);
+      $('#subvisit_number').val(subvisit[item.subnumber]['sub_visit']);
+    }
+    
+    $('#intreatmentindividual-treatment_id').focus();
+   } 
+   });*/
+   
+       var proceduresTags = [{"treatid":1,"treatment_name":"ACCOMMODA-ACC3","amount":12.5,"hsn":"159"},{"treatid":2,"treatment_name":"ANESTHESIA --ACC","amount":1,"hsn":"159"},{"treatid":3,"treatment_name":"ASSISTANT-","amount":0,"hsn":"159"},{"treatid":4,"treatment_name":"Anaesthetist-","amount":1500,"hsn":"159"},{"treatid":5,"treatment_name":"BERIUMENEM-","amount":0,"hsn":"159"},{"treatid":6,"treatment_name":"BLOOD-","amount":1,"hsn":"159"},{"treatid":7,"treatment_name":"Biopsy-","amount":500,"hsn":"159"},{"treatid":8,"treatment_name":"C arm-","amount":1,"hsn":"159"},{"treatid":9,"treatment_name":"CARDIOTOCO-","amount":0,"hsn":"159"},{"treatid":10,"treatment_name":"CASUALITY-CST","amount":1,"hsn":"159"},{"treatid":11,"treatment_name":"CIRCUMSSIA-","amount":1,"hsn":"159"},{"treatid":12,"treatment_name":"Cervical-","amount":4000,"hsn":"159"},{"treatid":13,"treatment_name":"Coper-t-","amount":300,"hsn":"159"},{"treatid":14,"treatment_name":"Copper T-","amount":500,"hsn":"159"},{"treatid":15,"treatment_name":"D & C-","amount":500,"hsn":"159"},{"treatid":16,"treatment_name":"DOCTOR-","amount":100,"hsn":"159"},{"treatid":17,"treatment_name":"DRESSING-","amount":1,"hsn":"159"},{"treatid":18,"treatment_name":"ENDOTRACH-","amount":1,"hsn":"159"},{"treatid":19,"treatment_name":"HERNIA-","amount":1,"hsn":"159"},{"treatid":20,"treatment_name":"HSG-","amount":1000,"hsn":"159"},{"treatid":21,"treatment_name":"HYSTERECTO-","amount":1,"hsn":"159"},{"treatid":22,"treatment_name":"High Risk-HR","amount":1,"hsn":"159"},{"treatid":23,"treatment_name":"I & D-","amount":450,"hsn":"159"},{"treatid":24,"treatment_name":"ICU--","amount":0,"hsn":"159"},{"treatid":25,"treatment_name":"IMPLANT-","amount":1,"hsn":"159"},{"treatid":26,"treatment_name":"IMPLANT-","amount":1,"hsn":"159"},{"treatid":27,"treatment_name":"IMPLANT-","amount":1,"hsn":"159"},{"treatid":28,"treatment_name":"INCUBATOR-","amount":0,"hsn":"159"},{"treatid":29,"treatment_name":"IND-","amount":1,"hsn":"159"},{"treatid":30,"treatment_name":"INJECTION-","amount":1,"hsn":"159"},{"treatid":31,"treatment_name":"INTUBATION-","amount":1,"hsn":"159"},{"treatid":32,"treatment_name":"IV-","amount":200,"hsn":"159"},{"treatid":33,"treatment_name":"IVMR-","amount":100,"hsn":"159"},{"treatid":34,"treatment_name":"Intra Uterine-","amount":750,"hsn":"159"},{"treatid":35,"treatment_name":"Investigations-","amount":0,"hsn":"159"},{"treatid":36,"treatment_name":"LABOUR-","amount":100,"hsn":"159"},{"treatid":37,"treatment_name":"LOOP-","amount":0,"hsn":"159"},{"treatid":38,"treatment_name":"M.T.P-","amount":2500,"hsn":"159"},{"treatid":39,"treatment_name":"MEDICAL-","amount":100,"hsn":"159"},{"treatid":40,"treatment_name":"MEDICINS-","amount":0,"hsn":"159"},{"treatid":41,"treatment_name":"MONITOR-","amount":500,"hsn":"159"},{"treatid":42,"treatment_name":"NEBULISATIO-","amount":50,"hsn":"159"},{"treatid":43,"treatment_name":"NON STRESS-","amount":0,"hsn":"159"},{"treatid":44,"treatment_name":"NURSING-","amount":80,"hsn":"159"},{"treatid":45,"treatment_name":"OBSERVATIO-","amount":1,"hsn":"159"},{"treatid":46,"treatment_name":"OBSERVATIO-","amount":0,"hsn":"159"},{"treatid":47,"treatment_name":"OPERATION-","amount":1,"hsn":"159"},{"treatid":48,"treatment_name":"OPERATION-","amount":150,"hsn":"159"},{"treatid":49,"treatment_name":"ORTHO --","amount":0,"hsn":"159"},{"treatid":50,"treatment_name":"OXYGEN-","amount":600,"hsn":"159"},{"treatid":51,"treatment_name":"Operation-","amount":1,"hsn":"159"},{"treatid":52,"treatment_name":"P.C.T-","amount":0,"hsn":"159"},{"treatid":53,"treatment_name":"P.O.P- ORTHO-","amount":1,"hsn":"159"},{"treatid":54,"treatment_name":"PHOTOTHERA-","amount":1,"hsn":"159"},{"treatid":55,"treatment_name":"PHYSIOTHER-","amount":0,"hsn":"159"},{"treatid":56,"treatment_name":"PHYSIOTHER-","amount":0,"hsn":"159"},{"treatid":57,"treatment_name":"PROCEDURE-","amount":1,"hsn":"159"},{"treatid":58,"treatment_name":"PULSE-","amount":0,"hsn":"159"},{"treatid":59,"treatment_name":"Pharmacy-","amount":0,"hsn":"159"},{"treatid":60,"treatment_name":"Pharmacy-","amount":0,"hsn":"159"},{"treatid":61,"treatment_name":"Pharmacy-","amount":0,"hsn":"159"},{"treatid":62,"treatment_name":"Photograph-","amount":1,"hsn":"159"},{"treatid":63,"treatment_name":"ROOM RENT-","amount":1,"hsn":"159"},{"treatid":65,"treatment_name":"SERVICE TAX-","amount":1,"hsn":"159"},{"treatid":66,"treatment_name":"SHOULDER-","amount":0,"hsn":"159"},{"treatid":67,"treatment_name":"SPECIAL-","amount":1,"hsn":"159"},{"treatid":68,"treatment_name":"SPINE - XRAY-","amount":0,"hsn":"159"},{"treatid":69,"treatment_name":"SPINE - XRAY-","amount":0,"hsn":"159"},{"treatid":70,"treatment_name":"SURGEON-","amount":0,"hsn":"159"},{"treatid":71,"treatment_name":"SURGEON-","amount":0,"hsn":"159"},{"treatid":72,"treatment_name":"SURGEON-","amount":0,"hsn":"159"},{"treatid":73,"treatment_name":"SURGERY-","amount":1,"hsn":"159"},{"treatid":74,"treatment_name":"SURGICAL-","amount":1,"hsn":"159"},{"treatid":75,"treatment_name":"SUTURE-","amount":1,"hsn":"159"},{"treatid":76,"treatment_name":"SUTURING-","amount":0,"hsn":"159"},{"treatid":77,"treatment_name":"SUTURING --","amount":1,"hsn":"159"},{"treatid":78,"treatment_name":"Sir Consult-","amount":0,"hsn":"159"},{"treatid":79,"treatment_name":"Surgeon-","amount":1,"hsn":"159"},{"treatid":80,"treatment_name":"TAPING-","amount":0,"hsn":"159"},{"treatid":81,"treatment_name":"TRACHEOSTO-","amount":0,"hsn":"159"},{"treatid":82,"treatment_name":"TREATMENT-","amount":1,"hsn":"159"},{"treatid":83,"treatment_name":"TREATMENT-","amount":1,"hsn":"159"},{"treatid":84,"treatment_name":"Treatment-","amount":1,"hsn":"159"},{"treatid":85,"treatment_name":"Tubectomy-","amount":2500,"hsn":"159"},{"treatid":86,"treatment_name":"VENTILATOR-","amount":1,"hsn":"159"},{"treatid":87,"treatment_name":"bedcharges-","amount":0,"hsn":"159"},{"treatid":88,"treatment_name":"blood packtes-","amount":0,"hsn":"159"},{"treatid":89,"treatment_name":"ctscan-","amount":0,"hsn":"159"},{"treatid":90,"treatment_name":"fislogram-","amount":1,"hsn":"159"},{"treatid":91,"treatment_name":"investigation-","amount":0,"hsn":"159"},{"treatid":92,"treatment_name":"p\/r-","amount":1,"hsn":"159"},{"treatid":93,"treatment_name":"scanning-","amount":0,"hsn":"159"},{"treatid":94,"treatment_name":"warmer-","amount":0,"hsn":"159"},{"treatid":96,"treatment_name":"SPECIAL ROOM-","amount":0,"hsn":"159"},{"treatid":97,"treatment_name":"Blood Transfusion-","amount":0,"hsn":"159"},{"treatid":98,"treatment_name":"CASUALITY-CHARGES-CAS","amount":100,"hsn":"159"}];
+      $(".procedures").typeahead({
+   
+   minLength: 1,
+   delay: 5,
+   source: proceduresTags,
+   autoSelect: true,
+   displayText: function(item)
+   {
+     return item.treatment_name;
+   },
+   afterSelect: function(item) 
+   {
+    //var obj = $.parseJSON(TaxGrouping);
+    //GST FETCH
+    
+    var tax_percent=TaxGrouping[item.hsn]['tax'];
+    
+    
+    $('#treatment_id').val(item.treatid);
+    $('#intreatmentindividual-qty').val(1);
+    $('#intreatmentindividual-rate').val(item.amount);
+    
+    $('#intreatmentindividual-gstpercent').val(tax_percent);
+    $('#intreatmentindividual-rate').focus();
+   } 
+   });
+   
+   
+   
+   
+   $(document).ready(function() {
+   	
+   	$("#intreatmentoverall-ip_no").focus();
+   var table = $('#example').DataTable({
+   "scrollY": "400px",
+   "paging": false,
+   });
+       
+   $("body").on('keypress', '.number', function (e) 
+   {
+   //if the letter is not digit then display error and don't type anything
+   if( e.which!=8 && e.which!=0 && (e.which<48 || e.which>57))
+   {
+    return false;
+   }
+   }); 
+   
+   //Default Focus
+   $('#intreatmentoverall-mrnumber').focus();
+   
+   });
+   
+   
+   function Patient_details() 
+   { 
+    $('#example_filter input.form-control.input-sm').focus();
+    $modal = $('#patient_hist-modal');
+    $modal.modal('show');
+   }
+      function formatDate2(date) 
+   {
+        var d = new Date(date),
+        month = '' + (d.getHours() + 1),
+        day = '' + d.getMinutes(),
+        year = d.getSeconds();
+      
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+   
+        return [month,day, year].join(':');
+    }
+   
+   function SubVisitFetch(subvisitid,mrnumber) 
+   {
+    if(subvisitid !== '' && mrnumber !== '')
+    {
+      $('#intreatmentoverall-name').val('');
+      $('#newpatient-par_relationname').val('');
+      $('#intreatmentoverall-dob').val('');
+      $('#intreatmentoverall-gender').val('');
+      $('#intreatmentoverall-insurancetype').html('');
+      
+      $('#pat_id').val('');
+      $('#subvisit_id').val('');
+      $('#subvisit_number').val('');
+      
+      
+      var formatdate= formatDate(newpatient[mrnumber]['dob']);
+      $('#intreatmentoverall-name').val(newpatient[mrnumber]['patientname']);
+      $('#newpatient-par_relationname').val(newpatient[mrnumber]['par_relationname']);
+      $('#intreatmentoverall-dob').val(formatdate);
+      $('#intreatmentoverall-gender').html('<option value='+newpatient[mrnumber]['pat_sex']+'>'+newpatient[mrnumber]['pat_sex']+'</option>');
+      $('#intreatmentoverall-mrnumber').val(mrnumber);
+      
+      if(subvisit[subvisitid]['insurance_type'] !== '')
+      {
+        var insurance_id=subvisit[subvisitid]['insurance_type'];
+        var ins_type=(Insurance[insurance_id]['insurance_type']=== '' ? "" : Insurance[insurance_id]['insurance_type']);
+        $('#intreatmentoverall-insurancetype').html('<option value='+insurance_id+'>'+ins_type+'</option>');
+      }
+      
+      $('#pat_id').val(subvisit[subvisitid]['pat_id']);
+      $('#subvisit_id').val(subvisitid);
+      $('#subvisit_number').val(subvisit[subvisitid]['sub_visit']);
+      
+        $modal = $('#patient_hist-modal');
+      $modal.modal('hide');
+        $('#intreatmentindividual-treatment_id').focus();
+    }
+   }
+   
+   function IPNUMBER(data,event)
+   {
+    if(data.value === '')
+    {
+      EmptyPatientDetails();
+    }
+    else if(event.keyCode === 13 && data.value !== '')
+    {
+      $('#load1').show();
+      $.ajax({  
+         type: "POST",
+       url: "/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/ip-number-fetch&id="+data.value,
+         success: function (result) 
+         {
+          //alert(result);
+          $('#load1').hide();
+          var obj = JSON.parse(result);
+            if(obj[0] === 'Empty')
+            {
+              EmptyPatientDetails();
+              $('#intreatmentoverall-ip_no').focus('');
+              Alertment('Invalid IP Number !!! Check It');
+            }
+           
+         }
+       });
+    } 
+   }
+   
+   
+   function EmptyPatientDetails()
+   {
+      $('#intreatmentoverall-name').val('');
+      $('#newpatient-par_relationname').val('');
+      $('#intreatmentoverall-dob').val('');
+      $('#intreatmentoverall-gender').val('');
+      $('#intreatmentoverall-insurancetype').html('');
+      $('#pat_id').val('');
+      $('#subvisit_id').val('');
+      $('#subvisit_number').val('');
+      $('#intreatmentoverall-mrnumber').val('');
+    
+      
+   }
+   
+   function validproname(data,event) 
+   {
+   	 var pat_name=$('#intreatmentoverall-name').val();
+		var ipnumber=$('#intreatmentoverall-ip_no').val();
+		var get_insurance=$('#intreatmentoverall-insurancetype').val();
+		// alert(get_insurance);
+		if(pat_name == '' && ipnumber == '')
+		{
+			$('#intreatmentoverall-ip_no').focus();
+			$('#intreatmentoverall-overalldiscountpercent').val('');
+			Alertment('Add Patient Name');
+			cleartxt();
+			clearhead(); 
+			clearprodu();
+			$('#intreatmentoverall-ip_no').focus();
+			return false;
+		}
+   }
+   
+   
+   function EmptyESC(data,event) 
+   {
+      if(data.value === '')
+      {
+        $('#intreatmentindividual-treatment_id').val('');
+        $('#intreatmentindividual-rate').val('');
+        $('#intreatmentindividual-qty').val('');
+        $('#intreatmentindividual-mrp').val('');
+        $('#intreatmentindividual-total_price').val('');
+        $('#intreatmentindividual-gstpercent').val('');
+        $('#intreatmentindividual-gstvalue').val('');
+        
+        $('#treatment_id').val('');
+        $('#intreatmentindividual-treatment_id').focus();
+      }
+      
+      if(event.keyCode === 27)
+      {
+        $('#intreatmentindividual-treatment_id').val('');
+        $('#intreatmentindividual-rate').val('');
+        $('#intreatmentindividual-qty').val('');
+        $('#intreatmentindividual-mrp').val('');
+        $('#intreatmentindividual-total_price').val('');
+        $('#intreatmentindividual-gstpercent').val('');
+        $('#intreatmentindividual-gstvalue').val('');
+        
+        $('#treatment_id').val('');
+        $('#intreatmentindividual-treatment_id').focus();
+      }
+   }
+   
+   function ClearAddGrid() 
+   {
+   $('#intreatmentindividual-treatment_id').val('');
+   $('#intreatmentindividual-rate').val('');
+   $('#intreatmentindividual-qty').val('');
+   $('#intreatmentindividual-mrp').val('');
+   $('#intreatmentindividual-total_price').val('');
+   $('#intreatmentindividual-gstpercent').val('');
+   $('#intreatmentindividual-gstvalue').val('');
+   
+   
+   $('#treatment_id').val('');
+   $('#intreatmentindividual-treatment_id').focus();
+   }
+   
+   function RateCalCulation(data,event)
+   {
+    var procedures=$('#intreatmentindividual-treatment_id').val();
+     var rate_val=$('#intreatmentindividual-rate').val();   
+    var qty=$('#intreatmentindividual-qty').val();
+    var gst=$('#intreatmentindividual-gstpercent').val();
+     
+      if(rate_val =="0")
+       {
+         ClearAddGrid();
+         alert('Rate Field Is must be greater than 0.');
+       }
+    if(procedures !== '')
+    {
+      
+      if(event.keyCode === 13 && data.value !== '' && qty !== '' && gst !== '')
+      {
+        var rate_qty=parseFloat(data.value);
+        qty=parseInt(qty);
+        gst=parseFloat(gst);
+        
+        //GST CALCULATION
+        if(rate_qty !== 0)
+        {
+          var calc=parseFloat((gst*rate_qty)/100);
+          $('#intreatmentindividual-gstvalue').val(calc);
+          
+          var multiply=parseFloat(rate_qty*qty);
+          var tot=parseFloat(multiply+calc);
+          
+          $('#intreatmentindividual-mrp').val(tot);
+          $('#intreatmentindividual-total_price').val(tot);
+        }
+        else
+        {
+          
+          var multiply=parseFloat(rate_qty*qty).toFixed(2);
+          $('#intreatmentindividual-mrp').val(multiply);
+          $('#intreatmentindividual-total_price').val(multiply);
+        }
+        
+        
+        $('#intreatmentindividual-qty').focus();
+      
+    }
+    }
+    else if(procedures === '')
+    {
+      ClearAddGrid();
+      alert('Procedures Field Is Mandatory');
+    }else if(data.value === '')
+      {
+        $('#intreatmentindividual-rate').val('');
+        
+      }
+   
+      if(event.keyCode === 27)
+      {
+        $('#intreatmentindividual-rate').val('');
+        
+      }
+   }
+   
+   
+   function QtyCalCulation(data,event)
+   {
+    var procedures=$('#intreatmentindividual-treatment_id').val();
+    var rate=$('#intreatmentindividual-rate').val();
+     var qty_val=$('#intreatmentindividual-qty').val();
+    var gst=$('#intreatmentindividual-gstpercent').val();
+   
+     if(qty_val =="0")
+       {
+         ClearAddGrid();
+         alert('Rate Field Is Mandatory');
+       }
+    if(procedures !== '')
+    {
+      if(event.keyCode === 13 && data.value !== '' && rate !== '' && gst !== '')
+      {
+        if(data.value === '0')
+        {
+          data.value = 1;
+        }
+        
+        var qty=parseInt(data.value);
+        rate=parseFloat(rate);
+        
+        var multiply=parseFloat(rate*qty);
+        
+        //GST CALCULATION
+        if(rate !== 0)
+        {
+          var calc=parseFloat((gst*multiply)/100);
+          $('#intreatmentindividual-gstvalue').val(calc);
+          
+          var multiply=parseFloat(rate*qty);
+          var tot=parseFloat(multiply+calc);
+          
+          $('#intreatmentindividual-mrp').val(tot);
+          $('#intreatmentindividual-total_price').val(tot);
+        }
+        else
+        {
+          
+          var multiply=parseFloat(rate*qty).toFixed(2);
+          $('#intreatmentindividual-mrp').val(multiply);
+          $('#intreatmentindividual-total_price').val(multiply);
+        }
+        
+        AddToGrid();
+      }
+      else if(data.value !== '' && rate !== '' && gst !== '')
+      {
+        if(data.value === '0')
+        {
+          data.value = 1;
+        }
+        var qty=parseInt(data.value);
+        rate=parseFloat(rate);
+        
+        var multiply=parseFloat(rate*qty);
+        
+        //GST CALCULATION
+        if(rate !== 0)
+        {
+          var calc=parseFloat((gst*multiply)/100);
+          $('#intreatmentindividual-gstvalue').val(calc);
+          
+          var multiply=parseFloat(rate*qty);
+          var tot=parseFloat(multiply+calc);
+          
+          $('#intreatmentindividual-mrp').val(tot);
+          $('#intreatmentindividual-total_price').val(tot);
+        }
+        else
+        {
+          
+          var multiply=parseFloat(rate*qty).toFixed(2);
+          $('#intreatmentindividual-mrp').val(multiply);
+          $('#intreatmentindividual-total_price').val(multiply);
+        }
+      }
+      else if(data.value === '' && rate !== '' && gst !== '')
+      {
+        $('#intreatmentindividual-qty').val(1);
+        var qty=parseInt(data.value);
+        rate=parseFloat(rate);
+        
+        var multiply=parseFloat(rate*qty);
+        
+        //GST CALCULATION
+        if(rate !== 0)
+        {
+          var calc=parseFloat((gst*multiply)/100);
+          $('#intreatmentindividual-gstvalue').val(calc);
+          
+          var multiply=parseFloat(rate*qty);
+          var tot=parseFloat(multiply+calc);
+          
+          $('#intreatmentindividual-mrp').val(tot);
+          $('#intreatmentindividual-total_price').val(tot);
+        }
+        else
+        {
+          
+          var multiply=parseFloat(rate*qty).toFixed(2);
+          $('#intreatmentindividual-mrp').val(multiply);
+          $('#intreatmentindividual-total_price').val(multiply);
+        }
+      }
+      
+    }
+    else if(procedures === '')
+    {
+      ClearAddGrid();
+      alert('Procedures Field Is Mandatory');
+    }
+    if(event.keyCode === 27)
+    {
+      $('#intreatmentindividual-qty').val('');
+    }
+   }
+   
+   
+   
+   //Date Format
+   function formatDate(date) 
+   {
+        var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+     
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+   
+        return [day, month, year].join('-');
+    }
+    
+    
+    function SaveProcedures()
+    {
+      var overall_discount_percentage=$('#intreatmentoverall-overalldiscountpercent').val();
+      var overall_discount_amount=$('#intreatmentoverall-overalldiscountamount').val();
+      
+      if(overall_discount_percentage !== '' && overall_discount_amount !== '')
+      {
+        $('#intreatmentoverall-remarks').attr('required','required');
+        $('#intreatmentoverall-discount_authority').attr('required','required');
+      }
+      else if(overall_discount_percentage === '' && overall_discount_amount === '')
+      {
+        $('#intreatmentoverall-remarks').removeAttr('required','required');
+        $('#intreatmentoverall-discount_authority').removeAttr('required','required');
+      }
+      
+      var valid=$("#w0").valid();  
+    if(valid === true)
+    {
+      //$('#load1').show();
+          if (confirm('Are You Sure to Save ?')) {
+      $.ajax({  
+             type: "POST",
+             url: "/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create",
+             data: $("#w0").serialize(),
+             success: function (result) 
+             {
+              
+              var obj=$.parseJSON(result);
+              if(obj[1] === 'invalid')
+              {
+                    $('#load1').hide();
+                    Alertment('Invalid Patient Details');
+              }
+              else if(obj[1] !== 'invalid')
+              {
+                    $('#load1').hide();
+                    onetimesave=2;
+                    $('#saves_sucess').attr('disabled','disabled');
+
+                    var url='/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/report&id='+obj[1];
+                    if (confirm('Record Saved Successfully Do You Want To Print?')) {
+                        Alertment('Treatment Register Number is '+obj[0]);
+                        window.open(url,'_blank');
+                    }
+              }
+              
+              
+              }
+       });
+     }
+    }else{
+      // alert();
+     }
+    }
+    
+   $(window).bind('keydown', function(event) {
+       if (event.ctrlKey || event.metaKey) {
+           switch (String.fromCharCode(event.which).toLowerCase()) {
+           case 's':
+               event.preventDefault();
+                SaveProcedures();
+               break;
+           case 'q':
+               event.preventDefault();
+               window.open('/2018/dmcpharmacy/backend/web/index.php','_self');
+               break;
+           case 'g':
+               event.preventDefault();
+               window.open('/2018/dmcpharmacy/backend/web/index.php?r=in-registration/in-index','_self');
+               break;
+           case 'c':
+               event.preventDefault();
+               alert('ctrl-c');
+               break;
+           }
+       }
+   });
+   
+     $("body").on('click', '.delrow', function () 
+    {
+   
+        var length_arr=$("#fetch_update_data tr").length;
+       if(length_arr!=1)
+       {
+       }
+       else{
+		   $('#intreatmentoverall-overalldiscountpercent').val(0);
+		   $('#intreatmentoverall-overalldiscountamount').val(0);
+       }
+      // 
+      //alert("test");
+      var data_addid = $(this).attr('data_delete_row')
+      var item_less=1;
+      var total_items=parseInt($('#intreatmentindividual-qty'+data_addid).val());
+      var total_gst_pre=(parseFloat($('#intreatmentindividual-cgst_percent'+data_addid).val())+parseFloat($('#intreatmentindividual-sgst_percent'+data_addid).val()));
+      var total_gst_val=(parseFloat($('#intreatmentindividual-cgst_value'+data_addid).val())+parseFloat($('#intreatmentindividual-sgst_value'+data_addid).val()));
+      var total_sub_total=parseFloat($('#intreatmentindividual-total_price'+data_addid).val()).toFixed(2);
+      var rate=parseFloat($('#intreatmentindividual-rate'+data_addid).val());
+       
+      $('#intreatmentoverall-tot_quantity').val(parseInt($('#intreatmentoverall-tot_quantity').val())-total_items);
+      $('#intreatmentoverall-overall_sub_total').val(parseFloat($('#intreatmentoverall-overall_sub_total').val()).toFixed(2)-rate);
+      $('#intreatmentoverall-total_gst_percent').val(parseFloat($('#intreatmentoverall-total_gst_percent').val()).toFixed(2)-parseFloat(total_gst_pre).toFixed(2));
+   
+   
+     var gstfix=parseFloat($('#intreatmentoverall-totalgstvalue').val()).toFixed(2)-parseFloat(total_gst_val).toFixed(2);
+      $('#intreatmentoverall-totalgstvalue').val(gstfix.toFixed(2));
+      
+      if($('#intreatmentoverall-overall_sub_total').val()!=""){
+			var sub_tot=parseFloat($('#intreatmentoverall-overall_sub_total').val());
+		}else{
+			var sub_tot="0";
+		} 
+		if($('#intreatmentoverall-totalgstvalue').val()!=""){
+			var tot_gst=parseFloat($('#intreatmentoverall-totalgstvalue').val());
+		}else{
+			var tot_gst="0";
+		}
+      	var billtotla=sub_tot+tot_gst;
+		$('#intreatmentoverall-overall_sub_total').val(billtotla.toFixed(2));
+		$('#tre_bill_total').val(billtotla.toFixed(2));
+      
+      $('#intreatmentoverall-overall_net_amount').val(parseFloat($('#intreatmentoverall-overall_net_amount').val()).toFixed(2)-total_sub_total);
+      //$('#intreatmentoverall-overalltotal').val(parseFloat($('#intreatmentoverall-overall_net_amount').val()));
+       //$('#intreatmentoverall-overall_due_amount').val('0');
+   
+      $('#table_del'+data_addid).remove();
+       var discountpercent=$('#intreatmentoverall-overalldiscountpercent').val();
+       AddtoGridProcedure();
+       if(discountpercent!=''){
+    	  DiscountPercentCalCulationProcedure(discountpercent,event);
+   	 }
+   	 
+   	 	var insurance=$("#intreatmentoverall-insurancetype").val();
+						//alert(insurance);
+						if(insurance!=""){
+							$('#intreatmentoverall-overalltotal').attr('readonly','readonly');
+							$('#intreatmentoverall-overalltotal').val('0');
+							$('#intreatmentoverall-overall_due_amount').val(parseFloat($('#intreatmentoverall-overall_net_amount').val()));
+						}else {
+							$('#intreatmentoverall-overalltotal').val(parseFloat($('#intreatmentoverall-overall_net_amount').val()));
+							$('#intreatmentoverall-overall_due_amount').val('0');
+						}
+   	 
+   	 
+   	 
+              
+    });
+    
+    function Patientdetails_modal1()
+    {
+      
+      //$modal = $('#patient_hist-modal1');
+    //$modal.modal('show');
+    var mrnumber=$("#mrnumber").val();
+    if(mrnumber==""){
+      Alertment('Invalid MR NUMBER');     
+    }else{
+      $.ajax({
+           type: "POST",
+           url: "/2018/dmcpharmacy/backend/web/index.php?r=sales/patientkey1&id="+mrnumber,
+           success: function (result) 
+           { 
+            var obj = JSON.parse(result);
+		        $('#set_patient_data1').html(obj);
+		        $modal = $('#patient_hist-modal_details');
+		        $modal.modal('show');
+            }
+        });
+    }
+    }
+    
+</script>
+<script type="text/javascript">
+   $(document).ready(function(){
+      $("body").addClass("fixed-left-void");
+   $("body").removeClass("fixed-left");
+   $("#wrapper").addClass("enlarged");
+      $("#wrapper").addClass("forced");         
+      $(".list-unstyled").css("display","none");
+       
+   });
+   
+</script>
+<script type="text/javascript">
+   $(document).ready(function(){
+   	jtable_pd();
+      $('#intreatmentoverall-overalldiscountpercent').click(function() {       
+     $(".enable-textbox-percentage").addClass('active');
+           $(".enable-textbox-flat").removeClass('active');    
+         });
+      
+      $('#intreatmentoverall-overalldiscountamount').click(function() {        
+           $(".enable-textbox-flat").addClass('active');
+           $(".enable-textbox-percentage").removeClass('active');    
+         });
+      
+   });
+   
+$("body").on('click', '.patient_fetch_details', function ()
+{
+	$modal = $('#patient_details');
+	$modal.modal('show');
+	setTimeout(function(){ 
+	var table_as = $("#reg_table").DataTable();
+	table_as.ajax.reload( function (json) {table_as.cell( ':eq(0)' ).focus();} );}, 1000);
+});
+
+ function jtable_pd(){
+    	
+    	var url=('http://192.168.1.71/2018/dmcpharmacy/backend/web');
+	var ajax_url=url+'/index.php?r=in-registration/injqgrid';
+  var table_reg= $('#reg_table').DataTable( {
+        "processing": true,
+        "serverSide": true,
+         "ajax": {
+        	"url": ajax_url,
+        	 "type": "POST"
+        	},
+        	keys: {
+           		keys: [ 13 /* ENTER */, 38 /* UP */, 40 /* DOWN */ ]
+        	},
+        	"columns": [
+        	{ "data": "ipno","defaultContent": '<input type="text" value="0" />' },
+            { "data": "mrno","defaultContent": '<input type="text" value="0" />' },
+            { "data": "pname","defaultContent": "NA" },
+            { "data": "rname","defaultContent":"NA" },
+            { "data": "mno","defaultContent": '<input type="text" value="0" />'  },
+        	],
+        initComplete: function() {
+		   this.api().row( {order: 'current' }, 0).select();
+ 
+		}
+    });
+   $('#reg_table').on('key-focus.dt', function(e, datatable, cell){
+        // Select highlighted row
+      //  table_reg.row(cell.index().row).select();
+      //  $('#reg_table_filter input').val("");
+         $('#reg_table_filter input').focus();
+    });
+  $('#reg_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
+        
+       
+        var table_as = $("#reg_table").DataTable();
+        if(key === 13){
+        	
+        	$('#reg_table thead').on( 'click', 'th', function () {
+				  var columnData = table_as.column( this ).data();
+  				//alert(columnData);
+				} );
+    				
+            var data_reg = table_as.row(cell.index().row).data();
+			// var cell = table_reg.cell( this );
+		    // alert(data_reg.join(','));             // FOR DEMONSTRATION ONLY
+            // $("#example-console").html(data.join(', '));
+            // $('#reg_table_filter input').val("");
+          	 $('#reg_table_filter input').focus();
+        }
+    }); 
+    
+$('#reg_table').on( 'click', 'tr', function () {
+    var data = table_reg.row(this).id(); 
+ 	PatientDetailsFetch(data);
+});
+
+$('#reg_table').on('key.dt', function(e, datatable, key, cell, originalEvent){
+     if(key === 13){
+      // var id = table_reg.row(this).id();
+        var data = table_reg.row(cell.index().row).id(); 
+   		PatientDetailsFetch(data);
+ 	}
+});   
+}
+   
+function PatientDetailsFetch(data)
+{
+	$.ajax({
+        type: "POST",
+        url: "/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/ajaxipnumberselectblockipentriesdata&id="+data,
+        success: function (result) 
+        { 
+        	var obj = $.parseJSON(result);
+        
+        	if(obj[2]==""){
+        		var insurance="";
+        		
+        		$("#intreatmentoverall-overalltotal").attr("readonly", false);
+        	}else{
+        		var insurance=obj[2];	
+        		$("#intreatmentoverall-overalltotal").attr('readonly', true);
+	        		$("#intreatmentoverall-overalldiscountamount").attr('readonly', true);
+	        		$("#intreatmentoverall-overalltotal").attr('readonly', true);
+        	}
+        	
+        	$('#intreatmentoverall-ip_no').val(obj[0]['ip_no']);
+        	$('#intreatmentoverall-name').val(obj[0]['patient_name']);
+        	$('#intreatmentoverall-dob').val(formatDate(obj[0]['dob']));
+        	$('#intreatmentoverall-gender').val(obj[0]['sex']);
+        	$('#intreatmentoverall-insurancetype').val(insurance);
+        	$('#newpatient-par_relationname').val(obj[0]['relative_name']);
+
+         		$("#fetch_update_data tr").remove();
+	             		clearprodu(); cleartxt();
+        	
+        	$modal = $('#patient_details');
+        	$modal.modal('hide');
+        }
+	});
+} 
+
+
+function ClearAllField()
+{
+   
+      $("#fetch_update_data tr").remove();
+      $("#saved_val").val('');
+      $('#saves_sucess').removeAttr('disabled');
+      $('#intreatmentoverall-overalltotal').removeAttr('readonly');
+      
+      document.getElementById("intreatmentoverall-overalldiscountpercent").disabled = false;
+      document.getElementById("intreatmentoverall-overalldiscountamount").disabled = false;
+      $('.enable-textbox-percentage').removeClass('active');
+      
+      onetimesave=1;
+      $('#intreatmentoverall-ip_no').focus();
+      cleartxt();
+      clearhead();
+}
+
+function cleartxt (argument) {
+  $('#intreatmentoverall-overall_sub_total').val('');
+  $('#intreatmentoverall-totalgstvalue').val('');
+  $('#tre_bill_total').val('');
+  $('#intreatmentoverall-overalldiscountpercent').val('');
+  $('#intreatmentoverall-overalldiscountamount').val('');
+  $('#intreatmentoverall-overall_net_amount').val('');
+  $('#intreatmentoverall-overalltotal').val('');
+  $('#intreatmentoverall-overall_due_amount').val('');
+  $('#intreatmentoverall-discount_authority').val('');
+  $('#intreatmentoverall-remarks').val('');
+  
+}
+
+function clearprodu (argument) {
+	$('#intreatmentindividual-treatment_id').val('');
+  $('#intreatmentindividual-rate').val('');
+  $('#intreatmentindividual-qty').val('');
+  $('#intreatmentindividual-gstpercent').val('');
+  $('#intreatmentindividual-gstvalue').val('');
+  $('#intreatmentindividual-mrp').val('');
+  $('#intreatmentindividual-total_price').val('');
+}
+
+function clearhead (argument) {
+  $('#intreatmentoverall-ip_no').val('');
+  $('#intreatmentoverall-name').val('');
+  $('#intreatmentoverall-dob').val('');
+  $('#intreatmentoverall-gender').val('');
+  $('#intreatmentoverall-insurancetype').val('');
+  $('#newpatient-par_relationname').val('');
+  $('#intreatmentindividual-treatment_id').val('');
+  $('#intreatmentindividual-rate').val('');
+  $('#intreatmentindividual-qty').val('');
+  $('#intreatmentindividual-gstpercent').val('');
+  $('#intreatmentindividual-gstvalue').val('');
+  $('#intreatmentindividual-mrp').val('');
+  $('#intreatmentindividual-total_price').val('');
+  $('#intreatmentoverall-ip_no').focus();
+}	
+$('input').keyup(function(e)
+   	{
+	  	var keycode = (e.keyCode ? e.keyCode : e.which);
+  		if(e.keyCode == 27)
+		 {
+			$(this).val('');
+		 }
+	});
+
+
+function RemarksDefault(data)
+{
+
+  var due_word='';
+  if(data === '')
+  {
+    $('#intreatmentoverall-remarks').val('');
+  }
+  else if(data !== '')
+  {
+    if(data === '1')
+    {
+      due_word='Due or Discount Given By E.C.SUGUNAMMA';
+    }
+    else if(data === '2')
+    {
+      due_word='Due or Discount Given By E.C.DINESH REDDY';
+    }
+    else if(data === '3')
+    {
+      due_word='Due or Discount Given By E.C.GANGI REDDY';
+    }
+
+    $('#intreatmentoverall-remarks').val(due_word);
+    $('#intreatmentoverall-remarks').focus();
+  }
+}
+</script>
+</div>
+            </div>
+         </div>
+         
+         
+         
+        <div class="msg_box_outer"> 
+         <div class="msg_box chat-box">
+
+         </div>
+         </div>
+         
+         <!-- Right Sidebar -->
+         <div class="side-bar right-bar nicescroll" tabindex="5000" style="overflow: hidden; outline: none;">
+            <h4 class="text-center">Chat    <a href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" style="float:right;margin-right:20px;" class="right-bar-toggle waves-effect waves-light"><i class="btn btn-sm btn-default fa fa-arrow-right"></i></a></h4>
+          
+            <input type="hidden" name="touser" id="touser">
+            <div class="contact-list nicescroll" tabindex="5001" style="overflow: hidden; outline: none;">
+               <ul class="list-group contacts-list">
+               	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="17"> Admin</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="56"> Lab</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="57"> Labuser</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="58"> Mastan</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="59"> Salim</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="60"> Subbu</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="61"> Gangadhar</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="62"> Hameed</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="63"> Smastan</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="64"> Oblux</div>
+                     </div>
+                  </li>
+                  	
+                  <li class="list-group-item">
+                     <div class="chat_body">
+                        <div class="user" data-id="65"> Karuna</div>
+                     </div>
+                  </li>
+                  
+               </ul>
+            </div>
+         <div id="ascrail2001" class="nicescroll-rails" style="width: 8px; z-index: 99; cursor: default; position: absolute; top: 53px; left: 232px; height: 600px; opacity: 0;"><div style="position: relative; top: 0px; float: right; width: 6px; height: 537px; background-color: rgb(152, 166, 173); border: 1px solid rgb(255, 255, 255); background-clip: padding-box; border-radius: 5px;"></div></div><div id="ascrail2001-hr" class="nicescroll-rails" style="height: 8px; z-index: 99; top: 645px; left: 0px; position: absolute; cursor: default; display: none; width: 232px; opacity: 0;"><div style="position: relative; top: 0px; height: 6px; width: 240px; background-color: rgb(152, 166, 173); border: 1px solid rgb(255, 255, 255); background-clip: padding-box; border-radius: 5px;"></div></div></div>
+         <footer class="footer text-right">
+            © 2017 DMC PHARMACY . All rights reserved.
+         </footer>
+      
+	  
+	  
+	  
+	  
+	  <script>
+	 /*  $(document).ready(function() {
+       
+    $(".user").click(function() {
+        // var domElement = $('<div class="module_holder"><div class="module_item"><h3>content 1</h3></div></div>').insertAfter(".msg_box") ;
+        var a = $('<div class="msg_box" style="right:242px;z-index:9;display:none;"><div class="msg_head">User1<div class="chat-close">x</div></div><div class="col-lg-12"><div class="card-box"><div class="msg_wrap chat-conversation"><ul class=" msg_body conversation-list nicescroll"><li class="clearfix"><div class="chat-avatar"><img src="assets/images/avatar-1.jpg" alt="male"><i>10:00</i></div><div class="conversation-text"><div class="ctext-wrap"><i>John Deo</i><p>Hello!</p></div></div></li></ul><div class="row"><div class="col-sm-9 chat-inputbar"> <p class="lead emoji-picker-container"><input type="text" class="form-control chat-input  " placeholder="Enter your text" data-emojiable="true"></p></div><div class="col-sm-3 chat-send"><button type="submit" class="btn btn-md btn-info btn-block waves-effect waves-light"><i class="fa fa-arrow-right"></i></button></div></div></div></div></div></div>').appendTo('.conversation-list').insertAfter(".msg_box");
+         
+    });
+    });
+    */
+
+	  </script>
+	  
+      <script src="./IP Procedure STD_files/jquery.js.download"></script>
+<script src="./IP Procedure STD_files/yii.js.download"></script>
+<script src="./IP Procedure STD_files/modernizr.min.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap.min.js.download"></script>
+<script src="./IP Procedure STD_files/detect.js.download"></script>
+<script src="./IP Procedure STD_files/fastclick.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.slimscroll.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.blockUI.js.download"></script>
+<script src="./IP Procedure STD_files/waves.js.download"></script>
+<script src="./IP Procedure STD_files/wow.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.nicescroll.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.scrollTo.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.peity.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.waypoints.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.counterup.min.js.download"></script>
+<script src="./IP Procedure STD_files/raphael-min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.knob.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.core.js.download"></script><div id="ascrail2000" class="nicescroll-rails" style="width: 8px; z-index: 99; cursor: default; position: fixed; top: 60px; left: 1607px; height: 608px; opacity: 0; display: block;"><div style="position: relative; top: 0px; float: right; width: 6px; height: 240px; background-color: rgb(152, 166, 173); border: 1px solid rgb(255, 255, 255); background-clip: padding-box; border-radius: 5px;"></div></div><div id="ascrail2000-hr" class="nicescroll-rails" style="height: 8px; z-index: 99; top: 660px; left: 1375px; position: fixed; cursor: default; display: none; width: 232px; opacity: 0;"><div style="position: relative; top: 0px; height: 6px; width: 240px; background-color: rgb(152, 166, 173); border: 1px solid rgb(255, 255, 255); background-clip: padding-box; border-radius: 5px;"></div></div>
+<script src="./IP Procedure STD_files/jquery.app.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.chat.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap-datepicker.min.js.download"></script>
+<script src="./IP Procedure STD_files/jsgrid.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.jsgrid.init.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.magnific-popup.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.dataTables.js.download"></script>
+<script src="./IP Procedure STD_files/mindmup-editabletable.js.download"></script>
+<script src="./IP Procedure STD_files/numeric-input-example.js.download"></script>
+<script src="./IP Procedure STD_files/select2.min.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap-select.min.js.download"></script>
+<script src="./IP Procedure STD_files/custombox.min.js.download"></script>
+<script src="./IP Procedure STD_files/legacy.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.steps.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.validate.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.wizard-init.js.download"></script>
+<script src="./IP Procedure STD_files/sweet-alert.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.sweet-alert.init.js.download"></script>
+<script src="./IP Procedure STD_files/util.js.download"></script>
+<script src="./IP Procedure STD_files/config.js.download"></script>
+<script src="./IP Procedure STD_files/emoji-picker.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.emojiarea.js.download"></script>
+<script src="./IP Procedure STD_files/notify.js.download"></script>
+<script src="./IP Procedure STD_files/notify-metro.js.download"></script>
+<script src="./IP Procedure STD_files/summernote.js.download"></script>
+<script src="./IP Procedure STD_files/autoNumeric.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap-inputmask.min.js.download"></script>
+<script src="./IP Procedure STD_files/moment.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap-timepicker.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap-colorpicker.min.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap-clockpicker.min.js.download"></script>
+<script src="./IP Procedure STD_files/daterangepicker.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.form-pickers.init.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap-datetimepicker.min.js.download"></script>
+<script src="./IP Procedure STD_files/bootstrap-table.min.js.download"></script>
+<script src="./IP Procedure STD_files/jquery.bs-table.js.download"></script>
+<script src="./IP Procedure STD_files/jquery-confirm.min.js.download"></script>      <script>
+         var resizefunc = [];
+      </script>
+      <script type="text/javascript">
+         jQuery(document).ready(function($) {
+             $('.counter').counterUp({
+                 delay: 100,
+                 time: 1200
+             });
+         
+             $(".knob").knob();
+         
+         });
+      </script>
+    
+      <script src="./IP Procedure STD_files/yii.validation.js.download"></script>
+<script src="./IP Procedure STD_files/yii.activeForm.js.download"></script>
+<script>jQuery(function ($) {
+jQuery('#w0').yiiActiveForm([{"id":"intreatmentoverall-mrnumber","name":"mrnumber","container":".field-mrnumber","input":"#mrnumber","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Mrnumber must be a string.","max":255,"tooLong":"Mrnumber should contain at most 255 characters.","skipOnEmpty":1});}},{"id":"intreatmentoverall-name","name":"name","container":".field-intreatmentoverall-name","input":"#intreatmentoverall-name","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Name must be a string.","max":255,"tooLong":"Name should contain at most 255 characters.","skipOnEmpty":1});}},{"id":"intreatmentoverall-dob","name":"dob","container":".field-intreatmentoverall-dob","input":"#intreatmentoverall-dob","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Dob must be a string.","max":255,"tooLong":"Dob should contain at most 255 characters.","skipOnEmpty":1});}},{"id":"intreatmentoverall-gender","name":"gender","container":".field-intreatmentoverall-gender","input":"#intreatmentoverall-gender","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Gender must be a string.","max":255,"tooLong":"Gender should contain at most 255 characters.","skipOnEmpty":1});}},{"id":"intreatmentoverall-insurancetype","name":"insurancetype","container":".field-intreatmentoverall-insurancetype","input":"#intreatmentoverall-insurancetype","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Insurancetype must be a string.","max":255,"tooLong":"Insurancetype should contain at most 255 characters.","skipOnEmpty":1});}},{"id":"newpatient-par_relationname","name":"par_relationname","container":".field-newpatient-par_relationname","input":"#newpatient-par_relationname","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Par Relationname must be a string.","max":50,"tooLong":"Par Relationname should contain at most 50 characters.","skipOnEmpty":1});}},{"id":"intreatmentindividual-treatment_id","name":"treatment_id","container":".field-intreatmentindividual-treatment_id","input":"#intreatmentindividual-treatment_id","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Treatment ID must be a string.","max":255,"tooLong":"Treatment ID should contain at most 255 characters.","skipOnEmpty":1});}},{"id":"intreatmentindividual-rate","name":"rate","container":".field-intreatmentindividual-rate","input":"#intreatmentindividual-rate","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Rate must be a number.","skipOnEmpty":1});}},{"id":"intreatmentindividual-qty","name":"qty","container":".field-intreatmentindividual-qty","input":"#intreatmentindividual-qty","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[+-]?\d+\s*$/,"message":"Qty must be an integer.","skipOnEmpty":1});}},{"id":"intreatmentindividual-gstpercent","name":"gstpercent","container":".field-intreatmentindividual-gstpercent","input":"#intreatmentindividual-gstpercent","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Gstpercent must be a number.","skipOnEmpty":1});}},{"id":"intreatmentindividual-gstvalue","name":"gstvalue","container":".field-intreatmentindividual-gstvalue","input":"#intreatmentindividual-gstvalue","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Gstvalue must be a number.","skipOnEmpty":1});}},{"id":"intreatmentindividual-mrp","name":"mrp","container":".field-intreatmentindividual-mrp","input":"#intreatmentindividual-mrp","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Mrp must be a number.","skipOnEmpty":1});}},{"id":"intreatmentindividual-total_price","name":"total_price","container":".field-intreatmentindividual-total_price","input":"#intreatmentindividual-total_price","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Total Price must be a number.","skipOnEmpty":1});}},{"id":"intreatmentoverall-overall_sub_total","name":"overall_sub_total","container":".field-intreatmentoverall-overall_sub_total","input":"#intreatmentoverall-overall_sub_total","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Overall Sub Total must be a number.","skipOnEmpty":1});}},{"id":"intreatmentoverall-totalgstvalue","name":"totalgstvalue","container":".field-intreatmentoverall-totalgstvalue","input":"#intreatmentoverall-totalgstvalue","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Totalgstvalue must be a number.","skipOnEmpty":1});}},{"id":"intreatmentoverall-overalldiscountpercent","name":"overalldiscountpercent","container":".field-intreatmentoverall-overalldiscountpercent","input":"#intreatmentoverall-overalldiscountpercent","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Overalldiscountpercent must be a number.","skipOnEmpty":1});}},{"id":"intreatmentoverall-overalldiscountamount","name":"overalldiscountamount","container":".field-intreatmentoverall-overalldiscountamount","input":"#intreatmentoverall-overalldiscountamount","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Overalldiscountamount must be a number.","skipOnEmpty":1});}},{"id":"intreatmentoverall-overall_net_amount","name":"overall_net_amount","container":".field-intreatmentoverall-overall_net_amount","input":"#intreatmentoverall-overall_net_amount","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Overall Net Amount must be a number.","skipOnEmpty":1});}},{"id":"intreatmentoverall-overalltotal","name":"overalltotal","container":".field-intreatmentoverall-overalltotal","input":"#intreatmentoverall-overalltotal","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Overalltotal must be a number.","skipOnEmpty":1});}},{"id":"intreatmentoverall-overall_due_amount","name":"overall_due_amount","container":".field-intreatmentoverall-overall_due_amount","input":"#intreatmentoverall-overall_due_amount","validate":function (attribute, value, messages, deferred, $form) {yii.validation.number(value, messages, {"pattern":/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/,"message":"Overall Due Amount must be a number.","skipOnEmpty":1});}},{"id":"intreatmentoverall-discount_authority","name":"discount_authority","container":".field-intreatmentoverall-discount_authority","input":"#intreatmentoverall-discount_authority","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Discount Authority must be a string.","max":255,"tooLong":"Discount Authority should contain at most 255 characters.","skipOnEmpty":1});}},{"id":"intreatmentoverall-remarks","name":"remarks","container":".field-intreatmentoverall-remarks","input":"#intreatmentoverall-remarks","validate":function (attribute, value, messages, deferred, $form) {yii.validation.string(value, messages, {"message":"Remarks must be a string.","skipOnEmpty":1});}}], []);
+jQuery('#modal').modal({"show":false});
+jQuery('#operationalmodal').modal({"show":false});
+jQuery('#custommodal').modal({"show":false});
+});</script>
+<div id="modal" class="fade modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-md">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="customheader"> </h3>
+</div>
+<div class="modal-body">
+<div id="modalContent">
+                 <div id="textContent"></div>
+                 <div class="modal-footer">
+                     <input type="hidden" class="data1">
+                     <a class="btn btn-primary deletatag" href="http://192.168.1.71/2018/dmcpharmacy/backend/web/index.php?r=in-treatment-overall/create#" data-method="post"><i class="fa fa-fw fa-check-square-o"></i> Yes</a>
+                     <button class="btn" data-dismiss="modal" aria-hidden="true"><i class="fa fa-fw fa-ban"></i> No</button>
+                 </div> 
+             </div>
+</div>
+
+</div>
+</div>
+</div>
+<div id="operationalmodal" class="fade modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-md">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h4 id="operationalheader"> </h4>
+</div>
+<div class="modal-body">
+<div id="modalContenttwo">
+                 <div id="customtwo"><input type="hidden" class="data2"></div>
+             </div>
+</div>
+
+</div>
+</div>
+</div>
+<div id="custommodal" class="fade modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h4 id="customviewheader"> </h4>
+</div>
+<div class="modal-body">
+<div id="customcontent"></div>
+</div>
+
+</div>
+</div>
+</div>      <script>
+      
+      $(document).on('click','.chatsave',function(event){
+      
+	x=$(this).attr('data-id');
+	is_valid="ok";
+	noteval=$("#chat_message").val();
+	touser=$("#touser").val();
+	if(noteval==''){
+		is_valid="no";
+		alert("Message cannot be blank");
+	}
+	
+if(is_valid=='ok'){	
+       //  var form = $('#stickynoteform');
+$.ajax({
+    
+    url : '/2018/dmcpharmacy/backend/web/index.php?r=chat%2Fcreate',
+    type: 'post',
+    data: 'note='+noteval+'&touser='+touser,
+     success : function(response){
+     $("#chat_message").val('');
+     $(".chat123").append(response);	
+     var ch=$(".chat123").get(0).scrollHeight;
+    	
+		$( ".chat123" ).scrollTop(ch);
+    }
+   })
+  }
+});
+
+      
+         //Delete Modal Call
+         $(document).on('click', '.modalDelete', function(e){
+             e.preventDefault();
+              var url = $(this).val();
+                 $('.deletatag').attr("href", url);
+                 $('#customheader').html('<span style="color:red"> <i class="fa fa-trash"></i> Delete</span>');
+                 $('#textContent').html('<h4>Are you sure you want to <span style="color:red;">DELETE</span> this item ?</h4>');
+                 $('#modal').modal('show').find('#modalContent').load();
+               
+         });
+		 
+		 
+		 $(document).on('click', '.modalCancel', function(e){
+             e.preventDefault();
+              var url = $(this).val();
+                 $('.deletatag').attr("href", url);
+                 $('#customheader').html('<span style="color:red"> <i class="fa fa-times"></i> Cancel</span>');
+                 $('#textContent').html('<h4>Are you sure you want to <span style="color:red;">Cancel</span> this item ?</h4>');
+                 $('#modal').modal('show').find('#modalContent').load();
+               
+         });
+		 
+		  $(document).on('click', '.modalRecancel', function(e){
+             e.preventDefault();
+              var url = $(this).val();
+                 $('.deletatag').attr("href", url);
+                 $('#customheader').html('<span style="color:red"> <i class="fa fa-times"></i> ReCancel</span>');
+                 $('#textContent').html('<h4>Are you sure you want to <span style="color:red;">ReCancel</span> this item ?</h4>');
+                 $('#modal').modal('show').find('#modalContent').load();
+               
+         });
+         
+         
+         //Status Changes Model
+         $(document).on('click', '.actionchange', function(e){
+             e.preventDefault();
+              var url = $(this).val();
+                 $('.deletatag').attr("href", url);
+                 $('#customheader').html('<span style="color:#195375"> <i class="fa fa-fw fa-info-circle"></i> Confirmation</span>');
+                 $('#textContent').html('<p>Are you sure you want to <span style="color:#195375;">Change the Status</span> for this item ?</p>');
+                 $('#modal').modal('show').find('#modalContent').load();
+         });
+         
+         
+         // Below Pagination class click for reload the page for ajax loading issue
+         $(document).on('click', '.pagination', function(e){
+             location.reload();
+         });
+         
+         
+         /* When Model is in Page the User Profile option will not come for avoid that bug the below code has been resolved it. */
+          $(document).on('click', '.dropdown-toggle', function(e){
+                  $('.navbar-nav > .user ').toggleClass("open");
+                 $(".navbar-nav > .user > .dropdown-toggle").attr("aria-expanded","true");
+             });
+         
+      </script>
+	  <!------------ CHAT ------------->
+	  <script>
+		$(document).ready(function(){
+			
+				/*	$('.chat_head').click(function(){
+				$('.chat_body').slideToggle('slow');
+			}); */
+			$('.msg_head').click(function(){
+				
+				$('.msg_wrap').slideToggle('slow');
+			});
+   	
+		 $(document).on('click','.chat-close',function(event){
+				$('.msg_box').hide();
+			});
+   	
+			$('.user').click(function(){
+  
+				$('.msg_wrap').show();
+				$('.msg_box').show();
+				x=$(this).attr("data-id");
+			
+				$('#touser').val(x);
+   				$.ajax({
+				    url:'/2018/dmcpharmacy/backend/web/index.php?r=chat/chatbox&id='+x ,
+				    type: 'post',
+				    data: 'user='+x,
+				    success : function(response){
+				    	
+				     	$(".msg_box").html(response);
+				     	var ch=$(".chat123").get(0).scrollHeight;
+    					$( ".chat123" ).scrollTop(ch);
+    					$(function() {
+			               window.emojiPicker = new EmojiPicker({
+				            emojiable_selector: '[data-emojiable=true]',
+				            assetsPath: '/2018/dmcpharmacy/backend/web/ubold/img/',
+			                	popupButtonClasses: 'fa fa-smile-o'
+			                                });
+			                        window.emojiPicker.discover();
+		                         });
+    				
+				    }
+				   })
+				
+			});	
+		});
+	</script>
+	     <script>
+	     
+	      $(document).ready(function()
+	      {
+	
+			 $("body").on('change', '#select-admin', function ()
+			    { 
+			    	var admin=$(this).val();
+			    	if(admin !== '')
+			    	{
+			    		 $.ajax({	
+					     type: "POST",
+		 				 url: "/2018/dmcpharmacy/backend/web/index.php?r=sales/rights&id="+admin,
+					     success: function (result) 
+						     {
+						     	// window.location.reload(true); 	
+						     }
+					  	 });
+			    	}
+			    });
+			});
+	     
+	     
+       /*  $(document).ready(function () {
+         	
+             $('#datatable').dataTable();
+             $('#datatable-keytable').DataTable({keys: true});
+             $('#datatable-responsive').DataTable();
+             $('#datatable-colvid').DataTable({
+             	
+                 "dom": 'C<"clear">lfrtip',
+                 "colVis": {
+                     "buttonText": "Change columns"
+                 }
+             });
+             $('#datatable-scroller').DataTable({
+             	
+                 ajax: "ubold/plugins/datatables/json/scroller-demo.json",
+                 deferRender: true,
+                 scrollY: 380,
+                 scrollCollapse: true,
+                 scroller: true
+             });
+             var table = $('#datatable-fixed-header').DataTable({fixedHeader: true});
+             var table = $('#datatable-fixed-col').DataTable({
+                 scrollY: "300px",
+                 scrollX: true,
+                 scrollCollapse: true,
+                 paging: false,
+                 fixedColumns: {
+                     leftColumns: 1,
+                     rightColumns: 1
+                 }
+             });
+         });*/
+        // TableManageButtons.init();
+         
+      </script>
+	
+   	 
+   
+
+
+<script type="text/javascript">window.onload = date_time('date_time');</script>
+<script>
+   function isNumber(evt) {
+        var iKeyCode = (evt.which) ? evt.which : evt.keyCode
+        if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+            return false;
+
+        return true;
+
+           
+                
+   }
+</script>
+<script>
+     $(document).ready(function(){
+        $('.dropdown-toggle').dropdown();
+		$('.open-left').click(function(){
+			
+			  $('#globalsearch').toggleClass('globalsearch');
+
+			
+			});
+			
+		
+    });
+    
+
+</script>
+
+
+<script type="text/javascript" src="./IP Procedure STD_files/bootstrap3-typeahead.js.download"></script>
+<script type="text/javascript" src="./IP Procedure STD_files/bootstrap3-typeahead.min.js.download"></script>
+
+
+<script>
+	
+	var subjects = [{"value":"branch header","value1":"branch-admin\/index"},{"value":"patient header","value1":"newpatient\/index"},{"value":"billing pharma","value1":"sales\/create#sales"},{"value":"short header","value1":"shortcut\/index"},{"value":"company header","value1":"company\/index"},{"value":"comp gst header","value1":"company-gst\/index"},{"value":"comp branch header","value1":"company-branch\/index"},{"value":"company create","value1":"company-branch%2Fcreate"},{"value":"product type header","value1":"producttype\/index"},{"value":"short create","value1":"shortcut%2Fcreate"},{"value":"comp header","value1":"composition\/index"},{"value":"product header","value1":"product\/index"},{"value":"prd group header","value1":"productgrouping\/index"},{"value":"product create","value1":"product%2Fcreate"},{"value":"prd group create","value1":"productgrouping%2Fcreate"},{"value":"unit header","value1":"unit\/index"},{"value":"Manufacturer header","value1":"manufacturermaster\/index"},{"value":"bulk header","value1":"bulkproducts\/index"},{"value":"bulk create","value1":"bulkproducts%2Fcreate"},{"value":"vendor create","value1":"vendor\/index"},{"value":"vendor gst header","value1":"vendor-gst\/index"},{"value":"vendor branch create","value1":"vendor-branch%2Fcreate"},{"value":"vendor branch header","value1":"vendor-branch\/index"},{"value":"stock header","value1":"stockmaster\/index"},{"value":"stock create","value1":"stockmaster%2Fcreate"},{"value":"stock audit","value1":"stockresponse\/audit"}];
+    $("#whole_link_move").typeahead({
+        minLength: 1,
+        delay: 100,
+	  	source: subjects,
+  		autoSelect: true,
+ 		displayText: function(item)
+ 		{
+ 	 		return item.value;	
+ 		},
+  		afterSelect: function(item) {
+			var base_url="/2018/dmcpharmacy/backend/web"+"/index.php?r="+item.value1;
+  			window.location.href = base_url;	
+  		}
+	});
+
+
+</script><div><div class="sweet-overlay" tabindex="-1"></div><div class="sweet-alert" tabindex="-1"><div class="icon error"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="icon warning"> <span class="body"></span> <span class="dot"></span> </div> <div class="icon info"></div> <div class="icon success"> <span class="line tip"></span> <span class="line long"></span> <div class="placeholder"></div> <div class="fix"></div> </div> <div class="icon custom"></div> <h2>Title</h2><p class="lead text-muted">Text</p><p><button class="cancel btn btn-lg" tabindex="2">Cancel</button> <button class="confirm btn btn-lg" tabindex="1">OK</button></p></div></div></body></html>

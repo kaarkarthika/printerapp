@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
-$this->title = 'DMC PHARMACY - LOGIN';
+$this->title = 'SUNITHA PRINTERS - LOGIN';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
     <div class="account-pages"></div>
@@ -10,11 +10,11 @@ $this->params['breadcrumbs'][] = $this->title;
 		<div class="wrapper-page">
 			<div class="card-box">
 				<div class="panel-heading">
-					<h3 class="text-center"><strong class="text-custom"><img src="<?= Url::to('@web/ubold/images/logo@1x.jpg') ?>"  width="120px" height="120px"/></strong></h3>
+					<h3 class="text-center"><strong class="text-custom"><img src="<?= Url::to('@web/ubold/images/sunitha-logo.png') ?>"  /></strong></h3>
 				</div>
 
 				<div class="panel-body">
-					 <?php $form = ActiveForm::begin(['id' => 'login-form','class'=>'form-horizontal m-t-20']); ?>
+					 <?php $form = ActiveForm::begin(['id' => 'login-form','class'=>'form-horizontal m-t-20','options'=> ['autocomplete'=>'off']]); ?>
 						<div class="form-group ">
 							<div class="col-xs-12">
 							    <?= $form->field($model, 'username',[
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             {error}',
         'inputOptions' => [
             'placeholder' => 'User Name',
-            'class'=>'form-control',
+            'class'=>'form-control  ',
         ]])
     ?>
 							</div>
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             {error}',
         'inputOptions' => [
             'placeholder' => 'Password',
-            'class'=>'form-control',
+            'class'=>'form-control  ',
             'type'=>'password',
         ]])
     ?>

@@ -1,6 +1,9 @@
-@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+/*@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300);
 @import url(https://fonts.googleapis.com/css?family=Roboto);
+
+
+
 
 /*
 Template Name: UBold Dashboard
@@ -32,7 +35,7 @@ File: Core
 body {
 	background: #ebeff2;
 	/* font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; */
-	font-family: 'Roboto', sans-serif;
+	font-family: 'ubuntu', sans-serif;
 	margin: 0;
 	overflow-x: hidden;
 	color: #797979;
@@ -52,7 +55,7 @@ h5,
 h6 {
 	color: #505458;
 	/* font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif; */
-	font-family: 'Roboto', sans-serif;
+	font-family: 'ubuntu', sans-serif;
 	margin: 10px 0;
 }
 
@@ -729,22 +732,23 @@ a:focus {
 
 
 /* Form components */
-
+/*
 textarea.form-control {
 	min-height: 90px;
 }
 
 .form-control {
 	background-color: #FFFFFF;
-	border: 1px solid #E3E3E3;
-	/* border: 1px solid #999; */
-	/* border-radius: 4px; */
+	/* border: 1px solid #E3E3E3;  
+	  border: 1px solid #999;  
+	/* border-radius: 4px;  
 	border-radius: 0px;
 	color: #565656;
-	/* padding: 5px 12px; */
-	padding: 0px 12px;
+	/* padding: 5px 12px;  
+	/* padding: 0px 12px;  
+	padding: 0px 2px;
 	height: 25px!important;
-	/* height: 38px; */
+	/* height: 38px;  
 	max-width: 100%;
 	-webkit-box-shadow: none;
 	box-shadow: none;
@@ -763,7 +767,7 @@ textarea.form-control {
 	outline: 0 !important;
 	color: #333333;
 }
-
+*/
 .input-lg {
 	height: 46px;
 	padding: 10px 16px;
@@ -773,9 +777,9 @@ textarea.form-control {
 }
 
 .input-sm {
-	height: 30px;
+	height: 30px!important;
 	padding: 5px 10px;
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 1.5;
 	border-radius: 3px;
 }
@@ -790,7 +794,7 @@ textarea.form-control {
 }
 
 .input-group-btn .btn {
-	padding: 8px 12px;
+	/* padding: 8px 12px; */
 }
 
 .input-group-btn .btn-sm {
@@ -2115,7 +2119,7 @@ body.fixed-left .side-menu.left {
 	color: #797979;
 	display: block;
 	/* font-family: 'Roboto', sans-serif; */
-	font-family: 'Roboto', sans-serif;
+	font-family: 'ubuntu', sans-serif;
 	font-size: 16px;
 	font-weight: 600;
 	padding-top: 5px;
@@ -2708,6 +2712,7 @@ body.fixed-left .side-menu.left {
 }
 
 
+
 /* =============
    Print css
 ============= */
@@ -2860,7 +2865,8 @@ span.btn-default i.glyphicon {
 
 #loginform-username.form-control,
 #loginform-password.form-control {
-	height: 38px!important;
+	/* height: 38px!important; */
+	/* height: 34px!important; */
 }
 
 .form-group.field-salesreturnsearch-updated_on div.help-block,
@@ -2958,7 +2964,7 @@ span.btn-default i.glyphicon {
 .form-control:focus,
 input[type="checkbox"]:focus,
 .select2-container .select2-selection--single:focus {
-	border: 2px solid #337ab7!important;
+	/* border: 2px solid #337ab7!important; */
 }
 
 .tmp-head {
@@ -3082,8 +3088,8 @@ a.btn-default.btn-default1 {
 }
 
 .input-group-btn span.btn.btn-default {
-	height: 25px!important;
-	padding: 3px 6px!important;
+	/* height: 25px!important; */
+	/* padding: 3px 6px!important; */
 }
 
 .w-100 {
@@ -3131,7 +3137,7 @@ textarea.re-txtarea {
 }
 
 .w-53 {
-	width: 53px;
+	width: 43px;
 }
 
 .table-bordered .table-bordered td,
@@ -3205,7 +3211,7 @@ tbody#fetch_update_data tr td {
 
 tbody#fetch_update_data input {
 	
-	padding: 2px 3px;
+	padding: 2px 0px;
 }
 
 .table-bordered.tbl-scrol tbody tr td {
@@ -3422,15 +3428,148 @@ select.product-select {
 }
 .text-caps{
 	text-transform:uppercase;
-<<<<<<< HEAD
+ 
 }
-=======
-}
+ 
+ 
 td div.input-group div.input-group-btn label.inp.btn.btn-default{
 	font-size:10px!important;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul > li:hover > ul{
 	display: block !important;
 }
+.form-control[disabled], .form-control[readonly], fieldset[disabled] {
+	background-color: #fafafa;
+    opacity: 1;
+    pointer-events: none;
+}
+.input-group-sm > .form-control, .input-group-sm > .input-group-addon, .input-group-sm   {
+	padding:0px!important;
+}
+.pd-no-space{
+	padding:5px 20px 0px 20px!important;
+}
+.v-hidden{
+	visibility:hidden;
+}
+.pb-10{
+	position:relative;
+	bottom:10px;
+}
+.bg-aqua-active{
+	background-color: #00a7d0 !important;
+}
+.bg-aqua-active th{
+	font-weight:normal!important;
+}
+.no-padding{
+	padding:0px!important;
+}
+.custom-label{
+	font-weight: 600;
+    color: #444444;
+    font-size: 13px;
+}
+.custom-column{
+	padding-left: 0px;
+    padding-right: 10px;
+}
+.box {
+    position: relative;
+    border-radius: 3px;
+    background: #ffffff;
+    /* border-top: 1px solid #d2d6de; */
+    margin: 5px 0px 1px;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+.box-header.with-border {
+     border-bottom: 1px solid #f4f4f4; 
+}
+.box-header {
+    color: #444;
+    display: block;
+    padding: 0px;
+    position: relative;
+}
+.box-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 10px;
+}
+.pd-cust{
+	padding:0px 11px 0px 10px!important;
+}
+.mb-0{
+	margin-bottom:0;
+}
+.mb-5{
+	margin-bottom:5px;
+}
+.mb-0 div.form-group{
+	margin-bottom:0px!important;
+}
+.mt-3{
+	margin-top:3px;
+}
+.table-condensed>thead>tr.bg-aqua-active>th,.table-condensed>tbody>tr.pd-sp>td{
+	padding: 1px;
+    font-size: 12px;
+}
 
->>>>>>> 02a76c083d551a732a4c13161d5b80f7c9041548
+.dtblock1 {
+    padding: 5px 0px 0px 0px!important;
+    height: 65px;
+    background-color: #ebeff2;
+}
+table.tscroll {
+  display: inline-grid;
+  grid-template-areas: 
+  "head-fixed" 
+  "body-scrollable";
+}
+
+table.tscroll thead {
+  grid-area: head-fixed;
+  background-color: darksalmon;
+}
+
+table.tscroll tbody {
+  grid-area: body-scrollable;
+  background-color: antiquewhite;
+  overflow: auto;
+  height: 80px;
+}
+
+table.tscroll thead th, table.tscroll tbody td {
+  min-width: 70px!important;
+  padding: 0px 0px;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+
+table.tscroll thead th:first-of-type, table.tscroll tbody td:first-of-type {
+    min-width: 50px;
+}
+.tfooter{
+text-align: right;color: green;font-weight: bold
+}
+.form-control{
+	border-radius:0px!important;
+	box-shadow:none!important;
+}
+.btn-group a.btn.btn-default{
+    padding:6px 12px!important;
+	font-size:14px!important;  
+}
+.mt-25{
+	margin-top:25px;
+}
+tr.filters td input.form-control{
+	height:28px!important;
+}
+.w-75{
+width:75px;
+}
